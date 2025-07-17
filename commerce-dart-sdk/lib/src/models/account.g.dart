@@ -49,46 +49,47 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$AccountToJson(Account instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('email', instance.email);
-  writeNotNull('userName', instance.userName);
-  writeNotNull('password', instance.password);
-  writeNotNull('isSubscribed', instance.isSubscribed);
-  writeNotNull('isGuest', instance.isGuest);
-  writeNotNull('canApproveOrders', instance.canApproveOrders);
-  writeNotNull('canViewApprovalOrders', instance.canViewApprovalOrders);
-  writeNotNull('billToId', instance.billToId);
-  writeNotNull('shipToId', instance.shipToId);
-  writeNotNull('firstName', instance.firstName);
-  writeNotNull('lastName', instance.lastName);
-  writeNotNull('role', instance.role);
-  writeNotNull('approver', instance.approver);
-  writeNotNull('isApproved', instance.isApproved);
-  writeNotNull('activationStatus', instance.activationStatus);
-  writeNotNull('defaultLocation', instance.defaultLocation);
-  writeNotNull('lastLoginOn', instance.lastLoginOn?.toIso8601String());
-  writeNotNull('availableApprovers', instance.availableApprovers);
-  writeNotNull('availableRoles', instance.availableRoles);
-  writeNotNull('setDefaultCustomer', instance.setDefaultCustomer);
-  writeNotNull('defaultCustomerId', instance.defaultCustomerId);
-  writeNotNull('defaultFulfillmentMethod', instance.defaultFulfillmentMethod);
-  writeNotNull('defaultWarehouse', instance.defaultWarehouse?.toJson());
-  writeNotNull('defaultWarehouseId', instance.defaultWarehouseId);
-  writeNotNull('accessToken', instance.accessToken);
-  writeNotNull('vmiRole', instance.vmiRole);
-  return val;
-}
+Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.email case final value?) 'email': value,
+      if (instance.userName case final value?) 'userName': value,
+      if (instance.password case final value?) 'password': value,
+      if (instance.isSubscribed case final value?) 'isSubscribed': value,
+      if (instance.isGuest case final value?) 'isGuest': value,
+      if (instance.canApproveOrders case final value?)
+        'canApproveOrders': value,
+      if (instance.canViewApprovalOrders case final value?)
+        'canViewApprovalOrders': value,
+      if (instance.billToId case final value?) 'billToId': value,
+      if (instance.shipToId case final value?) 'shipToId': value,
+      if (instance.firstName case final value?) 'firstName': value,
+      if (instance.lastName case final value?) 'lastName': value,
+      if (instance.role case final value?) 'role': value,
+      if (instance.approver case final value?) 'approver': value,
+      if (instance.isApproved case final value?) 'isApproved': value,
+      if (instance.activationStatus case final value?)
+        'activationStatus': value,
+      if (instance.defaultLocation case final value?) 'defaultLocation': value,
+      if (instance.lastLoginOn?.toIso8601String() case final value?)
+        'lastLoginOn': value,
+      if (instance.availableApprovers case final value?)
+        'availableApprovers': value,
+      if (instance.availableRoles case final value?) 'availableRoles': value,
+      if (instance.setDefaultCustomer case final value?)
+        'setDefaultCustomer': value,
+      if (instance.defaultCustomerId case final value?)
+        'defaultCustomerId': value,
+      if (instance.defaultFulfillmentMethod case final value?)
+        'defaultFulfillmentMethod': value,
+      if (instance.defaultWarehouse?.toJson() case final value?)
+        'defaultWarehouse': value,
+      if (instance.defaultWarehouseId case final value?)
+        'defaultWarehouseId': value,
+      if (instance.accessToken case final value?) 'accessToken': value,
+      if (instance.vmiRole case final value?) 'vmiRole': value,
+    };
 
 Vmi _$VmiFromJson(Map<String, dynamic> json) => Vmi(
       vmiUsers: (json['vmiUsers'] as List<dynamic>?)
@@ -100,20 +101,12 @@ Vmi _$VmiFromJson(Map<String, dynamic> json) => Vmi(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$VmiToJson(Vmi instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('vmiUsers', instance.vmiUsers?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$VmiToJson(Vmi instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.vmiUsers?.map((e) => e.toJson()).toList() case final value?)
+        'vmiUsers': value,
+    };
 
 VmiUser _$VmiUserFromJson(Map<String, dynamic> json) => VmiUser(
       userId: json['userId'] as String?,
@@ -129,19 +122,11 @@ VmiUser _$VmiUserFromJson(Map<String, dynamic> json) => VmiUser(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$VmiUserToJson(VmiUser instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('userId', instance.userId);
-  writeNotNull('vmiLocationNames', instance.vmiLocationNames);
-  writeNotNull('vmiRoles', instance.vmiRoles);
-  return val;
-}
+Map<String, dynamic> _$VmiUserToJson(VmiUser instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.userId case final value?) 'userId': value,
+      if (instance.vmiLocationNames case final value?)
+        'vmiLocationNames': value,
+      if (instance.vmiRoles case final value?) 'vmiRoles': value,
+    };

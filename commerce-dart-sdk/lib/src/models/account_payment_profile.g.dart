@@ -32,32 +32,25 @@ AccountPaymentProfile _$AccountPaymentProfileFromJson(
       );
 
 Map<String, dynamic> _$AccountPaymentProfileToJson(
-    AccountPaymentProfile instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('description', instance.description);
-  writeNotNull('cardType', instance.cardType);
-  writeNotNull('expirationDate', instance.expirationDate);
-  writeNotNull('maskedCardNumber', instance.maskedCardNumber);
-  writeNotNull('cardIdentifier', instance.cardIdentifier);
-  writeNotNull('cardHolderName', instance.cardHolderName);
-  writeNotNull('address1', instance.address1);
-  writeNotNull('address2', instance.address2);
-  writeNotNull('address3', instance.address3);
-  writeNotNull('address4', instance.address4);
-  writeNotNull('city', instance.city);
-  writeNotNull('state', instance.state);
-  writeNotNull('postalCode', instance.postalCode);
-  writeNotNull('country', instance.country);
-  writeNotNull('isDefault', instance.isDefault);
-  return val;
-}
+        AccountPaymentProfile instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.cardType case final value?) 'cardType': value,
+      if (instance.expirationDate case final value?) 'expirationDate': value,
+      if (instance.maskedCardNumber case final value?)
+        'maskedCardNumber': value,
+      if (instance.cardIdentifier case final value?) 'cardIdentifier': value,
+      if (instance.cardHolderName case final value?) 'cardHolderName': value,
+      if (instance.address1 case final value?) 'address1': value,
+      if (instance.address2 case final value?) 'address2': value,
+      if (instance.address3 case final value?) 'address3': value,
+      if (instance.address4 case final value?) 'address4': value,
+      if (instance.city case final value?) 'city': value,
+      if (instance.state case final value?) 'state': value,
+      if (instance.postalCode case final value?) 'postalCode': value,
+      if (instance.country case final value?) 'country': value,
+      if (instance.isDefault case final value?) 'isDefault': value,
+    };

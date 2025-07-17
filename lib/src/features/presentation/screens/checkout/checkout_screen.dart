@@ -3,12 +3,11 @@ import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
@@ -64,6 +63,11 @@ class CheckoutScreen extends BaseStatelessWidget {
         AnalyticsConstants.eventViewScreen,
         AnalyticsConstants.screenNameCheckout,
       );
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() => TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameCheckout,
+      );
 }
 
 class CheckoutPage extends StatelessWidget with BaseCheckout {
@@ -103,6 +107,21 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       String tax,
       String transactionId,
       String promoCode) {
+    context.read<RootBloc>().add(RootTelemetryEvent(TelemetryEvent(
+            eventName: AnalyticsConstants.screenNameCheckout)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyCurrency, strValue: currency)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyShipping, strValue: shipping)
+        .withProperty(name: AnalyticsConstants.eventPropertyTax, strValue: tax)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyTransactionId,
+            strValue: transactionId)
+        .withProperty(
+            name: AnalyticsConstants.eventPromoCode, strValue: promoCode)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyValue, strValue: value)));
+
     context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
             AnalyticsConstants.eventEcommercePurchase,
             AnalyticsConstants.screenNameCheckout)

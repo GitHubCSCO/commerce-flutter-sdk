@@ -9,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/platform_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -18,6 +19,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/bottom_menu
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class OrderDetailsScreen extends StatelessWidget {
+class OrderDetailsScreen extends BaseStatelessWidget {
   final String orderNumber;
   final bool? isFromVMI;
   const OrderDetailsScreen({
@@ -36,7 +38,7 @@ class OrderDetailsScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -103,6 +105,23 @@ class OrderDetailsScreen extends StatelessWidget {
         );
       }),
     );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    return AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameOrderDetail,
+    );
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    return TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameOrderDetail,
+    ).withProperty(
+        name: AnalyticsConstants.eventPropertyErpOrderNumber,
+        strValue: orderNumber);
   }
 }
 

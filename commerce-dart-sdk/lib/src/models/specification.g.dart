@@ -26,24 +26,18 @@ Specification _$SpecificationFromJson(Map<String, dynamic> json) =>
       value: json['value'] as String?,
     );
 
-Map<String, dynamic> _$SpecificationToJson(Specification instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('specificationId', instance.specificationId);
-  writeNotNull('name', instance.name);
-  writeNotNull('nameDisplay', instance.nameDisplay);
-  writeNotNull('value', instance.value);
-  writeNotNull('description', instance.description);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('isActive', instance.isActive);
-  writeNotNull('parentSpecification', instance.parentSpecification?.toJson());
-  writeNotNull('htmlContent', instance.htmlContent);
-  writeNotNull('specifications', instance.specifications?.toJson());
-  return val;
-}
+Map<String, dynamic> _$SpecificationToJson(Specification instance) =>
+    <String, dynamic>{
+      if (instance.specificationId case final value?) 'specificationId': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.nameDisplay case final value?) 'nameDisplay': value,
+      if (instance.value case final value?) 'value': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.isActive case final value?) 'isActive': value,
+      if (instance.parentSpecification?.toJson() case final value?)
+        'parentSpecification': value,
+      if (instance.htmlContent case final value?) 'htmlContent': value,
+      if (instance.specifications?.toJson() case final value?)
+        'specifications': value,
+    };

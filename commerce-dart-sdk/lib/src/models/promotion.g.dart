@@ -14,20 +14,12 @@ AddPromotion _$AddPromotionFromJson(Map<String, dynamic> json) => AddPromotion(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$AddPromotionToJson(AddPromotion instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('promotionCode', instance.promotionCode);
-  return val;
-}
+Map<String, dynamic> _$AddPromotionToJson(AddPromotion instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.promotionCode case final value?) 'promotionCode': value,
+    };
 
 PromotionCollectionModel _$PromotionCollectionModelFromJson(
         Map<String, dynamic> json) =>
@@ -43,22 +35,15 @@ PromotionCollectionModel _$PromotionCollectionModelFromJson(
       ..promotionCode = json['promotionCode'] as String?;
 
 Map<String, dynamic> _$PromotionCollectionModelToJson(
-    PromotionCollectionModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('promotionCode', instance.promotionCode);
-  writeNotNull(
-      'promotions', instance.promotions?.map((e) => e.toJson()).toList());
-  return val;
-}
+        PromotionCollectionModel instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.promotionCode case final value?) 'promotionCode': value,
+      if (instance.promotions?.map((e) => e.toJson()).toList()
+          case final value?)
+        'promotions': value,
+    };
 
 Promotion _$PromotionFromJson(Map<String, dynamic> json) => Promotion(
       id: json['id'] as String?,
@@ -76,25 +61,18 @@ Promotion _$PromotionFromJson(Map<String, dynamic> json) => Promotion(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$PromotionToJson(Promotion instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('promotionCode', instance.promotionCode);
-  writeNotNull('name', instance.name);
-  writeNotNull('amount', instance.amount);
-  writeNotNull('amountDisplay', instance.amountDisplay);
-  writeNotNull('promotionApplied', instance.promotionApplied);
-  writeNotNull('message', instance.message);
-  writeNotNull('orderLineId', instance.orderLineId);
-  writeNotNull('promotionResultType', instance.promotionResultType);
-  return val;
-}
+Map<String, dynamic> _$PromotionToJson(Promotion instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.promotionCode case final value?) 'promotionCode': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.amount case final value?) 'amount': value,
+      if (instance.amountDisplay case final value?) 'amountDisplay': value,
+      if (instance.promotionApplied case final value?)
+        'promotionApplied': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.orderLineId case final value?) 'orderLineId': value,
+      if (instance.promotionResultType case final value?)
+        'promotionResultType': value,
+    };

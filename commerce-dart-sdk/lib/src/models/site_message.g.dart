@@ -12,17 +12,9 @@ SiteMessage _$SiteMessageFromJson(Map<String, dynamic> json) => SiteMessage(
       languageCode: json['languageCode'] as String?,
     );
 
-Map<String, dynamic> _$SiteMessageToJson(SiteMessage instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('name', instance.name);
-  writeNotNull('message', instance.message);
-  writeNotNull('languageCode', instance.languageCode);
-  return val;
-}
+Map<String, dynamic> _$SiteMessageToJson(SiteMessage instance) =>
+    <String, dynamic>{
+      if (instance.name case final value?) 'name': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.languageCode case final value?) 'languageCode': value,
+    };

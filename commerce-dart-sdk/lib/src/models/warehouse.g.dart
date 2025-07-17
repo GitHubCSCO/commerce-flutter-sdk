@@ -41,41 +41,35 @@ Warehouse _$WarehouseFromJson(Map<String, dynamic> json) => Warehouse(
       ..message = json['message'] as String?
       ..requiresRealTimeInventory = json['requiresRealTimeInventory'] as bool?;
 
-Map<String, dynamic> _$WarehouseToJson(Warehouse instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('messageType', instance.messageType);
-  writeNotNull('message', instance.message);
-  writeNotNull('requiresRealTimeInventory', instance.requiresRealTimeInventory);
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('address1', instance.address1);
-  writeNotNull('address2', instance.address2);
-  writeNotNull('city', instance.city);
-  writeNotNull('contactName', instance.contactName);
-  writeNotNull('countryId', instance.countryId);
-  writeNotNull('deactivateOn', instance.deactivateOn?.toIso8601String());
-  writeNotNull('description', instance.description);
-  writeNotNull('phone', instance.phone);
-  writeNotNull('postalCode', instance.postalCode);
-  writeNotNull('shipSite', instance.shipSite);
-  writeNotNull('state', instance.state);
-  writeNotNull('isDefault', instance.isDefault);
-  writeNotNull('alternateWarehouses',
-      instance.alternateWarehouses?.map((e) => e.toJson()).toList());
-  writeNotNull('latitude', instance.latitude);
-  writeNotNull('longitude', instance.longitude);
-  writeNotNull('hours', instance.hours);
-  writeNotNull('distance', instance.distance);
-  writeNotNull('allowPickup', instance.allowPickup);
-  writeNotNull('pickupShipViaId', instance.pickupShipViaId);
-  return val;
-}
+Map<String, dynamic> _$WarehouseToJson(Warehouse instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.messageType case final value?) 'messageType': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.requiresRealTimeInventory case final value?)
+        'requiresRealTimeInventory': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.address1 case final value?) 'address1': value,
+      if (instance.address2 case final value?) 'address2': value,
+      if (instance.city case final value?) 'city': value,
+      if (instance.contactName case final value?) 'contactName': value,
+      if (instance.countryId case final value?) 'countryId': value,
+      if (instance.deactivateOn?.toIso8601String() case final value?)
+        'deactivateOn': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.phone case final value?) 'phone': value,
+      if (instance.postalCode case final value?) 'postalCode': value,
+      if (instance.shipSite case final value?) 'shipSite': value,
+      if (instance.state case final value?) 'state': value,
+      if (instance.isDefault case final value?) 'isDefault': value,
+      if (instance.alternateWarehouses?.map((e) => e.toJson()).toList()
+          case final value?)
+        'alternateWarehouses': value,
+      if (instance.latitude case final value?) 'latitude': value,
+      if (instance.longitude case final value?) 'longitude': value,
+      if (instance.hours case final value?) 'hours': value,
+      if (instance.distance case final value?) 'distance': value,
+      if (instance.allowPickup case final value?) 'allowPickup': value,
+      if (instance.pickupShipViaId case final value?) 'pickupShipViaId': value,
+    };

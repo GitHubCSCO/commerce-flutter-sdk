@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,11 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 abstract class BaseStatelessWidget extends StatelessWidget {
   const BaseStatelessWidget({super.key});
   AnalyticsEvent getAnalyticsEvent();
+  TelemetryEvent getTelemetryScreenEvent();
 
   @override
   Widget build(BuildContext context) {
     context.read<RootBloc>().add(
           RootAnalyticsEvent(getAnalyticsEvent()),
+        );
+    context.read<RootBloc>().add(
+          RootTelemetryEvent(getTelemetryScreenEvent()),
         );
     // Let derived classes handle their own widget tree as usual
     return buildContent(context);

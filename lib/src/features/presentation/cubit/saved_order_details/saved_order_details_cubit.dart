@@ -5,6 +5,7 @@ import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
@@ -169,6 +170,16 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
             name: AnalyticsConstants.eventPropertyProductNumber,
             strValue: productNumber)
         .withProperty(name: AnalyticsConstants.eventPropertyQty, strValue: qty);
+
+    var telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventAddToCart,
+      properties: {
+        AnalyticsConstants.eventPropertyProductNumber: productNumber,
+        AnalyticsConstants.eventPropertyQty: qty,
+      },
+    );
+
+    _savedOrderUsecase.trackTelemetryEvent(telemetryEvent);
 
     _savedOrderUsecase.trackEvent(analyticsEvent);
   }

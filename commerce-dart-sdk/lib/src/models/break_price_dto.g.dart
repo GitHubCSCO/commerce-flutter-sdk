@@ -16,20 +16,15 @@ BreakPriceDto _$BreakPriceDtoFromJson(Map<String, dynamic> json) =>
       savingsMessage: json['savingsMessage'] as String?,
     );
 
-Map<String, dynamic> _$BreakPriceDtoToJson(BreakPriceDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('breakQty', instance.breakQty);
-  writeNotNull('breakPrice', instance.breakPrice);
-  writeNotNull('breakPriceDisplay', instance.breakPriceDisplay);
-  writeNotNull('savingsMessage', instance.savingsMessage);
-  writeNotNull('breakPriceWithVat', instance.breakPriceWithVat);
-  writeNotNull('breakPriceWithVatDisplay', instance.breakPriceWithVatDisplay);
-  return val;
-}
+Map<String, dynamic> _$BreakPriceDtoToJson(BreakPriceDto instance) =>
+    <String, dynamic>{
+      if (instance.breakQty case final value?) 'breakQty': value,
+      if (instance.breakPrice case final value?) 'breakPrice': value,
+      if (instance.breakPriceDisplay case final value?)
+        'breakPriceDisplay': value,
+      if (instance.savingsMessage case final value?) 'savingsMessage': value,
+      if (instance.breakPriceWithVat case final value?)
+        'breakPriceWithVat': value,
+      if (instance.breakPriceWithVatDisplay case final value?)
+        'breakPriceWithVatDisplay': value,
+    };
