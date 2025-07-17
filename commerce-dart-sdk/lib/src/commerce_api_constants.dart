@@ -175,4 +175,7 @@ class CommerceAPIConstants {
 
   static const String wishListAddToCartUrl =
       "/api/v1/carts/current/cartlines/wishlist";
+
+  static const String registerDeviceTokenUrl =
+      '/api/v1/admin/device-tokens/register';
 }
