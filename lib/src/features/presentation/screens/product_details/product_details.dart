@@ -97,20 +97,25 @@ class ProductDetailsScreen extends BaseStatelessWidget {
             AnalyticsConstants.screenNameProductDetail)
         .withProperty(
             name: AnalyticsConstants.eventPropertyErpNumber,
-            strValue: (product?.getProductNumber().isEmpty ?? true)
-                ? productId
-                : product?.getProductNumber());
+            strValue: product?.getProductNumber())
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyProductNumber,
+          strValue: productId,
+        );
   }
 
   @override
   TelemetryEvent getTelemetryScreenEvent() {
     return TelemetryEvent(
       screenName: AnalyticsConstants.screenNameProductDetail,
-    ).withProperty(
-        name: AnalyticsConstants.eventPropertyErpNumber,
-        strValue: (product?.getProductNumber().isEmpty ?? true)
-            ? productId
-            : product?.getProductNumber());
+    )
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyErpNumber,
+            strValue: product?.getProductNumber())
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyProductNumber,
+          strValue: productId,
+        );
   }
 }
 
