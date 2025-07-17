@@ -46,35 +46,36 @@ GetProductCollectionResult _$GetProductCollectionResultFromJson(
       );
 
 Map<String, dynamic> _$GetProductCollectionResultToJson(
-    GetProductCollectionResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('pagination', instance.pagination?.toJson());
-  writeNotNull('products', instance.products?.map((e) => e.toJson()).toList());
-  writeNotNull('categoryFacets',
-      instance.categoryFacets?.map((e) => e.toJson()).toList());
-  writeNotNull('attributeTypeFacets',
-      instance.attributeTypeFacets?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'brandFacets', instance.brandFacets?.map((e) => e.toJson()).toList());
-  writeNotNull('productLineFacets',
-      instance.productLineFacets?.map((e) => e.toJson()).toList());
-  writeNotNull('didYouMeanSuggestions',
-      instance.didYouMeanSuggestions?.map((e) => e.toJson()).toList());
-  writeNotNull('exactMatch', instance.exactMatch);
-  writeNotNull('notAllProductsFound', instance.notAllProductsFound);
-  writeNotNull('notAllProductsAllowed', instance.notAllProductsAllowed);
-  writeNotNull('originalQuery', instance.originalQuery);
-  writeNotNull('correctedQuery', instance.correctedQuery);
-  writeNotNull('searchTermRedirectUrl', instance.searchTermRedirectUrl);
-  writeNotNull('priceRange', instance.priceRange?.toJson());
-  return val;
-}
+        GetProductCollectionResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+      if (instance.products?.map((e) => e.toJson()).toList() case final value?)
+        'products': value,
+      if (instance.categoryFacets?.map((e) => e.toJson()).toList()
+          case final value?)
+        'categoryFacets': value,
+      if (instance.attributeTypeFacets?.map((e) => e.toJson()).toList()
+          case final value?)
+        'attributeTypeFacets': value,
+      if (instance.brandFacets?.map((e) => e.toJson()).toList()
+          case final value?)
+        'brandFacets': value,
+      if (instance.productLineFacets?.map((e) => e.toJson()).toList()
+          case final value?)
+        'productLineFacets': value,
+      if (instance.didYouMeanSuggestions?.map((e) => e.toJson()).toList()
+          case final value?)
+        'didYouMeanSuggestions': value,
+      if (instance.exactMatch case final value?) 'exactMatch': value,
+      if (instance.notAllProductsFound case final value?)
+        'notAllProductsFound': value,
+      if (instance.notAllProductsAllowed case final value?)
+        'notAllProductsAllowed': value,
+      if (instance.originalQuery case final value?) 'originalQuery': value,
+      if (instance.correctedQuery case final value?) 'correctedQuery': value,
+      if (instance.searchTermRedirectUrl case final value?)
+        'searchTermRedirectUrl': value,
+      if (instance.priceRange?.toJson() case final value?) 'priceRange': value,
+    };

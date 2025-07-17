@@ -99,94 +99,117 @@ OrderLine _$OrderLineFromJson(Map<String, dynamic> json) => OrderLine(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$OrderLineToJson(OrderLine instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('productId', instance.productId);
-  writeNotNull('productUri', instance.productUri);
-  writeNotNull('mediumImagePath', instance.mediumImagePath);
-  writeNotNull('altText', instance.altText);
-  writeNotNull('productName', instance.productName);
-  writeNotNull('manufacturerItem', instance.manufacturerItem);
-  writeNotNull('customerName', instance.customerName);
-  writeNotNull('shortDescription', instance.shortDescription);
-  writeNotNull('productErpNumber', instance.productErpNumber);
-  writeNotNull('customerProductNumber', instance.customerProductNumber);
-  writeNotNull('requiredDate', instance.requiredDate?.toIso8601String());
-  writeNotNull('lastShipDate', instance.lastShipDate?.toIso8601String());
-  writeNotNull('customerNumber', instance.customerNumber);
-  writeNotNull('customerSequence', instance.customerSequence);
-  writeNotNull('lineType', instance.lineType);
-  writeNotNull('status', instance.status);
-  writeNotNull('lineNumber', instance.lineNumber);
-  writeNotNull('releaseNumber', instance.releaseNumber);
-  writeNotNull('linePOReference', instance.linePOReference);
-  writeNotNull('description', instance.description);
-  writeNotNull('warehouse', instance.warehouse);
-  writeNotNull('notes', instance.notes);
-  writeNotNull('qtyOrdered', instance.qtyOrdered);
-  writeNotNull('qtyShipped', instance.qtyShipped);
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('unitOfMeasureDisplay', instance.unitOfMeasureDisplay);
-  writeNotNull('unitOfMeasureDescription', instance.unitOfMeasureDescription);
-  writeNotNull('availability', instance.availability?.toJson());
-  writeNotNull('inventoryQtyOrdered', instance.inventoryQtyOrdered);
-  writeNotNull('inventoryQtyShipped', instance.inventoryQtyShipped);
-  writeNotNull('unitPrice', instance.unitPrice);
-  writeNotNull('unitNetPrice', instance.unitNetPrice);
-  writeNotNull('extendedUnitNetPrice', instance.extendedUnitNetPrice);
-  writeNotNull('discountPercent', instance.discountPercent);
-  writeNotNull('discountAmount', instance.discountAmount);
-  writeNotNull('unitDiscountAmount', instance.unitDiscountAmount);
-  writeNotNull('promotionAmountApplied', instance.promotionAmountApplied);
-  writeNotNull('totalDiscountAmount', instance.totalDiscountAmount);
-  writeNotNull('lineTotal', instance.lineTotal);
-  writeNotNull('totalRegularPrice', instance.totalRegularPrice);
-  writeNotNull('unitListPrice', instance.unitListPrice);
-  writeNotNull('unitRegularPrice', instance.unitRegularPrice);
-  writeNotNull('unitCost', instance.unitCost);
-  writeNotNull('orderLineOtherCharges', instance.orderLineOtherCharges);
-  writeNotNull('taxRate', instance.taxRate);
-  writeNotNull('taxAmount', instance.taxAmount);
-  writeNotNull('returnReason', instance.returnReason);
-  writeNotNull('rmaQtyRequested', instance.rmaQtyRequested);
-  writeNotNull('rmaQtyReceived', instance.rmaQtyReceived);
-  writeNotNull('unitPriceDisplay', instance.unitPriceDisplay);
-  writeNotNull('unitNetPriceDisplay', instance.unitNetPriceDisplay);
-  writeNotNull(
-      'extendedUnitNetPriceDisplay', instance.extendedUnitNetPriceDisplay);
-  writeNotNull('discountAmountDisplay', instance.discountAmountDisplay);
-  writeNotNull('unitDiscountAmountDisplay', instance.unitDiscountAmountDisplay);
-  writeNotNull(
-      'totalDiscountAmountDisplay', instance.totalDiscountAmountDisplay);
-  writeNotNull('lineTotalDisplay', instance.lineTotalDisplay);
-  writeNotNull('totalRegularPriceDisplay', instance.totalRegularPriceDisplay);
-  writeNotNull('unitListPriceDisplay', instance.unitListPriceDisplay);
-  writeNotNull('unitRegularPriceDisplay', instance.unitRegularPriceDisplay);
-  writeNotNull('unitCostDisplay', instance.unitCostDisplay);
-  writeNotNull(
-      'orderLineOtherChargesDisplay', instance.orderLineOtherChargesDisplay);
-  writeNotNull('costCode', instance.costCode);
-  writeNotNull('canAddToCart', instance.canAddToCart);
-  writeNotNull('isActiveProduct', instance.isActiveProduct);
-  writeNotNull('sectionOptions',
-      instance.sectionOptions?.map((e) => e.toJson()).toList());
-  writeNotNull('salePriceLabel', instance.salePriceLabel);
-  writeNotNull('canAddToWishlist', instance.canAddToWishlist);
-  writeNotNull('brand', instance.brand?.toJson());
-  writeNotNull('netPriceWithVat', instance.netPriceWithVat);
-  writeNotNull('netPriceWithVatDisplay', instance.netPriceWithVatDisplay);
-  writeNotNull('unitPriceWithVat', instance.unitPriceWithVat);
-  writeNotNull('unitPriceWithVatDisplay', instance.unitPriceWithVatDisplay);
-  writeNotNull('vmiBinNumber', instance.vmiBinNumber);
-  return val;
-}
+Map<String, dynamic> _$OrderLineToJson(OrderLine instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.productUri case final value?) 'productUri': value,
+      if (instance.mediumImagePath case final value?) 'mediumImagePath': value,
+      if (instance.altText case final value?) 'altText': value,
+      if (instance.productName case final value?) 'productName': value,
+      if (instance.manufacturerItem case final value?)
+        'manufacturerItem': value,
+      if (instance.customerName case final value?) 'customerName': value,
+      if (instance.shortDescription case final value?)
+        'shortDescription': value,
+      if (instance.productErpNumber case final value?)
+        'productErpNumber': value,
+      if (instance.customerProductNumber case final value?)
+        'customerProductNumber': value,
+      if (instance.requiredDate?.toIso8601String() case final value?)
+        'requiredDate': value,
+      if (instance.lastShipDate?.toIso8601String() case final value?)
+        'lastShipDate': value,
+      if (instance.customerNumber case final value?) 'customerNumber': value,
+      if (instance.customerSequence case final value?)
+        'customerSequence': value,
+      if (instance.lineType case final value?) 'lineType': value,
+      if (instance.status case final value?) 'status': value,
+      if (instance.lineNumber case final value?) 'lineNumber': value,
+      if (instance.releaseNumber case final value?) 'releaseNumber': value,
+      if (instance.linePOReference case final value?) 'linePOReference': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.warehouse case final value?) 'warehouse': value,
+      if (instance.notes case final value?) 'notes': value,
+      if (instance.qtyOrdered case final value?) 'qtyOrdered': value,
+      if (instance.qtyShipped case final value?) 'qtyShipped': value,
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.unitOfMeasureDisplay case final value?)
+        'unitOfMeasureDisplay': value,
+      if (instance.unitOfMeasureDescription case final value?)
+        'unitOfMeasureDescription': value,
+      if (instance.availability?.toJson() case final value?)
+        'availability': value,
+      if (instance.inventoryQtyOrdered case final value?)
+        'inventoryQtyOrdered': value,
+      if (instance.inventoryQtyShipped case final value?)
+        'inventoryQtyShipped': value,
+      if (instance.unitPrice case final value?) 'unitPrice': value,
+      if (instance.unitNetPrice case final value?) 'unitNetPrice': value,
+      if (instance.extendedUnitNetPrice case final value?)
+        'extendedUnitNetPrice': value,
+      if (instance.discountPercent case final value?) 'discountPercent': value,
+      if (instance.discountAmount case final value?) 'discountAmount': value,
+      if (instance.unitDiscountAmount case final value?)
+        'unitDiscountAmount': value,
+      if (instance.promotionAmountApplied case final value?)
+        'promotionAmountApplied': value,
+      if (instance.totalDiscountAmount case final value?)
+        'totalDiscountAmount': value,
+      if (instance.lineTotal case final value?) 'lineTotal': value,
+      if (instance.totalRegularPrice case final value?)
+        'totalRegularPrice': value,
+      if (instance.unitListPrice case final value?) 'unitListPrice': value,
+      if (instance.unitRegularPrice case final value?)
+        'unitRegularPrice': value,
+      if (instance.unitCost case final value?) 'unitCost': value,
+      if (instance.orderLineOtherCharges case final value?)
+        'orderLineOtherCharges': value,
+      if (instance.taxRate case final value?) 'taxRate': value,
+      if (instance.taxAmount case final value?) 'taxAmount': value,
+      if (instance.returnReason case final value?) 'returnReason': value,
+      if (instance.rmaQtyRequested case final value?) 'rmaQtyRequested': value,
+      if (instance.rmaQtyReceived case final value?) 'rmaQtyReceived': value,
+      if (instance.unitPriceDisplay case final value?)
+        'unitPriceDisplay': value,
+      if (instance.unitNetPriceDisplay case final value?)
+        'unitNetPriceDisplay': value,
+      if (instance.extendedUnitNetPriceDisplay case final value?)
+        'extendedUnitNetPriceDisplay': value,
+      if (instance.discountAmountDisplay case final value?)
+        'discountAmountDisplay': value,
+      if (instance.unitDiscountAmountDisplay case final value?)
+        'unitDiscountAmountDisplay': value,
+      if (instance.totalDiscountAmountDisplay case final value?)
+        'totalDiscountAmountDisplay': value,
+      if (instance.lineTotalDisplay case final value?)
+        'lineTotalDisplay': value,
+      if (instance.totalRegularPriceDisplay case final value?)
+        'totalRegularPriceDisplay': value,
+      if (instance.unitListPriceDisplay case final value?)
+        'unitListPriceDisplay': value,
+      if (instance.unitRegularPriceDisplay case final value?)
+        'unitRegularPriceDisplay': value,
+      if (instance.unitCostDisplay case final value?) 'unitCostDisplay': value,
+      if (instance.orderLineOtherChargesDisplay case final value?)
+        'orderLineOtherChargesDisplay': value,
+      if (instance.costCode case final value?) 'costCode': value,
+      if (instance.canAddToCart case final value?) 'canAddToCart': value,
+      if (instance.isActiveProduct case final value?) 'isActiveProduct': value,
+      if (instance.sectionOptions?.map((e) => e.toJson()).toList()
+          case final value?)
+        'sectionOptions': value,
+      if (instance.salePriceLabel case final value?) 'salePriceLabel': value,
+      if (instance.canAddToWishlist case final value?)
+        'canAddToWishlist': value,
+      if (instance.brand?.toJson() case final value?) 'brand': value,
+      if (instance.netPriceWithVat case final value?) 'netPriceWithVat': value,
+      if (instance.netPriceWithVatDisplay case final value?)
+        'netPriceWithVatDisplay': value,
+      if (instance.unitPriceWithVat case final value?)
+        'unitPriceWithVat': value,
+      if (instance.unitPriceWithVatDisplay case final value?)
+        'unitPriceWithVatDisplay': value,
+      if (instance.vmiBinNumber case final value?) 'vmiBinNumber': value,
+    };

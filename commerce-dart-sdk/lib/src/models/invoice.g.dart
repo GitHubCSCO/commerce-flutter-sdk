@@ -69,70 +69,77 @@ Invoice _$InvoiceFromJson(Map<String, dynamic> json) => Invoice(
       terms: json['terms'] as String?,
     );
 
-Map<String, dynamic> _$InvoiceToJson(Invoice instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('btAddress1', instance.btAddress1);
-  writeNotNull('btAddress2', instance.btAddress2);
-  writeNotNull('billToCity', instance.billToCity);
-  writeNotNull('btCompanyName', instance.btCompanyName);
-  writeNotNull('btCountry', instance.btCountry);
-  writeNotNull('billToPostalCode', instance.billToPostalCode);
-  writeNotNull('billToState', instance.billToState);
-  writeNotNull('currencyCode', instance.currencyCode);
-  writeNotNull('currentBalance', instance.currentBalance);
-  writeNotNull('currentBalanceDisplay', instance.currentBalanceDisplay);
-  writeNotNull('customerNumber', instance.customerNumber);
-  writeNotNull('customerPO', instance.customerPO);
-  writeNotNull('customerSequence', instance.customerSequence);
-  writeNotNull('discountAmount', instance.discountAmount);
-  writeNotNull('discountAmountDisplay', instance.discountAmountDisplay);
-  writeNotNull('dueDate', instance.dueDate?.toIso8601String());
-  writeNotNull('id', instance.id);
-  writeNotNull('invoiceDate', instance.invoiceDate?.toIso8601String());
-  writeNotNull(
-      'invoiceLines', instance.invoiceLines?.map((e) => e.toJson()).toList());
-  writeNotNull('invoiceNumber', instance.invoiceNumber);
-  writeNotNull('invoiceHistoryTaxes',
-      instance.invoiceHistoryTaxes?.map((e) => e.toJson()).toList());
-  writeNotNull('invoiceTotal', instance.invoiceTotal);
-  writeNotNull('invoiceTotalDisplay', instance.invoiceTotalDisplay);
-  writeNotNull('invoiceType', instance.invoiceType);
-  writeNotNull('isOpen', instance.isOpen);
-  writeNotNull('message', instance.message);
-  writeNotNull('notes', instance.notes);
-  writeNotNull('orderTotalDisplay', instance.orderTotalDisplay);
-  writeNotNull('otherCharges', instance.otherCharges);
-  writeNotNull('otherChargesDisplay', instance.otherChargesDisplay);
-  writeNotNull('productTotal', instance.productTotal);
-  writeNotNull('productTotalDisplay', instance.productTotalDisplay);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('salesperson', instance.salesperson);
-  writeNotNull('shipCode', instance.shipCode);
-  writeNotNull('shippingAndHandling', instance.shippingAndHandling);
-  writeNotNull(
-      'shippingAndHandlingDisplay', instance.shippingAndHandlingDisplay);
-  writeNotNull('shipViaDescription', instance.shipViaDescription);
-  writeNotNull('stAddress1', instance.stAddress1);
-  writeNotNull('stAddress2', instance.stAddress2);
-  writeNotNull('status', instance.status);
-  writeNotNull('shipToCity', instance.shipToCity);
-  writeNotNull('stCompanyName', instance.stCompanyName);
-  writeNotNull('stCountry', instance.stCountry);
-  writeNotNull('shipToPostalCode', instance.shipToPostalCode);
-  writeNotNull('shipToState', instance.shipToState);
-  writeNotNull('success', instance.success);
-  writeNotNull('taxAmount', instance.taxAmount);
-  writeNotNull('taxAmountDisplay', instance.taxAmountDisplay);
-  writeNotNull('terms', instance.terms);
-  return val;
-}
+Map<String, dynamic> _$InvoiceToJson(Invoice instance) => <String, dynamic>{
+      if (instance.btAddress1 case final value?) 'btAddress1': value,
+      if (instance.btAddress2 case final value?) 'btAddress2': value,
+      if (instance.billToCity case final value?) 'billToCity': value,
+      if (instance.btCompanyName case final value?) 'btCompanyName': value,
+      if (instance.btCountry case final value?) 'btCountry': value,
+      if (instance.billToPostalCode case final value?)
+        'billToPostalCode': value,
+      if (instance.billToState case final value?) 'billToState': value,
+      if (instance.currencyCode case final value?) 'currencyCode': value,
+      if (instance.currentBalance case final value?) 'currentBalance': value,
+      if (instance.currentBalanceDisplay case final value?)
+        'currentBalanceDisplay': value,
+      if (instance.customerNumber case final value?) 'customerNumber': value,
+      if (instance.customerPO case final value?) 'customerPO': value,
+      if (instance.customerSequence case final value?)
+        'customerSequence': value,
+      if (instance.discountAmount case final value?) 'discountAmount': value,
+      if (instance.discountAmountDisplay case final value?)
+        'discountAmountDisplay': value,
+      if (instance.dueDate?.toIso8601String() case final value?)
+        'dueDate': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.invoiceDate?.toIso8601String() case final value?)
+        'invoiceDate': value,
+      if (instance.invoiceLines?.map((e) => e.toJson()).toList()
+          case final value?)
+        'invoiceLines': value,
+      if (instance.invoiceNumber case final value?) 'invoiceNumber': value,
+      if (instance.invoiceHistoryTaxes?.map((e) => e.toJson()).toList()
+          case final value?)
+        'invoiceHistoryTaxes': value,
+      if (instance.invoiceTotal case final value?) 'invoiceTotal': value,
+      if (instance.invoiceTotalDisplay case final value?)
+        'invoiceTotalDisplay': value,
+      if (instance.invoiceType case final value?) 'invoiceType': value,
+      if (instance.isOpen case final value?) 'isOpen': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.notes case final value?) 'notes': value,
+      if (instance.orderTotalDisplay case final value?)
+        'orderTotalDisplay': value,
+      if (instance.otherCharges case final value?) 'otherCharges': value,
+      if (instance.otherChargesDisplay case final value?)
+        'otherChargesDisplay': value,
+      if (instance.productTotal case final value?) 'productTotal': value,
+      if (instance.productTotalDisplay case final value?)
+        'productTotalDisplay': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.salesperson case final value?) 'salesperson': value,
+      if (instance.shipCode case final value?) 'shipCode': value,
+      if (instance.shippingAndHandling case final value?)
+        'shippingAndHandling': value,
+      if (instance.shippingAndHandlingDisplay case final value?)
+        'shippingAndHandlingDisplay': value,
+      if (instance.shipViaDescription case final value?)
+        'shipViaDescription': value,
+      if (instance.stAddress1 case final value?) 'stAddress1': value,
+      if (instance.stAddress2 case final value?) 'stAddress2': value,
+      if (instance.status case final value?) 'status': value,
+      if (instance.shipToCity case final value?) 'shipToCity': value,
+      if (instance.stCompanyName case final value?) 'stCompanyName': value,
+      if (instance.stCountry case final value?) 'stCountry': value,
+      if (instance.shipToPostalCode case final value?)
+        'shipToPostalCode': value,
+      if (instance.shipToState case final value?) 'shipToState': value,
+      if (instance.success case final value?) 'success': value,
+      if (instance.taxAmount case final value?) 'taxAmount': value,
+      if (instance.taxAmountDisplay case final value?)
+        'taxAmountDisplay': value,
+      if (instance.terms case final value?) 'terms': value,
+    };
 
 InvoiceLine _$InvoiceLineFromJson(Map<String, dynamic> json) => InvoiceLine(
       altText: json['altText'] as String?,
@@ -173,49 +180,48 @@ InvoiceLine _$InvoiceLineFromJson(Map<String, dynamic> json) => InvoiceLine(
           : Brand.fromJson(json['brand'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$InvoiceLineToJson(InvoiceLine instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('altText', instance.altText);
-  writeNotNull('customerName', instance.customerName);
-  writeNotNull('customerProductNumber', instance.customerProductNumber);
-  writeNotNull('description', instance.description);
-  writeNotNull('discountAmount', instance.discountAmount);
-  writeNotNull('discountAmountDisplay', instance.discountAmountDisplay);
-  writeNotNull('discountPercent', instance.discountPercent);
-  writeNotNull('erpOrderNumber', instance.erpOrderNumber);
-  writeNotNull('id', instance.id);
-  writeNotNull('lineNumber', instance.lineNumber);
-  writeNotNull('linePOReference', instance.linePOReference);
-  writeNotNull('lineTotal', instance.lineTotal);
-  writeNotNull('lineTotalDisplay', instance.lineTotalDisplay);
-  writeNotNull('lineType', instance.lineType);
-  writeNotNull('manufacturerItem', instance.manufacturerItem);
-  writeNotNull('mediumImagePath', instance.mediumImagePath);
-  writeNotNull('message', instance.message);
-  writeNotNull('notes', instance.notes);
-  writeNotNull('productErpNumber', instance.productErpNumber);
-  writeNotNull('productName', instance.productName);
-  writeNotNull('productUri', instance.productUri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('qtyInvoiced', instance.qtyInvoiced);
-  writeNotNull('releaseNumber', instance.releaseNumber);
-  writeNotNull('shipmentNumber', instance.shipmentNumber);
-  writeNotNull('shortDescription', instance.shortDescription);
-  writeNotNull('success', instance.success);
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('unitPrice', instance.unitPrice);
-  writeNotNull('unitPriceDisplay', instance.unitPriceDisplay);
-  writeNotNull('warehouse', instance.warehouse);
-  writeNotNull('brand', instance.brand?.toJson());
-  return val;
-}
+Map<String, dynamic> _$InvoiceLineToJson(InvoiceLine instance) =>
+    <String, dynamic>{
+      if (instance.altText case final value?) 'altText': value,
+      if (instance.customerName case final value?) 'customerName': value,
+      if (instance.customerProductNumber case final value?)
+        'customerProductNumber': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.discountAmount case final value?) 'discountAmount': value,
+      if (instance.discountAmountDisplay case final value?)
+        'discountAmountDisplay': value,
+      if (instance.discountPercent case final value?) 'discountPercent': value,
+      if (instance.erpOrderNumber case final value?) 'erpOrderNumber': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.lineNumber case final value?) 'lineNumber': value,
+      if (instance.linePOReference case final value?) 'linePOReference': value,
+      if (instance.lineTotal case final value?) 'lineTotal': value,
+      if (instance.lineTotalDisplay case final value?)
+        'lineTotalDisplay': value,
+      if (instance.lineType case final value?) 'lineType': value,
+      if (instance.manufacturerItem case final value?)
+        'manufacturerItem': value,
+      if (instance.mediumImagePath case final value?) 'mediumImagePath': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.notes case final value?) 'notes': value,
+      if (instance.productErpNumber case final value?)
+        'productErpNumber': value,
+      if (instance.productName case final value?) 'productName': value,
+      if (instance.productUri case final value?) 'productUri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.qtyInvoiced case final value?) 'qtyInvoiced': value,
+      if (instance.releaseNumber case final value?) 'releaseNumber': value,
+      if (instance.shipmentNumber case final value?) 'shipmentNumber': value,
+      if (instance.shortDescription case final value?)
+        'shortDescription': value,
+      if (instance.success case final value?) 'success': value,
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.unitPrice case final value?) 'unitPrice': value,
+      if (instance.unitPriceDisplay case final value?)
+        'unitPriceDisplay': value,
+      if (instance.warehouse case final value?) 'warehouse': value,
+      if (instance.brand?.toJson() case final value?) 'brand': value,
+    };
 
 InvoiceTaxModel _$InvoiceTaxModelFromJson(Map<String, dynamic> json) =>
     InvoiceTaxModel(
@@ -233,24 +239,17 @@ InvoiceTaxModel _$InvoiceTaxModelFromJson(Map<String, dynamic> json) =>
       taxRate: json['taxRate'] as num?,
     );
 
-Map<String, dynamic> _$InvoiceTaxModelToJson(InvoiceTaxModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('message', instance.message);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('success', instance.success);
-  writeNotNull('taxAmount', instance.taxAmount);
-  writeNotNull('taxAmountDisplay', instance.taxAmountDisplay);
-  writeNotNull('taxCode', instance.taxCode);
-  writeNotNull('taxDescription', instance.taxDescription);
-  writeNotNull('taxRate', instance.taxRate);
-  return val;
-}
+Map<String, dynamic> _$InvoiceTaxModelToJson(InvoiceTaxModel instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.success case final value?) 'success': value,
+      if (instance.taxAmount case final value?) 'taxAmount': value,
+      if (instance.taxAmountDisplay case final value?)
+        'taxAmountDisplay': value,
+      if (instance.taxCode case final value?) 'taxCode': value,
+      if (instance.taxDescription case final value?) 'taxDescription': value,
+      if (instance.taxRate case final value?) 'taxRate': value,
+    };

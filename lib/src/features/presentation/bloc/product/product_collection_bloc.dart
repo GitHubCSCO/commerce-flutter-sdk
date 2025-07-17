@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/product/product_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -106,6 +107,24 @@ class ProductCollectionBloc extends Bloc<ProductEvent, ProductState> {
                   name: AnalyticsConstants.eventPropertySuccessful,
                   boolValue: apiCallIsSuccessful);
       _searchUseCase.trackEvent(viewScreenEvent);
+
+      var viewTelemetryEvent = TelemetryEvent(screenName: screenName)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertySearchTerm,
+              strValue: entity.query)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyReferenceId,
+              strValue: eventPropertyReferenceId)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyReferenceName,
+              strValue: eventPropertyReferenceName)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyResultsCount,
+              strValue: resultsCount.toString())
+          .withProperty(
+              name: AnalyticsConstants.eventPropertySuccessful,
+              boolValue: apiCallIsSuccessful);
+      _searchUseCase.trackTelemetryEvent(viewTelemetryEvent);
     }
   }
 }

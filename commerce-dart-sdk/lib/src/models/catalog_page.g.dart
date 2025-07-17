@@ -39,36 +39,32 @@ CatalogPage _$CatalogPageFromJson(Map<String, dynamic> json) => CatalogPage(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$CatalogPageToJson(CatalogPage instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('category', instance.category?.toJson());
-  writeNotNull('brandId', instance.brandId);
-  writeNotNull('productLineId', instance.productLineId);
-  writeNotNull('productId', instance.productId);
-  writeNotNull('productName', instance.productName);
-  writeNotNull('title', instance.title);
-  writeNotNull('metaDescription', instance.metaDescription);
-  writeNotNull('metaKeywords', instance.metaKeywords);
-  writeNotNull('canonicalPath', instance.canonicalPath);
-  writeNotNull('alternateLanguageUrls', instance.alternateLanguageUrls);
-  writeNotNull('isReplacementProduct', instance.isReplacementProduct);
-  writeNotNull(
-      'breadCrumbs', instance.breadCrumbs?.map((e) => e.toJson()).toList());
-  writeNotNull('obsoletePath', instance.obsoletePath);
-  writeNotNull('needRedirect', instance.needRedirect);
-  writeNotNull('redirectUrl', instance.redirectUrl);
-  writeNotNull('primaryImagePath', instance.primaryImagePath);
-  writeNotNull('openGraphTitle', instance.openGraphTitle);
-  writeNotNull('openGraphImage', instance.openGraphImage);
-  writeNotNull('openGraphUrl', instance.openGraphUrl);
-  return val;
-}
+Map<String, dynamic> _$CatalogPageToJson(CatalogPage instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.category?.toJson() case final value?) 'category': value,
+      if (instance.brandId case final value?) 'brandId': value,
+      if (instance.productLineId case final value?) 'productLineId': value,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.productName case final value?) 'productName': value,
+      if (instance.title case final value?) 'title': value,
+      if (instance.metaDescription case final value?) 'metaDescription': value,
+      if (instance.metaKeywords case final value?) 'metaKeywords': value,
+      if (instance.canonicalPath case final value?) 'canonicalPath': value,
+      if (instance.alternateLanguageUrls case final value?)
+        'alternateLanguageUrls': value,
+      if (instance.isReplacementProduct case final value?)
+        'isReplacementProduct': value,
+      if (instance.breadCrumbs?.map((e) => e.toJson()).toList()
+          case final value?)
+        'breadCrumbs': value,
+      if (instance.obsoletePath case final value?) 'obsoletePath': value,
+      if (instance.needRedirect case final value?) 'needRedirect': value,
+      if (instance.redirectUrl case final value?) 'redirectUrl': value,
+      if (instance.primaryImagePath case final value?)
+        'primaryImagePath': value,
+      if (instance.openGraphTitle case final value?) 'openGraphTitle': value,
+      if (instance.openGraphImage case final value?) 'openGraphImage': value,
+      if (instance.openGraphUrl case final value?) 'openGraphUrl': value,
+    };

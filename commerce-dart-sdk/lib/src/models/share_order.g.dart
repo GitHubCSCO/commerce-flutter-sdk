@@ -21,24 +21,16 @@ ShareOrder _$ShareOrderFromJson(Map<String, dynamic> json) => ShareOrder(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$ShareOrderToJson(ShareOrder instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('stEmail', instance.stEmail);
-  writeNotNull('stPostalCode', instance.stPostalCode);
-  writeNotNull('emailTo', instance.emailTo);
-  writeNotNull('emailFrom', instance.emailFrom);
-  writeNotNull('subject', instance.subject);
-  writeNotNull('message', instance.message);
-  writeNotNull('entityId', instance.entityId);
-  writeNotNull('entityName', instance.entityName);
-  return val;
-}
+Map<String, dynamic> _$ShareOrderToJson(ShareOrder instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.stEmail case final value?) 'stEmail': value,
+      if (instance.stPostalCode case final value?) 'stPostalCode': value,
+      if (instance.emailTo case final value?) 'emailTo': value,
+      if (instance.emailFrom case final value?) 'emailFrom': value,
+      if (instance.subject case final value?) 'subject': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.entityId case final value?) 'entityId': value,
+      if (instance.entityName case final value?) 'entityName': value,
+    };
