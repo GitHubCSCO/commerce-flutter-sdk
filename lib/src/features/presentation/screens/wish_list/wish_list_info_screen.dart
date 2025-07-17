@@ -7,6 +7,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -60,6 +61,16 @@ class WishListInformationScreen extends BaseStatelessWidget {
     return AnalyticsEvent(
       AnalyticsConstants.eventViewListInformation,
       AnalyticsConstants.screenNameListDetail,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyListId,
+      strValue: wishList.id,
+    );
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    return TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameListDetail,
     ).withProperty(
       name: AnalyticsConstants.eventPropertyListId,
       strValue: wishList.id,

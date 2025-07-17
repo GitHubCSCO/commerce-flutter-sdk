@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
@@ -34,4 +35,8 @@ class BarcodeSearchScreen extends BaseStatelessWidget {
     }
     Navigator.of(context).pop((resultText, format));
   }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() =>
+      TelemetryEvent(screenName: AnalyticsConstants.screenNameSearch);
 }
