@@ -103,7 +103,9 @@ class ProductDetailsScreen extends BaseStatelessWidget {
       screenName: AnalyticsConstants.screenNameProductDetail,
     ).withProperty(
         name: AnalyticsConstants.eventPropertyErpNumber,
-        strValue: product?.getProductNumber());
+        strValue: (product?.getProductNumber().isEmpty ?? true)
+            ? productId
+            : product?.getProductNumber());
   }
 }
 
