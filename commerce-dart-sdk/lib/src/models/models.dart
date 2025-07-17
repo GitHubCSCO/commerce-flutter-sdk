@@ -96,6 +96,7 @@ export 'job_quote_dto.dart';
 export 'autocomplete.dart';
 export 'wish_list_tag.dart';
 export 'wish_list_tag_collection.dart';
+export 'device_token_registration.dart';
 
 export './results/results.dart';
 export './parameters/parameters.dart';
