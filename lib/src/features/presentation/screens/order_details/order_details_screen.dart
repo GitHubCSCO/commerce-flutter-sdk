@@ -260,49 +260,49 @@ class OrderDetailsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (state.isReorderViewVisible)
-                  OrderBottomSectionWidget(
-                    actions: [
-                      SizedBox(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: TertiaryBlackButton(
-                                isEnabled: state.order.status == 'Processing'
-                                    ? true
-                                    : false,
-                                text: LocalizationConstants.cancelOrder
-                                    .localized(),
-                                onPressed: () {
-                                  showCancelOrderAlert(context,
-                                      onDismissAlert: () {
-                                    unawaited(context
-                                        .read<OrderDetailsCubit>()
-                                        .cancelOrder(state.order));
-                                  });
-                                },
-                              ),
+                OrderBottomSectionWidget(
+                  actions: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TertiaryBlackButton(
+                              isEnabled: state.order.status == 'Processing'
+                                  ? true
+                                  : false,
+                              text:
+                                  LocalizationConstants.cancelOrder.localized(),
+                              onPressed: () {
+                                showCancelOrderAlert(context,
+                                    onDismissAlert: () {
+                                  unawaited(context
+                                      .read<OrderDetailsCubit>()
+                                      .cancelOrder(state.order));
+                                });
+                              },
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: SecondaryButton(
-                                isEnabled: false,
-                                text: LocalizationConstants.returnOrder
-                                    .localized(),
-                                onPressed: () {
-                                  // Add your return order logic here
-                                  CustomSnackBar.showSnackBarMessage(
-                                    context,
-                                    'Return Order functionality coming soon',
-                                  );
-                                },
-                              ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: SecondaryButton(
+                              isEnabled: false,
+                              text:
+                                  LocalizationConstants.returnOrder.localized(),
+                              onPressed: () {
+                                // Add your return order logic here
+                                CustomSnackBar.showSnackBarMessage(
+                                  context,
+                                  'Return Order functionality coming soon',
+                                );
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
+                    ),
+                    if (state.isReorderViewVisible)
                       PrimaryButton(
                         text: LocalizationConstants.reorder.localized(),
                         onPressed: () {
@@ -351,8 +351,8 @@ class OrderDetailsPage extends StatelessWidget {
                           );
                         },
                       ),
-                    ],
-                  ),
+                  ],
+                ),
               ],
             );
           }
