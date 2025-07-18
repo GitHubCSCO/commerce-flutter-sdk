@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
@@ -8,14 +9,15 @@ import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/checkout_confirmation/checkout_confirmation_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/review_order/review_order_widget.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_widget.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CheckoutSuccessEntity {
@@ -75,6 +77,8 @@ class CheckoutSuccessScreen extends StatelessWidget {
           providers: [
             BlocProvider<ReviewOrderCubit>(
                 create: (context) => sl<ReviewOrderCubit>()),
+            BlocProvider<CheckoutConfirmationCubit>(
+                create: (context) => sl<CheckoutConfirmationCubit>()),
           ],
           child: CheckoutSuccessPage(
             checkoutSuccessEntity: checkoutSuccessEntity,
@@ -116,7 +120,48 @@ class CheckoutSuccessPage extends StatelessWidget {
               ),
             ),
           ),
-          ListInformationBottomSubmitWidget(actions: [
+          OrderBottomSectionWidget(actions: [
+            BlocConsumer<CheckoutConfirmationCubit, CheckoutConfirmationState>(
+              listener: (context, state) {
+                if (state is CheckoutConfirmationSuccess) {
+                  CustomSnackBar.showSnackBarMessage(
+                    context,
+                    LocalizationConstants
+                        .orderCancellationRequestSentSuccessfully
+                        .localized(),
+                  );
+                } else if (state is CheckoutConfirmationFailure) {
+                  CustomSnackBar.showSnackBarMessage(
+                    context,
+                    LocalizationConstants.somethingWentWrong.localized(),
+                  );
+                }
+              },
+              builder: (context, state) {
+                bool isEnabled;
+
+                switch (state) {
+                  case CheckoutConfirmationInitial():
+                  case CheckoutConfirmationFailure():
+                    isEnabled = true;
+                  case CheckoutConfirmationLoading():
+                  case CheckoutConfirmationSuccess():
+                    isEnabled = false;
+                  default:
+                    isEnabled = true;
+                }
+
+                return TertiaryBlackButton(
+                  isEnabled: isEnabled,
+                  text: LocalizationConstants.cancelOrder.localized(),
+                  onPressed: () {
+                    unawaited(context
+                        .read<CheckoutConfirmationCubit>()
+                        .cancelOrder(checkoutSuccessEntity.orderNumber));
+                  },
+                );
+              },
+            ),
             PrimaryButton(
               text: checkoutSuccessEntity.isVmiCheckout
                   ? LocalizationConstants.backToVmiHome.localized()
