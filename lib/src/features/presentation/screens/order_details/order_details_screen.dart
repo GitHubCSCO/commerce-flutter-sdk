@@ -146,6 +146,21 @@ class OrderDetailsPage extends StatelessWidget {
               state.errorMessage ?? '',
             );
           }
+
+          if (state.orderStatus == OrderStatus.cancelOrderSuccess) {
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.orderCancellationRequestSentSuccessfully
+                  .localized(),
+            );
+            context.read<RootBloc>().add(RootOrderHistoryInitialEvent());
+          }
+          if (state.orderStatus == OrderStatus.cancelOrderFailure) {
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.somethingWentWrong.localized(),
+            );
+          }
         },
         builder: (context, state) {
           if (state.orderStatus == OrderStatus.loading) {
@@ -260,18 +275,16 @@ class OrderDetailsPage extends StatelessWidget {
                                 text: LocalizationConstants.cancelOrder
                                     .localized(),
                                 onPressed: () {
-                                  // Add your cancel order logic here
-                                  CustomSnackBar.showSnackBarMessage(
-                                    context,
-                                    'Cancel Order functionality coming soon',
-                                  );
+                                  unawaited(context
+                                      .read<OrderDetailsCubit>()
+                                      .cancelOrder(state.order));
                                 },
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: SecondaryButton(
-                                isEnabled: true,
+                                isEnabled: false,
                                 text: LocalizationConstants.returnOrder
                                     .localized(),
                                 onPressed: () {

@@ -24,3 +24,5 @@ class RootAnalyticsEvent extends RootEvent {
   final AnalyticsEvent analyticsEvent;
   RootAnalyticsEvent(this.analyticsEvent);
 }
+
+class RootOrderHistoryInitialEvent extends RootEvent {}

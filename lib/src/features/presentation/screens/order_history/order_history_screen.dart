@@ -13,6 +13,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_enti
 import 'package:commerce_flutter_sdk/src/features/domain/enums/filter_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_history/order_history_cubit.dart';
@@ -108,74 +109,82 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
                       isFromVMI: isFromVMI ?? false,
                     );
               },
-              child: BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
-                builder: (context, state) {
-                  switch (state.orderStatus) {
-                    case OrderStatus.loading || OrderStatus.initial:
-                      return const Center(
-                        child: CircularProgressIndicator(),
+              child: BlocListener<RootBloc, RootState>(
+                listener: (context, state) {
+                  context.read<OrderHistoryCubit>().initialize(
+                        isFromVMI: isFromVMI ?? false,
                       );
-
-                    case OrderStatus.failure:
-                      return const CustomScrollView(
-                        slivers: <Widget>[
-                          SliverFillRemaining(
-                            child: Center(
-                              child: Text('Error loading orders'),
-                            ),
-                          ),
-                        ],
-                      );
-                    default:
-                      return Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            height: 50,
-                            padding: const EdgeInsetsDirectional.symmetric(
-                                horizontal: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '${state.orderEntities.pagination?.totalItemCount ?? ' '} Orders',
-                                  style: OptiTextStyles.header3,
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SortToolMenu(
-                                      selectedSortOrder: state.orderSortOrder,
-                                      availableSortOrders: context
-                                          .read<OrderHistoryCubit>()
-                                          .availableSortOrders,
-                                      onSortOrderChanged:
-                                          (SortOrderAttribute sortOrder) async {
-                                        await context
-                                            .read<OrderHistoryCubit>()
-                                            .changeSortOrder(
-                                              sortOrder as OrderSortOrder,
-                                            );
-                                      },
-                                      onSortOrderCancel: context
-                                          .read<OrderHistoryCubit>()
-                                          .cancelSort,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    const _OrderHistoryFilter(),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                          _OrderHistoryListWidget(
-                            orderEntities: state.orderEntities.orders ?? [],
-                            hidePricingEnable: state.hidePricingEnable,
-                          ),
-                        ],
-                      );
-                  }
                 },
+                child: BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+                  builder: (context, state) {
+                    switch (state.orderStatus) {
+                      case OrderStatus.loading || OrderStatus.initial:
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+
+                      case OrderStatus.failure:
+                        return const CustomScrollView(
+                          slivers: <Widget>[
+                            SliverFillRemaining(
+                              child: Center(
+                                child: Text('Error loading orders'),
+                              ),
+                            ),
+                          ],
+                        );
+                      default:
+                        return Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              height: 50,
+                              padding: const EdgeInsetsDirectional.symmetric(
+                                  horizontal: 16),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${state.orderEntities.pagination?.totalItemCount ?? ' '} Orders',
+                                    style: OptiTextStyles.header3,
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SortToolMenu(
+                                        selectedSortOrder: state.orderSortOrder,
+                                        availableSortOrders: context
+                                            .read<OrderHistoryCubit>()
+                                            .availableSortOrders,
+                                        onSortOrderChanged: (SortOrderAttribute
+                                            sortOrder) async {
+                                          await context
+                                              .read<OrderHistoryCubit>()
+                                              .changeSortOrder(
+                                                sortOrder as OrderSortOrder,
+                                              );
+                                        },
+                                        onSortOrderCancel: context
+                                            .read<OrderHistoryCubit>()
+                                            .cancelSort,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      const _OrderHistoryFilter(),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            _OrderHistoryListWidget(
+                              orderEntities: state.orderEntities.orders ?? [],
+                              hidePricingEnable: state.hidePricingEnable,
+                            ),
+                          ],
+                        );
+                    }
+                  },
+                ),
               ),
             ),
           ),

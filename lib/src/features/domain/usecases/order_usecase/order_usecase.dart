@@ -130,6 +130,21 @@ class OrderUsecase extends BaseUseCase {
     return hasReorder;
   }
 
+  Future<OrderEntity?> patchOrder(OrderEntity? order) async {
+    if (order == null) {
+      return null;
+    }
+    final result = await commerceAPIServiceProvider
+        .getOrderService()
+        .patchOrder(OrderEntityMapper.toModel(order));
+    switch (result) {
+      case Success(value: final value):
+        return value != null ? OrderEntityMapper.toEntity(value) : null;
+      case Failure():
+        return null;
+    }
+  }
+
   /// Refresh the Cart after calling this method
   Future<OrderStatus> reorderAllProducts({
     required List<OrderLineEntity> orderLines,

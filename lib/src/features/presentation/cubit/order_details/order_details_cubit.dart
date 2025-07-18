@@ -154,6 +154,26 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     }
   }
 
+  Future<void> cancelOrder(OrderEntity orderEntity) async {
+    emit(state.copyWith(orderStatus: OrderStatus.loading));
+    orderEntity = orderEntity.copyWith(status: 'CancellationRequested');
+
+    final result = await _orderUsecase.patchOrder(
+      orderEntity,
+    );
+
+    if (result != null) {
+      emit(state.copyWith(orderStatus: OrderStatus.cancelOrderSuccess));
+
+      final orderNumber = (orderEntity.webOrderNumber.isNullOrEmpty)
+          ? (orderEntity.erpOrderNumber ?? '')
+          : orderEntity.webOrderNumber!;
+      await loadOrderDetails(orderNumber);
+    } else {
+      emit(state.copyWith(orderStatus: OrderStatus.cancelOrderFailure));
+    }
+  }
+
   // Order Information
   String? get orderNumber => state.order.orderNumber;
 

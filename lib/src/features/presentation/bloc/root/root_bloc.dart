@@ -32,5 +32,8 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     on<RootAnalyticsEvent>((event, emit) {
       _rootUsecase.trackEvent(event.analyticsEvent);
     });
+    on<RootOrderHistoryInitialEvent>((event, emit) {
+      emit(RootOrderHistoryInitial());
+    });
   }
 }
