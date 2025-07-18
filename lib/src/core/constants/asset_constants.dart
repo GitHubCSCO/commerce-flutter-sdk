@@ -68,6 +68,8 @@ class AssetConstants {
       AssetPathResolver.resolve("assets/images/icon_arrow_down.svg");
   static final String iconError =
       AssetPathResolver.resolve("assets/images/error_icon.svg");
+  static final String iconAlert =
+      AssetPathResolver.resolve("assets/images/icon_alert.svg");
 
   static final String iconEye =
       AssetPathResolver.resolve("assets/images/icon_eye.svg");

@@ -12,6 +12,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/components/custom_dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/bottom_menu_cubit.dart';
@@ -275,9 +276,12 @@ class OrderDetailsPage extends StatelessWidget {
                                 text: LocalizationConstants.cancelOrder
                                     .localized(),
                                 onPressed: () {
-                                  unawaited(context
-                                      .read<OrderDetailsCubit>()
-                                      .cancelOrder(state.order));
+                                  showCancelOrderAlert(context,
+                                      onDismissAlert: () {
+                                    unawaited(context
+                                        .read<OrderDetailsCubit>()
+                                        .cancelOrder(state.order));
+                                  });
                                 },
                               ),
                             ),

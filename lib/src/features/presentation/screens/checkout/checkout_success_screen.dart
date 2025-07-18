@@ -9,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/components/custom_dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/checkout_confirmation/checkout_confirmation_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
@@ -155,9 +156,11 @@ class CheckoutSuccessPage extends StatelessWidget {
                   isEnabled: isEnabled,
                   text: LocalizationConstants.cancelOrder.localized(),
                   onPressed: () {
-                    unawaited(context
-                        .read<CheckoutConfirmationCubit>()
-                        .cancelOrder(checkoutSuccessEntity.orderNumber));
+                    showCancelOrderAlert(context, onDismissAlert: () {
+                      unawaited(context
+                          .read<CheckoutConfirmationCubit>()
+                          .cancelOrder(checkoutSuccessEntity.orderNumber));
+                    });
                   },
                 );
               },
