@@ -7,6 +7,7 @@ import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/quote_page_type.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_event.dart';
@@ -37,6 +38,15 @@ class QuoteScreen extends BaseStatelessWidget {
   AnalyticsEvent getAnalyticsEvent() {
     var viewScreenEvent = AnalyticsEvent(AnalyticsConstants.eventViewScreen,
         AnalyticsConstants.screenNameQuotes);
+
+    return viewScreenEvent;
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    var viewScreenEvent = TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameQuotes,
+    );
 
     return viewScreenEvent;
   }

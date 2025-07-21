@@ -16,20 +16,13 @@ Autocomplete _$AutocompleteFromJson(Map<String, dynamic> json) => Autocomplete(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$AutocompleteToJson(Autocomplete instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('products', instance.products?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$AutocompleteToJson(Autocomplete instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.products?.map((e) => e.toJson()).toList() case final value?)
+        'products': value,
+    };
 
 AutocompleteProduct _$AutocompleteProductFromJson(Map<String, dynamic> json) =>
     AutocompleteProduct(
@@ -51,31 +44,27 @@ AutocompleteProduct _$AutocompleteProductFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$AutocompleteProductToJson(AutocompleteProduct instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('title', instance.title);
-  writeNotNull('subtitle', instance.subtitle);
-  writeNotNull('image', instance.image);
-  writeNotNull('name', instance.name);
-  writeNotNull('erpNumber', instance.erpNumber);
-  writeNotNull('url', instance.url);
-  writeNotNull('manufacturerItemNumber', instance.manufacturerItemNumber);
-  writeNotNull('isNameCustomerOverride', instance.isNameCustomerOverride);
-  writeNotNull('brandName', instance.brandName);
-  writeNotNull('brandDetailPagePath', instance.brandDetailPagePath);
-  writeNotNull('binNumber', instance.binNumber);
-  return val;
-}
+Map<String, dynamic> _$AutocompleteProductToJson(
+        AutocompleteProduct instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.title case final value?) 'title': value,
+      if (instance.subtitle case final value?) 'subtitle': value,
+      if (instance.image case final value?) 'image': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.erpNumber case final value?) 'erpNumber': value,
+      if (instance.url case final value?) 'url': value,
+      if (instance.manufacturerItemNumber case final value?)
+        'manufacturerItemNumber': value,
+      if (instance.isNameCustomerOverride case final value?)
+        'isNameCustomerOverride': value,
+      if (instance.brandName case final value?) 'brandName': value,
+      if (instance.brandDetailPagePath case final value?)
+        'brandDetailPagePath': value,
+      if (instance.binNumber case final value?) 'binNumber': value,
+    };
 
 AutocompleteBrand _$AutocompleteBrandFromJson(Map<String, dynamic> json) =>
     AutocompleteBrand(
@@ -92,26 +81,18 @@ AutocompleteBrand _$AutocompleteBrandFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$AutocompleteBrandToJson(AutocompleteBrand instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('title', instance.title);
-  writeNotNull('subtitle', instance.subtitle);
-  writeNotNull('url', instance.url);
-  writeNotNull('image', instance.image);
-  writeNotNull('productLineId', instance.productLineId);
-  writeNotNull('productLineName', instance.productLineName);
-  return val;
-}
+Map<String, dynamic> _$AutocompleteBrandToJson(AutocompleteBrand instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.title case final value?) 'title': value,
+      if (instance.subtitle case final value?) 'subtitle': value,
+      if (instance.url case final value?) 'url': value,
+      if (instance.image case final value?) 'image': value,
+      if (instance.productLineId case final value?) 'productLineId': value,
+      if (instance.productLineName case final value?) 'productLineName': value,
+    };
 
 AutocompleteCategory _$AutocompleteCategoryFromJson(
         Map<String, dynamic> json) =>
@@ -128,21 +109,13 @@ AutocompleteCategory _$AutocompleteCategoryFromJson(
       );
 
 Map<String, dynamic> _$AutocompleteCategoryToJson(
-    AutocompleteCategory instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('title', instance.title);
-  writeNotNull('subtitle', instance.subtitle);
-  writeNotNull('url', instance.url);
-  writeNotNull('image', instance.image);
-  return val;
-}
+        AutocompleteCategory instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.title case final value?) 'title': value,
+      if (instance.subtitle case final value?) 'subtitle': value,
+      if (instance.url case final value?) 'url': value,
+      if (instance.image case final value?) 'image': value,
+    };

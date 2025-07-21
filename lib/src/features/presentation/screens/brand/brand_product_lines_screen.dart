@@ -5,6 +5,7 @@ import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart
 import 'package:commerce_flutter_sdk/src/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/brand/brand_product_line/brand_product_line_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/category/category_grid_widget.dart';
@@ -33,6 +34,16 @@ class BrandProductLinesScreen extends BaseStatelessWidget {
   AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
         AnalyticsConstants.eventViewScreen,
         AnalyticsConstants.screenNameBrandProductLine,
+      )
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyBrandId, strValue: brand.id)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyBrandName,
+              strValue: brand.name);
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() => TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameBrandProductLine,
       )
           .withProperty(
               name: AnalyticsConstants.eventPropertyBrandId, strValue: brand.id)

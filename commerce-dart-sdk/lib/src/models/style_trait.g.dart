@@ -25,27 +25,23 @@ StyleTrait _$StyleTraitFromJson(Map<String, dynamic> json) => StyleTrait(
       displayTextWithSwatch: json['displayTextWithSwatch'] as bool?,
     );
 
-Map<String, dynamic> _$StyleTraitToJson(StyleTrait instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('styleTraitId', instance.styleTraitId);
-  writeNotNull('name', instance.name);
-  writeNotNull('nameDisplay', instance.nameDisplay);
-  writeNotNull('unselectedValue', instance.unselectedValue);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull(
-      'styleValues', instance.styleValues?.map((e) => e.toJson()).toList());
-  writeNotNull('displayType', instance.displayType);
-  writeNotNull('numberOfSwatchesVisible', instance.numberOfSwatchesVisible);
-  writeNotNull('displayTextWithSwatch', instance.displayTextWithSwatch);
-  writeNotNull('id', instance.id);
-  writeNotNull(
-      'traitValues', instance.traitValues?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$StyleTraitToJson(StyleTrait instance) =>
+    <String, dynamic>{
+      if (instance.styleTraitId case final value?) 'styleTraitId': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.nameDisplay case final value?) 'nameDisplay': value,
+      if (instance.unselectedValue case final value?) 'unselectedValue': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.styleValues?.map((e) => e.toJson()).toList()
+          case final value?)
+        'styleValues': value,
+      if (instance.displayType case final value?) 'displayType': value,
+      if (instance.numberOfSwatchesVisible case final value?)
+        'numberOfSwatchesVisible': value,
+      if (instance.displayTextWithSwatch case final value?)
+        'displayTextWithSwatch': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.traitValues?.map((e) => e.toJson()).toList()
+          case final value?)
+        'traitValues': value,
+    };

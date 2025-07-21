@@ -67,32 +67,25 @@ CustomerValidationDto _$CustomerValidationDtoFromJson(
     );
 
 Map<String, dynamic> _$CustomerValidationDtoToJson(
-    CustomerValidationDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('firstName', instance.firstName?.toJson());
-  writeNotNull('lastName', instance.lastName?.toJson());
-  writeNotNull('companyName', instance.companyName?.toJson());
-  writeNotNull('attention', instance.attention?.toJson());
-  writeNotNull('address1', instance.address1?.toJson());
-  writeNotNull('address2', instance.address2?.toJson());
-  writeNotNull('address3', instance.address3?.toJson());
-  writeNotNull('address4', instance.address4?.toJson());
-  writeNotNull('country', instance.country?.toJson());
-  writeNotNull('state', instance.state?.toJson());
-  writeNotNull('city', instance.city?.toJson());
-  writeNotNull('postalCode', instance.postalCode?.toJson());
-  writeNotNull('phone', instance.phone?.toJson());
-  writeNotNull('email', instance.email?.toJson());
-  writeNotNull('fax', instance.fax?.toJson());
-  return val;
-}
+        CustomerValidationDto instance) =>
+    <String, dynamic>{
+      if (instance.firstName?.toJson() case final value?) 'firstName': value,
+      if (instance.lastName?.toJson() case final value?) 'lastName': value,
+      if (instance.companyName?.toJson() case final value?)
+        'companyName': value,
+      if (instance.attention?.toJson() case final value?) 'attention': value,
+      if (instance.address1?.toJson() case final value?) 'address1': value,
+      if (instance.address2?.toJson() case final value?) 'address2': value,
+      if (instance.address3?.toJson() case final value?) 'address3': value,
+      if (instance.address4?.toJson() case final value?) 'address4': value,
+      if (instance.country?.toJson() case final value?) 'country': value,
+      if (instance.state?.toJson() case final value?) 'state': value,
+      if (instance.city?.toJson() case final value?) 'city': value,
+      if (instance.postalCode?.toJson() case final value?) 'postalCode': value,
+      if (instance.phone?.toJson() case final value?) 'phone': value,
+      if (instance.email?.toJson() case final value?) 'email': value,
+      if (instance.fax?.toJson() case final value?) 'fax': value,
+    };
 
 FieldValidationDto _$FieldValidationDtoFromJson(Map<String, dynamic> json) =>
     FieldValidationDto(
@@ -101,17 +94,9 @@ FieldValidationDto _$FieldValidationDtoFromJson(Map<String, dynamic> json) =>
       maxLength: (json['maxLength'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$FieldValidationDtoToJson(FieldValidationDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('isRequired', instance.isRequired);
-  writeNotNull('isDisabled', instance.isDisabled);
-  writeNotNull('maxLength', instance.maxLength);
-  return val;
-}
+Map<String, dynamic> _$FieldValidationDtoToJson(FieldValidationDto instance) =>
+    <String, dynamic>{
+      if (instance.isRequired case final value?) 'isRequired': value,
+      if (instance.isDisabled case final value?) 'isDisabled': value,
+      if (instance.maxLength case final value?) 'maxLength': value,
+    };

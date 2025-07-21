@@ -6,6 +6,7 @@ import 'package:commerce_flutter_sdk/src/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_sdk/src/core/models/screen_parameters.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/brand_category/brand_category_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
@@ -60,6 +61,26 @@ class BrandCategoryScreen extends BaseStatelessWidget {
           strValue: brandCategory!.categoryName);
     }
     return viewScreenEvent;
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    var screenEvent = TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameBrandCategory,
+    );
+    screenEvent.withProperty(
+        name: AnalyticsConstants.eventPropertyBrandId, strValue: brand.id);
+    screenEvent.withProperty(
+        name: AnalyticsConstants.eventPropertyBrandName, strValue: brand.name);
+    if (brandCategory != null) {
+      screenEvent.withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceId,
+          strValue: brandCategory!.categoryId);
+      screenEvent.withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceName,
+          strValue: brandCategory!.categoryName);
+    }
+    return screenEvent;
   }
 }
 

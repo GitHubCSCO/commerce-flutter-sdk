@@ -12,19 +12,11 @@ CatalogTypeDto _$CatalogTypeDtoFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String?,
     );
 
-Map<String, dynamic> _$CatalogTypeDtoToJson(CatalogTypeDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('title', instance.title);
-  return val;
-}
+Map<String, dynamic> _$CatalogTypeDtoToJson(CatalogTypeDto instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.title case final value?) 'title': value,
+    };
 
 GetCatalogTypeResult _$GetCatalogTypeResultFromJson(
         Map<String, dynamic> json) =>
@@ -42,35 +34,20 @@ GetCatalogTypeResult _$GetCatalogTypeResultFromJson(
       );
 
 Map<String, dynamic> _$GetCatalogTypeResultToJson(
-    GetCatalogTypeResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('pagination', instance.pagination?.toJson());
-  writeNotNull('items', instance.items?.map((e) => e.toJson()).toList());
-  return val;
-}
+        GetCatalogTypeResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+      if (instance.items?.map((e) => e.toJson()).toList() case final value?)
+        'items': value,
+    };
 
 Map<String, dynamic> _$CatalogTypeQueryParametersToJson(
-    CatalogTypeQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('keyword', instance.keyword);
-  return val;
-}
+        CatalogTypeQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.keyword case final value?) 'keyword': value,
+    };

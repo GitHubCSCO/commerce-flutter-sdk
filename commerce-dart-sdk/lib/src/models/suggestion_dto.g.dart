@@ -13,17 +13,10 @@ SuggestionDto _$SuggestionDtoFromJson(Map<String, dynamic> json) =>
       suggestion: json['suggestion'] as String?,
     );
 
-Map<String, dynamic> _$SuggestionDtoToJson(SuggestionDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('highlightedSuggestion', instance.highlightedSuggestion);
-  writeNotNull('score', instance.score);
-  writeNotNull('suggestion', instance.suggestion);
-  return val;
-}
+Map<String, dynamic> _$SuggestionDtoToJson(SuggestionDto instance) =>
+    <String, dynamic>{
+      if (instance.highlightedSuggestion case final value?)
+        'highlightedSuggestion': value,
+      if (instance.score case final value?) 'score': value,
+      if (instance.suggestion case final value?) 'suggestion': value,
+    };

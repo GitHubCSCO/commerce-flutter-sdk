@@ -25,21 +25,16 @@ ProductInventory _$ProductInventoryFromJson(Map<String, dynamic> json) =>
       ),
     );
 
-Map<String, dynamic> _$ProductInventoryToJson(ProductInventory instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('productId', instance.productId);
-  writeNotNull('qtyOnHand', instance.qtyOnHand);
-  writeNotNull('inventoryAvailabilityDtos',
-      instance.inventoryAvailabilityDtos?.map((e) => e.toJson()).toList());
-  writeNotNull('inventoryWarehousesDtos',
-      instance.inventoryWarehousesDtos?.map((e) => e.toJson()).toList());
-  writeNotNull('additionalResults', instance.additionalResults);
-  return val;
-}
+Map<String, dynamic> _$ProductInventoryToJson(ProductInventory instance) =>
+    <String, dynamic>{
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.qtyOnHand case final value?) 'qtyOnHand': value,
+      if (instance.inventoryAvailabilityDtos?.map((e) => e.toJson()).toList()
+          case final value?)
+        'inventoryAvailabilityDtos': value,
+      if (instance.inventoryWarehousesDtos?.map((e) => e.toJson()).toList()
+          case final value?)
+        'inventoryWarehousesDtos': value,
+      if (instance.additionalResults case final value?)
+        'additionalResults': value,
+    };

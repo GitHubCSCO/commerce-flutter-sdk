@@ -10,6 +10,7 @@ import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/filter_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/base/base_dynamic_content_screen.dart';
@@ -47,6 +48,11 @@ class OrderHistoryScreen extends BaseStatelessWidget {
       AnalyticsConstants.screenNameOrders,
     );
   }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() => TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameOrders,
+      );
 }
 
 class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
