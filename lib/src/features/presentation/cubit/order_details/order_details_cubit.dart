@@ -156,7 +156,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
   Future<void> cancelOrder(OrderEntity orderEntity) async {
     emit(state.copyWith(orderStatus: OrderStatus.loading));
-    orderEntity = orderEntity.copyWith(status: 'CancellationRequested');
+    orderEntity =
+        orderEntity.copyWith(status: CoreConstants.cancellationRequested);
 
     final result = await _orderUsecase.patchOrder(
       orderEntity,

@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/order_usecase/order_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +16,7 @@ class CheckoutConfirmationCubit extends Cubit<CheckoutConfirmationState> {
     var order = await _orderUseCase.loadOrder(orderNumber);
 
     if (order != null) {
-      order = order.copyWith(status: 'CancellationRequested');
+      order = order.copyWith(status: CoreConstants.cancellationRequested);
       final result = await _orderUseCase.patchOrder(order);
       if (result != null) {
         emit(CheckoutConfirmationSuccess());
