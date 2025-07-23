@@ -200,7 +200,6 @@ class CheckoutSuccessPage extends StatelessWidget {
 
   Widget _buildOrderSuccessInfoWidget(BuildContext context,
       {bool isOrderApproval = false}) {
-    var width = (MediaQuery.of(context).size.width - 80).toInt();
     return Container(
       color: Colors.white,
       width: double.infinity,
@@ -212,8 +211,7 @@ class CheckoutSuccessPage extends StatelessWidget {
             Container(
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: OptiAppColors
-                    .successBackgroundColor, // This becomes the ink's surface
+                color: OptiAppColors.successBackgroundColor,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -244,16 +242,14 @@ class CheckoutSuccessPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 8.0),
                 Material(
-                  color: Colors.transparent, // Needed for Ink to render ripple
+                  color: Colors.transparent,
                   child: Ink(
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: OptiAppColors
-                          .backgroundInput, // This becomes the ink's surface
+                      color: OptiAppColors.backgroundInput,
                     ),
                     child: InkWell(
-                      borderRadius:
-                          BorderRadius.circular(100), // Needed for ripple shape
+                      borderRadius: BorderRadius.circular(100),
                       onTap: () {
                         unawaited(Clipboard.setData(
                           ClipboardData(
