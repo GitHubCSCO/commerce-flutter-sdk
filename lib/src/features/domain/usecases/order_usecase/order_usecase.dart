@@ -145,6 +145,21 @@ class OrderUsecase extends BaseUseCase {
     }
   }
 
+  Future<Rma?> postOrderReturns(String orderId, Rma? rma) async {
+    if (rma == null) {
+      return null;
+    }
+    final result = await commerceAPIServiceProvider
+        .getOrderService()
+        .postOrderReturns(orderId, rma);
+    switch (result) {
+      case Success(value: final value):
+        return value;
+      case Failure():
+        return null;
+    }
+  }
+
   /// Refresh the Cart after calling this method
   Future<OrderStatus> reorderAllProducts({
     required List<OrderLineEntity> orderLines,

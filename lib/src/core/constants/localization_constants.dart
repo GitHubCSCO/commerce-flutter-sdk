@@ -41,6 +41,8 @@ enum LocalizationConstants {
       keyword: "Are you sure you want to cancel the entire order?"),
   orderCancellationRequestSentSuccessfully(
       keyword: "Order cancellation request sent successfully"),
+  returnRequestSubmissionIsSuccessful(
+      keyword: "Return request submission is successful"),
   errorLoadingAccount(keyword: "Error Loading Account"),
   mySavedPayments(keyword: "My Saved Payments"),
   edit(keyword: "Edit"),

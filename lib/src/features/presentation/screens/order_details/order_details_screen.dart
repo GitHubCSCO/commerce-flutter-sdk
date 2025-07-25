@@ -311,11 +311,22 @@ class OrderDetailsPage extends StatelessWidget {
                               isEnabled: true,
                               text:
                                   LocalizationConstants.returnOrder.localized(),
-                              onPressed: () {
-                                AppRoute.orderReturn.navigateBackStack(
-                                  context,
+                              onPressed: () async {
+                                final isOrderReturn =
+                                    await context.pushNamed<bool>(
+                                  AppRoute.orderReturn.name,
                                   extra: state.order,
                                 );
+
+                                if (context.mounted && isOrderReturn == true) {
+                                  var cubit = context.read<OrderDetailsCubit>();
+                                  await cubit.loadOrderDetails(
+                                      cubit.orderNumber ?? '',
+                                      isFromVMI: false);
+                                  context
+                                      .read<RootBloc>()
+                                      .add(RootOrderHistoryInitialEvent());
+                                }
                               },
                             ),
                           ),

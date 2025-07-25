@@ -285,7 +285,7 @@ Future<void> initInjectionContainer() async {
         OrderDetailsCubit(orderUsercase: sl(), pricingInventoryUseCase: sl()))
 
     //order return
-    ..registerFactory(() => OrderReturnCubit())
+    ..registerFactory(() => OrderReturnCubit(orderUserCase: sl()))
 
     //saved order
     ..registerFactory(() =>

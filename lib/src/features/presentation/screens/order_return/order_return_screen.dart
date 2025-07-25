@@ -6,6 +6,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_enti
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/number_text_field.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_return/order_return_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/dropdown_picker.dart';
@@ -53,8 +54,22 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
       ),
       body: BlocConsumer<OrderReturnCubit, OrderReturnState>(
         listener: (context, state) {
-          // TODO: implement listener
+          if (state is OrderReturnSuccess) {
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.returnRequestSubmissionIsSuccessful
+                  .localized(),
+            );
+            Navigator.pop(context);
+          } else if (state is OrderReturnFailure) {
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.somethingWentWrong.localized(),
+            );
+          }
         },
+        buildWhen: (previous, current) =>
+            current is OrderReturnInitial || current is OrderReturnLoaded,
         builder: (context, state) {
           switch (state) {
             case OrderReturnInitial():
@@ -258,7 +273,9 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
               Expanded(
                 child: SecondaryButton(
                   text: LocalizationConstants.cancel.localized(),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
               ),
               const SizedBox(width: 8),

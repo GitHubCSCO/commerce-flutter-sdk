@@ -1,15 +1,19 @@
-import 'package:bloc/bloc.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
-import 'package:meta/meta.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/order_usecase/order_usecase.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'order_return_state.dart';
 
 class OrderReturnCubit extends Cubit<OrderReturnState> {
+  final OrderUsecase _orderUseCase;
   OrderEntity? order;
 
-  OrderReturnCubit() : super(OrderReturnInitial());
+  OrderReturnCubit({required OrderUsecase orderUserCase})
+      : _orderUseCase = orderUserCase,
+        super(OrderReturnInitial());
 
   void initiateReturn(OrderEntity order) {
     this.order = order;
@@ -18,6 +22,31 @@ class OrderReturnCubit extends Cubit<OrderReturnState> {
 
   void setReturnReasonTitle(String reason) {
     returnReason = reason;
+  }
+
+  Future<void> returnOrder(String returnNotes, int returnQuantity) async {
+    emit(OrderReturnInitial());
+    var orderNumber = order?.orderNumber ?? '';
+    var line = order?.orderLines?.length ?? 0;
+    var reason = returnReason ?? '';
+
+    var rmaLines = <RmaLine>[
+      RmaLine(
+          line: line, rmaQtyRequested: returnQuantity, rmaReasonCode: reason)
+    ];
+
+    var rmaOrder =
+        Rma(orderNumber: orderNumber, notes: returnNotes, rmaLines: rmaLines);
+
+    final result = await _orderUseCase.postOrderReturns(orderNumber, rmaOrder);
+
+    emit(OrderReturnLoaded());
+
+    if (result != null) {
+      emit(OrderReturnSuccess());
+    } else {
+      emit(OrderReturnFailure());
+    }
   }
 
   String? returnReason;
