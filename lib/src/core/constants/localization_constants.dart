@@ -35,6 +35,8 @@ enum LocalizationConstants {
   orderSaved(keyword: "Order Saved"),
   cancelOrder(keyword: "Cancel Order"),
   returnOrder(keyword: "Return Order"),
+  returnRequest(keyword: "Return Request"),
+  numberOfItems(keyword: "Number of Items"),
   areYouSureYouWantToCancelTheEntireOrder(
       keyword: "Are you sure you want to cancel the entire order?"),
   orderCancellationRequestSentSuccessfully(
@@ -216,6 +218,7 @@ enum LocalizationConstants {
   track(keyword: "Track"),
   orderDetails(keyword: "Order Details"),
   orderNotes(keyword: "Order Notes"),
+  returnNotes(keyword: "Return Notes"),
   shipDate(keyword: "Ship Date"),
   otherCharges(keyword: "Other Charges"),
   orderDeleted(keyword: "Order Deleted"),
@@ -377,6 +380,8 @@ enum LocalizationConstants {
   jobAccountOptional(keyword: "Job Account(Optional)"),
   shipWhenOrderIsComplete(keyword: "Ship When Order Is Complete"),
   orderNotesOptional(keyword: "Order Notes (Optional)"),
+  returnNotesOptional(keyword: "Return Notes (Optional)"),
+  selectAReturnReason(keyword: "Select a return reason"),
   cardEndingIn(keyword: "Card Ending in {0}"),
   cardExpires(keyword: "Expires {0}"),
   invalidPromotionCode(keyword: "Invalid Promotion Code"),

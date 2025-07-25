@@ -308,11 +308,14 @@ class OrderDetailsPage extends StatelessWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: SecondaryButton(
-                              isEnabled: false,
+                              isEnabled: true,
                               text:
                                   LocalizationConstants.returnOrder.localized(),
                               onPressed: () {
-                                // Add your return order logic here
+                                AppRoute.orderReturn.navigateBackStack(
+                                  context,
+                                  extra: state.order,
+                                );
                               },
                             ),
                           ),

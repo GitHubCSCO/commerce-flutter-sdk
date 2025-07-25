@@ -58,16 +58,20 @@ class PrimaryButton extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              leadingIcon ?? const SizedBox.shrink(),
-              const SizedBox(width: 10),
+              if (leadingIcon != null) ...{
+                leadingIcon ?? const SizedBox.shrink(),
+                const SizedBox(width: 10),
+              },
               Text(
                 text,
                 style: OptiTextStyles.subtitle.copyWith(
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
-              const SizedBox(width: 10),
-              trailingIcon ?? const SizedBox.shrink(),
+              if (trailingIcon != null) ...{
+                const SizedBox(width: 10),
+                trailingIcon ?? const SizedBox.shrink(),
+              }
             ],
           ),
         ),
