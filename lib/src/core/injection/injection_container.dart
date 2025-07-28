@@ -713,6 +713,9 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<ITelemetryTrackingService>(() =>
+        TelemetryTrackingService(
+            clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerLazySingleton<IVmiService>(() => VMIService(
           commerceAPIServiceProvider: sl(),
           coreServiceProvider: sl(),

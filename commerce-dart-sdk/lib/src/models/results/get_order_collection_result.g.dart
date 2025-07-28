@@ -23,19 +23,13 @@ GetOrderCollectionResult _$GetOrderCollectionResultFromJson(
       );
 
 Map<String, dynamic> _$GetOrderCollectionResultToJson(
-    GetOrderCollectionResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('pagination', instance.pagination?.toJson());
-  writeNotNull('orders', instance.orders?.map((e) => e.toJson()).toList());
-  writeNotNull('showErpOrderNumber', instance.showErpOrderNumber);
-  return val;
-}
+        GetOrderCollectionResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+      if (instance.orders?.map((e) => e.toJson()).toList() case final value?)
+        'orders': value,
+      if (instance.showErpOrderNumber case final value?)
+        'showErpOrderNumber': value,
+    };

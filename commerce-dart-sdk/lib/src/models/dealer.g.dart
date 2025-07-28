@@ -27,30 +27,21 @@ Dealer _$DealerFromJson(Map<String, dynamic> json) => Dealer(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$DealerToJson(Dealer instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('address1', instance.address1);
-  writeNotNull('address2', instance.address2);
-  writeNotNull('city', instance.city);
-  writeNotNull('state', instance.state);
-  writeNotNull('postalCode', instance.postalCode);
-  writeNotNull('countryId', instance.countryId);
-  writeNotNull('phone', instance.phone);
-  writeNotNull('latitude', instance.latitude);
-  writeNotNull('longitude', instance.longitude);
-  writeNotNull('webSiteUrl', instance.webSiteUrl);
-  writeNotNull('htmlContent', instance.htmlContent);
-  writeNotNull('distance', instance.distance);
-  return val;
-}
+Map<String, dynamic> _$DealerToJson(Dealer instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.address1 case final value?) 'address1': value,
+      if (instance.address2 case final value?) 'address2': value,
+      if (instance.city case final value?) 'city': value,
+      if (instance.state case final value?) 'state': value,
+      if (instance.postalCode case final value?) 'postalCode': value,
+      if (instance.countryId case final value?) 'countryId': value,
+      if (instance.phone case final value?) 'phone': value,
+      if (instance.latitude case final value?) 'latitude': value,
+      if (instance.longitude case final value?) 'longitude': value,
+      if (instance.webSiteUrl case final value?) 'webSiteUrl': value,
+      if (instance.htmlContent case final value?) 'htmlContent': value,
+      if (instance.distance case final value?) 'distance': value,
+    };

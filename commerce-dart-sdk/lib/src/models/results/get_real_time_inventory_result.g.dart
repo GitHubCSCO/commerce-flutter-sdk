@@ -20,18 +20,11 @@ GetRealTimeInventoryResult _$GetRealTimeInventoryResultFromJson(
       );
 
 Map<String, dynamic> _$GetRealTimeInventoryResultToJson(
-    GetRealTimeInventoryResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('realTimeInventoryResults',
-      instance.realTimeInventoryResults?.map((e) => e.toJson()).toList());
-  return val;
-}
+        GetRealTimeInventoryResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.realTimeInventoryResults?.map((e) => e.toJson()).toList()
+          case final value?)
+        'realTimeInventoryResults': value,
+    };

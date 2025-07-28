@@ -24,18 +24,12 @@ AddressFieldCollection _$AddressFieldCollectionFromJson(
       );
 
 Map<String, dynamic> _$AddressFieldCollectionToJson(
-    AddressFieldCollection instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('billToAddressFields', instance.billToAddressFields?.toJson());
-  writeNotNull('shipToAddressFields', instance.shipToAddressFields?.toJson());
-  return val;
-}
+        AddressFieldCollection instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.billToAddressFields?.toJson() case final value?)
+        'billToAddressFields': value,
+      if (instance.shipToAddressFields?.toJson() case final value?)
+        'shipToAddressFields': value,
+    };

@@ -22,20 +22,14 @@ QuoteResult _$QuoteResultFromJson(Map<String, dynamic> json) => QuoteResult(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$QuoteResultToJson(QuoteResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('quotes', instance.quotes?.map((e) => e.toJson()).toList());
-  writeNotNull('salespersonList',
-      instance.salespersonList?.map((e) => e.toJson()).toList());
-  writeNotNull('pagination', instance.pagination?.toJson());
-  return val;
-}
+Map<String, dynamic> _$QuoteResultToJson(QuoteResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.quotes?.map((e) => e.toJson()).toList() case final value?)
+        'quotes': value,
+      if (instance.salespersonList?.map((e) => e.toJson()).toList()
+          case final value?)
+        'salespersonList': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+    };

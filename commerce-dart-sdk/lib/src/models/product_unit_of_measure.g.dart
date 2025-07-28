@@ -27,24 +27,20 @@ ProductUnitOfMeasure _$ProductUnitOfMeasureFromJson(
       );
 
 Map<String, dynamic> _$ProductUnitOfMeasureToJson(
-    ProductUnitOfMeasure instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('productUnitOfMeasureId', instance.productUnitOfMeasureId);
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('unitOfMeasureDisplay', instance.unitOfMeasureDisplay);
-  writeNotNull('description', instance.description);
-  writeNotNull('qtyPerBaseUnitOfMeasure', instance.qtyPerBaseUnitOfMeasure);
-  writeNotNull('roundingRule', instance.roundingRule);
-  writeNotNull('isDefault', instance.isDefault);
-  writeNotNull('availability', instance.availability?.toJson());
-  return val;
-}
+        ProductUnitOfMeasure instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.productUnitOfMeasureId case final value?)
+        'productUnitOfMeasureId': value,
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.unitOfMeasureDisplay case final value?)
+        'unitOfMeasureDisplay': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.qtyPerBaseUnitOfMeasure case final value?)
+        'qtyPerBaseUnitOfMeasure': value,
+      if (instance.roundingRule case final value?) 'roundingRule': value,
+      if (instance.isDefault case final value?) 'isDefault': value,
+      if (instance.availability?.toJson() case final value?)
+        'availability': value,
+    };

@@ -16,20 +16,14 @@ OrderPromotion _$OrderPromotionFromJson(Map<String, dynamic> json) =>
       promotionResultType: json['promotionResultType'] as String?,
     );
 
-Map<String, dynamic> _$OrderPromotionToJson(OrderPromotion instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('amount', instance.amount);
-  writeNotNull('amountDisplay', instance.amountDisplay);
-  writeNotNull('name', instance.name);
-  writeNotNull('orderHistoryLineId', instance.orderHistoryLineId);
-  writeNotNull('promotionResultType', instance.promotionResultType);
-  return val;
-}
+Map<String, dynamic> _$OrderPromotionToJson(OrderPromotion instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.amount case final value?) 'amount': value,
+      if (instance.amountDisplay case final value?) 'amountDisplay': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.orderHistoryLineId case final value?)
+        'orderHistoryLineId': value,
+      if (instance.promotionResultType case final value?)
+        'promotionResultType': value,
+    };

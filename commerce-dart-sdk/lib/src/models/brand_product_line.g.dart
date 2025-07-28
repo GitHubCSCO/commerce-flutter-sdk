@@ -22,24 +22,19 @@ BrandProductLine _$BrandProductLineFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$BrandProductLineToJson(BrandProductLine instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('productListPagePath', instance.productListPagePath);
-  writeNotNull('featuredImagePath', instance.featuredImagePath);
-  writeNotNull('featuredImageAltText', instance.featuredImageAltText);
-  writeNotNull('isFeatured', instance.isFeatured);
-  writeNotNull('isSponsored', instance.isSponsored);
-  return val;
-}
+Map<String, dynamic> _$BrandProductLineToJson(BrandProductLine instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.productListPagePath case final value?)
+        'productListPagePath': value,
+      if (instance.featuredImagePath case final value?)
+        'featuredImagePath': value,
+      if (instance.featuredImageAltText case final value?)
+        'featuredImageAltText': value,
+      if (instance.isFeatured case final value?) 'isFeatured': value,
+      if (instance.isSponsored case final value?) 'isSponsored': value,
+    };

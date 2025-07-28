@@ -19,21 +19,13 @@ VmiCountModel _$VmiCountModelFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$VmiCountModelToJson(VmiCountModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  val['vmiBinId'] = instance.vmiBinId;
-  writeNotNull('productId', instance.productId);
-  writeNotNull('count', instance.count);
-  writeNotNull('createdBy', instance.createdBy);
-  return val;
-}
+Map<String, dynamic> _$VmiCountModelToJson(VmiCountModel instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      'vmiBinId': instance.vmiBinId,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.count case final value?) 'count': value,
+      if (instance.createdBy case final value?) 'createdBy': value,
+    };

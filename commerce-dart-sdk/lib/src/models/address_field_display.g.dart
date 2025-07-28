@@ -16,18 +16,11 @@ AddressFieldDisplay _$AddressFieldDisplayFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$AddressFieldDisplayToJson(AddressFieldDisplay instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('displayName', instance.displayName);
-  writeNotNull('isVisible', instance.isVisible);
-  return val;
-}
+Map<String, dynamic> _$AddressFieldDisplayToJson(
+        AddressFieldDisplay instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.displayName case final value?) 'displayName': value,
+      if (instance.isVisible case final value?) 'isVisible': value,
+    };
