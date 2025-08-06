@@ -7,6 +7,7 @@ class OrderDetailsState extends Equatable {
   final OrderSettingsEntity orderSettings;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final bool? cancelOrderEnable;
   final String? errorMessage;
 
   const OrderDetailsState({
@@ -16,6 +17,7 @@ class OrderDetailsState extends Equatable {
     required this.orderSettings,
     this.hidePricingEnable,
     this.hideInventoryEnable,
+    this.cancelOrderEnable,
     this.errorMessage,
   });
 
@@ -27,6 +29,7 @@ class OrderDetailsState extends Equatable {
         orderSettings,
         hidePricingEnable ?? false,
         hideInventoryEnable ?? false,
+        cancelOrderEnable ?? false,
         errorMessage ?? ''
       ];
 
@@ -37,6 +40,7 @@ class OrderDetailsState extends Equatable {
     OrderSettingsEntity? orderSettings,
     bool? hidePricingEnable,
     bool? hideInventoryEnable,
+    bool? cancelOrderEnable,
     String? errorMessage,
   }) {
     return OrderDetailsState(
@@ -46,6 +50,7 @@ class OrderDetailsState extends Equatable {
       orderSettings: orderSettings ?? this.orderSettings,
       hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
       hideInventoryEnable: hideInventoryEnable ?? this.hideInventoryEnable,
+      cancelOrderEnable: cancelOrderEnable ?? this.cancelOrderEnable,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }

@@ -289,10 +289,7 @@ class OrderDetailsPage extends StatelessWidget {
                         children: [
                           Expanded(
                             child: TertiaryBlackButton(
-                              isEnabled:
-                                  state.order.status == CoreConstants.processing
-                                      ? true
-                                      : false,
+                              isEnabled: state.cancelOrderEnable ?? false,
                               text:
                                   LocalizationConstants.cancelOrder.localized(),
                               onPressed: () {
