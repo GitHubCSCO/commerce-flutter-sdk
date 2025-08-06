@@ -45,7 +45,7 @@ class LoginUsecase extends BiometricUsecase {
                 final deviceToken = await coreServiceProvider
                     .getDeviceTokenService()
                     .getDeviceToken();
-
+                print('Device Token: $deviceToken');
                 unawaited(
                   commerceAPIServiceProvider
                       .getPushNotificationService()
@@ -200,6 +200,13 @@ class LoginUsecase extends BiometricUsecase {
     await commerceAPIServiceProvider
         .getCacheService()
         .invalidateAllObjectsExcept([CoreConstants.domainKey]);
+    final deviceToken =
+        await coreServiceProvider.getDeviceTokenService().getDeviceToken();
+    await commerceAPIServiceProvider
+        .getPushNotificationService()
+        .unRegisterDeviceToken(
+            DeviceTokenUnregistrationParameters(deviceToken: deviceToken));
+
     await commerceAPIServiceProvider.getAuthenticationService().logoutAsync();
   }
 }

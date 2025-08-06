@@ -8,6 +8,7 @@ import 'package:commerce_flutter_sdk/src/initializers/analytics_initializer.dart
 import 'package:commerce_flutter_sdk/src/initializers/commerce_sdk_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/essentials_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/hive_initializer.dart';
+import 'package:commerce_flutter_sdk/src/initializers/notifiaciton_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -49,6 +50,8 @@ class CommerceFlutterSDK {
 
     // 3️⃣ Analytics & crash reporting
     await AnalyticsInitializer().init();
+
+    await NotificationHandler.instance.initialize();
 
     // 4️⃣ Error & Bloc observer
     final logger = GetIt.I<OptiLoggerService>();

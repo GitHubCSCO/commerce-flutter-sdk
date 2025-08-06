@@ -178,4 +178,6 @@ class CommerceAPIConstants {
 
   static const String registerDeviceTokenUrl =
       '/api/v1/admin/device-tokens/register';
+  static const String unRegisterDeviceTokenUrl =
+      '/api/v1/admin/device-tokens/unregister';
 }

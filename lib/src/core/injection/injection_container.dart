@@ -672,6 +672,9 @@ Future<void> initInjectionContainer() async {
         enableErrorLog: false,
       ),
     )
+    ..registerLazySingleton<IPushNotificationService>(() =>
+        PushNotificationService(
+            cacheService: sl(), networkService: sl(), clientService: sl()))
     ..registerLazySingleton<ILoggerService>(() => sl<OptiLoggerService>())
     ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
     ..registerLazySingleton<IMessageService>(() => MessageService(
