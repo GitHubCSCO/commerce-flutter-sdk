@@ -117,9 +117,11 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
               },
               child: BlocListener<RootBloc, RootState>(
                 listener: (context, state) {
-                  context.read<OrderHistoryCubit>().initialize(
-                        isFromVMI: isFromVMI ?? false,
-                      );
+                  if (state is RootOrderHistoryInitial) {
+                    context.read<OrderHistoryCubit>().initialize(
+                          isFromVMI: isFromVMI ?? false,
+                        );
+                  }
                 },
                 child: BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
                   builder: (context, state) {
