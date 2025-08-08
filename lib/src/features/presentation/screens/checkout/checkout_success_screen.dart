@@ -79,7 +79,8 @@ class CheckoutSuccessScreen extends StatelessWidget {
             BlocProvider<ReviewOrderCubit>(
                 create: (context) => sl<ReviewOrderCubit>()),
             BlocProvider<CheckoutConfirmationCubit>(
-                create: (context) => sl<CheckoutConfirmationCubit>()),
+                create: (context) => sl<CheckoutConfirmationCubit>()
+                  ..loadOrderStatusMappings(checkoutSuccessEntity.cart.status)),
           ],
           child: CheckoutSuccessPage(
             checkoutSuccessEntity: checkoutSuccessEntity,
@@ -139,17 +140,20 @@ class CheckoutSuccessPage extends StatelessWidget {
                 }
               },
               builder: (context, state) {
-                bool isEnabled;
+                var isEnabled = false;
 
                 switch (state) {
                   case CheckoutConfirmationInitial():
-                  case CheckoutConfirmationFailure():
-                    isEnabled = true;
                   case CheckoutConfirmationLoading():
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case CheckoutConfirmationLoaded():
+                    isEnabled = state.isCancelEnabled;
                   case CheckoutConfirmationSuccess():
                     isEnabled = false;
-                  default:
-                    isEnabled = true;
+                  case CheckoutConfirmationFailure():
+                    isEnabled = state.isCancelEnabled;
                 }
 
                 return TertiaryBlackButton(
