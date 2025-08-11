@@ -2,9 +2,11 @@ import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/get_order_collection_result_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_line_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_status_mapping_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/settings/order_settings_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/order_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/order_status_mapping_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/pagination_entity_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/settings_entity_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/base_usecase.dart';
@@ -78,6 +80,21 @@ class OrderUsecase extends BaseUseCase {
         return filterValues;
       case Failure():
         return null;
+    }
+  }
+
+  Future<List<OrderStatusMappingEntity>> getOrderStatusMappings() async {
+    final result = await commerceAPIServiceProvider
+        .getOrderService()
+        .getOrderStatusMappings();
+    switch (result) {
+      case Success(value: final value):
+        return value
+                ?.map((e) => OrderStatusMappingMapper.toEntity(e))
+                .toList() ??
+            [];
+      case Failure():
+        return [];
     }
   }
 

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
@@ -289,10 +288,7 @@ class OrderDetailsPage extends StatelessWidget {
                         children: [
                           Expanded(
                             child: TertiaryBlackButton(
-                              isEnabled:
-                                  state.order.status == CoreConstants.processing
-                                      ? true
-                                      : false,
+                              isEnabled: state.cancelOrderEnable ?? false,
                               text:
                                   LocalizationConstants.cancelOrder.localized(),
                               onPressed: () {
