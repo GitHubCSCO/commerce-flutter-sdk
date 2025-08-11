@@ -250,18 +250,27 @@ class CheckoutSuccessPage extends StatelessWidget {
                     ),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(100),
-                      onTap: () {
-                        unawaited(Clipboard.setData(
-                          ClipboardData(
-                              text: checkoutSuccessEntity.orderNumber),
-                        ).then((_) {
-                          HapticFeedback.mediumImpact();
+                      onTap: () async {
+                        try {
+                          await Clipboard.setData(
+                            ClipboardData(
+                              text: checkoutSuccessEntity.orderNumber,
+                            ),
+                          );
+                          await HapticFeedback.mediumImpact();
                           CustomSnackBar.showSnackBarMessage(
                             context,
                             LocalizationConstants.orderNumberCopiedToClipboard
                                 .localized(),
                           );
-                        }));
+                        } catch (e) {
+                          CustomSnackBar.showSnackBarMessage(
+                            context,
+                            LocalizationConstants
+                                .failedToCopyOrderNumberToClipboard
+                                .localized(),
+                          );
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

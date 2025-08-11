@@ -603,6 +603,8 @@ enum LocalizationConstants {
   generateOrder(keyword: "Generate Order"),
   orderQuantityExceed(keyword: "Order quantity exceeds quantity remaining"),
   orderNumberCopiedToClipboard(keyword: "Order number copied to clipboard"),
+  failedToCopyOrderNumberToClipboard(
+      keyword: "Failed to copy order number to clipboard"),
   expirationDate(keyword: "Expiration Date"),
   creatingQuoteFor(keyword: "Creating Quote For"),
   selectAUser(keyword: "Select a User"),
