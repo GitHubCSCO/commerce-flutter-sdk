@@ -304,7 +304,7 @@ class OrderDetailsPage extends StatelessWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: SecondaryButton(
-                              isEnabled: true,
+                              isEnabled: state.returnOrderEnable ?? false,
                               text:
                                   LocalizationConstants.returnOrder.localized(),
                               onPressed: () async {

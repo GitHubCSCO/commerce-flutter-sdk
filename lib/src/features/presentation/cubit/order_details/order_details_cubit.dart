@@ -89,6 +89,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       final hideInventoryEnable =
           _pricingInventoryUseCase.getHideInventoryEnable();
       final cancelOrderEnable = cancelOrderEnabled(order, orderStatusMappings);
+      final returnOrderEnable = returnOrderEnabled(order, orderStatusMappings);
 
       if (order.orderPromotions != null || order.orderPromotions!.isNotEmpty) {
         final promotionAdjustedOrder = order.copyWith(
@@ -106,13 +107,15 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
         emit(
           state.copyWith(
-              order: promotionAdjustedOrder,
-              orderSettings: orderSettings,
-              orderStatus: OrderStatus.success,
-              isReorderViewVisible: isReorderVisible,
-              hidePricingEnable: hidePricingEnable,
-              hideInventoryEnable: hideInventoryEnable,
-              cancelOrderEnable: cancelOrderEnable),
+            order: promotionAdjustedOrder,
+            orderSettings: orderSettings,
+            orderStatus: OrderStatus.success,
+            isReorderViewVisible: isReorderVisible,
+            hidePricingEnable: hidePricingEnable,
+            hideInventoryEnable: hideInventoryEnable,
+            cancelOrderEnable: cancelOrderEnable,
+            returnOrderEnable: returnOrderEnable,
+          ),
         );
 
         return;
@@ -127,6 +130,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           hidePricingEnable: hidePricingEnable,
           hideInventoryEnable: hideInventoryEnable,
           cancelOrderEnable: cancelOrderEnable,
+          returnOrderEnable: returnOrderEnable,
         ),
       );
     }
@@ -193,6 +197,20 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     );
 
     return statusMapping.allowCancellation ?? false;
+  }
+
+  bool returnOrderEnabled(
+      OrderEntity? order, List<OrderStatusMappingEntity>? orderStatusMappings) {
+    if (order == null || orderStatusMappings == null) {
+      return false;
+    }
+
+    final statusMapping = orderStatusMappings.firstWhere(
+      (mapping) => mapping.erpOrderStatus == order.status,
+      orElse: () => const OrderStatusMappingEntity(),
+    );
+
+    return statusMapping.allowRma ?? false;
   }
 
   // Order Information
