@@ -838,7 +838,7 @@ class _CartPageState extends State<CartPage> {
             child: Column(
               children: [
                 CartLineWidgetList(
-                  oderNumber:
+                  orderNumber:
                       context.read<CartPageBloc>().cart?.orderNumber ?? '',
                   cartLineEntities: items
                       .take(CoreConstants.maximumItemDisplayInCart)
