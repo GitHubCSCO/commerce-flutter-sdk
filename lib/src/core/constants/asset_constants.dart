@@ -103,6 +103,12 @@ class AssetConstants {
   static final String iconTag =
       AssetPathResolver.resolve("assets/images/icon_tag.svg");
 
+  static final String iconMark =
+      AssetPathResolver.resolve("assets/images/checkout_icons/icon_mark.svg");
+
+  static final String iconCopy =
+      AssetPathResolver.resolve("assets/images/checkout_icons/icon_copy.svg");
+
   // ActionType-related icons
   static final String categoriesIcon =
       AssetPathResolver.resolve("assets/images/icon_categories.svg");
