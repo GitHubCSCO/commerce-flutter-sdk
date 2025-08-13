@@ -14,13 +14,16 @@ class CartLineWidgetList extends StatelessWidget {
   final bool? showClearCart;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final int? cartItemsCount;
   final List<CartLineEntity> cartLineEntities;
   final void Function(BuildContext) onCartChangeCallBack;
 
-  CartLineWidgetList({
+  const CartLineWidgetList({
+    super.key,
     required this.oderNumber,
     required this.cartLineEntities,
     required this.onCartChangeCallBack,
+    this.cartItemsCount,
     this.showClearCart,
     this.hidePricingEnable,
     this.hideInventoryEnable,
@@ -53,7 +56,7 @@ class CartLineWidgetList extends StatelessWidget {
               CartContentHeaderWidget(
                 orderNumber: oderNumber,
                 showClearCart: showClearCart,
-                cartCount: cartLineEntities.length,
+                cartCount: cartItemsCount ?? cartLineEntities.length,
               ),
               Column(
                 children: cartLineEntities

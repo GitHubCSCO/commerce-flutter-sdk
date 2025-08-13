@@ -843,6 +843,7 @@ class _CartPageState extends State<CartPage> {
                   cartLineEntities: items
                       .take(CoreConstants.maximumItemDisplayInCart)
                       .toList(),
+                  cartItemsCount: items.length,
                   onCartChangeCallBack: (context) {
                     context.read<CartCountCubit>().loadCurrentCartCount();
                     context.read<CartPageBloc>().add(CartPageLoadEvent());
