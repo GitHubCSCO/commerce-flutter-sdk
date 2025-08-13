@@ -179,11 +179,9 @@ void _showQuoteFilter(
                 onChanged: context.read<QuoteFilterCubit>().setQuoteNumber,
                 hintText: LocalizationConstants.quoteSign.localized(),
                 onListen: (context, state, textController) {
-                  if (state.quoteNumber != textController.text) {
-                    textController.text = state.quoteNumber ?? '';
-                    textController.selection = TextSelection.fromPosition(
-                      TextPosition(offset: textController.text.length),
-                    );
+                  if (state.quoteNumber != textController.text &&
+                      state.quoteNumber.isNullOrEmpty) {
+                    textController.value = const TextEditingValue(text: '');
                   }
                 },
               ),
@@ -349,7 +347,7 @@ class _FilterTextFieldWidgetState extends State<_FilterTextFieldWidget> {
   void initState() {
     super.initState();
     widget.existingValue != null
-        ? textController.text = widget.existingValue!
+        ? textController.value = TextEditingValue(text: widget.existingValue!)
         : null;
     textController.addListener(submit);
   }

@@ -180,7 +180,8 @@ class _FilterOrderTotalWidgetState extends State<_FilterOrderTotalWidget> {
   void initState() {
     super.initState();
     widget.orderNumber != null
-        ? orderNumberController.text = widget.orderNumber!
+        ? orderNumberController.value =
+            TextEditingValue(text: widget.orderNumber!)
         : null;
     orderNumberController.addListener(submit);
   }
@@ -202,11 +203,9 @@ class _FilterOrderTotalWidgetState extends State<_FilterOrderTotalWidget> {
   Widget build(BuildContext context) {
     return BlocListener<OrderApprovalFilterCubit, OrderApprovalFilterState>(
       listener: (context, state) {
-        if (state.orderNumber != orderNumberController.text) {
-          orderNumberController.text = state.orderNumber ?? '';
-          orderNumberController.selection = TextSelection.fromPosition(
-            TextPosition(offset: orderNumberController.text.length),
-          );
+        if (state.orderNumber != orderNumberController.text &&
+            state.orderNumber.isNullOrEmpty) {
+          orderNumberController.value = const TextEditingValue(text: '');
         }
       },
       child: Column(
@@ -321,7 +320,8 @@ class _FilterTotalAmountWidgetState extends State<_FilterTotalAmountWidget> {
   void initState() {
     super.initState();
     widget.orderTotal != null
-        ? orderTotalController.text = widget.orderTotal!
+        ? orderTotalController.value =
+            TextEditingValue(text: widget.orderTotal!)
         : null;
     orderTotalController.addListener(submit);
   }
@@ -343,11 +343,9 @@ class _FilterTotalAmountWidgetState extends State<_FilterTotalAmountWidget> {
   Widget build(BuildContext context) {
     return BlocListener<OrderApprovalFilterCubit, OrderApprovalFilterState>(
       listener: (context, state) {
-        if (state.orderTotal != orderTotalController.text) {
-          orderTotalController.text = state.orderTotal ?? '';
-          orderTotalController.selection = TextSelection.fromPosition(
-            TextPosition(offset: orderTotalController.text.length),
-          );
+        if (state.orderTotal != orderTotalController.text &&
+            state.orderTotal.isNullOrEmpty) {
+          orderTotalController.value = const TextEditingValue(text: '');
         }
       },
       child: Column(
