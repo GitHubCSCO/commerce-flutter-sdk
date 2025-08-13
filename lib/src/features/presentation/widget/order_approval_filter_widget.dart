@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
@@ -51,14 +53,16 @@ class OrderApprovalFilterWidget extends StatelessWidget {
             child: IconButton(
               padding: const EdgeInsets.all(10),
               onPressed: () {
-                context.read<OrderApprovalFilterCubit>().initialize(
-                      orderApprovalParameters: orderApprovalParameters,
-                    );
+                unawaited(
+                  context.read<OrderApprovalFilterCubit>().initialize(
+                        orderApprovalParameters: orderApprovalParameters,
+                      ),
+                );
 
                 _showOrderApprovalFilterWidget(
                   context,
                   onReset: () {
-                    context.read<OrderApprovalFilterCubit>().reset();
+                    unawaited(context.read<OrderApprovalFilterCubit>().reset());
                   },
                   onApply: () {
                     final currentState =
