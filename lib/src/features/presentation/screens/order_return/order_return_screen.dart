@@ -95,11 +95,31 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
               return Column(
                 children: [
                   Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildItems(context),
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: _buildOrderNotes(context),
+                        ),
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 20)
+                                .copyWith(bottom: 8),
+                            child: Text(
+                              LocalizationConstants.productsToReturn
+                                  .localized(),
+                              style: OptiTextStyles.titleLarge,
+                            ),
+                          ),
+                        ),
+                        _buildOrderReturnItems(
+                          context.read<OrderReturnCubit>().order?.orderLines ??
+                              [],
+                        ),
+                        SliverToBoxAdapter(
+                          child: _buildOrderInfo(context),
+                        ),
+                      ],
                     ),
                   ),
                   _buildReturnBottom(),
@@ -113,17 +133,6 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
         },
       ),
     );
-  }
-
-  List<Widget> _buildItems(BuildContext context) {
-    var list = <Widget>[];
-
-    list.add(_buildOrderNotes(context));
-    list.add(_buildOrderReturnItems(
-      context.read<OrderReturnCubit>().order?.orderLines ?? [],
-    ));
-    list.add(_buildOrderInfo(context));
-    return list;
   }
 
   Widget _buildOrderNotes(BuildContext context) {
@@ -155,41 +164,25 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
       ),
     ));
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
-              .copyWith(bottom: 8),
-          child: Text(
-            LocalizationConstants.productsToReturn.localized(),
-            style: OptiTextStyles.titleLarge,
-          ),
-        ),
-        SizedBox(
-          height: 600,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: orderLines.length,
-            itemBuilder: (context, index) {
-              final orderLine = orderLines[index];
-              final returnInfo = widget.returnInfoList[index];
-              return OrderReturnItem(
-                orderLine: orderLine,
-                returnInfo: returnInfo,
-                onReturnInfoChanged: (int requestCode, int numberOfItems) {
-                  widget.returnInfoList[index].requestCode = requestCode;
-                  widget.returnInfoList[index].numberOfItems = numberOfItems;
-                  context
-                      .read<OrderReturnCubit>()
-                      .setReturnRequestEnable(widget.returnInfoList);
-                },
-              );
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final orderLine = orderLines[index];
+          final returnInfo = widget.returnInfoList[index];
+          return OrderReturnItem(
+            orderLine: orderLine,
+            returnInfo: returnInfo,
+            onReturnInfoChanged: (int requestCode, int numberOfItems) {
+              widget.returnInfoList[index].requestCode = requestCode;
+              widget.returnInfoList[index].numberOfItems = numberOfItems;
+              context
+                  .read<OrderReturnCubit>()
+                  .setReturnRequestEnable(widget.returnInfoList);
             },
-          ),
-        ),
-      ],
+          );
+        },
+        childCount: orderLines.length,
+      ),
     );
   }
 
