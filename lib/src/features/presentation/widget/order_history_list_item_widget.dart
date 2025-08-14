@@ -43,7 +43,7 @@ class OrderHistoryListItem extends StatelessWidget {
                         .copyWith(color: OptiAppColors.primaryColor),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(width: 4),
                 Text(
                   orderEntity.orderDate != null
                       ? formatDateByLocale(

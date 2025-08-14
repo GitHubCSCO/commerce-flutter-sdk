@@ -10,7 +10,7 @@ part 'order_return_state.dart';
 
 class OrderReturnCubit extends Cubit<OrderReturnState> {
   final OrderUsecase _orderUseCase;
-  OrderEntity? order;
+  late OrderEntity order;
 
   OrderReturnCubit({required OrderUsecase orderUserCase})
       : _orderUseCase = orderUserCase,
@@ -68,16 +68,16 @@ class OrderReturnCubit extends Cubit<OrderReturnState> {
   }
 
   String? get discountValue =>
-      (order!.orderDiscountAmount == null || order!.orderDiscountAmount! == 0)
+      (order.orderDiscountAmount == null || order.orderDiscountAmount! == 0)
           ? ''
-          : '-${order!.orderDiscountAmountDisplay}';
+          : '-${order.orderDiscountAmountDisplay}';
 
   String? get discountTitle => LocalizationConstants.discounts.localized();
 
   String? get otherChargesValue =>
-      (order!.otherCharges == null || order!.otherCharges! == 0)
+      (order.otherCharges == null || order.otherCharges! == 0)
           ? ''
-          : order!.otherChargesDisplay;
+          : order.otherChargesDisplay;
 
   String? get otherChargesTitle =>
       LocalizationConstants.otherCharges.localized();
@@ -86,20 +86,20 @@ class OrderReturnCubit extends Cubit<OrderReturnState> {
       LocalizationConstants.shippingHandling.localized();
 
   num get _shippingHandlingValue =>
-      (order!.shippingCharges ?? 0) + (order!.handlingCharges ?? 0);
+      (order.shippingCharges ?? 0) + (order.handlingCharges ?? 0);
   String? get shippingHandlingValue => _shippingHandlingValue == 0
       ? ''
       : '${CoreConstants.currencySymbol}${_shippingHandlingValue.toStringAsFixed(2)}';
 
   String? get subTotalTitle => LocalizationConstants.subtotalItems.localized();
 
-  String? get subTotalValue => order!.orderSubTotalDisplay;
+  String? get subTotalValue => order.orderSubTotalDisplay;
 
   String? get taxTitle => LocalizationConstants.tax.localized();
 
-  String? get taxValue => order!.totalTaxDisplay;
+  String? get taxValue => order.totalTaxDisplay;
 
   String? get totalTitle => LocalizationConstants.total.localized();
 
-  String? get totalValue => order!.orderGrandTotalDisplay;
+  String? get totalValue => order.orderGrandTotalDisplay;
 }
