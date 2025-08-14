@@ -1,18 +1,31 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_return/order_return_cubit.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/widget/dropdown_picker.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/order_return/order_return_item.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+class ReturnInfo {
+  int lineNumber;
+  int requestCode;
+  int numberOfItems;
+
+  ReturnInfo({
+    required this.lineNumber,
+    required this.requestCode,
+    required this.numberOfItems,
+  });
+}
 
 class OrderReturnScreen extends StatelessWidget {
   final OrderEntity order;
@@ -26,13 +39,19 @@ class OrderReturnScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<OrderReturnCubit>(
       create: (context) => sl<OrderReturnCubit>()..initiateReturn(order),
-      child: const OrderReturnPage(),
+      child: OrderReturnPage(order: order),
     );
   }
 }
 
 class OrderReturnPage extends StatefulWidget {
-  const OrderReturnPage({super.key});
+  final OrderEntity order;
+  final List<ReturnInfo> returnInfoList = [];
+
+  OrderReturnPage({
+    super.key,
+    required this.order,
+  });
 
   @override
   State<OrderReturnPage> createState() => _OrderReturnPageState();
@@ -40,8 +59,6 @@ class OrderReturnPage extends StatefulWidget {
 
 class _OrderReturnPageState extends State<OrderReturnPage> {
   final _returnNotesController = TextEditingController();
-
-  final _qtyController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -75,21 +92,18 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
             case OrderReturnInitial():
               return const Center(child: CircularProgressIndicator());
             case OrderReturnLoaded():
-              return Container(
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _buildItems(context),
-                      ),
+              return Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildItems(context),
                     ),
-                    _buildReturnBottom(),
-                  ],
-                ),
+                  ),
+                  _buildReturnBottom(),
+                ],
               );
             default:
               return const Center(
@@ -105,14 +119,16 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
     var list = <Widget>[];
 
     list.add(_buildOrderNotes(context));
-    list.add(_buildNumberOfItems(context));
-    list.add(_buildReturnReason(context));
+    list.add(_buildOrderReturnItems(
+      context.read<OrderReturnCubit>().order?.orderLines ?? [],
+    ));
     list.add(_buildOrderInfo(context));
     return list;
   }
 
   Widget _buildOrderNotes(BuildContext context) {
-    return Padding(
+    return Container(
+      color: OptiAppColors.backgroundWhite,
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       child: Input(
         label: LocalizationConstants.returnNotes.localized(),
@@ -129,113 +145,51 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
     );
   }
 
-  bool itemsCountError = false;
-
-  Widget _buildNumberOfItems(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Row(
-              children: [
-                Text(
-                  LocalizationConstants.numberOfItems.localized(),
-                  style: OptiTextStyles.body,
-                ),
-                const SizedBox(width: 4.0), // Space between text and star
-                const Text(
-                  '*',
-                  style: TextStyle(
-                    color: Colors.red, // Change the color if needed
-                  ),
-                ),
-              ],
-            ),
-          ),
-          NumberTextField(
-            min: 1,
-            shouldShowIncrementDecrementIcon: false,
-            controller: _qtyController,
-            onChanged: (value) {},
-            focusListener: (hasFocus) {},
-            showWarningHighlighted: itemsCountError,
-          ),
-          Visibility(
-            visible: itemsCountError,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Text(
-                'Quantity exceeds',
-                style: OptiTextStyles.bodySmall
-                    .copyWith(color: OptiAppColors.invalidColor),
-              ),
-            ),
-          ),
-        ],
+  Widget _buildOrderReturnItems(List<OrderLineEntity> orderLines) {
+    widget.returnInfoList.addAll(List.generate(
+      orderLines.length,
+      (index) => ReturnInfo(
+        lineNumber: (orderLines[index].lineNumber ?? 0).toInt(),
+        requestCode: 0,
+        numberOfItems: 0,
       ),
-    );
-  }
+    ));
 
-  int selectedIndex = 0;
-
-  Widget _buildReturnReason(BuildContext context) {
-    var reasonList = [LocalizationConstants.selectAReturnReason.localized()];
-    final returnReasons = context.read<OrderReturnCubit>().order?.returnReasons;
-    if (returnReasons != null) {
-      reasonList.addAll(returnReasons.map((reason) => reason.toString()));
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              LocalizationConstants.returnRequest.localized(),
-              style: OptiTextStyles.body,
-            ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
+              .copyWith(bottom: 8),
+          child: Text(
+            LocalizationConstants.productsToReturn.localized(),
+            style: OptiTextStyles.titleLarge,
           ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: DropdownPickerWidget(
-                        items: reasonList,
-                        callback: (BuildContext context, Object item) {
-                          if (item is String) {
-                            final isDefaultOption = item == reasonList.first;
-                            context
-                                .read<OrderReturnCubit>()
-                                .setReturnReasonTitle(
-                                    isDefaultOption ? '' : item);
-
-                            setState(() {
-                              selectedIndex = reasonList.indexOf(item);
-                            });
-                          }
-                        },
-                        selectedIndex: selectedIndex,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+        ),
+        SizedBox(
+          height: 600,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: orderLines.length,
+            itemBuilder: (context, index) {
+              final orderLine = orderLines[index];
+              final returnInfo = widget.returnInfoList[index];
+              return OrderReturnItem(
+                orderLine: orderLine,
+                returnInfo: returnInfo,
+                onReturnInfoChanged: (int requestCode, int numberOfItems) {
+                  widget.returnInfoList[index].requestCode = requestCode;
+                  widget.returnInfoList[index].numberOfItems = numberOfItems;
+                  context
+                      .read<OrderReturnCubit>()
+                      .setReturnRequestEnable(widget.returnInfoList);
+                },
+              );
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -247,7 +201,7 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
       discountTitle: cubit.discountTitle,
       otherCharges: cubit.otherChargesValue,
       otherChargesTitle: cubit.otherChargesTitle,
-      promotions: [],
+      promotions: const [],
       shippingHandling: cubit.shippingHandlingValue,
       shippingHandlingTitle: cubit.shippingHandlingTitle,
       subtotal: cubit.subTotalValue,
@@ -263,41 +217,45 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
   Widget _buildReturnBottom() {
     var cubit = context.read<OrderReturnCubit>();
 
-    return OrderBottomSectionWidget(
-      actions: [
-        SizedBox(
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: SecondaryButton(
-                  text: LocalizationConstants.cancel.localized(),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+    return BlocBuilder<OrderReturnCubit, OrderReturnState>(
+        builder: (context, state) {
+      var isEnabled = false;
+      if (state is OrderReturnEnable) {
+        isEnabled = state.isEnabled;
+      }
+      return OrderBottomSectionWidget(
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SecondaryButton(
+                    text: LocalizationConstants.cancel.localized(),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: PrimaryButton(
-                  isEnabled: true,
-                  text: LocalizationConstants.returnRequest.localized(),
-                  onPressed: () {
-                    final returnItemCount =
-                        int.tryParse(_qtyController.text) ?? 0;
-                    final availableItems = cubit.order?.orderLines?.length ?? 0;
-
-                    setState(() {
-                      itemsCountError = returnItemCount > availableItems;
-                    });
-                  },
+                const SizedBox(width: 8),
+                Expanded(
+                  child: PrimaryButton(
+                    isEnabled: isEnabled,
+                    text: LocalizationConstants.returnRequest.localized(),
+                    onPressed: () {
+                      unawaited(cubit.returnOrder(
+                        _returnNotesController.text,
+                        widget.returnInfoList,
+                      ));
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }

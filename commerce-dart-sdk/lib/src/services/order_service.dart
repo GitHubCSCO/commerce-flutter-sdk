@@ -126,16 +126,16 @@ class OrderService extends ServiceBase implements IOrderService {
   }
 
   @override
-  Future<Result<Rma, ErrorResponse>> postOrderReturns(
+  Future<Result<String, ErrorResponse>> postOrderReturns(
     String? orderId,
     Rma rmaReturn,
   ) async {
     final data = rmaReturn.toJson();
     var url = Uri.parse('${CommerceAPIConstants.ordersUrl}/$orderId/returns');
-    return await postAsyncNoCache<Rma>(
+    return await postAsyncNoCache<String>(
       url.toString(),
       data,
-      Rma.fromJson,
+      (_) => '',
     );
   }
 

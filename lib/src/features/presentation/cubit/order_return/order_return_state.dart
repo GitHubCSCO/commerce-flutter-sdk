@@ -9,3 +9,9 @@ class OrderReturnLoaded extends OrderReturnState {}
 class OrderReturnSuccess extends OrderReturnState {}
 
 class OrderReturnFailure extends OrderReturnState {}
+
+class OrderReturnEnable extends OrderReturnState {
+  final bool isEnabled;
+
+  OrderReturnEnable(this.isEnabled);
+}
