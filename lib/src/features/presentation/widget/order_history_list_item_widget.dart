@@ -32,12 +32,18 @@ class OrderHistoryListItem extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  orderEntity.orderNumberLabel ?? orderEntity.orderNumber ?? '',
-                  style: OptiTextStyles.body
-                      .copyWith(color: OptiAppColors.primaryColor),
+                Expanded(
+                  child: Text(
+                    orderEntity.orderNumberLabel ??
+                        orderEntity.orderNumber ??
+                        '',
+                    style: OptiTextStyles.body
+                        .copyWith(color: OptiAppColors.primaryColor),
+                  ),
                 ),
+                const SizedBox(height: 4),
                 Text(
                   orderEntity.orderDate != null
                       ? formatDateByLocale(
