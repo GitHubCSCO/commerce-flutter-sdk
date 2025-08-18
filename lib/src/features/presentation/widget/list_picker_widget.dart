@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 class ListPickerWidget extends StatelessWidget {
   final void Function(BuildContext context, Object item)? callback;
+  final void Function()? tapCallback;
   final List<Object> items;
   final int? selectedIndex;
   final String? descriptionText;
@@ -17,6 +18,7 @@ class ListPickerWidget extends StatelessWidget {
       required this.items,
       this.selectedIndex,
       required this.callback,
+      this.tapCallback,
       this.descriptionText,
       this.showDropDown,
       this.isActionEnabled = true});
@@ -27,6 +29,7 @@ class ListPickerWidget extends StatelessWidget {
         items: items,
         selectedIndex: selectedIndex,
         callback: callback,
+        tapCallback: tapCallback,
         descriptionText: descriptionText,
         showDropDown: showDropDown,
         isActionEnabled: isActionEnabled);
@@ -35,6 +38,7 @@ class ListPickerWidget extends StatelessWidget {
 
 class ListPicker extends StatefulWidget {
   final void Function(BuildContext context, Object item)? callback;
+  final void Function()? tapCallback;
   final List<Object> items;
   final int? selectedIndex;
   final String? descriptionText;
@@ -45,6 +49,7 @@ class ListPicker extends StatefulWidget {
       required this.items,
       this.selectedIndex,
       required this.callback,
+      this.tapCallback,
       this.descriptionText,
       this.showDropDown,
       this.isActionEnabled});
@@ -71,6 +76,7 @@ class _ListPickerState extends State<ListPicker> with PickerMixin {
     return GestureDetector(
       onTap: (widget.isActionEnabled ?? false)
           ? () {
+              widget.tapCallback?.call();
               _selectItem(context);
             }
           : null,
