@@ -6,18 +6,16 @@ part of 'device_token_registration.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DeviceTokenRegistrationParameters _$DeviceTokenRegistrationRequestFromJson(
+DeviceTokenRegistrationParameters _$DeviceTokenRegistrationParametersFromJson(
         Map<String, dynamic> json) =>
     DeviceTokenRegistrationParameters(
       deviceToken: json['deviceToken'] as String?,
-      userProfileId: json['userProfileId'] as String?,
     );
 
-Map<String, dynamic> _$DeviceTokenRegistrationRequestToJson(
+Map<String, dynamic> _$DeviceTokenRegistrationParametersToJson(
         DeviceTokenRegistrationParameters instance) =>
     <String, dynamic>{
       if (instance.deviceToken case final value?) 'deviceToken': value,
-      if (instance.userProfileId case final value?) 'userProfileId': value,
     };
 
 DeviceTokenResponse _$DeviceTokenResponseFromJson(Map<String, dynamic> json) =>

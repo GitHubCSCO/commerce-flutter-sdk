@@ -52,7 +52,6 @@ class LoginUsecase extends BiometricUsecase {
                       .registerDeviceToken(
                         DeviceTokenRegistrationParameters(
                           deviceToken: deviceToken,
-                          userProfileId: fullSession.userProfileId,
                         ),
                       ),
                 );
@@ -127,7 +126,6 @@ class LoginUsecase extends BiometricUsecase {
                   .registerDeviceToken(
                     DeviceTokenRegistrationParameters(
                       deviceToken: deviceToken,
-                      userProfileId: fullSession.userProfileId,
                     ),
                   ),
             );

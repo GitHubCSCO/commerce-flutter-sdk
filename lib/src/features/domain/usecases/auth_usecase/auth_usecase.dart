@@ -44,7 +44,6 @@ class AuthUsecase extends BaseUseCase {
             .registerDeviceToken(
               DeviceTokenRegistrationParameters(
                 deviceToken: deviceToken,
-                userProfileId: fullSession.userProfileId,
               ),
             );
     }

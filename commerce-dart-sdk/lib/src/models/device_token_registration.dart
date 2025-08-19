@@ -6,18 +6,17 @@ part 'device_token_registration.g.dart';
 @JsonSerializable()
 class DeviceTokenRegistrationParameters {
   String? deviceToken;
-  String? userProfileId;
 
   DeviceTokenRegistrationParameters({
     this.deviceToken,
-    this.userProfileId,
   });
 
   factory DeviceTokenRegistrationParameters.fromJson(
           Map<String, dynamic> json) =>
-      _$DeviceTokenRegistrationRequestFromJson(json);
+      _$DeviceTokenRegistrationParametersFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DeviceTokenRegistrationRequestToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$DeviceTokenRegistrationParametersToJson(this);
 }
 
 /// Response model for device token operations
