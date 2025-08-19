@@ -7,23 +7,17 @@ part of 'order_approval_parameters.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$OrderApprovalParametersToJson(
-    OrderApprovalParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('shipToId', instance.shipToId);
-  writeNotNull('orderNumber', instance.orderNumber);
-  writeNotNull('orderTotal', instance.orderTotal);
-  writeNotNull('fromDate', instance.fromDate?.toIso8601String());
-  writeNotNull('toDate', instance.toDate?.toIso8601String());
-  writeNotNull('orderTotalOperator', instance.orderTotalOperator);
-  return val;
-}
+        OrderApprovalParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.shipToId case final value?) 'shipToId': value,
+      if (instance.orderNumber case final value?) 'orderNumber': value,
+      if (instance.orderTotal case final value?) 'orderTotal': value,
+      if (instance.fromDate?.toIso8601String() case final value?)
+        'fromDate': value,
+      if (instance.toDate?.toIso8601String() case final value?) 'toDate': value,
+      if (instance.orderTotalOperator case final value?)
+        'orderTotalOperator': value,
+    };

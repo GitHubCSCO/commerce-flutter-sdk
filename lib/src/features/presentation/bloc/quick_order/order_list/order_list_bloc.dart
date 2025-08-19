@@ -12,6 +12,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_enti
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
@@ -185,6 +186,16 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
             .withProperty(
                 name: AnalyticsConstants.eventPropertySuccessful,
                 strValue: scanState.name);
+
+    _quickOrderUseCase.trackTelemetryEvent(
+        TelemetryEvent(eventName: AnalyticsConstants.eventScanBarcode)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyBarcode,
+                strValue: barcode)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertySuccessful,
+                strValue: scanState.name));
+
     _quickOrderUseCase.trackEvent(trackEvent);
   }
 

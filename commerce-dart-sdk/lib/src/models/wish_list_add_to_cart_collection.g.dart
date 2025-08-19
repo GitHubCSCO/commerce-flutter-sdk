@@ -19,18 +19,11 @@ WishListAddToCartCollection _$WishListAddToCartCollectionFromJson(
       );
 
 Map<String, dynamic> _$WishListAddToCartCollectionToJson(
-    WishListAddToCartCollection instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull(
-      'wishListLines', instance.wishListLines?.map((e) => e.toJson()).toList());
-  return val;
-}
+        WishListAddToCartCollection instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.wishListLines?.map((e) => e.toJson()).toList()
+          case final value?)
+        'wishListLines': value,
+    };

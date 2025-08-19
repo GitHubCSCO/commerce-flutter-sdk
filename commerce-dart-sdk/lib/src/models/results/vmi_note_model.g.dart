@@ -21,22 +21,15 @@ VmiNoteModel _$VmiNoteModelFromJson(Map<String, dynamic> json) => VmiNoteModel(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$VmiNoteModelToJson(VmiNoteModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  val['id'] = instance.id;
-  writeNotNull('vmiBinId', instance.vmiBinId);
-  val['note'] = instance.note;
-  writeNotNull('createdOn', instance.createdOn?.toIso8601String());
-  writeNotNull('vmiBinProductId', instance.vmiBinProductId);
-  writeNotNull('includeOnOrder', instance.includeOnOrder);
-  return val;
-}
+Map<String, dynamic> _$VmiNoteModelToJson(VmiNoteModel instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      'id': instance.id,
+      if (instance.vmiBinId case final value?) 'vmiBinId': value,
+      'note': instance.note,
+      if (instance.createdOn?.toIso8601String() case final value?)
+        'createdOn': value,
+      if (instance.vmiBinProductId case final value?) 'vmiBinProductId': value,
+      if (instance.includeOnOrder case final value?) 'includeOnOrder': value,
+    };

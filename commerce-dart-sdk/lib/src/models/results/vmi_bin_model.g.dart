@@ -35,31 +35,28 @@ VmiBinModel _$VmiBinModelFromJson(Map<String, dynamic> json) => VmiBinModel(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$VmiBinModelToJson(VmiBinModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  val['id'] = instance.id;
-  val['vmiLocationId'] = instance.vmiLocationId;
-  val['binNumber'] = instance.binNumber;
-  writeNotNull('productId', instance.productId);
-  writeNotNull('minimumQty', instance.minimumQty);
-  writeNotNull('maximumQty', instance.maximumQty);
-  writeNotNull('lastCountDate', instance.lastCountDate?.toIso8601String());
-  writeNotNull('lastCountQty', instance.lastCountQty);
-  writeNotNull('lastCountUserName', instance.lastCountUserName);
-  writeNotNull(
-      'previousCountDate', instance.previousCountDate?.toIso8601String());
-  writeNotNull('previousCountQty', instance.previousCountQty);
-  writeNotNull('previousCountUserName', instance.previousCountUserName);
-  writeNotNull('lastOrderDate', instance.lastOrderDate?.toIso8601String());
-  writeNotNull('product', instance.product?.toJson());
-  return val;
-}
+Map<String, dynamic> _$VmiBinModelToJson(VmiBinModel instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      'id': instance.id,
+      'vmiLocationId': instance.vmiLocationId,
+      'binNumber': instance.binNumber,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.minimumQty case final value?) 'minimumQty': value,
+      if (instance.maximumQty case final value?) 'maximumQty': value,
+      if (instance.lastCountDate?.toIso8601String() case final value?)
+        'lastCountDate': value,
+      if (instance.lastCountQty case final value?) 'lastCountQty': value,
+      if (instance.lastCountUserName case final value?)
+        'lastCountUserName': value,
+      if (instance.previousCountDate?.toIso8601String() case final value?)
+        'previousCountDate': value,
+      if (instance.previousCountQty case final value?)
+        'previousCountQty': value,
+      if (instance.previousCountUserName case final value?)
+        'previousCountUserName': value,
+      if (instance.lastOrderDate?.toIso8601String() case final value?)
+        'lastOrderDate': value,
+      if (instance.product?.toJson() case final value?) 'product': value,
+    };

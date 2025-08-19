@@ -13,18 +13,10 @@ PriceFacet _$PriceFacetFromJson(Map<String, dynamic> json) => PriceFacet(
       selected: json['selected'] as bool?,
     );
 
-Map<String, dynamic> _$PriceFacetToJson(PriceFacet instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('minimumPrice', instance.minimumPrice);
-  writeNotNull('maximumPrice', instance.maximumPrice);
-  writeNotNull('count', instance.count);
-  writeNotNull('selected', instance.selected);
-  return val;
-}
+Map<String, dynamic> _$PriceFacetToJson(PriceFacet instance) =>
+    <String, dynamic>{
+      if (instance.minimumPrice case final value?) 'minimumPrice': value,
+      if (instance.maximumPrice case final value?) 'maximumPrice': value,
+      if (instance.count case final value?) 'count': value,
+      if (instance.selected case final value?) 'selected': value,
+    };

@@ -9,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/loca
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/search_history_service_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/tracking_service_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/vmi_service_interface.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 abstract class ICoreServiceProvider {
   IAppConfigurationService getAppConfigurationService();
@@ -21,5 +22,6 @@ abstract class ICoreServiceProvider {
   ISearchHistoryService getSearchHistoryService();
   IVmiService getVmiService();
   ITrackingService getTrackingService();
+  ITelemetryTrackingService getTelemetryService();
   IDeviceTokenService getDeviceTokenService();
 }

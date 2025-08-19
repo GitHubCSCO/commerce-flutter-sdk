@@ -63,60 +63,70 @@ ProductPrice _$ProductPriceFromJson(Map<String, dynamic> json) => ProductPrice(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$ProductPriceToJson(ProductPrice instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('productId', instance.productId);
-  writeNotNull('isOnSale', instance.isOnSale);
-  writeNotNull('requiresRealTimePrice', instance.requiresRealTimePrice);
-  writeNotNull('quoteRequired', instance.quoteRequired);
-  writeNotNull('additionalResults', instance.additionalResults);
-  writeNotNull('unitCost', instance.unitCost);
-  writeNotNull('unitCostDisplay', instance.unitCostDisplay);
-  writeNotNull('unitListPrice', instance.unitListPrice);
-  writeNotNull('unitListPriceDisplay', instance.unitListPriceDisplay);
-  writeNotNull('extendedUnitListPrice', instance.extendedUnitListPrice);
-  writeNotNull(
-      'extendedUnitListPriceDisplay', instance.extendedUnitListPriceDisplay);
-  writeNotNull('unitRegularPrice', instance.unitRegularPrice);
-  writeNotNull('unitRegularPriceDisplay', instance.unitRegularPriceDisplay);
-  writeNotNull('extendedUnitRegularPrice', instance.extendedUnitRegularPrice);
-  writeNotNull('extendedUnitRegularPriceDisplay',
-      instance.extendedUnitRegularPriceDisplay);
-  writeNotNull('unitNetPrice', instance.unitNetPrice);
-  writeNotNull('unitNetPriceDisplay', instance.unitNetPriceDisplay);
-  writeNotNull('extendedUnitNetPrice', instance.extendedUnitNetPrice);
-  writeNotNull(
-      'extendedUnitNetPriceDisplay', instance.extendedUnitNetPriceDisplay);
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('vatRate', instance.vatRate);
-  writeNotNull('vatAmount', instance.vatAmount);
-  writeNotNull('vatAmountDisplay', instance.vatAmountDisplay);
-  writeNotNull('unitListBreakPrices',
-      instance.unitListBreakPrices?.map((e) => e.toJson()).toList());
-  writeNotNull('unitRegularBreakPrices',
-      instance.unitRegularBreakPrices?.map((e) => e.toJson()).toList());
-  writeNotNull('regularPrice', instance.regularPrice);
-  writeNotNull('regularPriceDisplay', instance.regularPriceDisplay);
-  writeNotNull('extendedRegularPrice', instance.extendedRegularPrice);
-  writeNotNull(
-      'extendedRegularPriceDisplay', instance.extendedRegularPriceDisplay);
-  writeNotNull('actualPrice', instance.actualPrice);
-  writeNotNull('actualPriceDisplay', instance.actualPriceDisplay);
-  writeNotNull('extendedActualPrice', instance.extendedActualPrice);
-  writeNotNull(
-      'extendedActualPriceDisplay', instance.extendedActualPriceDisplay);
-  writeNotNull('regularBreakPrices',
-      instance.regularBreakPrices?.map((e) => e.toJson()).toList());
-  writeNotNull('actualBreakPrices',
-      instance.actualBreakPrices?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$ProductPriceToJson(ProductPrice instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.isOnSale case final value?) 'isOnSale': value,
+      if (instance.requiresRealTimePrice case final value?)
+        'requiresRealTimePrice': value,
+      if (instance.quoteRequired case final value?) 'quoteRequired': value,
+      if (instance.additionalResults case final value?)
+        'additionalResults': value,
+      if (instance.unitCost case final value?) 'unitCost': value,
+      if (instance.unitCostDisplay case final value?) 'unitCostDisplay': value,
+      if (instance.unitListPrice case final value?) 'unitListPrice': value,
+      if (instance.unitListPriceDisplay case final value?)
+        'unitListPriceDisplay': value,
+      if (instance.extendedUnitListPrice case final value?)
+        'extendedUnitListPrice': value,
+      if (instance.extendedUnitListPriceDisplay case final value?)
+        'extendedUnitListPriceDisplay': value,
+      if (instance.unitRegularPrice case final value?)
+        'unitRegularPrice': value,
+      if (instance.unitRegularPriceDisplay case final value?)
+        'unitRegularPriceDisplay': value,
+      if (instance.extendedUnitRegularPrice case final value?)
+        'extendedUnitRegularPrice': value,
+      if (instance.extendedUnitRegularPriceDisplay case final value?)
+        'extendedUnitRegularPriceDisplay': value,
+      if (instance.unitNetPrice case final value?) 'unitNetPrice': value,
+      if (instance.unitNetPriceDisplay case final value?)
+        'unitNetPriceDisplay': value,
+      if (instance.extendedUnitNetPrice case final value?)
+        'extendedUnitNetPrice': value,
+      if (instance.extendedUnitNetPriceDisplay case final value?)
+        'extendedUnitNetPriceDisplay': value,
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.vatRate case final value?) 'vatRate': value,
+      if (instance.vatAmount case final value?) 'vatAmount': value,
+      if (instance.vatAmountDisplay case final value?)
+        'vatAmountDisplay': value,
+      if (instance.unitListBreakPrices?.map((e) => e.toJson()).toList()
+          case final value?)
+        'unitListBreakPrices': value,
+      if (instance.unitRegularBreakPrices?.map((e) => e.toJson()).toList()
+          case final value?)
+        'unitRegularBreakPrices': value,
+      if (instance.regularPrice case final value?) 'regularPrice': value,
+      if (instance.regularPriceDisplay case final value?)
+        'regularPriceDisplay': value,
+      if (instance.extendedRegularPrice case final value?)
+        'extendedRegularPrice': value,
+      if (instance.extendedRegularPriceDisplay case final value?)
+        'extendedRegularPriceDisplay': value,
+      if (instance.actualPrice case final value?) 'actualPrice': value,
+      if (instance.actualPriceDisplay case final value?)
+        'actualPriceDisplay': value,
+      if (instance.extendedActualPrice case final value?)
+        'extendedActualPrice': value,
+      if (instance.extendedActualPriceDisplay case final value?)
+        'extendedActualPriceDisplay': value,
+      if (instance.regularBreakPrices?.map((e) => e.toJson()).toList()
+          case final value?)
+        'regularBreakPrices': value,
+      if (instance.actualBreakPrices?.map((e) => e.toJson()).toList()
+          case final value?)
+        'actualBreakPrices': value,
+    };

@@ -15,19 +15,12 @@ PriceRange _$PriceRangeFromJson(Map<String, dynamic> json) => PriceRange(
           .toList(),
     );
 
-Map<String, dynamic> _$PriceRangeToJson(PriceRange instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('minimumPrice', instance.minimumPrice);
-  writeNotNull('maximumPrice', instance.maximumPrice);
-  writeNotNull('count', instance.count);
-  writeNotNull(
-      'priceFacets', instance.priceFacets?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$PriceRangeToJson(PriceRange instance) =>
+    <String, dynamic>{
+      if (instance.minimumPrice case final value?) 'minimumPrice': value,
+      if (instance.maximumPrice case final value?) 'maximumPrice': value,
+      if (instance.count case final value?) 'count': value,
+      if (instance.priceFacets?.map((e) => e.toJson()).toList()
+          case final value?)
+        'priceFacets': value,
+    };

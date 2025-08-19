@@ -19,21 +19,15 @@ FieldScoreDetailed _$FieldScoreDetailedFromJson(Map<String, dynamic> json) =>
           (json['termFrequencyNormalized'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$FieldScoreDetailedToJson(FieldScoreDetailed instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('name', instance.name);
-  writeNotNull('score', instance.score);
-  writeNotNull('boost', instance.boost);
-  writeNotNull('matchText', instance.matchText);
-  writeNotNull('termFrequencyNormalized', instance.termFrequencyNormalized);
-  writeNotNull('inverseDocumentFrequency', instance.inverseDocumentFrequency);
-  writeNotNull('scoreUsed', instance.scoreUsed);
-  return val;
-}
+Map<String, dynamic> _$FieldScoreDetailedToJson(FieldScoreDetailed instance) =>
+    <String, dynamic>{
+      if (instance.name case final value?) 'name': value,
+      if (instance.score case final value?) 'score': value,
+      if (instance.boost case final value?) 'boost': value,
+      if (instance.matchText case final value?) 'matchText': value,
+      if (instance.termFrequencyNormalized case final value?)
+        'termFrequencyNormalized': value,
+      if (instance.inverseDocumentFrequency case final value?)
+        'inverseDocumentFrequency': value,
+      if (instance.scoreUsed case final value?) 'scoreUsed': value,
+    };

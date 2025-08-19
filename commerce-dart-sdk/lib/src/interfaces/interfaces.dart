@@ -37,4 +37,5 @@ export 'admin_authentication_interface.dart';
 export 'cache_interface.dart';
 export 'vmi_loaction_service_interface.dart';
 export 'logger_interface.dart';
+export 'telemetry_interface.dart';
 export 'push_notification_interface.dart';
