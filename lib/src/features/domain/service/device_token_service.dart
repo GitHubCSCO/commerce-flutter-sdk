@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_intefrace.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_interface.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class DeviceTokenService implements IDeviceTokenService {

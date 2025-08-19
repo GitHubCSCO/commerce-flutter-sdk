@@ -1,7 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/config/analytics_config.dart';
 import 'package:commerce_flutter_sdk/src/core/config/route_config.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/scanning_mode.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_intefrace.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/services.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/account_usecase/account_usecase.dart';

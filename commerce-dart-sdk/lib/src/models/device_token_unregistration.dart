@@ -1,7 +1,7 @@
 import 'models.dart';
 part 'device_token_unregistration.g.dart';
 
-/// Request model for registering a device token
+/// Request model for un-registering a device token
 @JsonSerializable()
 class DeviceTokenUnregistrationParameters {
   String? deviceToken;
