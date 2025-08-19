@@ -65,7 +65,7 @@ class BiometricUsecase extends BaseUseCase {
         .invalidateAllObjectsExcept([CoreConstants.domainKey]);
     final deviceToken =
         await coreServiceProvider.getDeviceTokenService().getDeviceToken();
-   await commerceAPIServiceProvider
+    await commerceAPIServiceProvider
         .getPushNotificationService()
         .unRegisterDeviceToken(
             DeviceTokenUnregistrationParameters(deviceToken: deviceToken));

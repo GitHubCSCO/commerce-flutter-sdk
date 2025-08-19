@@ -23,7 +23,7 @@ class DeviceTokenService implements IDeviceTokenService {
 
     // Fetch FCM token
     final fcmToken = await _firebaseMessaging.getToken();
-    
+
     // Cache token for future use
     if (fcmToken != null) {
       _cachedFcmToken = fcmToken;
