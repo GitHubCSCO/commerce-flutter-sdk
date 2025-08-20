@@ -17,9 +17,7 @@ dependencies:
   url_launcher: ^6.1.12
   map_launcher: ^3.2.0
   optimizely_commerce_api:
-    git:
-      url: git@github.com:GitHubCSCO/DartSDK.git
-      ref: main
+    path: ./commerce-dart-sdk
   shared_preferences: ^2.2.0
   get_it: ^8.0.3
   flutter_bloc: ^9.1.1
