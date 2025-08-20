@@ -11,8 +11,7 @@ abstract class IPushNotificationService {
     DeviceTokenRegistrationParameters deviceTokenRegistrationParameters,
   );
 
-
-   Future<Result<DeviceTokenResponse, ErrorResponse>> unRegisterDeviceToken(
+  Future<Result<DeviceTokenResponse, ErrorResponse>> unRegisterDeviceToken(
     DeviceTokenUnregistrationParameters deviceTokenUnregistrationParameters,
   );
 }
