@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
+import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
-import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -13,11 +13,12 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/custom
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/checkout_confirmation/checkout_confirmation_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/review_order/review_order_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_details_body_widget.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -107,6 +108,7 @@ class CheckoutSuccessPage extends StatelessWidget {
                 children: [
                   Container(
                     child: _buildOrderSuccessInfoWidget(
+                      context,
                       isOrderApproval: checkoutSuccessEntity.isOrderApproval,
                     ),
                   ),
@@ -156,16 +158,19 @@ class CheckoutSuccessPage extends StatelessWidget {
                     isEnabled = state.isCancelEnabled;
                 }
 
-                return TertiaryBlackButton(
-                  isEnabled: isEnabled,
-                  text: LocalizationConstants.cancelOrder.localized(),
-                  onPressed: () {
-                    showCancelOrderAlert(context, onDismissAlert: () {
-                      unawaited(context
-                          .read<CheckoutConfirmationCubit>()
-                          .cancelOrder(checkoutSuccessEntity.orderNumber));
-                    });
-                  },
+                return Visibility(
+                  visible: isEnabled,
+                  child: TertiaryBlackButton(
+                    isEnabled: isEnabled,
+                    text: LocalizationConstants.cancelOrder.localized(),
+                    onPressed: () {
+                      showCancelOrderAlert(context, onDismissAlert: () {
+                        unawaited(context
+                            .read<CheckoutConfirmationCubit>()
+                            .cancelOrder(checkoutSuccessEntity.orderNumber));
+                      });
+                    },
+                  ),
                 );
               },
             ),
@@ -188,101 +193,173 @@ class CheckoutSuccessPage extends StatelessWidget {
   }
 
   Widget _buildOrderItemSummaryWidget() {
-    int itemCount = checkoutSuccessEntity.cart.cartLines?.length ?? 0;
-    String itemText = itemCount == 1 ? 'Item' : 'Items';
+    var itemCount = checkoutSuccessEntity.cart.cartLines?.length ?? 0;
+    var itemText = itemCount == 1 ? 'Item' : 'Items';
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text(
-            "${LocalizationConstants.orderSummary.localized()} ($itemCount $itemText)",
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.subtitle,
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+            child: Text(
+              "${LocalizationConstants.orderSummary.localized()} ($itemCount $itemText)",
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.subtitle,
+            ),
           ),
-        ),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            final orderLine = checkoutSuccessEntity.cart.cartLines?[index];
-            return LineItemWidget(
-              productId: orderLine?.productId,
-              imagePath: orderLine?.smallImagePath,
-              shortDescription: orderLine?.shortDescription,
-              manufacturerItem: orderLine?.manufacturerItem,
-              productNumber: orderLine?.erpNumber,
-              discountMessage: (orderLine?.pricing?.unitNetPrice == 0)
-                  ? ''
-                  : (DiscountValueConverter().convert(orderLine) ?? '')
-                      .toString(),
-              priceValueText: orderLine?.pricing?.unitNetPriceDisplay ?? '',
-              unitOfMeasureValueText: orderLine?.unitOfMeasureDisplay != null
-                  ? ' / ${orderLine?.unitOfMeasureDisplay}'
-                  : null,
-              qtyOrdered: orderLine?.qtyOrdered?.round().toString(),
-              subtotalPriceText:
-                  orderLine?.pricing?.extendedUnitNetPriceDisplay,
-              canEditQty: false,
-              showViewAvailabilityByWarehouse: false,
-              showViewQuantityPricing: false,
-            );
-          },
-          separatorBuilder: (context, index) => const Divider(height: 1),
-          itemCount: checkoutSuccessEntity.cart.cartLines?.length ?? 0,
-        ),
-      ],
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final orderLine = checkoutSuccessEntity.cart.cartLines?[index];
+              return LineItemWidget(
+                productId: orderLine?.productId,
+                imagePath: orderLine?.smallImagePath,
+                shortDescription: orderLine?.shortDescription,
+                manufacturerItem: orderLine?.manufacturerItem,
+                productNumber: orderLine?.erpNumber,
+                discountMessage: (orderLine?.pricing?.unitNetPrice == 0)
+                    ? ''
+                    : (DiscountValueConverter().convert(orderLine) ?? '')
+                        .toString(),
+                priceValueText: orderLine?.pricing?.unitNetPriceDisplay ?? '',
+                unitOfMeasureValueText: orderLine?.unitOfMeasureDisplay != null
+                    ? ' / ${orderLine?.unitOfMeasureDisplay}'
+                    : null,
+                qtyOrdered: orderLine?.qtyOrdered?.round().toString(),
+                subtotalPriceText:
+                    orderLine?.pricing?.extendedUnitNetPriceDisplay,
+                canEditQty: false,
+                showViewAvailabilityByWarehouse: false,
+                showViewQuantityPricing: false,
+              );
+            },
+            separatorBuilder: (context, index) => const Divider(height: 1),
+            itemCount: checkoutSuccessEntity.cart.cartLines?.length ?? 0,
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Divider(
+              thickness: 1,
+              color: Colors.grey,
+            ),
+          )
+        ],
+      ),
     );
   }
 
-  Widget _buildOrderSuccessInfoWidget({bool isOrderApproval = false}) {
+  Widget _buildOrderSuccessInfoWidget(BuildContext context,
+      {bool isOrderApproval = false}) {
     return Container(
       color: Colors.white,
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: OptiAppColors.successBackgroundColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SvgAssetImage(
+                  assetName: AssetConstants.iconMark,
+                  semanticsLabel: 'success icon',
+                  fit: BoxFit.fitWidth,
+                  color: OptiAppColors.successColor,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16.0),
             Text(
               checkoutSuccessEntity.message ?? '',
               style: OptiTextStyles.subtitle,
             ),
-            const SizedBox(height: 8.0),
-            if (!isOrderApproval)
-              Text(
-                "We have received your order and have sent you an email confirmation to ${checkoutSuccessEntity.cart.shipTo?.email}",
-                style: OptiTextStyles.bodySmall,
-                textAlign: TextAlign.left,
-              ),
-            if (!isOrderApproval) const SizedBox(height: 8.0),
-            Text(
-              "Order Number ${checkoutSuccessEntity.orderNumber}",
-              style: OptiTextStyles.titleLarge,
+            const SizedBox(height: 16.0),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    checkoutSuccessEntity.orderNumber,
+                    style: OptiTextStyles.titleLarge,
+                    overflow: TextOverflow.visible,
+                  ),
+                ),
+                const SizedBox(width: 8.0),
+                Material(
+                  color: Colors.transparent,
+                  child: Ink(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: OptiAppColors.backgroundInput,
+                    ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(100),
+                      onTap: () async {
+                        try {
+                          await Clipboard.setData(
+                            ClipboardData(
+                              text: checkoutSuccessEntity.orderNumber,
+                            ),
+                          );
+                          await HapticFeedback.mediumImpact();
+                          CustomSnackBar.showSnackBarMessage(
+                            context,
+                            LocalizationConstants.orderNumberCopiedToClipboard
+                                .localized(),
+                          );
+                        } catch (e) {
+                          CustomSnackBar.showSnackBarMessage(
+                            context,
+                            LocalizationConstants
+                                .failedToCopyOrderNumberToClipboard
+                                .localized(),
+                          );
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SvgAssetImage(
+                          assetName: AssetConstants.iconCopy,
+                          semanticsLabel: 'copy icon',
+                          fit: BoxFit.fitWidth,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8.0),
-            if (checkoutSuccessEntity.cart.orderDate != null)
+            if (!isOrderApproval) ...{
+              const SizedBox(height: 16.0),
               Text(
-                "${isOrderApproval ? '${LocalizationConstants.orderDate.localized()}:' : 'Order Placed:'} ${formatDateByLocale(checkoutSuccessEntity.cart.orderDate!)}",
-                style: OptiTextStyles.body,
+                "We have sent you an email confirmation to ${checkoutSuccessEntity.cart.shipTo?.email}",
+                style: OptiTextStyles.bodySmall,
+                textAlign: TextAlign.center,
               ),
-            if (checkoutSuccessEntity.cart.orderDate != null)
-              const SizedBox(height: 8.0),
-            if (checkoutSuccessEntity.cart.fulfillmentMethod
-                .equalsIgnoreCase(ShippingOption.ship.name))
-              Text(
-                "Delivery Method: ${checkoutSuccessEntity.cart.carrier?.description}   ${checkoutSuccessEntity.cart.shipVia?.description}",
-                style: OptiTextStyles.body,
-              ),
+            },
             if (isOrderApproval &&
                 !checkoutSuccessEntity.cart.status.isNullOrEmpty) ...[
-              const SizedBox(height: 8.0),
+              const SizedBox(height: 16.0),
               Text(
                 "${LocalizationConstants.status.localized()}: ${checkoutSuccessEntity.cart.status ?? ''}",
               ),
             ],
-            const SizedBox(height: 8.0),
+            const SizedBox(height: 16.0),
+            const Divider(
+              thickness: 1,
+              color: Colors.grey,
+            )
           ],
         ),
       ),

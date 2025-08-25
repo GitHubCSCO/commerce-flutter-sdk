@@ -304,11 +304,25 @@ class OrderDetailsPage extends StatelessWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: SecondaryButton(
-                              isEnabled: false,
+                              isEnabled: state.returnOrderEnable ?? false,
                               text:
                                   LocalizationConstants.returnOrder.localized(),
-                              onPressed: () {
-                                // Add your return order logic here
+                              onPressed: () async {
+                                final isOrderReturn =
+                                    await context.pushNamed<bool>(
+                                  AppRoute.orderReturn.name,
+                                  extra: state.order,
+                                );
+
+                                if (context.mounted && isOrderReturn == true) {
+                                  var cubit = context.read<OrderDetailsCubit>();
+                                  await cubit.loadOrderDetails(
+                                      cubit.orderNumber ?? '',
+                                      isFromVMI: false);
+                                  context
+                                      .read<RootBloc>()
+                                      .add(RootOrderHistoryInitialEvent());
+                                }
                               },
                             ),
                           ),

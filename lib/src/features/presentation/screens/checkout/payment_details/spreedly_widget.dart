@@ -19,12 +19,14 @@ class SpreedlyWidget extends StatefulWidget {
   final String environmentKey;
   final HandleSpreedlyFinishedData handleSpreedlyFinishedData;
   final ValueNotifier<SpreedlyField?> spreedlyFieldUpdateNotifier;
+  final ValueNotifier<bool>? unfocusWebViewNotifier;
 
   const SpreedlyWidget(
       {Key? key,
       required this.environmentKey,
       required this.handleSpreedlyFinishedData,
-      required this.spreedlyFieldUpdateNotifier})
+      required this.spreedlyFieldUpdateNotifier,
+      this.unfocusWebViewNotifier})
       : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class _SpreedlyWidgetState extends State<SpreedlyWidget> {
     super.initState();
     widget.spreedlyFieldUpdateNotifier
         .addListener(_onSpreedlyFieldUpdateNotifierChanged);
+    widget.unfocusWebViewNotifier?.addListener(_unfocusWebView);
     // Initialize the WebView controller
     _webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -65,6 +68,7 @@ class _SpreedlyWidgetState extends State<SpreedlyWidget> {
   void dispose() {
     widget.spreedlyFieldUpdateNotifier
         .removeListener(_onSpreedlyFieldUpdateNotifierChanged);
+    widget.unfocusWebViewNotifier?.removeListener(_unfocusWebView);
     super.dispose();
   }
 
@@ -76,6 +80,13 @@ class _SpreedlyWidgetState extends State<SpreedlyWidget> {
       var year = spreedlyField.year;
 
       _submitPaymentForm(fullName, month, year);
+    }
+  }
+
+  void _unfocusWebView() {
+    if (widget.unfocusWebViewNotifier?.value ?? false) {
+      widget.unfocusWebViewNotifier?.value = false;
+      _webViewController.runJavaScript('document.activeElement.blur();');
     }
   }
 
