@@ -158,16 +158,19 @@ class CheckoutSuccessPage extends StatelessWidget {
                     isEnabled = state.isCancelEnabled;
                 }
 
-                return TertiaryBlackButton(
-                  isEnabled: isEnabled,
-                  text: LocalizationConstants.cancelOrder.localized(),
-                  onPressed: () {
-                    showCancelOrderAlert(context, onDismissAlert: () {
-                      unawaited(context
-                          .read<CheckoutConfirmationCubit>()
-                          .cancelOrder(checkoutSuccessEntity.orderNumber));
-                    });
-                  },
+                return Visibility(
+                  visible: isEnabled,
+                  child: TertiaryBlackButton(
+                    isEnabled: isEnabled,
+                    text: LocalizationConstants.cancelOrder.localized(),
+                    onPressed: () {
+                      showCancelOrderAlert(context, onDismissAlert: () {
+                        unawaited(context
+                            .read<CheckoutConfirmationCubit>()
+                            .cancelOrder(checkoutSuccessEntity.orderNumber));
+                      });
+                    },
+                  ),
                 );
               },
             ),

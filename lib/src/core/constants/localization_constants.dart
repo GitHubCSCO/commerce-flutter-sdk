@@ -36,6 +36,7 @@ enum LocalizationConstants {
   cancelOrder(keyword: "Cancel Order"),
   returnOrder(keyword: "Return Order"),
   returnRequest(keyword: "Return Request"),
+  returnReason(keyword: "Return Reason"),
   productsToReturn(keyword: "Products to Return"),
   numberOfItems(keyword: "Number of Items"),
   quantityExceeds(keyword: "Quantity exceeds"),
