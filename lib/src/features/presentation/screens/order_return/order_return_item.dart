@@ -147,7 +147,7 @@ class _OrderReturnItemState extends State<OrderReturnItem> {
 
   Widget _buildReturnReason(BuildContext context) {
     var reasonList = [LocalizationConstants.selectCode.localized()];
-    final returnReasons = context.read<OrderReturnCubit>().order?.returnReasons;
+    final returnReasons = context.read<OrderReturnCubit>().order.returnReasons;
     if (returnReasons != null) {
       reasonList.addAll(returnReasons.map((reason) => reason.toString()));
     }
@@ -159,7 +159,7 @@ class _OrderReturnItemState extends State<OrderReturnItem> {
         Padding(
           padding: const EdgeInsets.only(bottom: 4.0),
           child: Text(
-            LocalizationConstants.returnRequest.localized(),
+            LocalizationConstants.returnReason.localized(),
             style: OptiTextStyles.bodySmall,
           ),
         ),
