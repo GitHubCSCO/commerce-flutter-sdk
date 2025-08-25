@@ -68,6 +68,8 @@ class AssetConstants {
       AssetPathResolver.resolve("assets/images/icon_arrow_down.svg");
   static final String iconError =
       AssetPathResolver.resolve("assets/images/error_icon.svg");
+  static final String iconAlert =
+      AssetPathResolver.resolve("assets/images/icon_alert.svg");
 
   static final String iconEye =
       AssetPathResolver.resolve("assets/images/icon_eye.svg");
@@ -80,7 +82,7 @@ class AssetConstants {
       AssetPathResolver.resolve("assets/images/expand.svg");
 
   static final String speedredPaymentForm =
-      AssetPathResolver.resolve("assets/form/spreedly_payment_form.html'");
+      AssetPathResolver.resolve("assets/form/spreedly_payment_form.html");
 
   static final String iconFavorite =
       AssetPathResolver.resolve("assets/images/icon_favorite.svg");
@@ -102,6 +104,12 @@ class AssetConstants {
 
   static final String iconTag =
       AssetPathResolver.resolve("assets/images/icon_tag.svg");
+
+  static final String iconMark =
+      AssetPathResolver.resolve("assets/images/checkout_icons/icon_mark.svg");
+
+  static final String iconCopy =
+      AssetPathResolver.resolve("assets/images/checkout_icons/icon_copy.svg");
 
   // ActionType-related icons
   static final String categoriesIcon =

@@ -20,4 +20,7 @@ enum OrderStatus {
   lineItemAddToCartLoading,
   lineItemAddToCartQtyAdjusted,
   lineItemAddToCartComplete,
+
+  cancelOrderSuccess,
+  cancelOrderFailure,
 }
