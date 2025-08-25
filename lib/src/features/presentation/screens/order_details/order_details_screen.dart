@@ -13,6 +13,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/components/custom_dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/bottom_menu_cubit.dart';
@@ -165,6 +166,21 @@ class OrderDetailsPage extends StatelessWidget {
               state.errorMessage ?? '',
             );
           }
+
+          if (state.orderStatus == OrderStatus.cancelOrderSuccess) {
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.orderCancellationRequestSentSuccessfully
+                  .localized(),
+            );
+            context.read<RootBloc>().add(RootOrderHistoryInitialEvent());
+          }
+          if (state.orderStatus == OrderStatus.cancelOrderFailure) {
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.somethingWentWrong.localized(),
+            );
+          }
         },
         builder: (context, state) {
           if (state.orderStatus == OrderStatus.loading) {
@@ -263,9 +279,57 @@ class OrderDetailsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (state.isReorderViewVisible)
-                  OrderBottomSectionWidget(
-                    actions: [
+                OrderBottomSectionWidget(
+                  actions: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TertiaryBlackButton(
+                              isEnabled: state.cancelOrderEnable ?? false,
+                              text:
+                                  LocalizationConstants.cancelOrder.localized(),
+                              onPressed: () {
+                                showCancelOrderAlert(context,
+                                    onDismissAlert: () {
+                                  unawaited(context
+                                      .read<OrderDetailsCubit>()
+                                      .cancelOrder(state.order));
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: SecondaryButton(
+                              isEnabled: state.returnOrderEnable ?? false,
+                              text:
+                                  LocalizationConstants.returnOrder.localized(),
+                              onPressed: () async {
+                                final isOrderReturn =
+                                    await context.pushNamed<bool>(
+                                  AppRoute.orderReturn.name,
+                                  extra: state.order,
+                                );
+
+                                if (context.mounted && isOrderReturn == true) {
+                                  var cubit = context.read<OrderDetailsCubit>();
+                                  await cubit.loadOrderDetails(
+                                      cubit.orderNumber ?? '',
+                                      isFromVMI: false);
+                                  context
+                                      .read<RootBloc>()
+                                      .add(RootOrderHistoryInitialEvent());
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (state.isReorderViewVisible)
                       PrimaryButton(
                         text: LocalizationConstants.reorder.localized(),
                         onPressed: () {
@@ -314,8 +378,8 @@ class OrderDetailsPage extends StatelessWidget {
                           );
                         },
                       ),
-                    ],
-                  ),
+                  ],
+                ),
               ],
             );
           }

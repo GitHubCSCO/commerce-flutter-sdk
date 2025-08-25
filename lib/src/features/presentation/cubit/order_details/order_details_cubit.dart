@@ -5,13 +5,13 @@ import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.d
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_status_mapping_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/settings/order_settings_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/order_usecase/order_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'order_details_state.dart';
@@ -40,10 +40,13 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     final futureResults = await Future.wait([
       _orderUsecase.loadOrder(orderNumber),
       _orderUsecase.loadOrderSettings(),
+      _orderUsecase.getOrderStatusMappings(),
     ]);
 
     final order = futureResults[0] as OrderEntity?;
     final orderSettings = futureResults[1] as OrderSettingsEntity?;
+    final orderStatusMappings =
+        futureResults[2] as List<OrderStatusMappingEntity>?;
 
     if (order != null) {
       final analyticEvent = AnalyticsEvent(
@@ -85,6 +88,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
       final hideInventoryEnable =
           _pricingInventoryUseCase.getHideInventoryEnable();
+      final cancelOrderEnable = cancelOrderEnabled(order, orderStatusMappings);
+      final returnOrderEnable = returnOrderEnabled(order, orderStatusMappings);
 
       if (order.orderPromotions != null || order.orderPromotions!.isNotEmpty) {
         final promotionAdjustedOrder = order.copyWith(
@@ -102,12 +107,15 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
         emit(
           state.copyWith(
-              order: promotionAdjustedOrder,
-              orderSettings: orderSettings,
-              orderStatus: OrderStatus.success,
-              isReorderViewVisible: isReorderVisible,
-              hidePricingEnable: hidePricingEnable,
-              hideInventoryEnable: hideInventoryEnable),
+            order: promotionAdjustedOrder,
+            orderSettings: orderSettings,
+            orderStatus: OrderStatus.success,
+            isReorderViewVisible: isReorderVisible,
+            hidePricingEnable: hidePricingEnable,
+            hideInventoryEnable: hideInventoryEnable,
+            cancelOrderEnable: cancelOrderEnable,
+            returnOrderEnable: returnOrderEnable,
+          ),
         );
 
         return;
@@ -121,6 +129,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           isReorderViewVisible: isReorderVisible,
           hidePricingEnable: hidePricingEnable,
           hideInventoryEnable: hideInventoryEnable,
+          cancelOrderEnable: cancelOrderEnable,
+          returnOrderEnable: returnOrderEnable,
         ),
       );
     }
@@ -152,6 +162,55 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       emit(state.copyWith(
           orderStatus: OrderStatus.reorderFailure, errorMessage: message));
     }
+  }
+
+  Future<void> cancelOrder(OrderEntity orderEntity) async {
+    emit(state.copyWith(orderStatus: OrderStatus.loading));
+    orderEntity =
+        orderEntity.copyWith(status: CoreConstants.cancellationRequested);
+
+    final result = await _orderUsecase.patchOrder(
+      orderEntity,
+    );
+
+    if (result != null) {
+      emit(state.copyWith(orderStatus: OrderStatus.cancelOrderSuccess));
+
+      final orderNumber = (orderEntity.webOrderNumber.isNullOrEmpty)
+          ? (orderEntity.erpOrderNumber ?? '')
+          : orderEntity.webOrderNumber!;
+      await loadOrderDetails(orderNumber);
+    } else {
+      emit(state.copyWith(orderStatus: OrderStatus.cancelOrderFailure));
+    }
+  }
+
+  bool cancelOrderEnabled(
+      OrderEntity? order, List<OrderStatusMappingEntity>? orderStatusMappings) {
+    if (order == null || orderStatusMappings == null) {
+      return false;
+    }
+
+    final statusMapping = orderStatusMappings.firstWhere(
+      (mapping) => mapping.erpOrderStatus == order.status,
+      orElse: () => const OrderStatusMappingEntity(),
+    );
+
+    return statusMapping.allowCancellation ?? false;
+  }
+
+  bool returnOrderEnabled(
+      OrderEntity? order, List<OrderStatusMappingEntity>? orderStatusMappings) {
+    if (order == null || orderStatusMappings == null) {
+      return false;
+    }
+
+    final statusMapping = orderStatusMappings.firstWhere(
+      (mapping) => mapping.erpOrderStatus == order.status,
+      orElse: () => const OrderStatusMappingEntity(),
+    );
+
+    return statusMapping.allowRma ?? false;
   }
 
   // Order Information

@@ -120,7 +120,8 @@ class AddCreditCardPage extends StatelessWidget {
     required this.addCreditCardEntity,
   });
 
-  void _setUpEditCreditCardValues(BuildContext context) {
+  void _setUpEditCreditCardValues(
+      BuildContext context, WebsiteSettings? websiteSettings) {
     nameController.text =
         addCreditCardEntity.accountPaymentProfile?.cardHolderName ?? "";
     addressController.text =
@@ -128,6 +129,30 @@ class AddCreditCardPage extends StatelessWidget {
     cityController.text = addCreditCardEntity.accountPaymentProfile?.city ?? "";
     postalCodeController.text =
         addCreditCardEntity.accountPaymentProfile?.postalCode ?? "";
+
+    if (websiteSettings?.useSpreedlyDropIn == true) {
+      context.read<AddCreditCardBloc>().updateCreditCardInfo(
+          CreditCardInfoEntity(
+              cardIdentifier:
+                  addCreditCardEntity.accountPaymentProfile?.cardIdentifier ??
+                      '',
+              cardType:
+                  addCreditCardEntity.accountPaymentProfile?.cardType ?? '',
+              maskedCardNumber:
+                  addCreditCardEntity.accountPaymentProfile?.maskedCardNumber ??
+                      ''));
+    } else {
+      context.read<AddCreditCardBloc>().updateCreditCardInfo(
+          CreditCardInfoEntity(
+              cardIdentifier:
+                  addCreditCardEntity.accountPaymentProfile?.cardIdentifier ??
+                      '',
+              cardType:
+                  addCreditCardEntity.accountPaymentProfile?.cardType ?? '',
+              securityCode:
+                  addCreditCardEntity.accountPaymentProfile?.securityCode ??
+                      ''));
+    }
   }
 
   @override
@@ -180,7 +205,7 @@ class AddCreditCardPage extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               } else if (state is AddCreditCardLoadedState) {
                 if (!addCreditCardEntity.isAddNewCreditCard) {
-                  _setUpEditCreditCardValues(context);
+                  _setUpEditCreditCardValues(context, state.websiteSettings);
                   context.read<CardExpirationCubit>().onLoadCardExpirarionData(
                       addCreditCardEntity,
                       state.expirationYears,

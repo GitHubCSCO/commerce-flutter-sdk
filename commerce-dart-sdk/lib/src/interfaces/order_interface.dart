@@ -17,7 +17,7 @@ abstract class IOrderService {
 
   Future<Result<Order, ErrorResponse>> patchOrder(Order order);
 
-  Future<Result<Rma, ErrorResponse>> postOrderReturns(
+  Future<Result<String, ErrorResponse>> postOrderReturns(
       String orderId, Rma rmaReturn);
 
   Future<Result<ShareEntity, ErrorResponse>> shareOrder(ShareOrder order);

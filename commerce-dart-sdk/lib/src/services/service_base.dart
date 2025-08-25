@@ -117,7 +117,8 @@ class ServiceBase {
           {
             if (path.contains('/wishlistlines/batch') ||
                 path.contains('/shareinvoice') ||
-                path.contains('/tags/batch')) {
+                path.contains('/tags/batch') ||
+                path.contains('/returns')) {
               // returns empty response
               var model = deserialize<T>({}, fromJson);
               return Success(model);
