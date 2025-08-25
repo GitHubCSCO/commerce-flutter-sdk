@@ -1,10 +1,8 @@
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class OrderHistoryListItem extends StatelessWidget {
   final OrderEntity orderEntity;
@@ -34,12 +32,18 @@ class OrderHistoryListItem extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  orderEntity.orderNumberLabel ?? orderEntity.orderNumber ?? '',
-                  style: OptiTextStyles.body
-                      .copyWith(color: OptiAppColors.primaryColor),
+                Expanded(
+                  child: Text(
+                    orderEntity.orderNumberLabel ??
+                        orderEntity.orderNumber ??
+                        '',
+                    style: OptiTextStyles.body
+                        .copyWith(color: OptiAppColors.primaryColor),
+                  ),
                 ),
+                const SizedBox(width: 4),
                 Text(
                   orderEntity.orderDate != null
                       ? formatDateByLocale(
