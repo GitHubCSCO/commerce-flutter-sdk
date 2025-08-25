@@ -30,9 +30,14 @@ class OrderReturnCubit extends Cubit<OrderReturnState> {
       return;
     }
 
+    var isReturnReasonRequired =
+        order.returnReasons != null && order.returnReasons!.isNotEmpty;
+
     final isValid = returnInfoList
         .where((info) => info.numberOfItems > 0)
-        .every((info) => info.requestCode != 0);
+        .every((info) =>
+            info.numberOfItems <= info.maxItems &&
+            (!isReturnReasonRequired || info.requestCode != 0));
 
     emit(OrderReturnEnable(isValid));
   }

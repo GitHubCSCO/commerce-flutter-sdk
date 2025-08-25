@@ -66,6 +66,8 @@ class _OrderReturnItemState extends State<OrderReturnItem> {
   }
 
   Widget _buildReturnInfo() {
+    final returnReasons = context.read<OrderReturnCubit>().order?.returnReasons;
+
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -82,7 +84,8 @@ class _OrderReturnItemState extends State<OrderReturnItem> {
             const SizedBox(height: 8),
             _buildNumberOfItems(context),
             const SizedBox(height: 8),
-            _buildReturnReason(context),
+            if (returnReasons != null && returnReasons.isNotEmpty)
+              _buildReturnReason(context, returnReasons),
           ],
         ),
       ),
@@ -145,9 +148,10 @@ class _OrderReturnItemState extends State<OrderReturnItem> {
     );
   }
 
-  Widget _buildReturnReason(BuildContext context) {
+  Widget _buildReturnReason(
+      BuildContext context, List<String?>? returnReasons) {
     var reasonList = [LocalizationConstants.selectCode.localized()];
-    final returnReasons = context.read<OrderReturnCubit>().order.returnReasons;
+
     if (returnReasons != null) {
       reasonList.addAll(returnReasons.map((reason) => reason.toString()));
     }
