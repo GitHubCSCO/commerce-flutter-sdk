@@ -19,11 +19,13 @@ class ReturnInfo {
   int lineNumber;
   int requestCode;
   int numberOfItems;
+  int maxItems;
 
   ReturnInfo({
     required this.lineNumber,
     required this.requestCode,
     required this.numberOfItems,
+    required this.maxItems,
   });
 }
 
@@ -161,6 +163,7 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
         lineNumber: (orderLines[index].lineNumber ?? 0).toInt(),
         requestCode: 0,
         numberOfItems: 0,
+        maxItems: orderLines[index].qtyOrdered?.toInt() ?? 0,
       ),
     ));
 
