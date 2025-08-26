@@ -32,7 +32,8 @@ class BillingAddressCubit extends Cubit<BillingAddressState> {
     }
 
     if (addCreditCardEntity != null &&
-        !addCreditCardEntity.isAddNewCreditCard) {
+        !addCreditCardEntity.isAddNewCreditCard &&
+        (selectedCountry == null && selectedState == null)) {
       setSelectedCountryFromSavedCard(addCreditCardEntity);
     }
     var showAddNewBillingAddressFields = !billingAddressAddNewToggle;
