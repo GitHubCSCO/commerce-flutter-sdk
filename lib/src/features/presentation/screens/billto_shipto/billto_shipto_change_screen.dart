@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
@@ -78,7 +80,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
         child: BlocListener<BillToShipToBloc, BillToShipToState>(
           listener: (context, state) {
             if (state is SaveBillToShipToSuccess) {
-              context.read<CartCountCubit>().loadCurrentCartCount();
+              unawaited(context.read<CartCountCubit>().loadCurrentCartCount());
               context.read<RootBloc>().add(RootCartUpdateEvent());
               CustomSnackBar.showBilltoShipToSuccess(context);
               context.pop(false);
@@ -344,7 +346,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                     style: OptiTextStyles.link,
                   ),
                   onTap: () {
-                    _onDirectionsClick(wareHouse);
+                    unawaited(_onDirectionsClick(wareHouse));
                   },
                 )
               ],
@@ -397,10 +399,12 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
         _isSwitched = false;
       });
 
-      if (result is BillTo) {
-        context.read<BillToShipToBloc>().add(BillToUpdateEvent(result));
-      } else if (result is ShipTo) {
-        context.read<BillToShipToBloc>().add(ShipToUpdateEvent(result));
+      if (mounted) {
+        if (result is BillTo) {
+          context.read<BillToShipToBloc>().add(BillToUpdateEvent(result));
+        } else if (result is ShipTo) {
+          context.read<BillToShipToBloc>().add(ShipToUpdateEvent(result));
+        }
       }
     }
   }
