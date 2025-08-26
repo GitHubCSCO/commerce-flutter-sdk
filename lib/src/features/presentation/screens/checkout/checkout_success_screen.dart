@@ -75,16 +75,19 @@ class CheckoutSuccessScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(LocalizationConstants.orderConfirmation.localized()),
         ),
-        body: MultiBlocProvider(
-          providers: [
-            BlocProvider<ReviewOrderCubit>(
-                create: (context) => sl<ReviewOrderCubit>()),
-            BlocProvider<CheckoutConfirmationCubit>(
-                create: (context) => sl<CheckoutConfirmationCubit>()
-                  ..loadOrderStatusMappings(checkoutSuccessEntity.cart.status)),
-          ],
-          child: CheckoutSuccessPage(
-            checkoutSuccessEntity: checkoutSuccessEntity,
+        body: SafeArea(
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<ReviewOrderCubit>(
+                  create: (context) => sl<ReviewOrderCubit>()),
+              BlocProvider<CheckoutConfirmationCubit>(
+                  create: (context) => sl<CheckoutConfirmationCubit>()
+                    ..loadOrderStatusMappings(
+                        checkoutSuccessEntity.cart.status)),
+            ],
+            child: CheckoutSuccessPage(
+              checkoutSuccessEntity: checkoutSuccessEntity,
+            ),
           ),
         ));
   }
