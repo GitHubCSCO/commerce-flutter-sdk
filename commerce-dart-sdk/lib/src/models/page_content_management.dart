@@ -273,6 +273,8 @@ class Localization {
 int toInt(dynamic value) {
   if (value is int) {
     return value;
+  } else if (value is String && value == "") {
+    return 0;
   } else if (value is String) {
     return int.parse(value);
   }
