@@ -2,9 +2,11 @@ import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/get_order_collection_result_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_line_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_status_mapping_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/settings/order_settings_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/order_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/order_status_mapping_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/pagination_entity_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/settings_entity_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/base_usecase.dart';
@@ -81,6 +83,21 @@ class OrderUsecase extends BaseUseCase {
     }
   }
 
+  Future<List<OrderStatusMappingEntity>> getOrderStatusMappings() async {
+    final result = await commerceAPIServiceProvider
+        .getOrderService()
+        .getOrderStatusMappings();
+    switch (result) {
+      case Success(value: final value):
+        return value
+                ?.map((e) => OrderStatusMappingMapper.toEntity(e))
+                .toList() ??
+            [];
+      case Failure():
+        return [];
+    }
+  }
+
   Future<OrderSettingsEntity?> loadOrderSettings() async {
     final result = await commerceAPIServiceProvider
         .getSettingsService()
@@ -128,6 +145,32 @@ class OrderUsecase extends BaseUseCase {
     }
 
     return hasReorder;
+  }
+
+  Future<OrderEntity?> patchOrder(OrderEntity? order) async {
+    if (order == null) {
+      return null;
+    }
+    final result = await commerceAPIServiceProvider
+        .getOrderService()
+        .patchOrder(OrderEntityMapper.toModel(order));
+    switch (result) {
+      case Success(value: final value):
+        return value != null ? OrderEntityMapper.toEntity(value) : null;
+      case Failure():
+        return null;
+    }
+  }
+
+  Future<Result<String, ErrorResponse>?> postOrderReturns(
+      String orderId, Rma? rma) async {
+    if (rma == null) {
+      return null;
+    }
+    final result = await commerceAPIServiceProvider
+        .getOrderService()
+        .postOrderReturns(orderId, rma);
+    return result;
   }
 
   /// Refresh the Cart after calling this method

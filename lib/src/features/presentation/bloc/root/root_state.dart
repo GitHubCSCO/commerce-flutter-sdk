@@ -21,3 +21,5 @@ class RootSearchProduct extends RootState {
 
   RootSearchProduct(this.query);
 }
+
+class RootOrderHistoryInitial extends RootState {}

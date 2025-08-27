@@ -58,16 +58,20 @@ class PrimaryButton extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              leadingIcon ?? const SizedBox.shrink(),
-              const SizedBox(width: 10),
+              if (leadingIcon != null) ...{
+                leadingIcon ?? const SizedBox.shrink(),
+                const SizedBox(width: 10),
+              },
               Text(
                 text,
                 style: OptiTextStyles.subtitle.copyWith(
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
-              const SizedBox(width: 10),
-              trailingIcon ?? const SizedBox.shrink(),
+              if (trailingIcon != null) ...{
+                const SizedBox(width: 10),
+                trailingIcon ?? const SizedBox.shrink(),
+              }
             ],
           ),
         ),
@@ -121,7 +125,12 @@ class SecondaryButton extends StatelessWidget {
         width: double.infinity,
         child: Center(
           child: Text(text,
-              style: style ?? TextStyle(color: OptiAppColors.primaryColor)),
+              style: style ??
+                  TextStyle(
+                      color: isEnabled
+                          ? OptiAppColors.primaryColor
+                          : OptiAppColors.primaryColor
+                              .withOpacity(AppStyle.disabledButtonOpacity))),
         ),
       ),
     );
@@ -176,7 +185,11 @@ class TertiaryButton extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: TextStyle(color: OptiAppColors.primaryColor),
+            style: TextStyle(
+                color: isEnabled
+                    ? OptiAppColors.primaryColor
+                    : OptiAppColors.primaryColor
+                        .withOpacity(AppStyle.disabledButtonOpacity)),
           ),
         ),
       ),
