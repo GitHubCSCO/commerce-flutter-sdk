@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/telemetry_event_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -10,6 +12,34 @@ class BaseUseCase {
   BaseUseCase()
       : commerceAPIServiceProvider = sl<ICommerceAPIServiceProvider>(),
         coreServiceProvider = sl<ICoreServiceProvider>();
+
+  void trackTelemetryEvent(
+    TelemetryEvent telemetryEvent,
+  ) async {
+    await _enrichTelemetryEventWithDeviceProperties(telemetryEvent);
+
+    if (telemetryEvent.screenName != null) {
+      var screenViewEvent = TelemetryEventMapper.toScreenView(telemetryEvent);
+      coreServiceProvider
+          .getTelemetryService()
+          .screenView(screenViewEvent)
+          .ignore();
+    } else {
+      var userEvent = TelemetryEventMapper.toUserEvent(telemetryEvent);
+      coreServiceProvider.getTelemetryService().trackEvent(userEvent).ignore();
+    }
+  }
+
+  Future<void> _enrichTelemetryEventWithDeviceProperties(
+    TelemetryEvent telemetryEvent,
+  ) async {
+    final deviceProperties = await coreServiceProvider
+        .getDeviceService()
+        .getDeviceEnvironmentProperties();
+    for (final entry in deviceProperties.entries) {
+      telemetryEvent.properties[entry.key] = entry.value;
+    }
+  }
 
   void trackEvent(AnalyticsEvent analyticsEvent) async {
     coreServiceProvider

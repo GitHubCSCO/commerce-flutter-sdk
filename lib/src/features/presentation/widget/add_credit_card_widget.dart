@@ -105,6 +105,7 @@ class AddCreditCardPage extends StatelessWidget {
   final ValueNotifier<bool> tokenExValidateNotifier = ValueNotifier(false);
   final ValueNotifier<SpreedlyField?> spreedlyValidateNotifier =
       ValueNotifier(null);
+  final ValueNotifier<bool> unfocusWebViewNotifier = ValueNotifier(false);
 
   final AddCreditCardEntity addCreditCardEntity;
 
@@ -119,7 +120,8 @@ class AddCreditCardPage extends StatelessWidget {
     required this.addCreditCardEntity,
   });
 
-  void _setUpEditCreditCardValues(BuildContext context) {
+  void _setUpEditCreditCardValues(
+      BuildContext context, WebsiteSettings? websiteSettings) {
     nameController.text =
         addCreditCardEntity.accountPaymentProfile?.cardHolderName ?? "";
     addressController.text =
@@ -127,6 +129,30 @@ class AddCreditCardPage extends StatelessWidget {
     cityController.text = addCreditCardEntity.accountPaymentProfile?.city ?? "";
     postalCodeController.text =
         addCreditCardEntity.accountPaymentProfile?.postalCode ?? "";
+
+    if (websiteSettings?.useSpreedlyDropIn == true) {
+      context.read<AddCreditCardBloc>().updateCreditCardInfo(
+          CreditCardInfoEntity(
+              cardIdentifier:
+                  addCreditCardEntity.accountPaymentProfile?.cardIdentifier ??
+                      '',
+              cardType:
+                  addCreditCardEntity.accountPaymentProfile?.cardType ?? '',
+              maskedCardNumber:
+                  addCreditCardEntity.accountPaymentProfile?.maskedCardNumber ??
+                      ''));
+    } else {
+      context.read<AddCreditCardBloc>().updateCreditCardInfo(
+          CreditCardInfoEntity(
+              cardIdentifier:
+                  addCreditCardEntity.accountPaymentProfile?.cardIdentifier ??
+                      '',
+              cardType:
+                  addCreditCardEntity.accountPaymentProfile?.cardType ?? '',
+              securityCode:
+                  addCreditCardEntity.accountPaymentProfile?.securityCode ??
+                      ''));
+    }
   }
 
   @override
@@ -179,7 +205,7 @@ class AddCreditCardPage extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               } else if (state is AddCreditCardLoadedState) {
                 if (!addCreditCardEntity.isAddNewCreditCard) {
-                  _setUpEditCreditCardValues(context);
+                  _setUpEditCreditCardValues(context, state.websiteSettings);
                   context.read<CardExpirationCubit>().onLoadCardExpirarionData(
                       addCreditCardEntity,
                       state.expirationYears,
@@ -447,6 +473,7 @@ class AddCreditCardPage extends StatelessWidget {
             submitCardInfo(context);
           },
           tokenExValidateNotifier: tokenExValidateNotifier,
+          unfocusWebViewNotifier: unfocusWebViewNotifier,
         ),
       ),
     );
@@ -470,6 +497,7 @@ class AddCreditCardPage extends StatelessWidget {
             submitCardInfo(context);
           },
           spreedlyFieldUpdateNotifier: spreedlyValidateNotifier,
+          unfocusWebViewNotifier: unfocusWebViewNotifier,
         ),
       ),
     );
@@ -668,15 +696,17 @@ class AddCreditCardPage extends StatelessWidget {
                       children: [
                         Expanded(
                             child: ListPickerWidget(
-                                items: state.countries,
-                                selectedIndex: getIndexOfCountry(
-                                    state.countries,
-                                    context
-                                        .read<BillingAddressCubit>()
-                                        .selectedCountry),
-                                descriptionText:
-                                    LocalizationConstants.country.localized(),
-                                callback: onCountrySelect)),
+                          items: state.countries,
+                          selectedIndex: getIndexOfCountry(
+                              state.countries,
+                              context
+                                  .read<BillingAddressCubit>()
+                                  .selectedCountry),
+                          descriptionText:
+                              LocalizationConstants.country.localized(),
+                          callback: onCountrySelect,
+                          tapCallback: () => _updateFocus(),
+                        )),
                       ],
                     ),
                   ),
@@ -732,15 +762,17 @@ class AddCreditCardPage extends StatelessWidget {
                       children: [
                         Expanded(
                             child: ListPickerWidget(
-                                items: state.states ?? [],
-                                selectedIndex: getIndexOfState(
-                                    state.states,
-                                    context
-                                        .read<BillingAddressCubit>()
-                                        .selectedState),
-                                descriptionText:
-                                    LocalizationConstants.state.localized(),
-                                callback: onStateSelect)),
+                          items: state.states ?? [],
+                          selectedIndex: getIndexOfState(
+                              state.states,
+                              context
+                                  .read<BillingAddressCubit>()
+                                  .selectedState),
+                          descriptionText:
+                              LocalizationConstants.state.localized(),
+                          callback: onStateSelect,
+                          tapCallback: () => _updateFocus(),
+                        )),
                       ],
                     ),
                   ),
@@ -858,18 +890,19 @@ class AddCreditCardPage extends StatelessWidget {
                     children: [
                       Expanded(
                           child: ListPickerWidget(
-                              items: (expirationMonths != null)
-                                  ? expirationMonths as List<Object>
-                                  : [],
-                              descriptionText:
-                                  LocalizationConstants.selectMonth.localized(),
-                              selectedIndex:
-                                  getIndexForSelectedExpirationMonths(
-                                      expirationMonths,
-                                      context
-                                          .read<CardExpirationCubit>()
-                                          .selectedExpirationMonth),
-                              callback: _onMonthSelect)),
+                        items: (expirationMonths != null)
+                            ? expirationMonths as List<Object>
+                            : [],
+                        descriptionText:
+                            LocalizationConstants.selectMonth.localized(),
+                        selectedIndex: getIndexForSelectedExpirationMonths(
+                            expirationMonths,
+                            context
+                                .read<CardExpirationCubit>()
+                                .selectedExpirationMonth),
+                        callback: _onMonthSelect,
+                        tapCallback: () => _updateFocus(),
+                      )),
                     ],
                   ),
                 ),
@@ -918,17 +951,19 @@ class AddCreditCardPage extends StatelessWidget {
                     children: [
                       Expanded(
                           child: ListPickerWidget(
-                              items: (expirationYears != null)
-                                  ? expirationYears as List<Object>
-                                  : [],
-                              descriptionText:
-                                  LocalizationConstants.selectYear.localized(),
-                              selectedIndex: getIndexForSelectedExpirationYears(
-                                  expirationYears,
-                                  context
-                                      .read<CardExpirationCubit>()
-                                      .selectedExpirationYear),
-                              callback: _onYearSelect)),
+                        items: (expirationYears != null)
+                            ? expirationYears as List<Object>
+                            : [],
+                        descriptionText:
+                            LocalizationConstants.selectYear.localized(),
+                        selectedIndex: getIndexForSelectedExpirationYears(
+                            expirationYears,
+                            context
+                                .read<CardExpirationCubit>()
+                                .selectedExpirationYear),
+                        callback: _onYearSelect,
+                        tapCallback: () => _updateFocus(),
+                      )),
                     ],
                   ),
                 ),
@@ -976,5 +1011,9 @@ class AddCreditCardPage extends StatelessWidget {
         .read<CardExpirationCubit>()
         .onSelectExpirationMonth(item as KeyValuePair<String, int>);
     context.read<CardExpirationCubit>().validateExpirationDate();
+  }
+
+  void _updateFocus() {
+    unfocusWebViewNotifier.value = true;
   }
 }

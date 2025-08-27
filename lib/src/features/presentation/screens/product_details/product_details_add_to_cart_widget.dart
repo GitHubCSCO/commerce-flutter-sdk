@@ -278,7 +278,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                       max: CoreConstants.maximumOrderQuantity,
                       initialText: detailsAddToCartEntity.quantityText,
                       shouldShowIncrementDecrementIcon: true,
-                      onSubmitted: (int? quantity) {
+                      onSubmitted: (num? quantity) {
                         if (quantity == null) {
                           return;
                         }
@@ -287,7 +287,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                             AnalyticsEvent(AnalyticsConstants.eventQtyIncDec,
                                 AnalyticsConstants.screenNameProductDetail)));
 
-                        onQuantityChanged(quantity);
+                        onQuantityChanged(quantity.toInt());
                         var pricingState =
                             context.read<ProductDetailsPricingBloc>().state;
                         if (pricingState is ProductDetailsPricingLoaded) {
@@ -295,7 +295,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                               pricingState.productDetailsPriceEntity;
                           var productDetailsBloc =
                               context.read<ProductDetailsBloc>();
-                          productDetailsBloc.updateQuantity(quantity);
+                          productDetailsBloc.updateQuantity(quantity.toInt());
 
                           context
                               .read<ProductDetailsPricingBloc>()
@@ -304,7 +304,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                                     productDetailsPricingEntity,
                                 productDetailsDataEntity:
                                     productDetailsBloc.productDetailDataEntity,
-                                quantity: quantity,
+                                quantity: quantity.toInt(),
                               ));
                         } else {
                           context

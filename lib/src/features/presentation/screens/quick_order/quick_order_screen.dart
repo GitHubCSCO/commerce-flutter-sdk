@@ -14,6 +14,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_enti
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
@@ -91,6 +92,22 @@ class QuickOrderScreen extends BaseStatelessWidget {
     return AnalyticsEvent(
       AnalyticsConstants.eventViewScreen,
       screenName,
+    );
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    String screenName;
+    switch (_scanningMode) {
+      case ScanningMode.quick:
+        screenName = AnalyticsConstants.screenNameQuickOrder;
+      case ScanningMode.create:
+        screenName = AnalyticsConstants.screenNameVmiCreateOrder;
+      case ScanningMode.count:
+        screenName = AnalyticsConstants.screenNameCountInventory;
+    }
+    return TelemetryEvent(
+      screenName: screenName,
     );
   }
 }

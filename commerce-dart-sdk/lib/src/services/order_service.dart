@@ -114,7 +114,10 @@ class OrderService extends ServiceBase implements IOrderService {
   @override
   Future<Result<Order, ErrorResponse>> patchOrder(Order order) async {
     final data = order.toJson();
-    var url = Uri.parse('${CommerceAPIConstants.ordersUrl}/${order.id}');
+    final orderNumber = (order.webOrderNumber.isNullOrEmpty)
+        ? (order.erpOrderNumber ?? '')
+        : order.webOrderNumber!;
+    var url = Uri.parse('${CommerceAPIConstants.ordersUrl}/$orderNumber');
     return await patchAsyncNoCache<Order>(
       url.toString(),
       data,
@@ -123,16 +126,16 @@ class OrderService extends ServiceBase implements IOrderService {
   }
 
   @override
-  Future<Result<Rma, ErrorResponse>> postOrderReturns(
+  Future<Result<String, ErrorResponse>> postOrderReturns(
     String? orderId,
     Rma rmaReturn,
   ) async {
     final data = rmaReturn.toJson();
     var url = Uri.parse('${CommerceAPIConstants.ordersUrl}/$orderId/returns');
-    return await postAsyncNoCache<Rma>(
+    return await postAsyncNoCache<String>(
       url.toString(),
       data,
-      Rma.fromJson,
+      (_) => '',
     );
   }
 

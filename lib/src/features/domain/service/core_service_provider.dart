@@ -11,6 +11,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/sear
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/tracking_service_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/vmi_service_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/search_history_service.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CoreServiceProvider implements ICoreServiceProvider {
   @override
@@ -46,4 +47,8 @@ class CoreServiceProvider implements ICoreServiceProvider {
 
   @override
   ITrackingService getTrackingService() => sl<ITrackingService>();
+
+  @override
+  ITelemetryTrackingService getTelemetryService() =>
+      sl<ITelemetryTrackingService>();
 }

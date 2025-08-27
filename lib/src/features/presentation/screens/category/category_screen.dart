@@ -5,6 +5,7 @@ import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart
 import 'package:commerce_flutter_sdk/src/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/category/category_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/category/category_grid_widget.dart';
@@ -30,6 +31,11 @@ class CategoryScreen extends BaseStatelessWidget {
   AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
         AnalyticsConstants.eventViewScreen,
         AnalyticsConstants.screenNameTopCategories,
+      );
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() => TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameTopCategories,
       );
 }
 

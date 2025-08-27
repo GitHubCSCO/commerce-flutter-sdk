@@ -5,6 +5,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/get_order_collection_result_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/filter_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/order_usecase/order_usecase.dart';
@@ -273,6 +274,24 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
           );
 
       _orderUsecase.trackEvent(analyticsEvent);
+
+      var screenTelemetryEvent = TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameOrders,
+      )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertySearchTerm,
+            strValue: state.searchQuery,
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyResultsCount,
+            strValue: result?.pagination?.totalItemCount.toString() ?? '0',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertySuccessful,
+            strValue: result != null ? 'true' : 'false',
+          );
+
+      _orderUsecase.trackTelemetryEvent(screenTelemetryEvent);
     }
   }
 

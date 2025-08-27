@@ -32,4 +32,7 @@ abstract class IDeviceService {
   Future<void> biometricAuthentication(void Function() callback);
 
   bool isRunningOSVersionOrGreater(int majorVersion, int minorVersion);
+
+  /// Get device and environment properties for telemetry tracking
+  Future<Map<String, String>> getDeviceEnvironmentProperties();
 }

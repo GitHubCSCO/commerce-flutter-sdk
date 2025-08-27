@@ -5,6 +5,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
@@ -42,6 +43,10 @@ class ShopScreen extends BaseStatelessWidget {
         AnalyticsConstants.eventViewScreen,
         AnalyticsConstants.screenNameShop,
       );
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() =>
+      TelemetryEvent(screenName: AnalyticsConstants.screenNameShop);
 }
 
 class ShopPage extends StatelessWidget with BaseDynamicContentScreen {

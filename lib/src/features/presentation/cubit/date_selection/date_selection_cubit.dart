@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -13,7 +14,7 @@ class DateSelectionCubit extends Cubit<DateSelectionState> {
 
   Future<void> onInitialDateSelect(DateTime? selectedDate) async {
     if (selectedDate != null) {
-      String formattedDate = DateFormat('dd/MM/yyyy').format(selectedDate);
+      var formattedDate = formatDateByLocale(selectedDate);
       date = selectedDate;
       emit(DateSelectionState(formattedDate, selectedDate));
     } else {
@@ -23,7 +24,7 @@ class DateSelectionCubit extends Cubit<DateSelectionState> {
   }
 
   Future<void> onDateSelect(DateTime selectedDate) async {
-    String formattedDate = DateFormat('dd/MM/yyyy').format(selectedDate);
+    var formattedDate = formatDateByLocale(selectedDate);
     date = selectedDate;
     emit(DateSelectionState(formattedDate, selectedDate));
   }

@@ -17,6 +17,12 @@ AutocompleteResult _$AutocompleteResultFromJson(Map<String, dynamic> json) =>
       categories: (json['categories'] as List<dynamic>?)
           ?.map((e) => AutocompleteCategory.fromJson(e as Map<String, dynamic>))
           .toList(),
+      attributeResults: json['attributeResults'] == null
+          ? null
+          : AttributeResults.fromJson(
+              json['attributeResults'] as Map<String, dynamic>),
+      isRetailSearchCompletionResults:
+          json['isRetailSearchCompletionResults'] as bool?,
     )
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
@@ -34,4 +40,8 @@ Map<String, dynamic> _$AutocompleteResultToJson(AutocompleteResult instance) =>
       if (instance.categories?.map((e) => e.toJson()).toList()
           case final value?)
         'categories': value,
+      if (instance.attributeResults?.toJson() case final value?)
+        'attributeResults': value,
+      if (instance.isRetailSearchCompletionResults case final value?)
+        'isRetailSearchCompletionResults': value,
     };

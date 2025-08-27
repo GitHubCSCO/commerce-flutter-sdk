@@ -2,9 +2,11 @@ import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
@@ -170,6 +172,16 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
             strValue: productNumber)
         .withProperty(name: AnalyticsConstants.eventPropertyQty, strValue: qty);
 
+    var telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventAddToCart,
+      properties: {
+        AnalyticsConstants.eventPropertyProductNumber: productNumber,
+        AnalyticsConstants.eventPropertyQty: qty,
+      },
+    );
+
+    _orderApprovalUseCase.trackTelemetryEvent(telemetryEvent);
+
     _orderApprovalUseCase.trackEvent(analyticsEvent);
   }
 
@@ -224,7 +236,7 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
   String get billingCompanyTitle => state.cart.billTo?.companyName ?? '';
 
   String get orderDateValue => state.cart.orderDate != null
-      ? DateFormat(CoreConstants.dateFormatString).format(state.cart.orderDate!)
+      ? formatDateByLocale(state.cart.orderDate!)
       : '';
 
   String? get orderNotesValue => state.cart.notes ?? '';

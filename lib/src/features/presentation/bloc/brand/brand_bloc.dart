@@ -2,8 +2,10 @@ import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/brand_usecase/brand_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'brand_state.dart';
@@ -76,6 +78,20 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
                 boolValue: apiCallIsSuccessful);
 
         _brandUseCase.trackEvent(viewScreenEvent);
+
+        var viewTelemetryEvent = TelemetryEvent(
+          screenName: AnalyticsConstants.screenNameBrands,
+        )
+            .withProperty(
+                name: AnalyticsConstants.eventPropertySearchTerm,
+                strValue: event.query)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyResultsCount,
+                strValue: resultsCount.toString())
+            .withProperty(
+                name: AnalyticsConstants.eventPropertySuccessful,
+                boolValue: apiCallIsSuccessful);
+        _brandUseCase.trackTelemetryEvent(viewTelemetryEvent);
       }
     }
   }

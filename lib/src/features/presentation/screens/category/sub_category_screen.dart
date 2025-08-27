@@ -5,6 +5,7 @@ import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart
 import 'package:commerce_flutter_sdk/src/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/category/category_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/category/category_grid_widget.dart';
@@ -44,6 +45,22 @@ class SubCategoryScreen extends BaseStatelessWidget {
             name: AnalyticsConstants.eventPropertyCategoryName,
             strValue: category?.name);
     return viewScreenEvent;
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    var telemetryEvent = TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameCategory,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyCategoryId,
+          strValue: category?.id.toString(),
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyCategoryName,
+          strValue: category?.name,
+        );
+    return telemetryEvent;
   }
 }
 

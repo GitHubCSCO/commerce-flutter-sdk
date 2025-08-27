@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/models/screen_parameters.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/biometric_info_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quote_line_entity.dart';
@@ -23,6 +24,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/invoice_h
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/landing/landing_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/language/language_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/order_approval/order_approval_details_screen.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/order_return/order_return_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quote/job_quote_details_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quote/quote_all_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quote/quote_communication_screen.dart';
@@ -492,6 +494,17 @@ List<NavigationNode> _getNavigationRoot() {
     parent: vmi,
   );
 
+  // path: /orderReturn
+  final orderReturn = createNode(
+    name: AppRoute.orderReturn.name,
+    path: AppRoute.orderReturn.suffix,
+    builder: (context, state) {
+      final order = state.extra as OrderEntity;
+      return OrderReturnScreen(order: order);
+    },
+    parent: null,
+  );
+
   // path: /billToShipToChange
   final billToShipToChange = createNode(
     name: AppRoute.billToShipToChange.name,
@@ -794,6 +807,7 @@ List<NavigationNode> _getNavigationRoot() {
     biometricLogin,
     checkout,
     vmiCheckout,
+    orderReturn,
     checkoutSuccess,
     quickOrder,
     createOrder,

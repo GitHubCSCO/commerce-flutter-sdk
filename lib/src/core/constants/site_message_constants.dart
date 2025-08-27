@@ -259,7 +259,7 @@ class SiteMessageConstants {
   static String get defalutMobileAppAccountUnauthenticatedDescription =>
       "To view previous orders, lists, and other features, please sign in to your account.";
   static String get defaultMobileAppOrderConfirmationSuccessMessage =>
-      "Your order has been placed. Thank you.";
+      "Order placed. Thank you!";
   static String get defaultMobileAppSearchNoResults =>
       "Your search returned no results.";
   static String get defaultMobileAppLaunchAppDescription =>

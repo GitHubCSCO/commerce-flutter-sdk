@@ -6,6 +6,7 @@ import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart
 import 'package:commerce_flutter_sdk/src/core/mixins/validator_mixin.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
@@ -42,6 +43,17 @@ class InvoiceEmailScreen extends BaseStatelessWidget {
             name: AnalyticsConstants.screenNameInvoiceEmail,
             strValue: invoiceNumber);
     return viewScreenEvent;
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    var screenViewEvent = TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameInvoiceEmail,
+    ).withProperty(
+      name: AnalyticsConstants.screenNameInvoiceEmail,
+      strValue: invoiceNumber,
+    );
+    return screenViewEvent;
   }
 }
 

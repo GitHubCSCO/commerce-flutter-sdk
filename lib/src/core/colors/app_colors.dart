@@ -46,6 +46,7 @@ class OptiAppColors {
 
   static const invalidColor = Color(0xFFFF3B30);
   static const successColor = Color(0xFF77BC1F);
+  static const successBackgroundColor = Color(0xFF1D6C00);
 
   static const textFieldBackgroundColor = Color(0xFFFFFFFF);
   static const textFieldBorderColor = Color(0xFF9E9E9E);

@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/picker_mixin.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 
@@ -147,7 +148,9 @@ class _DropdownPickerState extends State<DropdownPicker> with PickerMixin {
                 return DropdownMenuItem<int>(
                   value: index,
                   enabled: isOptionAvailable(widget.items[index]),
-                  child: (index > 0 && widget.items.isNotEmpty)
+                  child: (index > 0 &&
+                          widget.items.isNotEmpty &&
+                          widget.items[index] is ProductDetailStyleValue)
                       ? getItemDescriptionWithAvatar(widget.items[index])
                       : Text(
                           getItemDescriptions(widget.items[index]),

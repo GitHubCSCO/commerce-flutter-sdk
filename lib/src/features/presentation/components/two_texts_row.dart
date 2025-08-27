@@ -18,19 +18,20 @@ class TwoTextsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          label,
+          style: textStyle,
+        ),
+        const SizedBox(width: 4.0),
         Expanded(
           child: Text(
-            label,
+            value,
             style: textStyle,
             maxLines: maxLines,
             overflow: (maxLines != null) ? TextOverflow.ellipsis : null,
           ),
-        ),
-        const SizedBox.shrink(),
-        Text(
-          value,
-          style: textStyle,
         ),
       ],
     );

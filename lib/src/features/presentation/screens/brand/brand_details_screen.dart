@@ -9,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -55,6 +56,18 @@ class BrandDetailsScreen extends BaseStatelessWidget {
           .withProperty(
               name: AnalyticsConstants.eventPropertyBrandId,
               strValue: brand.id);
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    return TelemetryEvent(
+      screenName: AnalyticsConstants.eventViewScreen,
+    )
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyBrandName,
+            strValue: brand.name)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyBrandId, strValue: brand.id);
+  }
 }
 
 class BrandDetailsPage extends StatelessWidget {

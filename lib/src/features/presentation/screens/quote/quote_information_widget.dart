@@ -1,7 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/extensions/date_time_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -33,9 +32,7 @@ class QuoteInformationWidget extends StatelessWidget {
               value: quoteDto?.statusDisplay ?? ''),
           DetailRow(
               label: LocalizationConstants.dateSubmitted.localized(),
-              value: quoteDto?.orderDate
-                      ?.formatDate(format: CoreConstants.dateFormatString) ??
-                  ''),
+              value: formatDateByLocale(quoteDto?.orderDate)),
           DetailRow(
               label: LocalizationConstants.customer.localized(),
               value: quoteDto?.customerName ?? ''),

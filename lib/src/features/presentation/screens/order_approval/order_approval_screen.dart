@@ -5,6 +5,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
@@ -270,8 +271,7 @@ class _OrderApprovalItem extends StatelessWidget {
                 ),
                 Text(
                   cart.orderDate != null
-                      ? DateFormat(CoreConstants.dateFormatShortString)
-                          .format(cart.orderDate!)
+                      ? formatDateByLocale(cart.orderDate!)
                       : '',
                   style: OptiTextStyles.body,
                 ),

@@ -7,6 +7,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -60,6 +61,16 @@ class WishListInformationScreen extends BaseStatelessWidget {
     return AnalyticsEvent(
       AnalyticsConstants.eventViewListInformation,
       AnalyticsConstants.screenNameListDetail,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyListId,
+      strValue: wishList.id,
+    );
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    return TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameListDetail,
     ).withProperty(
       name: AnalyticsConstants.eventPropertyListId,
       strValue: wishList.id,
@@ -189,6 +200,18 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                     context.read<WishListTagsControllerCubit>().initialize(
                           wishListTags: state.wishListTags ?? [],
                         );
+
+                    final wishListInfoState =
+                        context.read<WishListInformationCubit>().state;
+
+                    unawaited(
+                      context.read<WishListInformationCubit>().initialize(
+                            wishList: wishListInfoState.wishList.copyWith(
+                              wishListTags: state.wishListTags,
+                            ),
+                          ),
+                    );
+
                     Navigator.of(context, rootNavigator: true).pop();
                     CustomSnackBar.showSnackBarMessage(
                       context,
@@ -360,6 +383,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                             .localized(),
                                         autoFocusNode: _tagInputFocusNode,
                                         controller: _tagInputEditingController,
+                                        maxLength: 50,
                                         onTapOutside: (p0) {
                                           _tagInputFocusNode.unfocus();
                                         },
@@ -392,11 +416,16 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                                 AssetConstants.iconPlusCircle,
                                               ),
                                               const SizedBox(width: 16),
-                                              Text(
-                                                LocalizationConstants.addTag
-                                                    .localized()
-                                                    .format(
-                                                  [tagSearchInputString],
+                                              Expanded(
+                                                child: Text(
+                                                  LocalizationConstants.addTag
+                                                      .localized()
+                                                      .format(
+                                                    [tagSearchInputString],
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ],
@@ -505,9 +534,13 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                     context
                                         .read<WishListTagsControllerCubit>()
                                         .initialize(
-                                          wishListTags:
-                                              widget.wishList.wishListTags ??
-                                                  [],
+                                          wishListTags: context
+                                                  .read<
+                                                      WishListInformationCubit>()
+                                                  .state
+                                                  .wishList
+                                                  .wishListTags ??
+                                              [],
                                         );
                                   },
                                 ),
@@ -614,17 +647,21 @@ class _TagItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SvgPicture.asset(AssetConstants.iconTag),
-              const SizedBox(width: 16),
-              Text(
-                tag,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+          Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(AssetConstants.iconTag),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    tag,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
           InkWell(
             onTap: onDelete,

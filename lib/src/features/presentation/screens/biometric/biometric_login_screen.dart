@@ -7,6 +7,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
@@ -46,6 +47,16 @@ class BiometricLoginScreen extends BaseStatelessWidget {
     return AnalyticsEvent(
       AnalyticsConstants.eventViewBiometricSetup,
       AnalyticsConstants.screenNameSignIn,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyLoginType,
+      strValue: biometricName,
+    );
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    return TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameSignIn,
     ).withProperty(
       name: AnalyticsConstants.eventPropertyLoginType,
       strValue: biometricName,

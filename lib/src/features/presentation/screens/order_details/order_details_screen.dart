@@ -9,15 +9,18 @@ import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/platform_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/components/custom_dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/bottom_menu_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +29,7 @@ import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class OrderDetailsScreen extends StatelessWidget {
+class OrderDetailsScreen extends BaseStatelessWidget {
   final String orderNumber;
   final bool? isFromVMI;
   const OrderDetailsScreen({
@@ -36,7 +39,7 @@ class OrderDetailsScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -104,6 +107,23 @@ class OrderDetailsScreen extends StatelessWidget {
       }),
     );
   }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    return AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameOrderDetail,
+    );
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    return TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameOrderDetail,
+    ).withProperty(
+        name: AnalyticsConstants.eventPropertyErpOrderNumber,
+        strValue: orderNumber);
+  }
 }
 
 class OrderDetailsPage extends StatelessWidget {
@@ -144,6 +164,21 @@ class OrderDetailsPage extends StatelessWidget {
             CustomSnackBar.showSnackBarMessage(
               context,
               state.errorMessage ?? '',
+            );
+          }
+
+          if (state.orderStatus == OrderStatus.cancelOrderSuccess) {
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.orderCancellationRequestSentSuccessfully
+                  .localized(),
+            );
+            context.read<RootBloc>().add(RootOrderHistoryInitialEvent());
+          }
+          if (state.orderStatus == OrderStatus.cancelOrderFailure) {
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.somethingWentWrong.localized(),
             );
           }
         },
@@ -244,9 +279,57 @@ class OrderDetailsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (state.isReorderViewVisible)
-                  OrderBottomSectionWidget(
-                    actions: [
+                OrderBottomSectionWidget(
+                  actions: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TertiaryBlackButton(
+                              isEnabled: state.cancelOrderEnable ?? false,
+                              text:
+                                  LocalizationConstants.cancelOrder.localized(),
+                              onPressed: () {
+                                showCancelOrderAlert(context,
+                                    onDismissAlert: () {
+                                  unawaited(context
+                                      .read<OrderDetailsCubit>()
+                                      .cancelOrder(state.order));
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: SecondaryButton(
+                              isEnabled: state.returnOrderEnable ?? false,
+                              text:
+                                  LocalizationConstants.returnOrder.localized(),
+                              onPressed: () async {
+                                final isOrderReturn =
+                                    await context.pushNamed<bool>(
+                                  AppRoute.orderReturn.name,
+                                  extra: state.order,
+                                );
+
+                                if (context.mounted && isOrderReturn == true) {
+                                  var cubit = context.read<OrderDetailsCubit>();
+                                  await cubit.loadOrderDetails(
+                                      cubit.orderNumber ?? '',
+                                      isFromVMI: false);
+                                  context
+                                      .read<RootBloc>()
+                                      .add(RootOrderHistoryInitialEvent());
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (state.isReorderViewVisible)
                       PrimaryButton(
                         text: LocalizationConstants.reorder.localized(),
                         onPressed: () {
@@ -295,8 +378,8 @@ class OrderDetailsPage extends StatelessWidget {
                           );
                         },
                       ),
-                    ],
-                  ),
+                  ],
+                ),
               ],
             );
           }

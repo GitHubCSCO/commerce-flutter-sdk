@@ -5,14 +5,70 @@ import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/devi
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class DeviceService implements IDeviceService {
   PackageInfo? packageInfo;
+  final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
+  final Connectivity _connectivity = Connectivity();
 
   DeviceService();
 
   Future<void> init() async {
     packageInfo = await PackageInfo.fromPlatform();
+  }
+
+  /// Get device and environment properties for telemetry
+  @override
+  Future<Map<String, String>> getDeviceEnvironmentProperties() async {
+    final properties = <String, String>{};
+
+    // App version
+    properties['appVersion'] = packageInfo?.version ?? 'unknown';
+
+    // Platform
+    if (Platform.isIOS) {
+      properties['platform'] = 'iOS';
+      final iosInfo = await _deviceInfo.iosInfo;
+      properties['deviceModel'] = iosInfo.model;
+      properties['osVersion'] =
+          '${iosInfo.systemName} ${iosInfo.systemVersion}';
+    } else if (Platform.isAndroid) {
+      properties['platform'] = 'Android';
+      final androidInfo = await _deviceInfo.androidInfo;
+      properties['deviceModel'] = androidInfo.model;
+      properties['osVersion'] = 'Android ${androidInfo.version.release}';
+    } else {
+      properties['platform'] = Platform.operatingSystem;
+      properties['deviceModel'] = 'unknown';
+      properties['osVersion'] = 'unknown';
+    }
+
+    // Locale
+    properties['locale'] = Platform.localeName;
+
+    // Timezone
+    properties['timezone'] = DateTime.now().timeZoneName;
+
+    // Network type
+    final connectivityResult = await _connectivity.checkConnectivity();
+    if (connectivityResult.contains(ConnectivityResult.wifi)) {
+      properties['networkType'] = 'wifi';
+    } else if (connectivityResult.contains(ConnectivityResult.mobile)) {
+      properties['networkType'] = 'mobile';
+    } else if (connectivityResult.contains(ConnectivityResult.ethernet)) {
+      properties['networkType'] = 'ethernet';
+    } else {
+      properties['networkType'] = 'none';
+    }
+
+    // Timestamp
+    properties['timestamp'] = DateTime.now().toUtc().toIso8601String();
+
+    properties['mobile'] = "true";
+
+    return properties;
   }
 
   @override

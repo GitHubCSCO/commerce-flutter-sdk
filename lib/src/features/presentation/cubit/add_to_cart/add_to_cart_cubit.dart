@@ -2,6 +2,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/add_to_cart/add_to_cart_state.dart';
@@ -44,10 +45,28 @@ class AddToCartCubit extends Cubit<AddToCartState> {
         var analyticsEvent = AnalyticsEvent(
           AnalyticsConstants.eventAddToCart,
           AnalyticsConstants.screenNameProductList,
-        ).withProperty(
-            name: AnalyticsConstants.eventPropertyProductNumber,
-            strValue: product.erpNumber);
+        )
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyProductNumber,
+                strValue: product.erpNumber)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyQty,
+                strValue: data?.qtyOrdered.toString());
+
+        var telemetryEvent = TelemetryEvent(
+          eventName: AnalyticsConstants.eventAddToCart,
+          properties: {
+            AnalyticsConstants.eventPropertyProductNumber:
+                product.erpNumber ?? '',
+            AnalyticsConstants.eventPropertyQty:
+                data?.qtyOrdered.toString() ?? '',
+          },
+        );
+
+        _addToCartUsecase.trackTelemetryEvent(telemetryEvent);
+
         _addToCartUsecase.trackEvent(analyticsEvent);
+
         emit(AddToCartSuccess(addToCartMsg: productAddCartSiteMsg));
         break;
       case Failure(errorResponse: final errorResponse):

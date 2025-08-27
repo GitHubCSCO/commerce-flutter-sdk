@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
@@ -145,6 +146,16 @@ class ProductDetailsAddToCartBloc
             name: AnalyticsConstants.eventPropertyProductNumber,
             strValue: productNumber)
         .withProperty(name: AnalyticsConstants.eventPropertyQty, strValue: qty);
+
+    var telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventAddToCart,
+      properties: {
+        AnalyticsConstants.eventPropertyProductNumber: productNumber,
+        AnalyticsConstants.eventPropertyQty: qty,
+      },
+    );
+
+    _productDetailsAddToCartUseCase.trackTelemetryEvent(telemetryEvent);
 
     _productDetailsAddToCartUseCase.trackEvent(analyticsEvent);
   }

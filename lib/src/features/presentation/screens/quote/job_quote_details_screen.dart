@@ -4,6 +4,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/job_quote_details_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
@@ -119,8 +120,8 @@ class JobQuoteDetailsPage extends StatelessWidget {
                         _JobQuoteInfoSection(
                           jobName: cubit.jobQuote?.jobName ?? '',
                           expirationDate: cubit.jobQuote?.expirationDate != null
-                              ? DateFormat(CoreConstants.dateFormatString)
-                                  .format(cubit.jobQuote!.expirationDate!)
+                              ? formatDateByLocale(
+                                  cubit.jobQuote!.expirationDate!)
                               : '',
                           customerName: cubit.jobQuote?.customerName ?? '',
                           shipToAddress:

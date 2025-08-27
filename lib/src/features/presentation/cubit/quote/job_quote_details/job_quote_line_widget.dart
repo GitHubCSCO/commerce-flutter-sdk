@@ -135,7 +135,12 @@ class _JobQuoteLineQuantityGroupWidget extends StatelessWidget {
                   min: 0,
                   initialText: qtyOrdered,
                   shouldShowIncrementDecrementIcon: false,
-                  onSubmitted: onQtyChanged,
+                  onSubmitted: (num? quantity) {
+                    if (quantity == null || onQtyChanged == null) {
+                      return;
+                    }
+                    onQtyChanged!(quantity.toInt());
+                  },
                 ),
               ],
             ),

@@ -195,7 +195,7 @@ class CartAllListBody extends StatelessWidget {
                 child: SafeArea(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: state.cart?.cartLines?.length ?? 0 + 1,
+                    itemCount: cartLines.length + 1,
                     itemBuilder: (context, index) {
                       if (index == 0) {
                         return CartContentHeaderWidget(

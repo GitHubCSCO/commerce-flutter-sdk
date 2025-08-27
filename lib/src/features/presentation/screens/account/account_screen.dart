@@ -5,6 +5,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/platform_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/base/base_dynamic_content_screen.dart';
@@ -49,6 +50,10 @@ void _reloadAccountPage(BuildContext context) {
 
 class AccountScreen extends BaseStatelessWidget {
   const AccountScreen({super.key});
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() =>
+      TelemetryEvent(screenName: AnalyticsConstants.screenNameAccount);
 
   @override
   AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(

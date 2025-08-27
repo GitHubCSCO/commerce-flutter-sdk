@@ -3,6 +3,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/language/language_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
@@ -25,6 +26,11 @@ class LanguageScreen extends BaseStatelessWidget {
   AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
         AnalyticsConstants.eventViewScreen,
         AnalyticsConstants.screenNameLanguages,
+      );
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() => TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameLanguages,
       );
 }
 

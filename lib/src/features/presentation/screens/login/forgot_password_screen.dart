@@ -6,6 +6,7 @@ import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -38,6 +39,11 @@ class ForgotPasswordScreen extends BaseStatelessWidget {
   AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
         AnalyticsConstants.eventViewForgotPassword,
         AnalyticsConstants.screenNameSignIn,
+      );
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() => TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameSignIn,
       );
 }
 

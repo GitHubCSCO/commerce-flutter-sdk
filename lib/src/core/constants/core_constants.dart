@@ -20,10 +20,7 @@ class CoreConstants {
   static const String pickupWareHouseChangeReloadKey =
       "PickupWareHouseChangeReloadKey";
   static const String currencySymbol = "\$";
-  static const String dateFormatString = "MM/dd/yyyy";
-  static const String dateFormatShortString = "MM/dd/yy";
-  static const String dateFormatFullMonthString = "MMMM dd, yyyy";
-  static const String dateFormatFullString = "MM/dd/yyyy HH:mm:ss";
+
   static const String savedPaymentsShouldReloadKey =
       "SavedPaymentsShouldReloadKey";
   static const String checkoutPaymentsShouldReloadKey =
@@ -51,6 +48,8 @@ class CoreConstants {
   static const double topOffsetFactor = 0.70;
   static const double cartBottomSheetInitialSize = 70;
   static const double cartBottomPerButtonSize = 50;
+  static const String processing = 'Processing';
+  static const String cancellationRequested = 'CancellationRequested';
   static const String domainKey = 'DomainKey';
   static const String devMode = 'DevMode';
 }

@@ -24,3 +24,10 @@ class RootAnalyticsEvent extends RootEvent {
   final AnalyticsEvent analyticsEvent;
   RootAnalyticsEvent(this.analyticsEvent);
 }
+
+class RootTelemetryEvent extends RootEvent {
+  final TelemetryEvent telemetryEvent;
+  RootTelemetryEvent(this.telemetryEvent);
+}
+
+class RootOrderHistoryInitialEvent extends RootEvent {}

@@ -41,7 +41,12 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                     max: CoreConstants.maximumOrderQuantity,
                     initialText: qtyOrdered,
                     shouldShowIncrementDecrementIcon: false,
-                    onSubmitted: onQtyChanged,
+                    onSubmitted: (num? quantity) {
+                      if (quantity == null || onQtyChanged == null) {
+                        return;
+                      }
+                      onQtyChanged!(quantity.toInt());
+                    },
                     showWarningHighlighted: hasInsufficientInventory ?? false,
                     isEnabled: !isEditFieldDisabled,
                   )

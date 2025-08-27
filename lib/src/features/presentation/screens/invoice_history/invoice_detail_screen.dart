@@ -9,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/platform_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/invoice_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
@@ -111,6 +112,17 @@ class InvoiceDetailScreen extends BaseStatelessWidget {
         .withProperty(
             name: AnalyticsConstants.screenNameInvoiceDetail,
             strValue: invoiceNumber);
+    return viewScreenEvent;
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    var viewScreenEvent = TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameInvoiceDetail,
+    ).withProperty(
+      name: AnalyticsConstants.screenNameInvoiceDetail,
+      strValue: invoiceNumber,
+    );
     return viewScreenEvent;
   }
 }

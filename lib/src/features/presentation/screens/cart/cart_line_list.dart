@@ -10,17 +10,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartLineWidgetList extends StatelessWidget {
-  final String? oderNumber;
+  final String? orderNumber;
   final bool? showClearCart;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final int? cartItemsCount;
   final List<CartLineEntity> cartLineEntities;
   final void Function(BuildContext) onCartChangeCallBack;
 
-  CartLineWidgetList({
-    required this.oderNumber,
+  const CartLineWidgetList({
+    super.key,
+    required this.orderNumber,
     required this.cartLineEntities,
     required this.onCartChangeCallBack,
+    this.cartItemsCount,
     this.showClearCart,
     this.hidePricingEnable,
     this.hideInventoryEnable,
@@ -51,9 +54,9 @@ class CartLineWidgetList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CartContentHeaderWidget(
-                orderNumber: oderNumber,
+                orderNumber: orderNumber,
                 showClearCart: showClearCart,
-                cartCount: cartLineEntities.length,
+                cartCount: cartItemsCount ?? cartLineEntities.length,
               ),
               Column(
                 children: cartLineEntities
@@ -65,7 +68,7 @@ class CartLineWidgetList extends StatelessWidget {
                           onCartQuantityChangedCallback: (quantity) {
                             context.read<CartContentBloc>().add(
                                   CartContentQuantityChangedEvent(
-                                    orderNumber: oderNumber,
+                                    orderNumber: orderNumber,
                                     cartLineEntity: cartLineEntity.copyWith(
                                         qtyOrdered: quantity),
                                   ),
@@ -74,7 +77,7 @@ class CartLineWidgetList extends StatelessWidget {
                           onCartLineRemovedCallback: (cartLineEntity) {
                             context.read<CartContentBloc>().add(
                                 CartContentRemoveEvent(
-                                    orderNumber: oderNumber,
+                                    orderNumber: orderNumber,
                                     cartLine: CartLineEntityMapper.toModel(
                                         cartLineEntity)));
                           },

@@ -2,6 +2,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/product/product_screen.dart';
 import 'package:flutter/material.dart';
@@ -127,17 +128,27 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
               ?.totalItemCount ??
           0;
 
+      _searchUseCase.trackTelemetryEvent(
+          TelemetryEvent(eventName: AnalyticsConstants.eventScanBarcode)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyBarcode,
+                  strValue: searchQuery)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyBarcodeFormat,
+                  strValue: barcodeFormat?.name));
+
+      _searchUseCase.trackEvent(AnalyticsEvent(
+              AnalyticsConstants.eventScanBarcode,
+              AnalyticsConstants.screenNameSearch)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyBarcode,
+              strValue: searchQuery)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyBarcodeFormat,
+              strValue: barcodeFormat?.name));
+
       //This is a workaround for ICM-4422 where leading 0 in EAN-13 code gets dropped by the MLKit
       if (totalItemCount == 0 && barcodeFormat != null) {
-        _searchUseCase.trackEvent(AnalyticsEvent(
-                AnalyticsConstants.eventScanBarcode,
-                AnalyticsConstants.screenNameSearch)
-            .withProperty(
-                name: AnalyticsConstants.eventPropertyBarcode,
-                strValue: searchQuery)
-            .withProperty(
-                name: AnalyticsConstants.eventPropertyBarcodeFormat,
-                strValue: barcodeFormat?.name));
         /*
         For example we have a product: 012546011099
         It's UPC-A will be: 0-12546-01109-9
@@ -280,5 +291,18 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             name: AnalyticsConstants.eventPropertySuccessful,
             boolValue: apiCallIsSuccessful);
     _searchUseCase.trackEvent(viewScreenEvent);
+
+    var viewTelemetryEvent =
+        TelemetryEvent(screenName: AnalyticsConstants.screenNameSearch)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertySearchTerm,
+                strValue: query)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyResultsCount,
+                strValue: resultsCount.toString())
+            .withProperty(
+                name: AnalyticsConstants.eventPropertySuccessful,
+                boolValue: apiCallIsSuccessful);
+    _searchUseCase.trackTelemetryEvent(viewTelemetryEvent);
   }
 }

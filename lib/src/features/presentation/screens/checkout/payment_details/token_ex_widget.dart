@@ -29,13 +29,15 @@ class TokenExWidget extends StatelessWidget {
   final HandleWebViewRequestFromTokenEX handleWebViewRequestFromTokenEX;
   final HandleTokenExFinishedData handleTokenExFinishedData;
   final ValueNotifier<bool>? tokenExValidateNotifier;
+  final ValueNotifier<bool>? unfocusWebViewNotifier;
 
   const TokenExWidget(
       {super.key,
       required this.tokenExEntity,
       required this.handleWebViewRequestFromTokenEX,
       required this.handleTokenExFinishedData,
-      required this.tokenExValidateNotifier});
+      required this.tokenExValidateNotifier,
+      this.unfocusWebViewNotifier});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,8 @@ class TokenExWidget extends StatelessWidget {
           tokenExEntity: tokenExEntity,
           handleWebViewRequestFromTokenEX: handleWebViewRequestFromTokenEX,
           handleTokenExFinishedData: handleTokenExFinishedData,
-          tokenExValidateNotifier: tokenExValidateNotifier),
+          tokenExValidateNotifier: tokenExValidateNotifier,
+          unfocusWebViewNotifier: unfocusWebViewNotifier),
     );
   }
 }
@@ -55,13 +58,15 @@ class TokenExWebView extends StatefulWidget {
   final HandleWebViewRequestFromTokenEX handleWebViewRequestFromTokenEX;
   final HandleTokenExFinishedData handleTokenExFinishedData;
   final ValueNotifier<bool>? tokenExValidateNotifier;
+  final ValueNotifier<bool>? unfocusWebViewNotifier;
 
   const TokenExWebView(
       {super.key,
       required this.tokenExEntity,
       required this.handleWebViewRequestFromTokenEX,
       required this.handleTokenExFinishedData,
-      required this.tokenExValidateNotifier});
+      required this.tokenExValidateNotifier,
+      this.unfocusWebViewNotifier});
 
   @override
   State<TokenExWebView> createState() => _TokenExWebViewState();
@@ -75,12 +80,14 @@ class _TokenExWebViewState extends State<TokenExWebView> {
     super.initState();
     widget.tokenExValidateNotifier
         ?.addListener(_onTokenExValidateNotifierChanged);
+    widget.unfocusWebViewNotifier?.addListener(_unfocusWebView);
   }
 
   @override
   void dispose() {
     widget.tokenExValidateNotifier
         ?.removeListener(_onTokenExValidateNotifierChanged);
+    widget.unfocusWebViewNotifier?.removeListener(_unfocusWebView);
     super.dispose();
   }
 
@@ -88,6 +95,13 @@ class _TokenExWebViewState extends State<TokenExWebView> {
     final validate = widget.tokenExValidateNotifier?.value ?? false;
     if (validate) {
       context.read<TokenExBloc>().add(TokenExValidateEvent());
+    }
+  }
+
+  void _unfocusWebView() {
+    if (widget.unfocusWebViewNotifier?.value ?? false) {
+      widget.unfocusWebViewNotifier?.value = false;
+      _webViewController.runJavaScript('document.activeElement.blur();');
     }
   }
 
