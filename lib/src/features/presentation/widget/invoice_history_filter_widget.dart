@@ -122,11 +122,9 @@ void _showInvoiceHistoryFilter(
                     context.read<InvoiceHistoryFilterCubit>().setInvoiceNumber,
                 hintText: LocalizationConstants.invoiceNumber.localized(),
                 onListen: (context, state, textController) {
-                  if (state.invoiceNumber != textController.text) {
-                    textController.text = state.invoiceNumber ?? '';
-                    textController.selection = TextSelection.fromPosition(
-                      TextPosition(offset: textController.text.length),
-                    );
+                  if (state.invoiceNumber != textController.text &&
+                      state.invoiceNumber.isNullOrEmpty) {
+                    textController.value = const TextEditingValue(text: '');
                   }
                 },
               ),
@@ -225,7 +223,7 @@ class _FilterTextFieldWidgetState extends State<_FilterTextFieldWidget> {
   void initState() {
     super.initState();
     widget.existingValue != null
-        ? textController.text = widget.existingValue!
+        ? textController.value = TextEditingValue(text: widget.existingValue!)
         : null;
     textController.addListener(submit);
   }
