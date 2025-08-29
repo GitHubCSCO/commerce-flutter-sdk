@@ -99,9 +99,11 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/product_deta
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/checkout_confirmation/checkout_confirmation_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/in_app_browser/in_app_browser_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_email/invoice_email_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_return/order_return_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/job_quote_details/job_quote_details_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_communication/quote_communication_bloc.dart';
@@ -282,6 +284,9 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() =>
         OrderDetailsCubit(orderUsercase: sl(), pricingInventoryUseCase: sl()))
 
+    //order return
+    ..registerFactory(() => OrderReturnCubit(orderUserCase: sl()))
+
     //saved order
     ..registerFactory(() =>
         SavedOrderCubit(savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
@@ -433,6 +438,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => PaymentDetailsUseCase())
     ..registerFactory(() => TokenExBloc())
     ..registerFactory(() => ReviewOrderCubit())
+    ..registerFactory(() => CheckoutConfirmationCubit(orderUseCase: sl()))
 
     // Add Credit Card
     ..registerFactory(() => AddCreditCardBloc(addCreditCardUsecase: sl()))
