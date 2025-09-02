@@ -137,9 +137,12 @@ class WishListTagsControllerCubit extends Cubit<WishListTagsControllerState> {
       final currentState = state as WishListTagsControllerEditing;
       final addedTags = currentState.addedTags ?? [];
       final existingTags = currentState.wishListTags ?? [];
+      final tagToLowerCase = tag.toLowerCase();
 
-      if (existingTags.any((element) => element.tag == tag) ||
-          addedTags.any((element) => element.tag == tag)) {
+      if (existingTags
+              .any((element) => element.tag?.toLowerCase() == tagToLowerCase) ||
+          addedTags
+              .any((element) => element.tag?.toLowerCase() == tagToLowerCase)) {
         return '';
       }
 

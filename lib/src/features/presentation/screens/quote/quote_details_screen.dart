@@ -84,6 +84,12 @@ class QuoteDetailsPage extends StatelessWidget {
         } else if (state is QuoteSubmissionSuccessState) {
           CustomSnackBar.showSuccesss(context);
           context.read<RootBloc>().add(RootCartUpdateEvent());
+          final cubit = context.read<QuoteDetailsBloc>();
+          if (cubit.quoteDto?.isJobQuote == true &&
+              cubit.quoteDto?.status == "JobAccepted") {
+            context.pop(false);
+            return;
+          }
           context.pop(true);
         } else if (state is QuoteSubmissionFailedState) {
           CustomSnackBar.showFailure(context);
