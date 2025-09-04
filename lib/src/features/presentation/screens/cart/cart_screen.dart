@@ -878,14 +878,14 @@ class _CartPageState extends State<CartPage> {
       list.add(
           CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
     }
-    list.add(BlocProvider<CartShippingSelectionBloc>(
-      create: (context) => sl<CartShippingSelectionBloc>()
-        ..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
-      child: CartShippingWidget(
-        shippingEntity: shippingEntity,
-        onCallBack: _handlePickUpLocationCallBack,
-      ),
-    ));
+    // list.add(BlocProvider<CartShippingSelectionBloc>(
+    //   create: (context) => sl<CartShippingSelectionBloc>()
+    //     ..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
+    //   child: CartShippingWidget(
+    //     shippingEntity: shippingEntity,
+    //     onCallBack: _handlePickUpLocationCallBack,
+    //   ),
+    // ));
 
     list.add(const SizedBox(height: 8));
 
