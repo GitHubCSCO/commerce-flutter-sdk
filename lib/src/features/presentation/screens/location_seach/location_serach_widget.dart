@@ -158,7 +158,7 @@ class LocationSearchPage extends StatelessWidget {
                     if (state is LocationSearchLoadedState) {
                       textEditingController.text =
                           state.searchedLocation?.formattedName ?? "";
-        
+
                       if (locationSearchType == LocationSearchType.vmi) {
                         context.read<VMILocationBloc>().add(
                             UpdateSearchPlaceEvent(
