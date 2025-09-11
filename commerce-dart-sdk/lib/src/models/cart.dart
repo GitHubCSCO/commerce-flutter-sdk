@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, unintended_html_in_doc_comment
 import 'package:optimizely_commerce_api/src/utils/key_value_pair.dart';
 
 import 'models.dart';

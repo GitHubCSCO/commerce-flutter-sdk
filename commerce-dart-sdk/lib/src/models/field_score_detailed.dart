@@ -5,14 +5,14 @@ part 'field_score_detailed.g.dart';
 @JsonSerializable(explicitToJson: true)
 class FieldScoreDetailed extends FieldScore {
   FieldScoreDetailed({
-    String? name,
-    double? score,
+    super.name,
+    super.score,
     this.boost,
     this.inverseDocumentFrequency,
     this.matchText,
     this.scoreUsed,
     this.termFrequencyNormalized,
-  }) : super(name: name, score: score);
+  });
 
   double? boost;
 

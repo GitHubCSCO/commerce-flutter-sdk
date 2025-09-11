@@ -1,6 +1,8 @@
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:test/test.dart';
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 void main() {
   group('StyledProduct', () {
     test('fromJson should correctly deserialize JSON to StyledProduct object',
