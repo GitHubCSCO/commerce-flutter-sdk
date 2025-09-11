@@ -91,12 +91,12 @@ class VmiNoteQueryParameters extends VmiCountQueryParameters {
   String? vmiNoteId;
 
   VmiNoteQueryParameters({
-    required vmiBinId,
+    required super.vmiBinId,
     this.vmiNoteId,
     super.page,
     super.pageSize,
     super.sort,
-  }) : super(vmiBinId: vmiBinId);
+  });
 
   @override
   Map<String, dynamic> toJson() =>
@@ -109,12 +109,12 @@ class VmiLocationDetailParameters extends BaseVmiLocationQueryParameters {
   List<String> expand;
 
   VmiLocationDetailParameters({
-    required vmiLocationId,
+    required super.vmiLocationId,
     this.expand = const [],
     super.page,
     super.pageSize,
     super.sort,
-  }) : super(vmiLocationId: vmiLocationId);
+  });
 
   @override
   Map<String, dynamic> toJson() =>
@@ -132,7 +132,7 @@ class VmiBinDetailParameters extends BaseVmiLocationQueryParameters {
     super.page,
     super.pageSize,
     super.sort,
-  }) : super(vmiLocationId: vmiLocationId);
+  });
 
   @override
   Map<String, dynamic> toJson() =>
@@ -145,13 +145,13 @@ class VmiCountDetailParameters extends VmiBinDetailParameters {
   String vmiCountId;
 
   VmiCountDetailParameters({
-    required vmiLocationId,
-    required vmiBinId,
+    required super.vmiLocationId,
+    required super.vmiBinId,
     required this.vmiCountId,
     super.page,
     super.pageSize,
     super.sort,
-  }) : super(vmiLocationId: vmiLocationId, vmiBinId: vmiBinId);
+  });
 
   @override
   Map<String, dynamic> toJson() =>
@@ -163,9 +163,11 @@ class VmiCountDetailParameters extends VmiBinDetailParameters {
 class VmiNoteDetailParameters extends VmiBinDetailParameters {
   String vmiNoteId;
 
-  VmiNoteDetailParameters(
-      {required vmiLocationId, required vmiBinId, required this.vmiNoteId})
-      : super(vmiLocationId: vmiLocationId, vmiBinId: vmiBinId);
+  VmiNoteDetailParameters({
+    required super.vmiLocationId,
+    required super.vmiBinId,
+    required this.vmiNoteId,
+  });
 
   @override
   Map<String, dynamic> toJson() =>
@@ -180,14 +182,14 @@ class VmiLocationProductParameters extends BaseVmiLocationQueryParameters {
   String filter;
 
   VmiLocationProductParameters({
-    required vmiLocationId,
+    required super.vmiLocationId,
     required this.searchCriteria,
     this.expand = const [],
     required this.filter,
     super.page,
     super.pageSize,
     super.sort,
-  }) : super(vmiLocationId: vmiLocationId);
+  });
 
   @override
   Map<String, dynamic> toJson() =>
