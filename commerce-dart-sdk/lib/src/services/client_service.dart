@@ -122,10 +122,11 @@ class ClientService implements IClientService {
   // Map<String, String> headers = {};
 
   String? get clientId => ClientConfig.clientId;
-  set clientID(clientId) => ClientConfig.clientId = clientId;
+  set clientID(String? clientId) => ClientConfig.clientId = clientId;
 
   String? get clientSecret => ClientConfig.clientSecret;
-  set clientSecret(clientSecret) => ClientConfig.clientSecret = clientSecret;
+  set clientSecret(String? clientSecret) =>
+      ClientConfig.clientSecret = clientSecret;
 
   String get bearerTokenStorageKey => "bearerToken";
   String get refreshTokenStorageKey => "refreshToken";

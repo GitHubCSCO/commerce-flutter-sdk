@@ -127,7 +127,7 @@ class VmiBinDetailParameters extends BaseVmiLocationQueryParameters {
   String vmiBinId;
 
   VmiBinDetailParameters({
-    required vmiLocationId,
+    required super.vmiLocationId,
     required this.vmiBinId,
     super.page,
     super.pageSize,
