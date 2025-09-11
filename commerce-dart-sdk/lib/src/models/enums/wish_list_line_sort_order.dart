@@ -1,5 +1,3 @@
-// ignore_for_file: unused_element
-
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 enum WishListLineSortOrder implements SortOrderAttribute {
@@ -32,7 +30,6 @@ enum WishListLineSortOrder implements SortOrderAttribute {
     required this.groupTitle,
     required this.title,
     required this.value,
-    this.sortOrderOptions,
   });
 
   @override
@@ -41,7 +38,8 @@ enum WishListLineSortOrder implements SortOrderAttribute {
   final String title;
   @override
   final String value;
-  final SortOrderOptions? sortOrderOptions;
+
+  final SortOrderOptions? sortOrderOptions = null;
 
   @override
   SortOrderOptions? get sortOrderOption => sortOrderOptions;
