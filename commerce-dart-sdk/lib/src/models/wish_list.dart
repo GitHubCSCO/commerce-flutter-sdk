@@ -1,5 +1,3 @@
-import 'package:optimizely_commerce_api/src/models/wish_list_tag.dart';
-
 import 'models.dart';
 
 part 'wish_list.g.dart';

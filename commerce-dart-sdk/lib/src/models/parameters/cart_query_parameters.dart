@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-import 'package:optimizely_commerce_api/src/utils/json_encoding_methods.dart';
 
 part 'cart_query_parameters.g.dart';
 

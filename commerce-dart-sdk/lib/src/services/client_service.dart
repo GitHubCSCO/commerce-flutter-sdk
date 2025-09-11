@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:dio/dio.dart';
 
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:optimizely_commerce_api/src/constants/header_constants.dart';
-import 'package:optimizely_commerce_api/src/interfaces/auth_stream_service_interface.dart';
 import 'package:optimizely_commerce_api/src/utils/commerce_cookie_jar.dart';
 
 class RequestMessage {
