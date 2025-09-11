@@ -135,11 +135,9 @@ void _showInvoiceHistoryFilter(
                     context.read<InvoiceHistoryFilterCubit>().setPoNumber,
                 hintText: LocalizationConstants.pONumber.localized(),
                 onListen: (context, state, textController) {
-                  if (state.poNumber != textController.text) {
-                    textController.text = state.poNumber ?? '';
-                    textController.selection = TextSelection.fromPosition(
-                      TextPosition(offset: textController.text.length),
-                    );
+                  if (state.poNumber != textController.text &&
+                      state.poNumber.isNullOrEmpty) {
+                    textController.value = const TextEditingValue(text: '');
                   }
                 },
               ),
@@ -150,11 +148,9 @@ void _showInvoiceHistoryFilter(
                     context.read<InvoiceHistoryFilterCubit>().setOrderNumber,
                 hintText: LocalizationConstants.orderNumber.localized(),
                 onListen: (context, state, textController) {
-                  if (state.orderNumber != textController.text) {
-                    textController.text = state.orderNumber ?? '';
-                    textController.selection = TextSelection.fromPosition(
-                      TextPosition(offset: textController.text.length),
-                    );
+                  if (state.orderNumber != textController.text &&
+                      state.orderNumber.isNullOrEmpty) {
+                    textController.value = const TextEditingValue(text: '');
                   }
                 },
               ),
