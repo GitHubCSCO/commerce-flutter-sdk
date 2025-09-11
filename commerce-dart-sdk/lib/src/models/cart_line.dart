@@ -84,21 +84,13 @@ class CartLine extends AddCartLine {
       this.status,
       this.unitOfMeasureDescription,
       this.unitOfMeasureDisplay,
-      String? productId,
-      num? qtyOrdered,
-      String? unitOfMeasure,
-      String? notes,
-      String? vmiBinId,
-      List<SectionOptionDto>? sectionOptions,
-      bool? allowZeroPricing})
-      : super(
-            notes: notes,
-            productId: productId,
-            qtyOrdered: qtyOrdered,
-            sectionOptions: sectionOptions,
-            unitOfMeasure: unitOfMeasure,
-            vmiBinId: vmiBinId,
-            allowZeroPricing: allowZeroPricing);
+      super.productId,
+      super.qtyOrdered,
+      super.unitOfMeasure,
+      super.notes,
+      super.vmiBinId,
+      super.sectionOptions,
+      super.allowZeroPricing});
 
   /// Gets or sets the product URI.
   String? productUri;

@@ -1,5 +1,4 @@
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-import 'package:optimizely_commerce_api/src/models/user_event.dart';
 
 class MobileSpireContentService extends ServiceBase
     implements IMobileSpireContentService {
