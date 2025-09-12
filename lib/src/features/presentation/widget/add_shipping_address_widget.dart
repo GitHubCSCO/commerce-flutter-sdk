@@ -28,11 +28,13 @@ class AddShippingAddressScreen extends StatelessWidget {
           title: Text(LocalizationConstants.shippingAddress.localized()),
           centerTitle: false,
         ),
-        body: MultiBlocProvider(providers: [
-          BlocProvider<AddShippingAddressCubit>(
-              create: (context) =>
-                  sl<AddShippingAddressCubit>()..setUpDataShippingAddress()),
-        ], child: AddShippingAddressPage()));
+        body: SafeArea(
+          child: MultiBlocProvider(providers: [
+            BlocProvider<AddShippingAddressCubit>(
+                create: (context) =>
+                    sl<AddShippingAddressCubit>()..setUpDataShippingAddress()),
+          ], child: AddShippingAddressPage()),
+        ));
   }
 }
 

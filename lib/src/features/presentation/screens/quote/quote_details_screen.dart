@@ -58,153 +58,161 @@ class QuoteDetailsPage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocConsumer<QuoteDetailsBloc, QuoteDetailsState>(
-          buildWhen: (previous, current) {
-        if (current is QuoteDetailsLoadedState ||
-            current is QuoteDetailsLoadingState ||
-            current is QuoteDetailsFailedState) {
-          return true;
-        }
-        return false;
-      }, listener: (_, state) {
-        if (state is QuoteDetailsInitializationSuccessState) {
-          context
-              .read<QuoteDetailsBloc>()
-              .add(LoadQuoteDetailsDataEvent(quoteId: quoteDto?.id ?? ""));
-        } else if (state is QuoteAcceptMessageShowState) {
-          displayDialogForAccpetQuote(context);
-        } else if (state is QuoteAcceptMessageBypassState) {
-          context.read<QuoteDetailsBloc>().add(ProceedToCheckoutEvent());
-        } else if (state is QuoteAcceptedCheckoutState) {
-          AppRoute.checkout.navigateBackStack(context, extra: state.cart);
-        } else if (state is ExpirationDateRequiredState) {
-          _displayDialogForExpirationDateRequired(context, state.message);
-        } else if (state is PastExpirationDateState) {
-          _displayDialogPastExpirationDate(context, state.message);
-        } else if (state is QuoteSubmissionSuccessState) {
-          CustomSnackBar.showSuccesss(context);
-          context.read<RootBloc>().add(RootCartUpdateEvent());
-          context.pop(true);
-        } else if (state is QuoteSubmissionFailedState) {
-          CustomSnackBar.showFailure(context);
-          context.read<RootBloc>().add(RootCartUpdateEvent());
-          context.pop(true);
-        } else if (state is QuoteDeletionSuccessState) {
-          CustomSnackBar.showSuccesss(context);
-          context.read<RootBloc>().add(RootCartUpdateEvent());
-          AppRoute.myQuote.navigate(context);
-        } else if (state is QuoteDeletionFailedState) {
-          CustomSnackBar.showFailure(context);
-        } else if (state is QuoteDeclineSuccessState) {
-          CustomSnackBar.showSuccesss(context);
-          context.read<RootBloc>().add(RootCartUpdateEvent());
-          context.pop(true);
-        } else if (state is QuoteDeclineFailedState) {
-          CustomSnackBar.showFailure(context);
-        } else if (state is QuotelineNoetUpdateSuccessState) {
-          CustomSnackBar.showSuccesss(context);
-          context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
-        } else if (state is QuotelineNoteUpdateFailureState) {
-          CustomSnackBar.showFailure(context);
-          context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
-        } else if (state is QuotelineQuantityUpdatedState) {
-          context
-              .read<QuoteDetailsBloc>()
-              .add(LoadQuoteDetailsDataEvent(quoteId: quoteDto?.id ?? ""));
-        } else if (state is QuotelineQuantityUpdatedFailureState) {
-          CustomSnackBar.showFailure(context);
-        }
-      }, builder: (_, state) {
-        if (state is QuoteDetailsFailedState) {
-          return OptiErrorWidget(
-            onRetry: () {
-              context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
-            },
-          );
-        } else if (state is QuoteDetailsLoadingState) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is QuoteDetailsLoadedState) {
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Visibility(
-                          visible: context
-                              .read<QuoteDetailsBloc>()
-                              .shouldShowExpirationDate,
-                          child: _buildQuoteExpirationWidget(
-                              context, state.quoteDto)),
-                      _buildQuoteMessageWidget(context, state.quoteDto),
-                      QuoteInformationWidget(quoteDto: state.quoteDto),
-                      _buildQuoteLinesWidget(context, state.quoteLines),
-                      _buildButtonsWidget(context, state.quoteDto)
-                    ],
+      body: SafeArea(
+        child: BlocConsumer<QuoteDetailsBloc, QuoteDetailsState>(
+            buildWhen: (previous, current) {
+          if (current is QuoteDetailsLoadedState ||
+              current is QuoteDetailsLoadingState ||
+              current is QuoteDetailsFailedState) {
+            return true;
+          }
+          return false;
+        }, listener: (_, state) {
+          if (state is QuoteDetailsInitializationSuccessState) {
+            context
+                .read<QuoteDetailsBloc>()
+                .add(LoadQuoteDetailsDataEvent(quoteId: quoteDto?.id ?? ""));
+          } else if (state is QuoteAcceptMessageShowState) {
+            displayDialogForAccpetQuote(context);
+          } else if (state is QuoteAcceptMessageBypassState) {
+            context.read<QuoteDetailsBloc>().add(ProceedToCheckoutEvent());
+          } else if (state is QuoteAcceptedCheckoutState) {
+            AppRoute.checkout.navigateBackStack(context, extra: state.cart);
+          } else if (state is ExpirationDateRequiredState) {
+            _displayDialogForExpirationDateRequired(context, state.message);
+          } else if (state is PastExpirationDateState) {
+            _displayDialogPastExpirationDate(context, state.message);
+          } else if (state is QuoteSubmissionSuccessState) {
+            CustomSnackBar.showSuccesss(context);
+            context.read<RootBloc>().add(RootCartUpdateEvent());
+            final cubit = context.read<QuoteDetailsBloc>();
+            if (cubit.quoteDto?.isJobQuote == true &&
+                cubit.quoteDto?.status == "JobAccepted") {
+              context.pop(false);
+              return;
+            }
+            context.pop(true);
+          } else if (state is QuoteSubmissionFailedState) {
+            CustomSnackBar.showFailure(context);
+            context.read<RootBloc>().add(RootCartUpdateEvent());
+            context.pop(true);
+          } else if (state is QuoteDeletionSuccessState) {
+            CustomSnackBar.showSuccesss(context);
+            context.read<RootBloc>().add(RootCartUpdateEvent());
+            AppRoute.myQuote.navigate(context);
+          } else if (state is QuoteDeletionFailedState) {
+            CustomSnackBar.showFailure(context);
+          } else if (state is QuoteDeclineSuccessState) {
+            CustomSnackBar.showSuccesss(context);
+            context.read<RootBloc>().add(RootCartUpdateEvent());
+            context.pop(true);
+          } else if (state is QuoteDeclineFailedState) {
+            CustomSnackBar.showFailure(context);
+          } else if (state is QuotelineNoetUpdateSuccessState) {
+            CustomSnackBar.showSuccesss(context);
+            context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
+          } else if (state is QuotelineNoteUpdateFailureState) {
+            CustomSnackBar.showFailure(context);
+            context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
+          } else if (state is QuotelineQuantityUpdatedState) {
+            context
+                .read<QuoteDetailsBloc>()
+                .add(LoadQuoteDetailsDataEvent(quoteId: quoteDto?.id ?? ""));
+          } else if (state is QuotelineQuantityUpdatedFailureState) {
+            CustomSnackBar.showFailure(context);
+          }
+        }, builder: (_, state) {
+          if (state is QuoteDetailsFailedState) {
+            return OptiErrorWidget(
+              onRetry: () {
+                context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
+              },
+            );
+          } else if (state is QuoteDetailsLoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is QuoteDetailsLoadedState) {
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Visibility(
+                            visible: context
+                                .read<QuoteDetailsBloc>()
+                                .shouldShowExpirationDate,
+                            child: _buildQuoteExpirationWidget(
+                                context, state.quoteDto)),
+                        _buildQuoteMessageWidget(context, state.quoteDto),
+                        QuoteInformationWidget(quoteDto: state.quoteDto),
+                        _buildQuoteLinesWidget(context, state.quoteLines),
+                        _buildButtonsWidget(context, state.quoteDto)
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              BlocBuilder<QuoteDetailsBloc, QuoteDetailsState>(
-                  builder: (_, state) {
-                if (state is SubmitButtonLoadingState) {
-                  return const Padding(
-                    padding: EdgeInsets.all(30.0),
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-                    child: Visibility(
-                      visible: context
-                          .read<QuoteDetailsBloc>()
-                          .canBeSubmittedOrDeleted,
-                      child: PrimaryButton(
-                        onPressed: () {
-                          if (context
-                              .read<QuoteDetailsBloc>()
-                              .isJobQuoteProposed) {
-                            var quoteDto =
-                                context.read<QuoteDetailsBloc>().quoteDto;
-                            if (quoteDto != null) {
-                              context
-                                  .read<QuoteDetailsBloc>()
-                                  .add(SubmitQuoteEvent(quoteDto: quoteDto));
-                            }
-                          } else if (context
-                              .read<QuoteDetailsBloc>()
-                              .isQuoteProposed) {
-                            context
-                                .read<QuoteDetailsBloc>()
-                                .add(AcceptQuoteEvent());
-                          } else if (context
-                              .read<QuoteDetailsBloc>()
-                              .isSalesPerson) {
-                            var quoteDto =
-                                context.read<QuoteDetailsBloc>().quoteDto;
-                            if (quoteDto != null) {
-                              context
-                                  .read<QuoteDetailsBloc>()
-                                  .add(SubmitQuoteEvent(quoteDto: quoteDto));
-                            }
-                          }
-                        },
-                        text: context.read<QuoteDetailsBloc>().getSubmitTitle,
+                BlocBuilder<QuoteDetailsBloc, QuoteDetailsState>(
+                    builder: (_, state) {
+                  if (state is SubmitButtonLoadingState) {
+                    return const Padding(
+                      padding: EdgeInsets.all(30.0),
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
-                    ),
-                  );
-                }
-              })
-            ],
-          );
-        } else {
-          return Container();
-        }
-      }),
+                    );
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+                      child: Visibility(
+                        visible: context
+                            .read<QuoteDetailsBloc>()
+                            .canBeSubmittedOrDeleted,
+                        child: PrimaryButton(
+                          onPressed: () {
+                            if (context
+                                .read<QuoteDetailsBloc>()
+                                .isJobQuoteProposed) {
+                              var quoteDto =
+                                  context.read<QuoteDetailsBloc>().quoteDto;
+                              if (quoteDto != null) {
+                                context
+                                    .read<QuoteDetailsBloc>()
+                                    .add(SubmitQuoteEvent(quoteDto: quoteDto));
+                              }
+                            } else if (context
+                                .read<QuoteDetailsBloc>()
+                                .isQuoteProposed) {
+                              context
+                                  .read<QuoteDetailsBloc>()
+                                  .add(AcceptQuoteEvent());
+                            } else if (context
+                                .read<QuoteDetailsBloc>()
+                                .isSalesPerson) {
+                              var quoteDto =
+                                  context.read<QuoteDetailsBloc>().quoteDto;
+                              if (quoteDto != null) {
+                                context
+                                    .read<QuoteDetailsBloc>()
+                                    .add(SubmitQuoteEvent(quoteDto: quoteDto));
+                              }
+                            }
+                          },
+                          text: context.read<QuoteDetailsBloc>().getSubmitTitle,
+                        ),
+                      ),
+                    );
+                  }
+                })
+              ],
+            );
+          } else {
+            return Container();
+          }
+        }),
+      ),
     );
   }
 

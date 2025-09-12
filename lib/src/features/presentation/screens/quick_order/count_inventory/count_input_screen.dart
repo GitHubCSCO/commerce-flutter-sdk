@@ -107,57 +107,61 @@ class _CountInputPageState extends State<CountInputPage> {
             ),
           ],
         ),
-        body: Container(
-          color: OptiAppColors.backgroundWhite,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ProductListItemWithBasicInfo(
-                        imageUrl: widget.countInventoryEntity.vmiBinEntity
-                            .productEntity?.smallImagePath,
-                        title: widget.countInventoryEntity.vmiBinEntity
-                            .productEntity?.shortDescription,
-                        productNumber: widget
-                            .countInventoryEntity.vmiBinEntity.productEntity
-                            ?.getProductNumber(),
-                      ),
-                      const SizedBox(height: 20.0),
-                      TabSwitchWidget(
-                        tabTitle0: LocalizationConstants.history.localized(),
-                        tabTitle1:
-                            LocalizationConstants.productInfo.localized(),
-                        tabWidget0: _getHistoryWidget(),
-                        tabWidget1: _getProductInfoWidget(),
-                      ),
-                      _getQtyInputWidget()
-                    ],
+        body: SafeArea(
+          child: Container(
+            color: OptiAppColors.backgroundWhite,
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ProductListItemWithBasicInfo(
+                          imageUrl: widget.countInventoryEntity.vmiBinEntity
+                              .productEntity?.smallImagePath,
+                          title: widget.countInventoryEntity.vmiBinEntity
+                              .productEntity?.shortDescription,
+                          productNumber: widget
+                              .countInventoryEntity.vmiBinEntity.productEntity
+                              ?.getProductNumber(),
+                        ),
+                        const SizedBox(height: 20.0),
+                        TabSwitchWidget(
+                          tabTitle0: LocalizationConstants.history.localized(),
+                          tabTitle1:
+                              LocalizationConstants.productInfo.localized(),
+                          tabWidget0: _getHistoryWidget(),
+                          tabWidget1: _getProductInfoWidget(),
+                        ),
+                        _getQtyInputWidget()
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                height: 80,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                clipBehavior: Clip.antiAlias,
-                decoration: const BoxDecoration(color: Colors.white),
-                child: PrimaryButton(
-                  onPressed: () {
-                    setState(() {
-                      isUpdateEnable = !isUpdateEnable;
-                    });
-                    context.read<CountInventoryCubit>().updateInventoryQuantity(
-                        widget.countInventoryEntity.vmiBinEntity,
-                        _qtyController.text);
-                  },
-                  isEnabled: isUpdateEnable,
-                  text: LocalizationConstants.update.localized(),
-                ),
-              )
-            ],
+                Container(
+                  height: 80,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: const BoxDecoration(color: Colors.white),
+                  child: PrimaryButton(
+                    onPressed: () {
+                      setState(() {
+                        isUpdateEnable = !isUpdateEnable;
+                      });
+                      context
+                          .read<CountInventoryCubit>()
+                          .updateInventoryQuantity(
+                              widget.countInventoryEntity.vmiBinEntity,
+                              _qtyController.text);
+                    },
+                    isEnabled: isUpdateEnable,
+                    text: LocalizationConstants.update.localized(),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

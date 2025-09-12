@@ -150,7 +150,7 @@ class PageClassicWidget {
   @JsonKey(name: 'class')
   String? type;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? subType;
 
   @JsonKey(name: 'childWidgets')
