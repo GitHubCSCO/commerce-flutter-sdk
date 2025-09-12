@@ -71,68 +71,73 @@ class _OrderReturnPageState extends State<OrderReturnPage> {
         centerTitle: false,
         title: Text(LocalizationConstants.returnRequest.localized()),
       ),
-      body: BlocConsumer<OrderReturnCubit, OrderReturnState>(
-        listener: (context, state) {
-          if (state is OrderReturnSuccess) {
-            CustomSnackBar.showSnackBarMessage(
-              context,
-              LocalizationConstants.returnRequestSubmissionIsSuccessful
-                  .localized(),
-            );
-            Navigator.pop(context);
-          } else if (state is OrderReturnFailure) {
-            CustomSnackBar.showSnackBarMessage(
-              context,
-              LocalizationConstants.somethingWentWrong.localized(),
-            );
-          }
-        },
-        buildWhen: (previous, current) =>
-            current is OrderReturnInitial || current is OrderReturnLoaded,
-        builder: (context, state) {
-          switch (state) {
-            case OrderReturnInitial():
-              return const Center(child: CircularProgressIndicator());
-            case OrderReturnLoaded():
-              return Column(
-                children: [
-                  Expanded(
-                    child: CustomScrollView(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: _buildOrderNotes(context),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                    horizontal: 24, vertical: 20)
-                                .copyWith(bottom: 8),
-                            child: Text(
-                              LocalizationConstants.productsToReturn
-                                  .localized(),
-                              style: OptiTextStyles.titleLarge,
+      body: SafeArea(
+        child: BlocConsumer<OrderReturnCubit, OrderReturnState>(
+          listener: (context, state) {
+            if (state is OrderReturnSuccess) {
+              CustomSnackBar.showSnackBarMessage(
+                context,
+                LocalizationConstants.returnRequestSubmissionIsSuccessful
+                    .localized(),
+              );
+              Navigator.pop(context);
+            } else if (state is OrderReturnFailure) {
+              CustomSnackBar.showSnackBarMessage(
+                context,
+                LocalizationConstants.somethingWentWrong.localized(),
+              );
+            }
+          },
+          buildWhen: (previous, current) =>
+              current is OrderReturnInitial || current is OrderReturnLoaded,
+          builder: (context, state) {
+            switch (state) {
+              case OrderReturnInitial():
+                return const Center(child: CircularProgressIndicator());
+              case OrderReturnLoaded():
+                return Column(
+                  children: [
+                    Expanded(
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: _buildOrderNotes(context),
+                          ),
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 20)
+                                  .copyWith(bottom: 8),
+                              child: Text(
+                                LocalizationConstants.productsToReturn
+                                    .localized(),
+                                style: OptiTextStyles.titleLarge,
+                              ),
                             ),
                           ),
-                        ),
-                        _buildOrderReturnItems(
-                          context.read<OrderReturnCubit>().order?.orderLines ??
-                              [],
-                        ),
-                        SliverToBoxAdapter(
-                          child: _buildOrderInfo(context),
-                        ),
-                      ],
+                          _buildOrderReturnItems(
+                            context
+                                    .read<OrderReturnCubit>()
+                                    .order
+                                    ?.orderLines ??
+                                [],
+                          ),
+                          SliverToBoxAdapter(
+                            child: _buildOrderInfo(context),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  _buildReturnBottom(),
-                ],
-              );
-            default:
-              return const Center(
-                child: Text('Unknown state'),
-              );
-          }
-        },
+                    _buildReturnBottom(),
+                  ],
+                );
+              default:
+                return const Center(
+                  child: Text('Unknown state'),
+                );
+            }
+          },
+        ),
       ),
     );
   }

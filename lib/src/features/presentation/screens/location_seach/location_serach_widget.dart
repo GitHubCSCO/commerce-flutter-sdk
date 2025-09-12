@@ -87,191 +87,193 @@ class LocationSearchPage extends StatelessWidget {
         title: Text(getTitle()),
         centerTitle: false,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: BlocBuilder<LocationSearchBloc, LoactionSearchState>(
-                buildWhen: (previous, current) =>
-                    current is LocationSearchInitialState,
-                builder: (_, state) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: Input(
-                          hintText: context
-                              .read<LocationSearchBloc>()
-                              .searchBarPlaceholder,
-                          suffixIcon: IconButton(
-                            icon: SvgAssetImage(
-                              assetName: AssetConstants.iconClear,
-                              semanticsLabel: 'search query clear icon',
-                              fit: BoxFit.fitWidth,
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: BlocBuilder<LocationSearchBloc, LoactionSearchState>(
+                  buildWhen: (previous, current) =>
+                      current is LocationSearchInitialState,
+                  builder: (_, state) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: Input(
+                            hintText: context
+                                .read<LocationSearchBloc>()
+                                .searchBarPlaceholder,
+                            suffixIcon: IconButton(
+                              icon: SvgAssetImage(
+                                assetName: AssetConstants.iconClear,
+                                semanticsLabel: 'search query clear icon',
+                                fit: BoxFit.fitWidth,
+                              ),
+                              onPressed: () {
+                                textEditingController.clear();
+                                context.closeKeyboard();
+                                context
+                                    .read<LocationSearchBloc>()
+                                    .add(LocationSearchInitialEvent());
+                              },
                             ),
-                            onPressed: () {
-                              textEditingController.clear();
-                              context.closeKeyboard();
-                              context
-                                  .read<LocationSearchBloc>()
-                                  .add(LocationSearchInitialEvent());
+                            onTapOutside: (p0) => context.closeKeyboard(),
+                            textInputAction: TextInputAction.search,
+                            focusListener: (bool hasFocus) {
+                              if (hasFocus) {
+                                context
+                                    .read<LocationSearchBloc>()
+                                    .add(LocationSeachHistoryLoadEvent());
+                              } else {
+                                context
+                                    .read<LocationSearchBloc>()
+                                    .add(LocationSearchInitialEvent());
+                              }
                             },
+                            onChanged: (String searchQuery) {},
+                            onSubmitted: (String query) {
+                              if (query.isNotEmpty) {
+                                context.read<LocationSearchBloc>().add(
+                                    LocationSearchLoadEvent(
+                                        searchQuery: query, pageType: ""));
+                              } else {
+                                context
+                                    .read<LocationSearchBloc>()
+                                    .add(LocationSearchInitialEvent());
+                              }
+                            },
+                            controller: textEditingController,
                           ),
-                          onTapOutside: (p0) => context.closeKeyboard(),
-                          textInputAction: TextInputAction.search,
-                          focusListener: (bool hasFocus) {
-                            if (hasFocus) {
-                              context
-                                  .read<LocationSearchBloc>()
-                                  .add(LocationSeachHistoryLoadEvent());
-                            } else {
-                              context
-                                  .read<LocationSearchBloc>()
-                                  .add(LocationSearchInitialEvent());
-                            }
-                          },
-                          onChanged: (String searchQuery) {},
-                          onSubmitted: (String query) {
-                            if (query.isNotEmpty) {
-                              context.read<LocationSearchBloc>().add(
-                                  LocationSearchLoadEvent(
-                                      searchQuery: query, pageType: ""));
-                            } else {
-                              context
-                                  .read<LocationSearchBloc>()
-                                  .add(LocationSearchInitialEvent());
-                            }
-                          },
-                          controller: textEditingController,
                         ),
-                      ),
-                    ],
-                  );
-                }),
-          ),
-          Expanded(
-              child: MultiBlocListener(
-            listeners: [
-              BlocListener<LocationSearchBloc, LoactionSearchState>(
-                listener: (context, state) {
-                  if (state is LocationSearchLoadedState) {
-                    textEditingController.text =
-                        state.searchedLocation?.formattedName ?? "";
+                      ],
+                    );
+                  }),
+            ),
+            Expanded(
+                child: MultiBlocListener(
+              listeners: [
+                BlocListener<LocationSearchBloc, LoactionSearchState>(
+                  listener: (context, state) {
+                    if (state is LocationSearchLoadedState) {
+                      textEditingController.text =
+                          state.searchedLocation?.formattedName ?? "";
 
-                    if (locationSearchType == LocationSearchType.vmi) {
-                      context.read<VMILocationBloc>().add(
-                          UpdateSearchPlaceEvent(
-                              seachPlace: state.searchedLocation));
-                      context
-                          .read<VMILocationBloc>()
-                          .add(LoadVMILocationsEvent());
-                    } else if (locationSearchType ==
-                        LocationSearchType.locationFinder) {
-                      context
-                          .read<DealerLocationCubit>()
-                          .updateSeachPlaceForDealer(state.searchedLocation);
-                    } else if (locationSearchType ==
-                        LocationSearchType.pickUpLocation) {
-                      context.read<PickupLocationBloc>().add(
-                          LoadSearchedPickUpLocationsEvent(
-                              searchedLocation: state.searchedLocation));
+                      if (locationSearchType == LocationSearchType.vmi) {
+                        context.read<VMILocationBloc>().add(
+                            UpdateSearchPlaceEvent(
+                                seachPlace: state.searchedLocation));
+                        context
+                            .read<VMILocationBloc>()
+                            .add(LoadVMILocationsEvent());
+                      } else if (locationSearchType ==
+                          LocationSearchType.locationFinder) {
+                        context
+                            .read<DealerLocationCubit>()
+                            .updateSeachPlaceForDealer(state.searchedLocation);
+                      } else if (locationSearchType ==
+                          LocationSearchType.pickUpLocation) {
+                        context.read<PickupLocationBloc>().add(
+                            LoadSearchedPickUpLocationsEvent(
+                                searchedLocation: state.searchedLocation));
+                      }
+                    } else if (state is LocationSearchFailureState) {
+                      if (locationSearchType == LocationSearchType.vmi) {
+                        context.read<VMILocationBloc>().add(
+                            SearchVMILocationFromListEvent(
+                                searchKey: textEditingController.text));
+                      }
                     }
+                  },
+                ),
+              ],
+              child: BlocBuilder<LocationSearchBloc, LoactionSearchState>(
+                builder: (_, state) {
+                  if (state is LocationSearchLoadingState) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is LocationSearchInitialState) {
+                    switch (locationSearchType) {
+                      case LocationSearchType.vmi:
+                        {
+                          return VMILocationScreen(
+                            onLocationSelected:
+                                (CurrentLocationDataEntity locationData) {
+                              context
+                                  .read<LocationSearchHandlerCubit>()
+                                  .setLocationData(locationData);
+                            },
+                          );
+                        }
+                      case LocationSearchType.locationFinder:
+                        {
+                          return const DealerLocationWidget();
+                        }
+                      case LocationSearchType.pickUpLocation:
+                        return PickUpLocationScreen(
+                            onWarehouseLocationSelected: (locationData) {
+                          context
+                              .read<LocationSearchHandlerCubit>()
+                              .setWarehouseData(locationData);
+                        });
+                    }
+                  } else if (state is LocationSearchLoadedState) {
+                    switch (locationSearchType) {
+                      case LocationSearchType.vmi:
+                        {
+                          return VMILocationScreen(
+                            onLocationSelected:
+                                (CurrentLocationDataEntity locationData) {
+                              context
+                                  .read<LocationSearchHandlerCubit>()
+                                  .setLocationData(locationData);
+                            },
+                          );
+                        }
+                      case LocationSearchType.locationFinder:
+                        {
+                          return const DealerLocationWidget();
+                        }
+                      case LocationSearchType.pickUpLocation:
+                        return PickUpLocationScreen(
+                            onWarehouseLocationSelected: (locationData) {
+                          context
+                              .read<LocationSearchHandlerCubit>()
+                              .setWarehouseData(locationData);
+                        });
+                    }
+                  } else if (state is LocationSearchFocusState) {
+                    return Container();
                   } else if (state is LocationSearchFailureState) {
                     if (locationSearchType == LocationSearchType.vmi) {
-                      context.read<VMILocationBloc>().add(
-                          SearchVMILocationFromListEvent(
-                              searchKey: textEditingController.text));
+                      return VMILocationScreen(
+                        onLocationSelected:
+                            (CurrentLocationDataEntity locationData) {
+                          context
+                              .read<LocationSearchHandlerCubit>()
+                              .setLocationData(locationData);
+                        },
+                      );
+                    } else {
+                      return Center(
+                          child: Text(context
+                              .read<LocationSearchBloc>()
+                              .noSearchResultsFoundText));
                     }
+                  } else if (state is LocationSearchHistoryLoadedState) {
+                    return (state.searchHistory.isEmpty)
+                        ? Text(LocalizationConstants.searchNoHistoryAvailable
+                            .localized())
+                        : buildSearchHistoryList(state);
+                  } else {
+                    return Container();
                   }
                 },
               ),
-            ],
-            child: BlocBuilder<LocationSearchBloc, LoactionSearchState>(
-              builder: (_, state) {
-                if (state is LocationSearchLoadingState) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is LocationSearchInitialState) {
-                  switch (locationSearchType) {
-                    case LocationSearchType.vmi:
-                      {
-                        return VMILocationScreen(
-                          onLocationSelected:
-                              (CurrentLocationDataEntity locationData) {
-                            context
-                                .read<LocationSearchHandlerCubit>()
-                                .setLocationData(locationData);
-                          },
-                        );
-                      }
-                    case LocationSearchType.locationFinder:
-                      {
-                        return const DealerLocationWidget();
-                      }
-                    case LocationSearchType.pickUpLocation:
-                      return PickUpLocationScreen(
-                          onWarehouseLocationSelected: (locationData) {
-                        context
-                            .read<LocationSearchHandlerCubit>()
-                            .setWarehouseData(locationData);
-                      });
-                  }
-                } else if (state is LocationSearchLoadedState) {
-                  switch (locationSearchType) {
-                    case LocationSearchType.vmi:
-                      {
-                        return VMILocationScreen(
-                          onLocationSelected:
-                              (CurrentLocationDataEntity locationData) {
-                            context
-                                .read<LocationSearchHandlerCubit>()
-                                .setLocationData(locationData);
-                          },
-                        );
-                      }
-                    case LocationSearchType.locationFinder:
-                      {
-                        return const DealerLocationWidget();
-                      }
-                    case LocationSearchType.pickUpLocation:
-                      return PickUpLocationScreen(
-                          onWarehouseLocationSelected: (locationData) {
-                        context
-                            .read<LocationSearchHandlerCubit>()
-                            .setWarehouseData(locationData);
-                      });
-                  }
-                } else if (state is LocationSearchFocusState) {
-                  return Container();
-                } else if (state is LocationSearchFailureState) {
-                  if (locationSearchType == LocationSearchType.vmi) {
-                    return VMILocationScreen(
-                      onLocationSelected:
-                          (CurrentLocationDataEntity locationData) {
-                        context
-                            .read<LocationSearchHandlerCubit>()
-                            .setLocationData(locationData);
-                      },
-                    );
-                  } else {
-                    return Center(
-                        child: Text(context
-                            .read<LocationSearchBloc>()
-                            .noSearchResultsFoundText));
-                  }
-                } else if (state is LocationSearchHistoryLoadedState) {
-                  return (state.searchHistory.isEmpty)
-                      ? Text(LocalizationConstants.searchNoHistoryAvailable
-                          .localized())
-                      : buildSearchHistoryList(state);
-                } else {
-                  return Container();
-                }
-              },
-            ),
-          ))
-        ],
+            ))
+          ],
+        ),
       ),
     );
   }

@@ -52,95 +52,98 @@ class QuotePricingPage extends StatelessWidget {
             ),
           ],
         ),
-        body: BlocConsumer<QuotePricingBloc, QuotePricingState>(
-            buildWhen: (previous, current) {
-          if (current is QuotePricingLoadingState ||
-              current is QuotePricingLoadedState) {
-            return true;
-          }
-          return false;
-        }, listener: (context, state) {
-          if (state is QuotePriceBreakValidationState) {
-            if (state.isValid == false) {
+        body: SafeArea(
+          child: BlocConsumer<QuotePricingBloc, QuotePricingState>(
+              buildWhen: (previous, current) {
+            if (current is QuotePricingLoadingState ||
+                current is QuotePricingLoadedState) {
+              return true;
+            }
+            return false;
+          }, listener: (context, state) {
+            if (state is QuotePriceBreakValidationState) {
+              if (state.isValid == false) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(state.message),
+                ));
+              }
+            } else if (state is QuoteLinePricingApplySuccessState) {
+              context.pop(state.quoteDto);
+            } else if (state is QuoteLinePricingApplyFailureState) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(state.message),
+                content: Text(LocalizationConstants.failed.localized()),
               ));
             }
-          } else if (state is QuoteLinePricingApplySuccessState) {
-            context.pop(state.quoteDto);
-          } else if (state is QuoteLinePricingApplyFailureState) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(LocalizationConstants.failed.localized()),
-            ));
-          }
-        }, builder: (context, state) {
-          if (state is QuotePricingLoadingState) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is QuotePricingLoadedState) {
-            return Container(
-              color: Colors.white,
-              child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      QuoteLineWidget(
-                          hidePricingEnable:
-                              state.quoteLineEntity.hidePricingEnable ?? false,
-                          hideInventoryEnable:
-                              state.quoteLineEntity.hideInventoryEnable ??
-                                  false,
-                          quoteLineEntity: state.quoteLineEntity,
-                          showRemoveButton: false,
-                          showViewBreakPricing: false,
-                          showQuantityAndSubtotalField: false,
-                          moreButtonWidget: Container(),
-                          hidePricingWidget: true,
-                          onCartLineRemovedCallback: (cartLineEntity) {},
-                          onCartQuantityChangedCallback: (quantity) {}),
-                      _buildQuoteItemPirincgWidget(
-                          context, state.quoteLineEntity),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                30.0, 20.0, 20.0, 20.0),
-                            child: Text(
-                              LocalizationConstants.quantity.localized(),
-                              style: OptiTextStyles.body,
+          }, builder: (context, state) {
+            if (state is QuotePricingLoadingState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is QuotePricingLoadedState) {
+              return Container(
+                color: Colors.white,
+                child: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        QuoteLineWidget(
+                            hidePricingEnable:
+                                state.quoteLineEntity.hidePricingEnable ??
+                                    false,
+                            hideInventoryEnable:
+                                state.quoteLineEntity.hideInventoryEnable ??
+                                    false,
+                            quoteLineEntity: state.quoteLineEntity,
+                            showRemoveButton: false,
+                            showViewBreakPricing: false,
+                            showQuantityAndSubtotalField: false,
+                            moreButtonWidget: Container(),
+                            hidePricingWidget: true,
+                            onCartLineRemovedCallback: (cartLineEntity) {},
+                            onCartQuantityChangedCallback: (quantity) {}),
+                        _buildQuoteItemPirincgWidget(
+                            context, state.quoteLineEntity),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  30.0, 20.0, 20.0, 20.0),
+                              child: Text(
+                                LocalizationConstants.quantity.localized(),
+                                style: OptiTextStyles.body,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                20.0, 20.0, 120.0, 20.0),
-                            child: Text(
-                              LocalizationConstants.price.localized(),
-                              style: OptiTextStyles.body,
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  20.0, 20.0, 120.0, 20.0),
+                              child: Text(
+                                LocalizationConstants.price.localized(),
+                                style: OptiTextStyles.body,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      ...state.quoteLinePricingBreakItemEntities.map((item) {
-                        return PriceBreakwidget(
-                          index: item.id,
-                          key: ValueKey(item.id),
-                          startQtyDisplay: item.startQuantityDisplay!,
-                          endQtyDisplay: item.endQuantityDisplay!,
-                          priceDisplay: item.priceDisplay!,
-                          endQtyEnabled: item.endQuantityEnabled ?? true,
-                        );
-                      }),
-                      _buildQuoteButtonsWidget(context),
-                    ]),
-              ),
-            );
-          } else {
-            return Container();
-          }
-        }));
+                          ],
+                        ),
+                        ...state.quoteLinePricingBreakItemEntities.map((item) {
+                          return PriceBreakwidget(
+                            index: item.id,
+                            key: ValueKey(item.id),
+                            startQtyDisplay: item.startQuantityDisplay!,
+                            endQtyDisplay: item.endQuantityDisplay!,
+                            priceDisplay: item.priceDisplay!,
+                            endQtyEnabled: item.endQuantityEnabled ?? true,
+                          );
+                        }),
+                        _buildQuoteButtonsWidget(context),
+                      ]),
+                ),
+              );
+            } else {
+              return Container();
+            }
+          }),
+        ));
   }
 
   Widget _buildQuoteButtonsWidget(BuildContext context) {
