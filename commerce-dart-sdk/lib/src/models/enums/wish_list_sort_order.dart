@@ -24,8 +24,6 @@ enum WishListSortOrder implements SortOrderAttribute {
     required this.groupTitle,
     required this.title,
     required this.value,
-    // ignore: unused_element
-    this.sortOrderOptions,
   });
 
   @override
@@ -34,7 +32,7 @@ enum WishListSortOrder implements SortOrderAttribute {
   final String title;
   @override
   final String value;
-  final SortOrderOptions? sortOrderOptions;
+  final SortOrderOptions? sortOrderOptions = null;
 
   @override
   SortOrderOptions? get sortOrderOption => sortOrderOptions;

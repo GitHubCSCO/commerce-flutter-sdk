@@ -9,11 +9,13 @@ import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/components/custom_dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/checkout_confirmation/checkout_confirmation_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/review_order/review_order_widget.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_widget.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_details_body_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -73,13 +75,19 @@ class CheckoutSuccessScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(LocalizationConstants.orderConfirmation.localized()),
         ),
-        body: MultiBlocProvider(
-          providers: [
-            BlocProvider<ReviewOrderCubit>(
-                create: (context) => sl<ReviewOrderCubit>()),
-          ],
-          child: CheckoutSuccessPage(
-            checkoutSuccessEntity: checkoutSuccessEntity,
+        body: SafeArea(
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<ReviewOrderCubit>(
+                  create: (context) => sl<ReviewOrderCubit>()),
+              BlocProvider<CheckoutConfirmationCubit>(
+                  create: (context) => sl<CheckoutConfirmationCubit>()
+                    ..loadOrderStatusMappings(
+                        checkoutSuccessEntity.cart.status)),
+            ],
+            child: CheckoutSuccessPage(
+              checkoutSuccessEntity: checkoutSuccessEntity,
+            ),
           ),
         ));
   }
@@ -119,7 +127,56 @@ class CheckoutSuccessPage extends StatelessWidget {
               ),
             ),
           ),
-          ListInformationBottomSubmitWidget(actions: [
+          OrderBottomSectionWidget(actions: [
+            BlocConsumer<CheckoutConfirmationCubit, CheckoutConfirmationState>(
+              listener: (context, state) {
+                if (state is CheckoutConfirmationSuccess) {
+                  CustomSnackBar.showSnackBarMessage(
+                    context,
+                    LocalizationConstants
+                        .orderCancellationRequestSentSuccessfully
+                        .localized(),
+                  );
+                } else if (state is CheckoutConfirmationFailure) {
+                  CustomSnackBar.showSnackBarMessage(
+                    context,
+                    LocalizationConstants.somethingWentWrong.localized(),
+                  );
+                }
+              },
+              builder: (context, state) {
+                var isEnabled = false;
+
+                switch (state) {
+                  case CheckoutConfirmationInitial():
+                  case CheckoutConfirmationLoading():
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case CheckoutConfirmationLoaded():
+                    isEnabled = state.isCancelEnabled;
+                  case CheckoutConfirmationSuccess():
+                    isEnabled = false;
+                  case CheckoutConfirmationFailure():
+                    isEnabled = state.isCancelEnabled;
+                }
+
+                return Visibility(
+                  visible: isEnabled,
+                  child: TertiaryBlackButton(
+                    isEnabled: isEnabled,
+                    text: LocalizationConstants.cancelOrder.localized(),
+                    onPressed: () {
+                      showCancelOrderAlert(context, onDismissAlert: () {
+                        unawaited(context
+                            .read<CheckoutConfirmationCubit>()
+                            .cancelOrder(checkoutSuccessEntity.orderNumber));
+                      });
+                    },
+                  ),
+                );
+              },
+            ),
             PrimaryButton(
               text: checkoutSuccessEntity.isVmiCheckout
                   ? LocalizationConstants.backToVmiHome.localized()

@@ -36,57 +36,59 @@ class VmiLocationNotePage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Edit Location Note'),
         ),
-        body: BlocListener<VMILocationNoteCubit, VmiLocationNoteState>(
-          listener: (context, state) {
-            if (state is VmiLocationNoteSavedSuccessState) {
-              CustomSnackBar.showVMILocationNoteSaved(context);
-              context.pop(true);
-            }
-            if (state is VmiLocationNoteSavedFailureState) {
-              CustomSnackBar.showVMILocationNoteNotSaved(context);
-            }
-          },
-          child: BlocBuilder<VMILocationNoteCubit, VmiLocationNoteState>(
-              builder: (context, state) {
-            if (state is VmiLocationNoteLoadingState) {
-              return const CircularProgressIndicator();
-            } else if (state is VmiLocationNoteInitialState) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Input(
-                        label: LocalizationConstants.locationNote.localized(),
-                        controller: noteDescriptionController,
-                        onTapOutside: (p0) => context.closeKeyboard(),
-                        onEditingComplete: () => context.closeKeyboard(),
+        body: SafeArea(
+          child: BlocListener<VMILocationNoteCubit, VmiLocationNoteState>(
+            listener: (context, state) {
+              if (state is VmiLocationNoteSavedSuccessState) {
+                CustomSnackBar.showVMILocationNoteSaved(context);
+                context.pop(true);
+              }
+              if (state is VmiLocationNoteSavedFailureState) {
+                CustomSnackBar.showVMILocationNoteNotSaved(context);
+              }
+            },
+            child: BlocBuilder<VMILocationNoteCubit, VmiLocationNoteState>(
+                builder: (context, state) {
+              if (state is VmiLocationNoteLoadingState) {
+                return const CircularProgressIndicator();
+              } else if (state is VmiLocationNoteInitialState) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Input(
+                          label: LocalizationConstants.locationNote.localized(),
+                          controller: noteDescriptionController,
+                          onTapOutside: (p0) => context.closeKeyboard(),
+                          onEditingComplete: () => context.closeKeyboard(),
+                        ),
                       ),
                     ),
-                  ),
-                  ListInformationBottomSubmitWidget(actions: [
-                    SecondaryButton(
-                      text: LocalizationConstants.cancel.localized(),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    PrimaryButton(
-                      text: LocalizationConstants.save.localized(),
-                      onPressed: () {
-                        context.read<VMILocationNoteCubit>().saveLocationNote(
-                              noteDescriptionController.text,
-                            );
-                      },
-                    ),
-                  ])
-                ],
-              );
-            } else
-              // ignore: curly_braces_in_flow_control_structures
-              return Container();
-          }),
+                    ListInformationBottomSubmitWidget(actions: [
+                      SecondaryButton(
+                        text: LocalizationConstants.cancel.localized(),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      PrimaryButton(
+                        text: LocalizationConstants.save.localized(),
+                        onPressed: () {
+                          context.read<VMILocationNoteCubit>().saveLocationNote(
+                                noteDescriptionController.text,
+                              );
+                        },
+                      ),
+                    ])
+                  ],
+                );
+              } else
+                // ignore: curly_braces_in_flow_control_structures
+                return Container();
+            }),
+          ),
         ));
   }
 }

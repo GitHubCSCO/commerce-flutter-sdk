@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
@@ -25,7 +24,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 final GlobalKey _wishListAddToPageScaffoldKey = GlobalKey();
@@ -177,154 +175,157 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
         title: Text(LocalizationConstants.addToList.localized()),
         centerTitle: false,
       ),
-      body: Column(
-        children: [
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-            child: Input(
-              hintText: LocalizationConstants.search.localized(),
-              suffixIcon: IconButton(
-                icon: SvgAssetImage(
-                  assetName: AssetConstants.iconClear,
-                  semanticsLabel: 'search query clear icon',
-                  fit: BoxFit.fitWidth,
-                ),
-                onPressed: () {
-                  _textEditingController.clear();
+      body: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              child: Input(
+                hintText: LocalizationConstants.search.localized(),
+                suffixIcon: IconButton(
+                  icon: SvgAssetImage(
+                    assetName: AssetConstants.iconClear,
+                    semanticsLabel: 'search query clear icon',
+                    fit: BoxFit.fitWidth,
+                  ),
+                  onPressed: () {
+                    _textEditingController.clear();
 
-                  context
-                      .read<WishListAddToCubit>()
-                      .searchQueryChanged(_textEditingController.text);
-                  context.closeKeyboard();
+                    context
+                        .read<WishListAddToCubit>()
+                        .searchQueryChanged(_textEditingController.text);
+                    context.closeKeyboard();
+                  },
+                ),
+                onTapOutside: (p0) => context.closeKeyboard(),
+                textInputAction: TextInputAction.search,
+                controller: _textEditingController,
+                onChanged: (value) {
+                  context.read<WishListAddToCubit>().searchQueryChanged(value);
+                },
+                onSubmitted: (value) {
+                  context.read<WishListAddToCubit>().searchQueryChanged(value);
                 },
               ),
-              onTapOutside: (p0) => context.closeKeyboard(),
-              textInputAction: TextInputAction.search,
-              controller: _textEditingController,
-              onChanged: (value) {
-                context.read<WishListAddToCubit>().searchQueryChanged(value);
-              },
-              onSubmitted: (value) {
-                context.read<WishListAddToCubit>().searchQueryChanged(value);
-              },
             ),
-          ),
-          BlocConsumer<WishListAddToCubit, WishListState>(
-            listener: (context, state) {
-              if (state.status == WishListStatus.listItemAddToListLoading) {
-                showPleaseWait(context);
-              }
-
-              if (state.status == WishListStatus.listItemAddToListSuccess) {
-                Navigator.of(context, rootNavigator: true).pop();
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  state.message ?? '',
-                );
-
-                if (widget.onWishListUpdated != null) {
-                  widget.onWishListUpdated!();
+            BlocConsumer<WishListAddToCubit, WishListState>(
+              listener: (context, state) {
+                if (state.status == WishListStatus.listItemAddToListLoading) {
+                  showPleaseWait(context);
                 }
 
-                context.pop();
-              }
-
-              if (state.status == WishListStatus.listItemAddToListFailure) {
-                Navigator.of(context, rootNavigator: true).pop();
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  LocalizationConstants.failedToAddToList.localized(),
-                );
-              }
-            },
-            builder: (context, state) {
-              if (state.status == WishListStatus.loading) {
-                return const Expanded(
-                    child: Center(child: CircularProgressIndicator()));
-              } else if (state.status == WishListStatus.failure) {
-                return Expanded(
-                    child: Center(
-                        child: Text(LocalizationConstants.error.localized())));
-              } else if (context.read<WishListAddToCubit>().noWishListFound) {
-                return Expanded(
-                  child: Center(
-                    child: Text(
-                        LocalizationConstants.noListsAvailable.localized()),
-                  ),
-                );
-              }
-              return Expanded(
-                child: Column(
-                  children: [
-                    if (!context.read<WishListAddToCubit>().noWishListFound)
-                      Container(
-                        height: 50,
-                        padding: const EdgeInsetsDirectional.symmetric(
-                            horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(width: 10),
-                                SortToolMenu(
-                                  availableSortOrders: context
-                                      .read<WishListAddToCubit>()
-                                      .availableSortOrders,
-                                  onSortOrderChanged:
-                                      (SortOrderAttribute sortOrder) async {
-                                    await context
-                                        .read<WishListAddToCubit>()
-                                        .changeSortOrder(
-                                          sortOrder as WishListSortOrder,
-                                        );
-                                  },
-                                  selectedSortOrder: state.sortOrder,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    _WishListsSection(
-                      wishListEntities:
-                          state.wishLists.wishListCollection ?? [],
-                      addToCartCollection: widget.addToCartCollection,
-                      onWishListUpdated: widget.onWishListUpdated,
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          ListInformationBottomSubmitWidget(
-            actions: [
-              PrimaryButton(
-                text: LocalizationConstants.createNewList.localized(),
-                onPressed: () async {
-                  final result = await context.pushNamed(
-                    AppRoute.wishListCreate.name,
-                    extra: WishListCreateScreenCallbackHelper(
-                      addToCartCollection: widget.addToCartCollection,
-                    ),
+                if (state.status == WishListStatus.listItemAddToListSuccess) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  CustomSnackBar.showSnackBarMessage(
+                    context,
+                    state.message ?? '',
                   );
 
-                  if (result == true) {
-                    if (widget.onWishListUpdated != null) {
-                      widget.onWishListUpdated!();
-                    }
-
-                    if (context.mounted) {
-                      context.pop();
-                    }
+                  if (widget.onWishListUpdated != null) {
+                    widget.onWishListUpdated!();
                   }
-                },
-              ),
-            ],
-          ),
-        ],
+
+                  context.pop();
+                }
+
+                if (state.status == WishListStatus.listItemAddToListFailure) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  CustomSnackBar.showSnackBarMessage(
+                    context,
+                    LocalizationConstants.failedToAddToList.localized(),
+                  );
+                }
+              },
+              builder: (context, state) {
+                if (state.status == WishListStatus.loading) {
+                  return const Expanded(
+                      child: Center(child: CircularProgressIndicator()));
+                } else if (state.status == WishListStatus.failure) {
+                  return Expanded(
+                      child: Center(
+                          child:
+                              Text(LocalizationConstants.error.localized())));
+                } else if (context.read<WishListAddToCubit>().noWishListFound) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(
+                          LocalizationConstants.noListsAvailable.localized()),
+                    ),
+                  );
+                }
+                return Expanded(
+                  child: Column(
+                    children: [
+                      if (!context.read<WishListAddToCubit>().noWishListFound)
+                        Container(
+                          height: 50,
+                          padding: const EdgeInsetsDirectional.symmetric(
+                              horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(width: 10),
+                                  SortToolMenu(
+                                    availableSortOrders: context
+                                        .read<WishListAddToCubit>()
+                                        .availableSortOrders,
+                                    onSortOrderChanged:
+                                        (SortOrderAttribute sortOrder) async {
+                                      await context
+                                          .read<WishListAddToCubit>()
+                                          .changeSortOrder(
+                                            sortOrder as WishListSortOrder,
+                                          );
+                                    },
+                                    selectedSortOrder: state.sortOrder,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      _WishListsSection(
+                        wishListEntities:
+                            state.wishLists.wishListCollection ?? [],
+                        addToCartCollection: widget.addToCartCollection,
+                        onWishListUpdated: widget.onWishListUpdated,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            ListInformationBottomSubmitWidget(
+              actions: [
+                PrimaryButton(
+                  text: LocalizationConstants.createNewList.localized(),
+                  onPressed: () async {
+                    final result = await context.pushNamed(
+                      AppRoute.wishListCreate.name,
+                      extra: WishListCreateScreenCallbackHelper(
+                        addToCartCollection: widget.addToCartCollection,
+                      ),
+                    );
+
+                    if (result == true) {
+                      if (widget.onWishListUpdated != null) {
+                        widget.onWishListUpdated!();
+                      }
+
+                      if (context.mounted) {
+                        context.pop();
+                      }
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
