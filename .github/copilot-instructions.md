@@ -214,9 +214,19 @@ blocTest<FeatureBloc, FeatureState>(
 ### Navigation
 
 ```dart
-// Use GoRouter for navigation
-context.go('/route/path');
-context.push('/route/path');
+// Use AppRoute enum for navigation
+AppRoute.shop.navigate(context);
+AppRoute.productDetails.navigate(context, pathParameters: {'productId': productId});
+
+// For navigation with parameters
+AppRoute.orderDetails.navigate(
+  context,
+  pathParameters: {'orderNumber': orderNumber},
+  queryParameters: {'tab': 'details'},
+);
+
+// For back stack navigation
+AppRoute.checkout.navigateBackStack(context);
 ```
 
 ## 🎨 Customization Approach
@@ -249,11 +259,19 @@ class CustomTrackingService implements ITrackingService {
 
 ```dart
 emit(FeatureLoading());
-final result = await useCase.execute();
-result.fold(
-  success: (data) => emit(FeatureLoaded(data)),
-  failure: (error) => emit(FeatureError(error.message)),
-);
+
+final response = await commerceAPIServiceProvider
+    .getCartService()
+    .clearCart();
+
+switch (response) {
+  case Success(value: final data):
+    emit(FeatureLoaded(data));
+    return Success(data);
+  case Failure(errorResponse: final errorResponse):
+    emit(FeatureError(errorResponse.message));
+    return Failure(errorResponse);
+}
 ```
 
 ### Service Access
