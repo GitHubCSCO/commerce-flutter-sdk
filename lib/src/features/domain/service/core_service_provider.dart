@@ -4,6 +4,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/biom
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_interface.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/geo_location_service_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/localization_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/location_search_history_service.dart';
@@ -51,4 +52,7 @@ class CoreServiceProvider implements ICoreServiceProvider {
   @override
   ITelemetryTrackingService getTelemetryService() =>
       sl<ITelemetryTrackingService>();
+
+  @override
+  IDeviceTokenService getDeviceTokenService() => sl<IDeviceTokenService>();
 }

@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/base_usecase.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BiometricUsecase extends BaseUseCase {
   BiometricUsecase() : super();
@@ -60,6 +63,13 @@ class BiometricUsecase extends BaseUseCase {
     await commerceAPIServiceProvider
         .getCacheService()
         .invalidateAllObjectsExcept([CoreConstants.domainKey]);
+    final deviceToken =
+        await coreServiceProvider.getDeviceTokenService().getDeviceToken();
+    await commerceAPIServiceProvider
+        .getPushNotificationService()
+        .unRegisterDeviceToken(
+            DeviceTokenUnregistrationParameters(deviceToken: deviceToken));
+
     await commerceAPIServiceProvider.getAuthenticationService().logoutAsync();
   }
 

@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/config/analytics_config.dart';
 import 'package:commerce_flutter_sdk/src/core/config/route_config.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/scanning_mode.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/services.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/account_usecase/account_usecase.dart';
@@ -187,6 +188,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/w
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_information/wish_list_tags_controller_cubit.dart';
 import 'package:commerce_flutter_sdk/src/services/local_storage_service.dart';
 import 'package:commerce_flutter_sdk/src/services/secure_storage_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -206,6 +208,12 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(
         () => AuthCubit(authUsecase: sl(), authStreamService: sl()))
     ..registerFactory(() => AuthUsecase())
+
+    //firebase messaging
+    ..registerLazySingleton(() => FirebaseMessaging.instance)
+    ..registerLazySingleton<IDeviceTokenService>(
+      () => DeviceTokenService(firebaseMessaging: sl()),
+    )
 
     //language
     ..registerFactory(() => LanguageBloc(languageUsecase: sl()))
@@ -670,6 +678,9 @@ Future<void> initInjectionContainer() async {
         enableErrorLog: false,
       ),
     )
+    ..registerLazySingleton<IPushNotificationService>(() =>
+        PushNotificationService(
+            cacheService: sl(), networkService: sl(), clientService: sl()))
     ..registerLazySingleton<ILoggerService>(() => sl<OptiLoggerService>())
     ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
     ..registerLazySingleton<IMessageService>(() => MessageService(
