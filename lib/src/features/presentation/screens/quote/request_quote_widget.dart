@@ -190,6 +190,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
                                                   cartLineEntity:
                                                       cartLineEntity,
                                                   showRemoveButton: false,
+                                                  navigateWithoutNavbar: true,
                                                   moreButtonWidget:
                                                       _buildMenuButton(context,
                                                           cartLineEntity),
