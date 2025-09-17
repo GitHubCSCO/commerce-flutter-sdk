@@ -65,10 +65,12 @@ class FeatureBloc extends Bloc<FeatureEvent, FeatureState> {
 
     final result = await _featureUseCase.executeOperation();
 
-    result.fold(
-      success: (data) => emit(FeatureLoaded(data)),
-      failure: (error) => emit(FeatureError(error.message)),
-    );
+    switch (result) {
+      case Success(value: final data):
+        emit(FeatureLoaded(data));
+      case Failure(errorResponse: final error):
+        emit(FeatureError(error.message));
+    }
   }
 }
 ```
@@ -86,10 +88,12 @@ class FeatureUseCase extends BaseUseCase {
         .getServiceName()
         .performOperation();
 
-    return result.fold(
-      success: (data) => Success(data),
-      failure: (error) => Failure(error),
-    );
+    switch (result) {
+      case Success(value: final data):
+        return Success(data);
+      case Failure(errorResponse: final error):
+        return Failure(error);
+    }
   }
 }
 ```
@@ -164,11 +168,13 @@ final result = await commerceAPIServiceProvider
     .getServiceName()
     .methodName(parameters);
 
-// Handle results with fold pattern
-result.fold(
-  success: (data) => handleSuccess(data),
-  failure: (error) => handleError(error),
-);
+// Handle results with switch pattern
+switch (result) {
+  case Success(value: final data):
+    handleSuccess(data);
+  case Failure(errorResponse: final error):
+    handleError(error);
+}
 ```
 
 ### Error Handling
