@@ -89,4 +89,7 @@ class CommerceAPIServiceProvider implements ICommerceAPIServiceProvider {
   IWebsiteService getWebsiteService() => sl<IWebsiteService>();
   @override
   IWishListService getWishListService() => sl<IWishListService>();
+  @override
+  IPushNotificationService getPushNotificationService() =>
+      sl<IPushNotificationService>();
 }

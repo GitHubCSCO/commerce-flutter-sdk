@@ -33,3 +33,4 @@ export 'admin_client_service.dart';
 export 'admin_authentication_service.dart';
 export 'vmi_location_service.dart';
 export 'telemetry_service.dart';
+export 'push_notification_service.dart';

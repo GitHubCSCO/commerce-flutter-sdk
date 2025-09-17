@@ -23,6 +23,9 @@ PODS:
   - Firebase/Crashlytics (12.0.0):
     - Firebase/CoreOnly
     - FirebaseCrashlytics (~> 12.0.0)
+  - Firebase/Messaging (12.0.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 12.0.0)
   - Firebase/RemoteConfig (12.0.0):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 12.0.0)
@@ -35,6 +38,10 @@ PODS:
     - Flutter
   - firebase_crashlytics (5.0.0):
     - Firebase/Crashlytics (= 12.0.0)
+    - firebase_core
+    - Flutter
+  - firebase_messaging (16.0.0):
+    - Firebase/Messaging (= 12.0.0)
     - firebase_core
     - Flutter
   - firebase_remote_config (6.0.0):
@@ -83,6 +90,15 @@ PODS:
     - GoogleUtilities/Environment (~> 8.1)
     - GoogleUtilities/UserDefaults (~> 8.1)
     - PromisesObjC (~> 2.4)
+  - FirebaseMessaging (12.0.0):
+    - FirebaseCore (~> 12.0.0)
+    - FirebaseInstallations (~> 12.0.0)
+    - GoogleDataTransport (~> 10.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 8.1)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/Reachability (~> 8.1)
+    - GoogleUtilities/UserDefaults (~> 8.1)
+    - nanopb (~> 3.30910.0)
   - FirebaseRemoteConfig (12.0.0):
     - FirebaseABTesting (~> 12.0.0)
     - FirebaseCore (~> 12.0.0)
@@ -103,6 +119,8 @@ PODS:
     - PromisesSwift (~> 2.1)
   - FirebaseSharedSwift (12.0.0)
   - Flutter (1.0.0)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_secure_storage_darwin (10.0.0):
     - Flutter
     - FlutterMacOS
@@ -255,8 +273,10 @@ DEPENDENCIES:
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
+  - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - Flutter (from `Flutter`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_secure_storage_darwin (from `.symlinks/plugins/flutter_secure_storage_darwin/darwin`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - google_mlkit_barcode_scanning (from `.symlinks/plugins/google_mlkit_barcode_scanning/ios`)
@@ -285,6 +305,7 @@ SPEC REPOS:
     - FirebaseCoreInternal
     - FirebaseCrashlytics
     - FirebaseInstallations
+    - FirebaseMessaging
     - FirebaseRemoteConfig
     - FirebaseRemoteConfigInterop
     - FirebaseSessions
@@ -323,10 +344,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_crashlytics:
     :path: ".symlinks/plugins/firebase_crashlytics/ios"
+  firebase_messaging:
+    :path: ".symlinks/plugins/firebase_messaging/ios"
   firebase_remote_config:
     :path: ".symlinks/plugins/firebase_remote_config/ios"
   Flutter:
     :path: Flutter
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_secure_storage_darwin:
     :path: ".symlinks/plugins/flutter_secure_storage_darwin/darwin"
   google_maps_flutter_ios:
@@ -371,6 +396,7 @@ SPEC CHECKSUMS:
   firebase_analytics: cd56fc56f75c1df30a6ff5290cd56e230996a76d
   firebase_core: 633e1851ffe1b9ab875f6467a4f574c79cef02e4
   firebase_crashlytics: 2c6c1a17900a38081d938330e9f48e60ec5b255d
+  firebase_messaging: d17feef781edc84ebefe62624fb384358ad96361
   firebase_remote_config: ce17e27739e9fa1a5a41a70319c5ce3f792788d4
   FirebaseABTesting: 2cad22e464cd7ef4589ae29f897bc71ff83ce83b
   FirebaseAnalytics: 6d790cd1b159b4eb61a99948df0934ce505a34f7
@@ -379,11 +405,13 @@ SPEC CHECKSUMS:
   FirebaseCoreInternal: dedc28e569a4be85f38f3d6af1070a2e12018d55
   FirebaseCrashlytics: db75aa0cab8d00f68406fa247c32fe17ade884d7
   FirebaseInstallations: d4c7c958f99c8860d7fcece786314ae790e2f988
+  FirebaseMessaging: af49f8d7c0a3d2a017d9302c80946f45a7777dde
   FirebaseRemoteConfig: 4cbbe0083474359025e7bb334b9d0cff16b78d3a
   FirebaseRemoteConfigInterop: bfa0ea72ba3dc5af739777296424e46bd6f42613
   FirebaseSessions: 4e784acda213108aafef536535cdfc03504acc42
   FirebaseSharedSwift: 59266c22ccfcef604d725c034c568fa666ea9bda
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_local_notifications: a5a732f069baa862e728d839dd2ebb904737effb
   flutter_secure_storage_darwin: ce237a8775b39723566dc72571190a3769d70468
   Google-Maps-iOS-Utils: 0a484b05ed21d88c9f9ebbacb007956edd508a96
   google_maps_flutter_ios: 0291eb2aa252298a769b04d075e4a9d747ff7264
