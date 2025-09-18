@@ -1,6 +1,8 @@
 # GitHub Copilot Instructions for Optimizely Commerce Flutter SDK
 
-You are working with an enterprise-grade Flutter mobile commerce SDK that follows Clean Architecture principles and integrates with Optimizely Configured Commerce APIs.
+You are an expert in Flutter and Dart development. You are working with an enterprise-grade Flutter mobile commerce SDK that follows Clean Architecture principles and integrates with Optimizely Configured Commerce APIs. Your goal is to build
+beautiful, performant, and maintainable applications following modern best
+practices.
 
 ## 🏗️ Project Context
 
@@ -115,13 +117,6 @@ sl.registerLazySingleton<IServiceInterface>(() => ServiceImplementation());
 
 ## 🚫 Critical Don'ts
 
-### Never Modify These Files Directly
-
-- `lib/src/features/domain/usecases/base_usecase.dart`
-- `lib/src/core/injection/injection_container.dart` (core registrations)
-- `lib/commerce_flutter_sdk.dart`
-- Any service interface files in `lib/src/features/domain/service/interfaces/`
-
 ### Architecture Violations to Avoid
 
 - Don't put business logic in widgets or BLoCs
@@ -235,31 +230,52 @@ AppRoute.orderDetails.navigate(
 AppRoute.checkout.navigateBackStack(context);
 ```
 
-## 🎨 Customization Approach
+## 🎨 Development Approach
 
-### Extension Pattern (Preferred)
+### Core SDK Development
 
 ```dart
-// Create extensions rather than modifying core files
-extension CustomProductExtensions on Product {
+// Modify core files directly as needed for SDK features
+class ProductService implements IProductService {
+  @override
+  Future<Result<Product, ErrorResponse>> getProduct(String productId) async {
+    // Direct implementation in core SDK
+  }
+}
+```
+
+### Extension Pattern (For Backward Compatibility)
+
+```dart
+// Use extensions when adding optional features
+extension ProductExtensions on Product {
   bool get isCustomCategory => categoryId == 'custom-category-id';
   String get customDisplayName => customProperties?['displayName'] ?? name ?? '';
 }
 ```
 
-### Custom Implementation Pattern
-
-```dart
-// Implement interfaces for custom behavior
-class CustomTrackingService implements ITrackingService {
-  @override
-  Future<void> trackEvent(String eventName, Map<String, dynamic> parameters) async {
-    // Custom tracking logic
-  }
-}
-```
-
 ## 🔧 Common Patterns to Follow
+
+### Package Management
+
+- If a new feature requires an external package, the AI will identify the most
+  suitable and stable package from pub.dev.
+- To add a regular dependency, it will execute `flutter pub add <package_name>`.
+- To add a development dependency, it will execute `flutter pub add dev:<package_name>`.
+
+### Dart Best Practices
+
+- Follow the official Effective Dart guidelines.
+- Define related classes within the same library file. For large libraries,
+  export smaller, private libraries from a single top-level library.
+- Group related libraries in the same folder.
+- Add documentation comments to all public APIs, including classes,
+  constructors, methods, and top-level functions.
+- Write clear comments for complex or non-obvious code. Avoid over-commenting.
+- Add trailing comments.
+- Ensure proper use of `async`/`await` for asynchronous operations with robust
+  error handling.
+- Use pattern matching features where they simplify the code.
 
 ### Loading States
 
@@ -348,4 +364,18 @@ switch (result) {
 
 ---
 
-**Remember**: This is an enterprise SDK that must maintain backward compatibility. Always prefer extension and composition over modification of existing code. Follow Clean Architecture principles strictly and ensure comprehensive test coverage for all new features.
+## 🚨 IMPORTANT - SDK DEVELOPERS ONLY
+
+**This is specifically for Optimizely Commerce Flutter SDK core developers.** As SDK developers, you can modify any files in this codebase as needed for implementing features, fixing bugs, and improving architecture.
+
+**Key Points for SDK Development:**
+
+- ✅ **Full File Access**: Modify any file including base classes, interfaces, and core services
+- ✅ **Architecture Changes**: Update fundamental patterns when needed for SDK improvement
+- ✅ **Breaking Changes**: Implement when necessary for better SDK design (with proper versioning)
+- ✅ **Direct Implementation**: Write code directly in core classes rather than extensions
+- ⚠️ **Backward Compatibility**: Maintain when possible, but prioritize good architecture and functionality
+- 📋 **Documentation**: Update API docs and architecture guides for major changes
+- 🧪 **Testing**: Ensure comprehensive test coverage for all changes
+
+**Remember**: This is NOT guidance for SDK consumers/clients - they should follow different patterns that avoid modifying SDK internals. This guidance is exclusively for the core SDK development team at Optimizely.
