@@ -14,7 +14,7 @@ The Optimizely Configured Commerce Mobile UI SDK is the foundation of a customiz
   - [Before you run](#before-you-run)
     - [Configure and extend your app](#configure-and-extend-your-app)
   - [Change client id](#change-client-id)
-  - [To see logs when running the app](#to-see-logs-when-runing-the-app)
+  - [To see logs when running the app](#to-see-logs-when-running-the-app)
   - [Run your app locally](#run-your-app-locally)
   - [Deploy your app publicly](#deploy-your-app-publicly)
 

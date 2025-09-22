@@ -1,6 +1,7 @@
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:dio/dio.dart';
 
+// ignore_for_file: deprecated_member_use_from_same_package
 class CartService extends ServiceBase implements ICartService {
   CartService({
     required super.clientService,
