@@ -417,7 +417,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                 ),
                                               ),
                                             ),
-                                            Container(
+                                            SafeArea(
+                                              bottom: true,
+                                              top: false,
+                                              child:Container(
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 32,
@@ -531,7 +534,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                 ],
                                               ),
                                             ),
-                                          ],
+                                          
+                                            )
+                                            ],
                                         ),
                                 );
                               },
