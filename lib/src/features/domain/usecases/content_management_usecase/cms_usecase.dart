@@ -291,14 +291,15 @@ class CmsUseCase extends BaseUseCase {
     if (pageWidget.translatableFields != null) {
       var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
       String? targetLanguageId = currentSession?.language?.id;
-      
+
       // If no specific language match found, use the first available language
       if (targetLanguageId == null || !titles.containsKey(targetLanguageId)) {
         targetLanguageId = titles.keys.first;
       }
-      
+
       if (titles.containsKey(targetLanguageId)) {
-        searchHistoryWidget = searchHistoryWidget.copyWith(title: titles[targetLanguageId]);
+        searchHistoryWidget =
+            searchHistoryWidget.copyWith(title: titles[targetLanguageId]);
       }
     }
 
@@ -320,14 +321,15 @@ class CmsUseCase extends BaseUseCase {
     if (pageWidget.translatableFields != null) {
       var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
       String? targetLanguageId = currentSession?.language?.id;
-      
+
       // If no specific language match found, use the first available language
       if (targetLanguageId == null || !titles.containsKey(targetLanguageId)) {
         targetLanguageId = titles.keys.first;
       }
-      
+
       if (titles.containsKey(targetLanguageId)) {
-        productCarouselWidget = productCarouselWidget.copyWith(title: titles[targetLanguageId]);
+        productCarouselWidget =
+            productCarouselWidget.copyWith(title: titles[targetLanguageId]);
       }
     }
     return productCarouselWidget;
@@ -354,12 +356,12 @@ class CmsUseCase extends BaseUseCase {
     } else if (pageWidget.translatableFields?.links != null) {
       var links = pageWidget.translatableFields?.links as Map<String, dynamic>;
       String? targetLanguageId = currentSession?.language?.id;
-      
+
       // If no specific language match found, use the first available language
       if (targetLanguageId == null || !links.containsKey(targetLanguageId)) {
         targetLanguageId = links.keys.first;
       }
-      
+
       if (links.containsKey(targetLanguageId)) {
         var value = links[targetLanguageId];
         var pageLinks =
@@ -416,17 +418,16 @@ class CmsUseCase extends BaseUseCase {
         var slides =
             pageWidget.translatableFields?.slides as Map<String, dynamic>;
         String? targetLanguageId = currentSession?.language?.id;
-        
+
         // If no specific language match found, use the first available language
         if (targetLanguageId == null || !slides.containsKey(targetLanguageId)) {
           targetLanguageId = slides.keys.first;
         }
-        
+
         if (slides.containsKey(targetLanguageId)) {
           var value = slides[targetLanguageId];
-          var pageSlides = (value as List)
-              .map((item) => PageSlide.fromJson(item))
-              .toList();
+          var pageSlides =
+              (value as List).map((item) => PageSlide.fromJson(item)).toList();
           if (pageSlides.isNotEmpty) {
             for (var item in pageSlides) {
               var slideWidget = CarouselSlideWidgetEntity(
@@ -443,8 +444,8 @@ class CmsUseCase extends BaseUseCase {
 
               carouselSlideEntityList.add(slideWidget);
             }
-            carouselWidget = carouselWidget.copyWith(
-                childWidgets: carouselSlideEntityList);
+            carouselWidget =
+                carouselWidget.copyWith(childWidgets: carouselSlideEntityList);
           }
         }
       }
