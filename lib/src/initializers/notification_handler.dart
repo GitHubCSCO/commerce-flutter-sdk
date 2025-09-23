@@ -252,9 +252,8 @@ class NotificationHandler {
   }
 
   Future<void> _trackNotificationClicked() async {
+    final trackingService = _coreServiceProvider.getTrackingService();
     try {
-      final trackingService = _coreServiceProvider.getTrackingService();
-
       final analyticsEvent = AnalyticsEvent(
         AnalyticsConstants.eventNotificationClicked,
         'Push Notification',
@@ -262,6 +261,7 @@ class NotificationHandler {
 
       await trackingService.trackEvent(analyticsEvent);
     } catch (e, stackTrace) {
+      await trackingService.trackError(e);
       _logError('Failed to track notification clicked event', e, stackTrace);
     }
   }
