@@ -128,8 +128,6 @@ class NotificationHandler {
   /// Setup Firebase message listeners
   Future<void> _setupFirebaseListeners() async {
     try {
-      FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
-
       await _handleInitialMessage();
 
       _foregroundSubscription = FirebaseMessaging.onMessage.listen(
@@ -154,7 +152,6 @@ class NotificationHandler {
           await FirebaseMessaging.instance.getInitialMessage();
       if (initialMessage != null) {
         await _trackNotificationClicked();
-        await _processNotificationAction(initialMessage);
       }
     } catch (e, stackTrace) {
       _logError('Failed to handle initial message', e, stackTrace);
@@ -174,7 +171,6 @@ class NotificationHandler {
   Future<void> _handleMessageOpenedApp(RemoteMessage message) async {
     try {
       await _trackNotificationClicked();
-      await _processNotificationAction(message);
     } catch (e, stackTrace) {
       _logError('Failed to handle message opened app', e, stackTrace);
     }
@@ -236,11 +232,6 @@ class NotificationHandler {
     }
   }
 
-  /// Process notification action (navigation, deep linking, etc.)
-  Future<void> _processNotificationAction(RemoteMessage message) async {
-    // TODO: Implement notification action handling
-  }
-
   /// Generate unique notification ID
   int _generateNotificationId() {
     return DateTime.now().millisecondsSinceEpoch ~/ 1000;
@@ -284,17 +275,5 @@ class NotificationHandler {
     if (stackTrace != null) {
       debugPrint('Stack trace: $stackTrace');
     }
-  }
-}
-
-/// Background message handler (must be top-level function)
-@pragma('vm:entry-point')
-Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
-  try {
-    debugPrint(
-        '[NotificationHandler] Background message received: ${message.messageId}');
-  } catch (e) {
-    debugPrint(
-        '[NotificationHandler] Background message processing failed: $e');
   }
 }
