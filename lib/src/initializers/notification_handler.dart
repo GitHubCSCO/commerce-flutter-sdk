@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/core_service_provider_interface.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/opti_logger_service_interface.dart';
 
 /// Notification handler service for managing Firebase and local notifications
 class NotificationHandler {
@@ -266,14 +267,20 @@ class NotificationHandler {
   }
 
   void _logWarning(String message) {
-    debugPrint('$_logPrefix WARNING: $message');
+    final optiLogger = sl<OptiLoggerService>();
+    if (optiLogger.isDebugLogEnabled) {
+      print('$_logPrefix WARNING: $message');
+    }
   }
 
   void _logError(String message, [dynamic error, StackTrace? stackTrace]) {
-    final errorText = error != null ? ' - $error' : '';
-    debugPrint('$_logPrefix ERROR: $message$errorText');
-    if (stackTrace != null) {
-      debugPrint('Stack trace: $stackTrace');
+    final optiLogger = sl<OptiLoggerService>();
+    if (optiLogger.isErrorLogEnabled) {
+      final errorText = error != null ? ' - $error' : '';
+      print('$_logPrefix ERROR: $message$errorText');
+      if (stackTrace != null) {
+        print('Stack trace: $stackTrace');
+      }
     }
   }
 }
