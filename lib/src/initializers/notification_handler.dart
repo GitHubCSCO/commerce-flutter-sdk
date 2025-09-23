@@ -2,10 +2,8 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/core_service_provider_interface.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/opti_logger_service_interface.dart';
 
 /// Notification handler service for managing Firebase and local notifications
 class NotificationHandler {
@@ -21,17 +19,20 @@ class NotificationHandler {
 
   final ICoreServiceProvider _coreServiceProvider;
 
+  /// Check if notification permissions are granted
+  bool get hasNotificationPermissions => _hasNotificationPermissions;
+
   static const String _channelId = 'commerce_notifications';
   static const String _channelName = 'Commerce Notifications';
   static const String _channelDescription =
       'Notifications for commerce app updates and alerts';
   static const String _androidIcon = '@mipmap/ic_launcher';
-  static const String _logPrefix = '[NotificationHandler]';
 
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
 
   bool _isInitialized = false;
+  bool _hasNotificationPermissions = false;
   StreamSubscription<RemoteMessage>? _foregroundSubscription;
   StreamSubscription<RemoteMessage>? _backgroundSubscription;
 
@@ -42,13 +43,15 @@ class NotificationHandler {
 
     try {
       await _requestPermissions();
-      await _initializeLocalNotifications();
-      await _setupFirebaseListeners();
+
+      // Only proceed with initialization if permissions are granted
+      if (hasNotificationPermissions) {
+        await _initializeLocalNotifications();
+        await _setupFirebaseListeners();
+      }
+
       _isInitialized = true;
-    } catch (e, stackTrace) {
-      _logError('Failed to initialize notification handler', e, stackTrace);
-      rethrow;
-    }
+    } catch (e) {}
   }
 
   Future<void> _requestPermissions() async {
@@ -65,12 +68,12 @@ class NotificationHandler {
       );
 
       if (settings.authorizationStatus == AuthorizationStatus.denied) {
-        _logWarning('User denied notification permissions');
+        _hasNotificationPermissions = false;
+        return;
+      } else {
+        _hasNotificationPermissions = true;
       }
-    } catch (e, stackTrace) {
-      _logError('Failed to request permissions', e, stackTrace);
-      rethrow;
-    }
+    } catch (e) {}
   }
 
   Future<void> _initializeLocalNotifications() async {
@@ -98,10 +101,7 @@ class NotificationHandler {
       );
 
       await _createNotificationChannel();
-    } catch (e, stackTrace) {
-      _logError('Failed to initialize local notifications', e, stackTrace);
-      rethrow;
-    }
+    } catch (e) {}
   }
 
   /// Create notification channel for Android
@@ -121,9 +121,7 @@ class NotificationHandler {
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
-    } catch (e, stackTrace) {
-      _logError('Failed to create notification channel', e, stackTrace);
-    }
+    } catch (e) {}
   }
 
   /// Setup Firebase message listeners
@@ -133,17 +131,12 @@ class NotificationHandler {
 
       _foregroundSubscription = FirebaseMessaging.onMessage.listen(
         _handleForegroundMessage,
-        onError: (error) => _logError('Foreground message error', error),
       );
 
       _backgroundSubscription = FirebaseMessaging.onMessageOpenedApp.listen(
         _handleMessageOpenedApp,
-        onError: (error) => _logError('Message opened app error', error),
       );
-    } catch (e, stackTrace) {
-      _logError('Failed to setup Firebase listeners', e, stackTrace);
-      rethrow;
-    }
+    } catch (e) {}
   }
 
   /// Handle initial message when app opens from terminated state
@@ -154,32 +147,34 @@ class NotificationHandler {
       if (initialMessage != null) {
         await _trackNotificationClicked();
       }
-    } catch (e, stackTrace) {
-      _logError('Failed to handle initial message', e, stackTrace);
-    }
+    } catch (e) {}
   }
 
   /// Handle foreground messages
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
     try {
-      await _showLocalNotification(message);
-    } catch (e, stackTrace) {
-      _logError('Failed to handle foreground message', e, stackTrace);
-    }
+      // Only show notification if permissions are granted
+      if (hasNotificationPermissions) {
+        await _showLocalNotification(message);
+      }
+    } catch (e) {}
   }
 
   /// Handle message when app is opened from background
   Future<void> _handleMessageOpenedApp(RemoteMessage message) async {
     try {
       await _trackNotificationClicked();
-    } catch (e, stackTrace) {
-      _logError('Failed to handle message opened app', e, stackTrace);
-    }
+    } catch (e) {}
   }
 
   /// Show local notification
   Future<void> _showLocalNotification(RemoteMessage message) async {
     try {
+      // Double-check permissions before showing notification
+      if (!hasNotificationPermissions) {
+        return;
+      }
+
       String title =
           message.notification?.title ?? message.data['title'] ?? 'New Message';
       String body = message.notification?.body ??
@@ -219,18 +214,14 @@ class NotificationHandler {
         notificationDetails,
         payload: _createPayload(message),
       );
-    } catch (e, stackTrace) {
-      _logError('Failed to show local notification', e, stackTrace);
-    }
+    } catch (e) {}
   }
 
   /// Handle notification response (when user taps notification)
   Future<void> _onNotificationResponse(NotificationResponse response) async {
     try {
       await _trackNotificationClicked();
-    } catch (e, stackTrace) {
-      _logError('Failed to handle notification response', e, stackTrace);
-    }
+    } catch (e) {}
   }
 
   /// Generate unique notification ID
@@ -260,27 +251,8 @@ class NotificationHandler {
       );
 
       await trackingService.trackEvent(analyticsEvent);
-    } catch (e, stackTrace) {
+    } catch (e) {
       await trackingService.trackError(e);
-      _logError('Failed to track notification clicked event', e, stackTrace);
-    }
-  }
-
-  void _logWarning(String message) {
-    final optiLogger = sl<OptiLoggerService>();
-    if (optiLogger.isDebugLogEnabled) {
-      print('$_logPrefix WARNING: $message');
-    }
-  }
-
-  void _logError(String message, [dynamic error, StackTrace? stackTrace]) {
-    final optiLogger = sl<OptiLoggerService>();
-    if (optiLogger.isErrorLogEnabled) {
-      final errorText = error != null ? ' - $error' : '';
-      print('$_logPrefix ERROR: $message$errorText');
-      if (stackTrace != null) {
-        print('Stack trace: $stackTrace');
-      }
     }
   }
 }
