@@ -210,4 +210,8 @@ class AnalyticsConstants {
   static const String eventPropertyVmiLocationId = "vmi_location_id";
   static const String eventPropertyVmiBinId = "vmi_bin_id";
   static const String eventPropertyActionType = "action_type";
+
+  // Notification Events
+  static const String eventNotificationReceived = "notification_received";
+  static const String eventNotificationClicked = "notification_clicked";
 }

@@ -3,16 +3,24 @@ import 'dart:developer' as developer;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:commerce_flutter_sdk/src/core/config/log_config.dart';
+import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/core_service_provider_interface.dart';
 
 /// Notification handler service for managing Firebase and local notifications
 class NotificationHandler {
   // Private constructor for singleton pattern
-  NotificationHandler._();
+  NotificationHandler._(this._coreServiceProvider);
 
-  static final NotificationHandler _instance = NotificationHandler._();
+  static NotificationHandler? _instance;
 
   /// Get the singleton instance
-  static NotificationHandler get instance => _instance;
+  static NotificationHandler getInstance(ICoreServiceProvider coreServiceProvider) {
+    _instance ??= NotificationHandler._(coreServiceProvider);
+    return _instance!;
+  }
+
+  final ICoreServiceProvider _coreServiceProvider;
 
   // Constants
   static const String _channelId = 'commerce_notifications';
@@ -89,7 +97,9 @@ class NotificationHandler {
 
       await _localNotifications.initialize(
         initSettings,
-        onDidReceiveNotificationResponse: _onNotificationResponse,
+        onDidReceiveNotificationResponse: (response) async {
+          await _onNotificationResponse(response);
+        },
       );
 
       // Create notification channel for Android
@@ -154,6 +164,8 @@ class NotificationHandler {
       final initialMessage =
           await FirebaseMessaging.instance.getInitialMessage();
       if (initialMessage != null) {
+        // Track notification clicked event for app opened from terminated state
+        await _trackNotificationClicked();
         await _processNotificationAction(initialMessage);
       }
     } catch (e, stackTrace) {
@@ -164,6 +176,9 @@ class NotificationHandler {
   /// Handle foreground messages
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
     try {
+      // Track notification received event
+      await _trackNotificationReceived();
+      
       // Always show local notification for foreground messages
       await _showLocalNotification(message);
     } catch (e, stackTrace) {
@@ -174,6 +189,9 @@ class NotificationHandler {
   /// Handle message when app is opened from background
   Future<void> _handleMessageOpenedApp(RemoteMessage message) async {
     try {
+      // Track notification clicked event
+      await _trackNotificationClicked();
+      
       await _processNotificationAction(message);
     } catch (e, stackTrace) {
       _logError('Failed to handle message opened app', e, stackTrace);
@@ -230,9 +248,16 @@ class NotificationHandler {
   }
 
   /// Handle notification response (when user taps notification)
-  void _onNotificationResponse(NotificationResponse response) {
-    // TODO: Implement notification tap handling
-    // Example: Parse payload and navigate to appropriate screen
+  Future<void> _onNotificationResponse(NotificationResponse response) async {
+    try {
+      // Track notification clicked event (users only tap local notifications)
+      await _trackNotificationClicked();
+      
+      // TODO: Implement notification tap handling
+      // Example: Parse payload and navigate to appropriate screen
+    } catch (e, stackTrace) {
+      _logError('Failed to handle notification response', e, stackTrace);
+    }
   }
 
   /// Process notification action (navigation, deep linking, etc.)
@@ -260,6 +285,38 @@ class NotificationHandler {
     _isInitialized = false;
   }
 
+  /// Track notification received analytics event
+  Future<void> _trackNotificationReceived() async {
+    try {
+      final trackingService = _coreServiceProvider.getTrackingService();
+      
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventNotificationReceived,
+        'Push Notification',
+      );
+
+      await trackingService.trackEvent(analyticsEvent);
+    } catch (e, stackTrace) {
+      _logError('Failed to track notification received event', e, stackTrace);
+    }
+  }
+
+  /// Track notification clicked analytics event
+  Future<void> _trackNotificationClicked() async {
+    try {
+      final trackingService = _coreServiceProvider.getTrackingService();
+      
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventNotificationClicked,
+        'Push Notification',
+      );
+
+      await trackingService.trackEvent(analyticsEvent);
+    } catch (e, stackTrace) {
+      _logError('Failed to track notification clicked event', e, stackTrace);
+    }
+  }
+
   // Essential logging methods
   void _logWarning(String message) {
     if (LogConfig.isAllLogsEnabled) {
@@ -285,4 +342,26 @@ class NotificationHandler {
 Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
   // Handle background message processing here
   // Keep it lightweight as this runs in isolate
+  
+  try {
+    // Track notification received in background
+    await _trackBackgroundNotificationReceived(message);
+  } catch (e) {
+    // Log error but don't throw to avoid breaking the background handler
+    developer.log('Background notification tracking failed: $e', name: 'NotificationHandler');
+  }
+}
+
+/// Track background notification received (must be top-level accessible)
+Future<void> _trackBackgroundNotificationReceived(RemoteMessage message) async {
+  try {
+    // Since this runs in isolate, we need to use a simple tracking approach
+    // You could also store this data and sync when app comes to foreground
+    developer.log('Background notification received: ${message.messageId}', name: 'NotificationHandler');
+    
+    // If you have access to analytics in background isolate, track here
+    // Otherwise, consider storing the event and syncing when app becomes active
+  } catch (e) {
+    developer.log('Failed to track background notification: $e', name: 'NotificationHandler');
+  }
 }
