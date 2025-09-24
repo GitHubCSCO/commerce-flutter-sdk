@@ -75,106 +75,108 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
         backgroundColor: OptiAppColors.backgroundWhite,
         title: Text(LocalizationConstants.createNewList.localized()),
       ),
-      body: BlocConsumer<WishListCreateCubit, WishListCreateState>(
-        listener: (context, state) {
-          if (state.status == WishListStatus.listCreateSuccess) {
-            CustomSnackBar.showSnackBarMessage(
-              context,
-              LocalizationConstants.listCreated.localized(),
-            );
+      body: SafeArea(
+        child: BlocConsumer<WishListCreateCubit, WishListCreateState>(
+          listener: (context, state) {
+            if (state.status == WishListStatus.listCreateSuccess) {
+              CustomSnackBar.showSnackBarMessage(
+                context,
+                LocalizationConstants.listCreated.localized(),
+              );
 
-            context.read<RootBloc>().add(
-                  RootAnalyticsEvent(
-                    AnalyticsEvent(
-                      AnalyticsConstants.eventCreateList,
-                      AnalyticsConstants.screenNameLists,
+              context.read<RootBloc>().add(
+                    RootAnalyticsEvent(
+                      AnalyticsEvent(
+                        AnalyticsConstants.eventCreateList,
+                        AnalyticsConstants.screenNameLists,
+                      ),
                     ),
-                  ),
-                );
+                  );
 
-            if (widget.onWishListCreated != null) {
-              widget.onWishListCreated!();
+              if (widget.onWishListCreated != null) {
+                widget.onWishListCreated!();
+              }
+              context.pop(true);
             }
-            context.pop(true);
-          }
 
-          if (state.status == WishListStatus.listCreateFailure) {
-            displayDialogWidget(
-              context: context,
-              title: LocalizationConstants.error.localized(),
-              message: LocalizationConstants.somethingWentWrong.localized(),
-              actions: [
-                PlainBlackButton(
-                  text: LocalizationConstants.oK.localized(),
-                  onPressed: () => context.pop(),
-                ),
-              ],
-            );
-          }
+            if (state.status == WishListStatus.listCreateFailure) {
+              displayDialogWidget(
+                context: context,
+                title: LocalizationConstants.error.localized(),
+                message: LocalizationConstants.somethingWentWrong.localized(),
+                actions: [
+                  PlainBlackButton(
+                    text: LocalizationConstants.oK.localized(),
+                    onPressed: () => context.pop(),
+                  ),
+                ],
+              );
+            }
 
-          if (state.status == WishListStatus.listCreateEmptyNameFailure) {
-            displayDialogWidget(
-              context: context,
-              title: LocalizationConstants.error.localized(),
-              message: LocalizationConstants.enterListName.localized(),
-              actions: [
-                PlainBlackButton(
-                  text: LocalizationConstants.oK.localized(),
-                  onPressed: () => context.pop(),
-                ),
-              ],
-            );
-          }
-        },
-        builder: (context, state) => Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  color: OptiAppColors.backgroundWhite,
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ListNameInputWidget(
-                        listNameController: _listNameEditingController,
-                        maxLength: 100,
-                      ),
-                      const SizedBox(height: 32),
-                      ListDescriptionInputWidget(
-                        listDescriptionController:
-                            _listDescriptionEditingController,
-                      ),
-                    ],
+            if (state.status == WishListStatus.listCreateEmptyNameFailure) {
+              displayDialogWidget(
+                context: context,
+                title: LocalizationConstants.error.localized(),
+                message: LocalizationConstants.enterListName.localized(),
+                actions: [
+                  PlainBlackButton(
+                    text: LocalizationConstants.oK.localized(),
+                    onPressed: () => context.pop(),
+                  ),
+                ],
+              );
+            }
+          },
+          builder: (context, state) => Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    color: OptiAppColors.backgroundWhite,
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ListNameInputWidget(
+                          listNameController: _listNameEditingController,
+                          maxLength: 100,
+                        ),
+                        const SizedBox(height: 32),
+                        ListDescriptionInputWidget(
+                          listDescriptionController:
+                              _listDescriptionEditingController,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            ListInformationBottomSubmitWidget(
-              actions: [
-                SecondaryButton(
-                  text: LocalizationConstants.cancel.localized(),
-                  onPressed: () {
-                    context.pop();
-                  },
-                ),
-                PrimaryButton(
-                  text: LocalizationConstants.create.localized(),
-                  onPressed: () {
-                    unawaited(
-                        context.read<WishListCreateCubit>().createWishList(
-                              name: _listNameEditingController.text,
-                              description:
-                                  _listDescriptionEditingController.text,
-                              addToCartCollection: widget.addToCartCollection,
-                            ));
-                  },
-                ),
-              ],
-            ),
-          ],
+              ListInformationBottomSubmitWidget(
+                actions: [
+                  SecondaryButton(
+                    text: LocalizationConstants.cancel.localized(),
+                    onPressed: () {
+                      context.pop();
+                    },
+                  ),
+                  PrimaryButton(
+                    text: LocalizationConstants.create.localized(),
+                    onPressed: () {
+                      unawaited(
+                          context.read<WishListCreateCubit>().createWishList(
+                                name: _listNameEditingController.text,
+                                description:
+                                    _listDescriptionEditingController.text,
+                                addToCartCollection: widget.addToCartCollection,
+                              ));
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

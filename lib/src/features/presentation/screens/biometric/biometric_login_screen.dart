@@ -146,94 +146,96 @@ class BiometricLoginPage extends StatelessWidget {
           style: OptiTextStyles.titleLarge,
         ),
       ),
-      body: BlocConsumer<BiometricControllerCubit, BiometricControllerState>(
-        listener: (context, state) {
-          if (state is BiometricControllerChangeSuccessEnabled) {
-            context
-                .read<BiometricControllerCubit>()
-                .trackBiometricSetupEvent('success');
-            title = 'Success';
-            subtitle =
-                'Next time you sign in, you can ${(biometricOptionName == 'Fingerprint' || biometricOptionName == 'Touch') ? 'use your fingerprint' : 'sign in\nwith Face ID'}';
-          }
+      body: SafeArea(
+        child: BlocConsumer<BiometricControllerCubit, BiometricControllerState>(
+          listener: (context, state) {
+            if (state is BiometricControllerChangeSuccessEnabled) {
+              context
+                  .read<BiometricControllerCubit>()
+                  .trackBiometricSetupEvent('success');
+              title = 'Success';
+              subtitle =
+                  'Next time you sign in, you can ${(biometricOptionName == 'Fingerprint' || biometricOptionName == 'Touch') ? 'use your fingerprint' : 'sign in\nwith Face ID'}';
+            }
 
-          if (state is BiometricControllerChangeFailure) {
-            context
-                .read<BiometricControllerCubit>()
-                .trackBiometricSetupEvent('denied');
-          }
-        },
-        builder: (context, state) {
-          return Container(
-            height: double.infinity,
-            color: AppStyle.neutral00,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 60),
-                      _BiometricIcon(
-                          iconPath: iconPath ?? '',
-                          enabled:
-                              state is BiometricControllerChangeSuccessEnabled
-                                  ? true
-                                  : false),
-                      const SizedBox(height: 30),
-                      Text(
-                        title ?? '',
-                        style: OptiTextStyles.header3,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 30),
-                      Text(
-                        subtitle,
-                        style: OptiTextStyles.body,
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      state is BiometricControllerChangeSuccessEnabled
-                          ? PrimaryButton(
-                              text: LocalizationConstants.continueText
-                                  .localized(),
-                              onPressed: () async {
-                                context.pop();
-                              },
-                            )
-                          : PrimaryButton(
-                              text: enableButtonTitle,
-                              onPressed: () async {
-                                await context
-                                    .read<BiometricControllerCubit>()
-                                    .enableBiometric(password);
-                              },
-                            ),
-                      const SizedBox(height: 5),
-                      state is BiometricControllerChangeSuccessEnabled
-                          ? const SizedBox.shrink()
-                          : PlainButton(
-                              text: 'No Thanks',
-                              onPressed: () {
-                                context
-                                    .read<BiometricControllerCubit>()
-                                    .trackBiometricSetupEvent('canceled');
-                                context.pop();
-                              },
-                            ),
-                    ],
-                  ),
-                ],
+            if (state is BiometricControllerChangeFailure) {
+              context
+                  .read<BiometricControllerCubit>()
+                  .trackBiometricSetupEvent('denied');
+            }
+          },
+          builder: (context, state) {
+            return Container(
+              height: double.infinity,
+              color: AppStyle.neutral00,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 60),
+                        _BiometricIcon(
+                            iconPath: iconPath ?? '',
+                            enabled:
+                                state is BiometricControllerChangeSuccessEnabled
+                                    ? true
+                                    : false),
+                        const SizedBox(height: 30),
+                        Text(
+                          title ?? '',
+                          style: OptiTextStyles.header3,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 30),
+                        Text(
+                          subtitle,
+                          style: OptiTextStyles.body,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        state is BiometricControllerChangeSuccessEnabled
+                            ? PrimaryButton(
+                                text: LocalizationConstants.continueText
+                                    .localized(),
+                                onPressed: () async {
+                                  context.pop();
+                                },
+                              )
+                            : PrimaryButton(
+                                text: enableButtonTitle,
+                                onPressed: () async {
+                                  await context
+                                      .read<BiometricControllerCubit>()
+                                      .enableBiometric(password);
+                                },
+                              ),
+                        const SizedBox(height: 5),
+                        state is BiometricControllerChangeSuccessEnabled
+                            ? const SizedBox.shrink()
+                            : PlainButton(
+                                text: 'No Thanks',
+                                onPressed: () {
+                                  context
+                                      .read<BiometricControllerCubit>()
+                                      .trackBiometricSetupEvent('canceled');
+                                  context.pop();
+                                },
+                              ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

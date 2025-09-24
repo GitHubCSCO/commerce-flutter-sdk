@@ -1,3 +1,4 @@
+// ignore_for_file: unintended_html_in_doc_comment
 import 'models.dart';
 
 part 'customer_validation_dto.g.dart';

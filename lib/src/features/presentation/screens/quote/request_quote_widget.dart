@@ -77,152 +77,160 @@ class RequestQuoteWidgetPage extends StatelessWidget {
                 ),
               ],
             ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(children: [
-                      BlocBuilder<RequestQuoteBloc, RequestQuoteState>(
-                          buildWhen: (previous, current) {
-                        if (current is RequestAddCartInitSuccessState) {
-                          return true;
-                        }
-                        return false;
-                      }, builder: (_, state) {
-                        if (state is RequestAddCartInitSuccessState) {
-                          return _buildSelectUserWidget(context);
-                        } else {
-                          return Container();
-                        }
-                      }),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: RadioListTile<RequestQuoteType>(
-                              title: Text(
-                                  LocalizationConstants.salesQuote.localized()),
-                              value: RequestQuoteType.salesQuote,
-                              groupValue: selectedRequestQuoteType,
-                              onChanged: (value) {
-                                context.read<RequestQuoteSelectionBloc>().add(
-                                    RequestQuoteSelectionChangeEvent(value!));
-                              },
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(children: [
+                        BlocBuilder<RequestQuoteBloc, RequestQuoteState>(
+                            buildWhen: (previous, current) {
+                          if (current is RequestAddCartInitSuccessState) {
+                            return true;
+                          }
+                          return false;
+                        }, builder: (_, state) {
+                          if (state is RequestAddCartInitSuccessState) {
+                            return _buildSelectUserWidget(context);
+                          } else {
+                            return Container();
+                          }
+                        }),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: RadioListTile<RequestQuoteType>(
+                                title: Text(LocalizationConstants.salesQuote
+                                    .localized()),
+                                value: RequestQuoteType.salesQuote,
+                                groupValue: selectedRequestQuoteType,
+                                onChanged: (value) {
+                                  context.read<RequestQuoteSelectionBloc>().add(
+                                      RequestQuoteSelectionChangeEvent(value!));
+                                },
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: RadioListTile<RequestQuoteType>(
-                              title: Text(
-                                  LocalizationConstants.jobQuote.localized()),
-                              value: RequestQuoteType.jobQuote,
-                              groupValue: selectedRequestQuoteType,
-                              onChanged: (value) {
-                                context.read<RequestQuoteSelectionBloc>().add(
-                                    RequestQuoteSelectionChangeEvent(value!));
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                      Visibility(
-                          visible: selectedRequestQuoteType ==
-                              RequestQuoteType.jobQuote,
-                          child: _buildJobNameInputWidget(context)),
-                      _buildOrderNotesInputWidget(context),
-                      MultiBlocListener(
-                          listeners: [
-                            BlocListener<RequestQuoteBloc, RequestQuoteState>(
-                              listener: (context, state) {
-                                if (state is DeleteCartLineSuccessState ||
-                                    state is UpdateCartlineSuccessState) {
-                                  context
-                                      .read<RequestQuoteBloc>()
-                                      .add(LoadRequestQuoteCartLinesEvent());
-                                } else if (state is SubmitQuoteSuccessState) {
-                                  if (context
-                                      .read<RequestQuoteBloc>()
-                                      .isSalesPerson) {
-                                    Navigator.pop(context);
-                                    AppRoute.quoteDetails.navigateBackStack(
-                                        context,
-                                        extra: state.quoteDto);
-                                  } else {
-                                    Navigator.pop(context);
-                                    AppRoute.quoteConfirmation
-                                        .navigateBackStack(context,
-                                            extra: state.quoteDto);
-                                  }
-                                } else if (state is SubmitQuoteErrorState) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(state.message),
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
+                            Expanded(
+                              child: RadioListTile<RequestQuoteType>(
+                                title: Text(
+                                    LocalizationConstants.jobQuote.localized()),
+                                value: RequestQuoteType.jobQuote,
+                                groupValue: selectedRequestQuoteType,
+                                onChanged: (value) {
+                                  context.read<RequestQuoteSelectionBloc>().add(
+                                      RequestQuoteSelectionChangeEvent(value!));
+                                },
+                              ),
+                            )
                           ],
-                          child:
-                              BlocBuilder<RequestQuoteBloc, RequestQuoteState>(
-                                  buildWhen: (previous, current) {
-                            if (current is RequestQuoteCartLinesLoaded ||
-                                current is RequestQuoteCartLinesLoading) {
-                              return true;
-                            }
-                            return false;
-                          }, builder: (context, state) {
-                            if (state is RequestQuoteCartLinesLoaded) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text(
-                                      '${state.cartLineEntities.length} ${state.cartLineEntities.length == 1 ? "product" : "products"}',
-                                      style: OptiTextStyles.body,
+                        ),
+                        Visibility(
+                            visible: selectedRequestQuoteType ==
+                                RequestQuoteType.jobQuote,
+                            child: _buildJobNameInputWidget(context)),
+                        _buildOrderNotesInputWidget(context),
+                        MultiBlocListener(
+                            listeners: [
+                              BlocListener<RequestQuoteBloc, RequestQuoteState>(
+                                listener: (context, state) {
+                                  if (state is DeleteCartLineSuccessState ||
+                                      state is UpdateCartlineSuccessState) {
+                                    context
+                                        .read<RequestQuoteBloc>()
+                                        .add(LoadRequestQuoteCartLinesEvent());
+                                  } else if (state is SubmitQuoteSuccessState) {
+                                    if (context
+                                        .read<RequestQuoteBloc>()
+                                        .isSalesPerson) {
+                                      Navigator.pop(context);
+                                      AppRoute.quoteDetails.navigateBackStack(
+                                          context,
+                                          extra: state.quoteDto);
+                                    } else {
+                                      Navigator.pop(context);
+                                      AppRoute.quoteConfirmation
+                                          .navigateBackStack(context,
+                                              extra: state.quoteDto);
+                                    }
+                                  } else if (state is SubmitQuoteErrorState) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(state.message),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                            child: BlocBuilder<RequestQuoteBloc,
+                                    RequestQuoteState>(
+                                buildWhen: (previous, current) {
+                              if (current is RequestQuoteCartLinesLoaded ||
+                                  current is RequestQuoteCartLinesLoading) {
+                                return true;
+                              }
+                              return false;
+                            }, builder: (context, state) {
+                              if (state is RequestQuoteCartLinesLoaded) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                        '${state.cartLineEntities.length} ${state.cartLineEntities.length == 1 ? "product" : "products"}',
+                                        style: OptiTextStyles.body,
+                                      ),
                                     ),
-                                  ),
-                                  Column(
-                                    children: state.cartLineEntities
-                                        .map((cartLineEntity) => CartLineWidget(
-                                            cartLineEntity: cartLineEntity,
-                                            showRemoveButton: false,
-                                            moreButtonWidget: _buildMenuButton(
-                                                context, cartLineEntity),
-                                            onCartLineRemovedCallback:
-                                                (cartLineEntity) {},
-                                            onCartQuantityChangedCallback:
-                                                (quantity) {
-                                              context
-                                                  .read<RequestQuoteBloc>()
-                                                  .add(UpdateCartLineEvent(
-                                                      cartLineEntity:
-                                                          cartLineEntity.copyWith(
-                                                              qtyOrdered:
-                                                                  quantity)));
-                                            }))
-                                        .toList(),
-                                  ),
-                                ],
-                              );
-                            } else if (state is RequestQuoteCartLinesLoading) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else {
-                              return Container();
-                            }
-                          })),
-                    ]),
+                                    Column(
+                                      children: state.cartLineEntities
+                                          .map((cartLineEntity) =>
+                                              CartLineWidget(
+                                                  cartLineEntity:
+                                                      cartLineEntity,
+                                                  showRemoveButton: false,
+                                                  moreButtonWidget:
+                                                      _buildMenuButton(context,
+                                                          cartLineEntity),
+                                                  onCartLineRemovedCallback:
+                                                      (cartLineEntity) {},
+                                                  onCartQuantityChangedCallback:
+                                                      (quantity) {
+                                                    context
+                                                        .read<
+                                                            RequestQuoteBloc>()
+                                                        .add(UpdateCartLineEvent(
+                                                            cartLineEntity:
+                                                                cartLineEntity
+                                                                    .copyWith(
+                                                                        qtyOrdered:
+                                                                            quantity)));
+                                                  }))
+                                          .toList(),
+                                    ),
+                                  ],
+                                );
+                              } else if (state
+                                  is RequestQuoteCartLinesLoading) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            })),
+                      ]),
+                    ),
                   ),
-                ),
-                _buildSubmitButton(context, () {
-                  context.read<RequestQuoteBloc>().add(SubmitQuoteEvent(
-                      requestQuoteType: selectedRequestQuoteType!,
-                      jobName: jobNameInputTextEditingController.text,
-                      note: orderNoteInputTextEditingController.text));
-                })
-              ],
+                  _buildSubmitButton(context, () {
+                    context.read<RequestQuoteBloc>().add(SubmitQuoteEvent(
+                        requestQuoteType: selectedRequestQuoteType!,
+                        jobName: jobNameInputTextEditingController.text,
+                        note: orderNoteInputTextEditingController.text));
+                  })
+                ],
+              ),
             ),
           );
         },

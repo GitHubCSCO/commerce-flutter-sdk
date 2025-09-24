@@ -38,26 +38,29 @@ class QuoteConfirmationPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(LocalizationConstants.quoteConfirmation.localized()),
       ),
-      body: BlocBuilder<QuoteConfirmationCubit, QuoteConfirmationState>(
-          builder: (_, state) {
-        if (state is QuoteConfirmationLoadingState) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is QuoteConfirmationLoadedState) {
-          return SingleChildScrollView(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              _buildTitleWidget("${quote.quoteNumber} Requested"),
-              QuoteInformationWidget(
-                quoteDto: state.quoteDto,
-              ),
-              _buildQuoteLinesWidget(context, state.quoteLineEntities),
-              _buildButtonsWidget(context),
-            ]),
-          );
-        } else {
-          return Container();
-        }
-      }),
+      body: SafeArea(
+        child: BlocBuilder<QuoteConfirmationCubit, QuoteConfirmationState>(
+            builder: (_, state) {
+          if (state is QuoteConfirmationLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is QuoteConfirmationLoadedState) {
+            return SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTitleWidget("${quote.quoteNumber} Requested"),
+                    QuoteInformationWidget(
+                      quoteDto: state.quoteDto,
+                    ),
+                    _buildQuoteLinesWidget(context, state.quoteLineEntities),
+                    _buildButtonsWidget(context),
+                  ]),
+            );
+          } else {
+            return Container();
+          }
+        }),
+      ),
     );
   }
 
