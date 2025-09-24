@@ -666,7 +666,21 @@ class ClientService implements IClientService {
   @override
   Future<void> reset() async {
     await _storeCookies();
-    _createClient();
+    _resetClientState();
+  }
+
+  void _resetClientState() async {
+    // Clear authorization headers
+    client.options.headers.remove(HttpHeaders.authorizationHeader);
+
+    // Reset refresh token state
+    isRefreshingToken = false;
+    _refreshCompleter = null;
+
+    await removeAccessToken();
+
+    // Set basic authorization header for post-logout state
+    setBasicAuthorizationHeader();
   }
 
   @override

@@ -290,12 +290,17 @@ class CmsUseCase extends BaseUseCase {
 
     if (pageWidget.translatableFields != null) {
       var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
-      titles.forEach((key, value) {
-        if (currentSession?.language != null &&
-            currentSession?.language?.id == key) {
-          searchHistoryWidget = searchHistoryWidget.copyWith(title: value);
-        }
-      });
+      String? targetLanguageId = currentSession?.language?.id;
+
+      // If no specific language match found, use the first available language
+      if (targetLanguageId == null || !titles.containsKey(targetLanguageId)) {
+        targetLanguageId = titles.keys.first;
+      }
+
+      if (titles.containsKey(targetLanguageId)) {
+        searchHistoryWidget =
+            searchHistoryWidget.copyWith(title: titles[targetLanguageId]);
+      }
     }
 
     return searchHistoryWidget;
@@ -315,12 +320,17 @@ class CmsUseCase extends BaseUseCase {
 
     if (pageWidget.translatableFields != null) {
       var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
-      titles.forEach((key, value) {
-        if (currentSession?.language != null &&
-            currentSession?.language?.id == key) {
-          productCarouselWidget = productCarouselWidget.copyWith(title: value);
-        }
-      });
+      String? targetLanguageId = currentSession?.language?.id;
+
+      // If no specific language match found, use the first available language
+      if (targetLanguageId == null || !titles.containsKey(targetLanguageId)) {
+        targetLanguageId = titles.keys.first;
+      }
+
+      if (titles.containsKey(targetLanguageId)) {
+        productCarouselWidget =
+            productCarouselWidget.copyWith(title: titles[targetLanguageId]);
+      }
     }
     return productCarouselWidget;
   }
@@ -344,25 +354,30 @@ class CmsUseCase extends BaseUseCase {
         ));
       }
     } else if (pageWidget.translatableFields?.links != null) {
-      var titles = pageWidget.translatableFields?.links as Map<String, dynamic>;
-      titles.forEach((key, value) {
-        if (currentSession?.language != null &&
-            currentSession?.language?.id == key) {
-          var pageLinks =
-              (value as List).map((item) => PageLink.fromJson(item)).toList();
-          if (pageLinks.isNotEmpty) {
-            for (var pageLink in pageLinks) {
-              actionList.add(ActionLinkEntity(
-                type: ActionTypeConverter.convert(pageLink.fields?.type ?? ''),
-                icon: pageLink.fields?.icon,
-                text: pageLink.fields?.text,
-                url: pageLink.fields?.url,
-                requiresAuth: pageLink.fields?.requiresAuth,
-              ));
-            }
+      var links = pageWidget.translatableFields?.links as Map<String, dynamic>;
+      String? targetLanguageId = currentSession?.language?.id;
+
+      // If no specific language match found, use the first available language
+      if (targetLanguageId == null || !links.containsKey(targetLanguageId)) {
+        targetLanguageId = links.keys.first;
+      }
+
+      if (links.containsKey(targetLanguageId)) {
+        var value = links[targetLanguageId];
+        var pageLinks =
+            (value as List).map((item) => PageLink.fromJson(item)).toList();
+        if (pageLinks.isNotEmpty) {
+          for (var pageLink in pageLinks) {
+            actionList.add(ActionLinkEntity(
+              type: ActionTypeConverter.convert(pageLink.fields?.type ?? ''),
+              icon: pageLink.fields?.icon,
+              text: pageLink.fields?.text,
+              url: pageLink.fields?.url,
+              requiresAuth: pageLink.fields?.requiresAuth,
+            ));
           }
         }
-      });
+      }
     }
     actionsWidget = actionsWidget.copyWith(
       id: pageWidget.id,
@@ -402,33 +417,37 @@ class CmsUseCase extends BaseUseCase {
       } else if (pageWidget.translatableFields?.slides != null) {
         var slides =
             pageWidget.translatableFields?.slides as Map<String, dynamic>;
-        slides.forEach((key, value) {
-          if (currentSession?.language != null &&
-              currentSession?.language?.id == key) {
-            var pageSlides = (value as List)
-                .map((item) => PageSlide.fromJson(item))
-                .toList();
-            if (pageSlides.isNotEmpty) {
-              for (var item in pageSlides) {
-                var slideWidget = CarouselSlideWidgetEntity(
-                    background: item.slide?.background,
-                    backgroundColor: item.slide?.backgroundColor,
-                    imagePath: item.slide?.image,
-                    link: item.slide?.link,
-                    primaryText: item.slide?.heading,
-                    primaryTextColorHex: item.slide?.headingColor,
-                    secondaryText: item.slide?.subheading,
-                    secondaryTextColorHex: item.slide?.subheadingColor,
-                    textJustification: TextJustificationConverter.convert(
-                        item.slide?.textAlignment ?? ''));
+        String? targetLanguageId = currentSession?.language?.id;
 
-                carouselSlideEntityList.add(slideWidget);
-                carouselWidget = carouselWidget.copyWith(
-                    childWidgets: carouselSlideEntityList);
-              }
+        // If no specific language match found, use the first available language
+        if (targetLanguageId == null || !slides.containsKey(targetLanguageId)) {
+          targetLanguageId = slides.keys.first;
+        }
+
+        if (slides.containsKey(targetLanguageId)) {
+          var value = slides[targetLanguageId];
+          var pageSlides =
+              (value as List).map((item) => PageSlide.fromJson(item)).toList();
+          if (pageSlides.isNotEmpty) {
+            for (var item in pageSlides) {
+              var slideWidget = CarouselSlideWidgetEntity(
+                  background: item.slide?.background,
+                  backgroundColor: item.slide?.backgroundColor,
+                  imagePath: item.slide?.image,
+                  link: item.slide?.link,
+                  primaryText: item.slide?.heading,
+                  primaryTextColorHex: item.slide?.headingColor,
+                  secondaryText: item.slide?.subheading,
+                  secondaryTextColorHex: item.slide?.subheadingColor,
+                  textJustification: TextJustificationConverter.convert(
+                      item.slide?.textAlignment ?? ''));
+
+              carouselSlideEntityList.add(slideWidget);
             }
+            carouselWidget =
+                carouselWidget.copyWith(childWidgets: carouselSlideEntityList);
           }
-        });
+        }
       }
 
       carouselWidget = carouselWidget.copyWith(
