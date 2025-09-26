@@ -46,15 +46,17 @@ class LoginUsecase extends BiometricUsecase {
                     .getDeviceTokenService()
                     .getDeviceToken();
 
-                unawaited(
-                  commerceAPIServiceProvider
-                      .getPushNotificationService()
-                      .registerDeviceToken(
-                        DeviceTokenRegistrationParameters(
-                          deviceToken: deviceToken,
+                if (!deviceToken.isNullOrEmpty) {
+                  unawaited(
+                    commerceAPIServiceProvider
+                        .getPushNotificationService()
+                        .registerDeviceToken(
+                          DeviceTokenRegistrationParameters(
+                            deviceToken: deviceToken,
+                          ),
                         ),
-                      ),
-                );
+                  );
+                }
 
                 await commerceAPIServiceProvider
                     .getAccountService()
@@ -120,15 +122,17 @@ class LoginUsecase extends BiometricUsecase {
                 .getDeviceTokenService()
                 .getDeviceToken();
 
-            unawaited(
-              commerceAPIServiceProvider
-                  .getPushNotificationService()
-                  .registerDeviceToken(
-                    DeviceTokenRegistrationParameters(
-                      deviceToken: deviceToken,
+            if (!deviceToken.isNullOrEmpty) {
+              unawaited(
+                commerceAPIServiceProvider
+                    .getPushNotificationService()
+                    .registerDeviceToken(
+                      DeviceTokenRegistrationParameters(
+                        deviceToken: deviceToken,
+                      ),
                     ),
-                  ),
-            );
+              );
+            }
 
             final accountResult = await commerceAPIServiceProvider
                 .getAccountService()
@@ -200,10 +204,12 @@ class LoginUsecase extends BiometricUsecase {
         .invalidateAllObjectsExcept([CoreConstants.domainKey]);
     final deviceToken =
         await coreServiceProvider.getDeviceTokenService().getDeviceToken();
-    await commerceAPIServiceProvider
-        .getPushNotificationService()
-        .unRegisterDeviceToken(
-            DeviceTokenUnregistrationParameters(deviceToken: deviceToken));
+    if (!deviceToken.isNullOrEmpty) {
+      await commerceAPIServiceProvider
+          .getPushNotificationService()
+          .unRegisterDeviceToken(
+              DeviceTokenUnregistrationParameters(deviceToken: deviceToken));
+    }
 
     await commerceAPIServiceProvider.getAuthenticationService().logoutAsync();
   }
