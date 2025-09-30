@@ -24,6 +24,15 @@ class WishListsQueryParameters extends BaseQueryParameters {
   @JsonKey(toJson: DateFormatter.toYyyyMmDd)
   DateTime? toUpdatedOn;
 
+  String? erpNumber;
+
+  String? brandId;
+
+  // For autocomplete search of sharedBy users
+  String? sharedByQuery;
+
+  String? sharedBy;
+
   WishListsQueryParameters({
     this.query,
     this.expand,
@@ -35,6 +44,10 @@ class WishListsQueryParameters extends BaseQueryParameters {
     this.toCreatedDate,
     this.fromUpdatedOn,
     this.toUpdatedOn,
+    this.erpNumber,
+    this.brandId,
+    this.sharedByQuery,
+    this.sharedBy,
   });
 
   factory WishListsQueryParameters.fromJson(Map<String, dynamic> json) =>

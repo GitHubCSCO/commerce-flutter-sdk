@@ -28,6 +28,10 @@ WishListsQueryParameters _$WishListsQueryParametersFromJson(
       toUpdatedOn: json['toUpdatedOn'] == null
           ? null
           : DateTime.parse(json['toUpdatedOn'] as String),
+      erpNumber: json['erpNumber'] as String?,
+      brandId: json['brandId'] as String?,
+      sharedByQuery: json['sharedByQuery'] as String?,
+      sharedBy: json['sharedBy'] as String?,
     );
 
 Map<String, dynamic> _$WishListsQueryParametersToJson(
@@ -46,4 +50,8 @@ Map<String, dynamic> _$WishListsQueryParametersToJson(
       'toCreatedDate': DateFormatter.toYyyyMmDd(instance.toCreatedDate),
       'fromUpdatedOn': DateFormatter.toYyyyMmDd(instance.fromUpdatedOn),
       'toUpdatedOn': DateFormatter.toYyyyMmDd(instance.toUpdatedOn),
+      if (instance.erpNumber case final value?) 'erpNumber': value,
+      if (instance.brandId case final value?) 'brandId': value,
+      if (instance.sharedByQuery case final value?) 'sharedByQuery': value,
+      if (instance.sharedBy case final value?) 'sharedBy': value,
     };
