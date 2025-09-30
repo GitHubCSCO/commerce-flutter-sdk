@@ -1,4 +1,5 @@
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:optimizely_commerce_api/src/utils/date_formatter.dart';
 
 part 'wish_lists_query_parameters.g.dart';
 
@@ -11,6 +12,18 @@ class WishListsQueryParameters extends BaseQueryParameters {
 
   String? wishListLinesSort;
 
+  @JsonKey(toJson: DateFormatter.toYyyyMmDd)
+  DateTime? fromCreatedDate;
+
+  @JsonKey(toJson: DateFormatter.toYyyyMmDd)
+  DateTime? toCreatedDate;
+
+  @JsonKey(toJson: DateFormatter.toYyyyMmDd)
+  DateTime? fromUpdatedOn;
+
+  @JsonKey(toJson: DateFormatter.toYyyyMmDd)
+  DateTime? toUpdatedOn;
+
   WishListsQueryParameters({
     this.query,
     this.expand,
@@ -18,6 +31,10 @@ class WishListsQueryParameters extends BaseQueryParameters {
     super.page,
     super.pageSize,
     super.sort,
+    this.fromCreatedDate,
+    this.toCreatedDate,
+    this.fromUpdatedOn,
+    this.toUpdatedOn,
   });
 
   factory WishListsQueryParameters.fromJson(Map<String, dynamic> json) =>

@@ -16,6 +16,18 @@ WishListsQueryParameters _$WishListsQueryParametersFromJson(
       page: (json['page'] as num?)?.toInt(),
       pageSize: (json['pageSize'] as num?)?.toInt(),
       sort: json['sort'] as String?,
+      fromCreatedDate: json['fromCreatedDate'] == null
+          ? null
+          : DateTime.parse(json['fromCreatedDate'] as String),
+      toCreatedDate: json['toCreatedDate'] == null
+          ? null
+          : DateTime.parse(json['toCreatedDate'] as String),
+      fromUpdatedOn: json['fromUpdatedOn'] == null
+          ? null
+          : DateTime.parse(json['fromUpdatedOn'] as String),
+      toUpdatedOn: json['toUpdatedOn'] == null
+          ? null
+          : DateTime.parse(json['toUpdatedOn'] as String),
     );
 
 Map<String, dynamic> _$WishListsQueryParametersToJson(
@@ -30,4 +42,8 @@ Map<String, dynamic> _$WishListsQueryParametersToJson(
         'expand': value,
       if (instance.wishListLinesSort case final value?)
         'wishListLinesSort': value,
+      'fromCreatedDate': DateFormatter.toYyyyMmDd(instance.fromCreatedDate),
+      'toCreatedDate': DateFormatter.toYyyyMmDd(instance.toCreatedDate),
+      'fromUpdatedOn': DateFormatter.toYyyyMmDd(instance.fromUpdatedOn),
+      'toUpdatedOn': DateFormatter.toYyyyMmDd(instance.toUpdatedOn),
     };
