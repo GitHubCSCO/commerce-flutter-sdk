@@ -3,11 +3,13 @@ import 'package:commerce_flutter_sdk/commerce_config.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/asset_provider.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/opti_logger_service_interface.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/initializers/analytics_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/commerce_sdk_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/essentials_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/hive_initializer.dart';
+import 'package:commerce_flutter_sdk/src/initializers/notification_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -49,6 +51,10 @@ class CommerceFlutterSDK {
 
     // 3️⃣ Analytics & crash reporting
     await AnalyticsInitializer().init();
+
+    // Initialize notification handler with core service provider
+    final coreServiceProvider = sl<ICoreServiceProvider>();
+    await NotificationHandler.getInstance(coreServiceProvider).initialize();
 
     // 4️⃣ Error & Bloc observer
     final logger = GetIt.I<OptiLoggerService>();

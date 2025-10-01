@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/login_status.dart';
@@ -38,6 +40,22 @@ class LoginUsecase extends BiometricUsecase {
               {
                 if (fullSession == null) {
                   return LoginResponse(LoginStatus.loginErrorUnknown);
+                }
+
+                final deviceToken = await coreServiceProvider
+                    .getDeviceTokenService()
+                    .getDeviceToken();
+
+                if (!deviceToken.isNullOrEmpty) {
+                  unawaited(
+                    commerceAPIServiceProvider
+                        .getPushNotificationService()
+                        .registerDeviceToken(
+                          DeviceTokenRegistrationParameters(
+                            deviceToken: deviceToken,
+                          ),
+                        ),
+                  );
                 }
 
                 await commerceAPIServiceProvider
@@ -98,6 +116,22 @@ class LoginUsecase extends BiometricUsecase {
           {
             if (fullSession == null) {
               return LoginStatus.loginErrorUnknown;
+            }
+
+            final deviceToken = await coreServiceProvider
+                .getDeviceTokenService()
+                .getDeviceToken();
+
+            if (!deviceToken.isNullOrEmpty) {
+              unawaited(
+                commerceAPIServiceProvider
+                    .getPushNotificationService()
+                    .registerDeviceToken(
+                      DeviceTokenRegistrationParameters(
+                        deviceToken: deviceToken,
+                      ),
+                    ),
+              );
             }
 
             final accountResult = await commerceAPIServiceProvider
@@ -168,6 +202,15 @@ class LoginUsecase extends BiometricUsecase {
     await commerceAPIServiceProvider
         .getCacheService()
         .invalidateAllObjectsExcept([CoreConstants.domainKey]);
+    final deviceToken =
+        await coreServiceProvider.getDeviceTokenService().getDeviceToken();
+    if (!deviceToken.isNullOrEmpty) {
+      await commerceAPIServiceProvider
+          .getPushNotificationService()
+          .unRegisterDeviceToken(
+              DeviceTokenUnregistrationParameters(deviceToken: deviceToken));
+    }
+
     await commerceAPIServiceProvider.getAuthenticationService().logoutAsync();
   }
 }

@@ -5,14 +5,12 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
@@ -427,11 +425,13 @@ class _WishListItem extends StatelessWidget {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        wishList.name ?? '',
-                        style: OptiTextStyles.body,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      Flexible(
+                        child: Text(
+                          wishList.name ?? '',
+                          style: OptiTextStyles.body,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       if (wishList.wishListTags != null &&
                           wishList.wishListTags!.isNotEmpty) ...[

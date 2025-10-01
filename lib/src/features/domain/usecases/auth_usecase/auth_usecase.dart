@@ -18,4 +18,36 @@ class AuthUsecase extends BaseUseCase {
         return false;
     }
   }
+
+  Future<void> sendDeviceToken() async {
+    final results = Future.wait(
+      [
+        coreServiceProvider.getDeviceTokenService().getDeviceToken(),
+        commerceAPIServiceProvider.getSessionService().getCurrentSession(),
+      ],
+    );
+
+    final resultsList = await results;
+    final deviceToken = resultsList[0] as String;
+    final sessionResult = resultsList[1];
+
+    switch (sessionResult) {
+      case Failure():
+        return;
+      case Success(value: final fullSession):
+        if (fullSession == null) {
+          return;
+        }
+
+        if (!deviceToken.isNullOrEmpty) {
+          await commerceAPIServiceProvider
+              .getPushNotificationService()
+              .registerDeviceToken(
+                DeviceTokenRegistrationParameters(
+                  deviceToken: deviceToken,
+                ),
+              );
+        }
+    }
+  }
 }
