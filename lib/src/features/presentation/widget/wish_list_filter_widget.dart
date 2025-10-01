@@ -114,6 +114,18 @@ void _showWishListFilterWidget(
                   context.read<WishListFilterCubit>().setToCreatedDate(date);
                 },
               ),
+              const SizedBox(height: 32),
+              _WishListFilterDateSectionWidget(
+                sectionTitle: LocalizationConstants.dateUpdated.localized(),
+                fromDate: state.fromUpdatedOn,
+                toDate: state.toUpdatedOn,
+                onFromDateSelected: (context, date) {
+                  context.read<WishListFilterCubit>().setFromUpdatedOn(date);
+                },
+                onToDateSelected: (context, date) {
+                  context.read<WishListFilterCubit>().setToUpdatedOn(date);
+                },
+              ),
             ],
           );
         },
