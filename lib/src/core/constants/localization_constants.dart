@@ -373,6 +373,8 @@ enum LocalizationConstants {
   promoCodesMore(keyword: "Promo (%s & %s More)"),
   yourOrderNumber(keyword: "Your Order Number"),
   date(keyword: "Date"),
+  dateCreated(keyword: "Date Created"),
+  dateUpdated(keyword: "Date Updated"),
   selectDate(keyword: "Select Date"),
   carrier(keyword: "Carrier"),
   service(keyword: "Service"),
