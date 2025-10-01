@@ -183,6 +183,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/w
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_information/wish_list_tags_controller_cubit.dart';
@@ -515,6 +516,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => WishListCreateCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListAddToCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListHandlerCubit())
+    ..registerFactory(() => WishListFilterCubit())
     ..registerFactory(
         () => WishListTagsControllerCubit(wishListDetailsUsecase: sl()))
 
