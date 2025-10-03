@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/settings/wish_list_settings_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
@@ -21,6 +22,13 @@ class WishListCubit extends Cubit<WishListState> {
             wishLists: WishListCollectionEntity(),
             searchQuery: '',
             settings: WishListSettingsEntity(),
+            fromCreatedDate: null,
+            toCreatedDate: null,
+            fromUpdatedOn: null,
+            toUpdatedOn: null,
+            erpNumber: null,
+            brandId: null,
+            sharedBy: null,
           ),
         );
 
@@ -70,6 +78,13 @@ class WishListCubit extends Cubit<WishListState> {
 
   Future<void> loadWishLists({
     bool skipRecentlyPurchased = false,
+    DateTime? fromCreatedDate,
+    DateTime? toCreatedDate,
+    DateTime? fromUpdatedOn,
+    DateTime? toUpdatedOn,
+    String? erpNumber,
+    String? brandId,
+    String? sharedBy,
   }) async {
     emit(state.copyWith(status: WishListStatus.loading));
 
@@ -79,6 +94,13 @@ class WishListCubit extends Cubit<WishListState> {
       sortOrder: state.sortOrder,
       page: 1,
       searchText: state.searchQuery,
+      fromCreatedDate: fromCreatedDate,
+      toCreatedDate: toCreatedDate,
+      fromUpdatedOn: fromUpdatedOn,
+      toUpdatedOn: toUpdatedOn,
+      erpNumber: erpNumber,
+      brandId: brandId,
+      sharedBy: sharedBy,
     );
 
     if (skipRecentlyPurchased) {
@@ -95,6 +117,13 @@ class WishListCubit extends Cubit<WishListState> {
               sortOrder: state.sortOrder,
               searchQuery: state.searchQuery,
               settings: settings,
+              fromCreatedDate: fromCreatedDate,
+              toCreatedDate: toCreatedDate,
+              fromUpdatedOn: fromUpdatedOn,
+              toUpdatedOn: toUpdatedOn,
+              erpNumber: erpNumber,
+              brandId: brandId,
+              sharedBy: sharedBy,
             ),
           )
         : emit(state.copyWith(status: WishListStatus.failure));
@@ -156,6 +185,13 @@ class WishListCubit extends Cubit<WishListState> {
       page: state.wishLists.pagination!.page! + 1,
       sortOrder: state.sortOrder,
       searchText: state.searchQuery,
+      fromCreatedDate: state.fromCreatedDate,
+      toCreatedDate: state.toCreatedDate,
+      fromUpdatedOn: state.fromUpdatedOn,
+      toUpdatedOn: state.toUpdatedOn,
+      erpNumber: state.erpNumber,
+      brandId: state.brandId,
+      sharedBy: state.sharedBy,
     );
 
     if (result == null) {
@@ -260,4 +296,18 @@ class WishListCubit extends Cubit<WishListState> {
       wishList: wishList,
     );
   }
+
+  int get totalWishListCount => state.wishLists.pagination?.totalItemCount ?? 0;
+
+  bool get hasFilter =>
+      state.fromCreatedDate != null ||
+      state.toCreatedDate != null ||
+      state.fromUpdatedOn != null ||
+      state.toUpdatedOn != null ||
+      !(state.erpNumber?.isNullOrEmpty ?? true) ||
+      !(state.brandId?.isNullOrEmpty ?? true) ||
+      !(state.sharedBy?.isNullOrEmpty ?? true);
+
+  String get listCountText =>
+      '${totalWishListCount.toString()}  ${totalWishListCount != 1 ? LocalizationConstants.lists.localized() : LocalizationConstants.list.localized()}';
 }
