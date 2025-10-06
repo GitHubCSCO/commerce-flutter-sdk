@@ -44,7 +44,7 @@ final class WishListFilterAutocompleteProductsLoaded
 
 final class WishListFilterAutocompleteSharedByUsersLoaded
     extends WishListFilterAutocompleteState {
-  final List<String> users;
+  final List<WishListFilterItemEntity> users;
 
   const WishListFilterAutocompleteSharedByUsersLoaded(this.users);
 

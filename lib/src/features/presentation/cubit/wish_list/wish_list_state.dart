@@ -11,9 +11,9 @@ class WishListState extends Equatable {
   final DateTime? toCreatedDate;
   final DateTime? fromUpdatedOn;
   final DateTime? toUpdatedOn;
-  final String? erpNumber;
-  final String? brandId;
-  final String? sharedBy;
+  final WishListFilterItemEntity? product;
+  final WishListFilterItemEntity? brand;
+  final WishListFilterItemEntity? sharedByUser;
 
   const WishListState({
     required this.wishLists,
@@ -25,9 +25,9 @@ class WishListState extends Equatable {
     required this.toCreatedDate,
     required this.fromUpdatedOn,
     required this.toUpdatedOn,
-    required this.erpNumber,
-    required this.brandId,
-    required this.sharedBy,
+    required this.product,
+    required this.brand,
+    required this.sharedByUser,
     this.message,
   });
 
@@ -42,9 +42,9 @@ class WishListState extends Equatable {
         toCreatedDate ?? DateTime(0),
         fromUpdatedOn ?? DateTime(0),
         toUpdatedOn ?? DateTime(0),
-        erpNumber ?? '',
-        brandId ?? '',
-        sharedBy ?? '',
+        product ?? '',
+        brand ?? '',
+        sharedByUser ?? '',
         message ?? '',
       ];
 
@@ -58,9 +58,9 @@ class WishListState extends Equatable {
     DateTime? toCreatedDate,
     DateTime? fromUpdatedOn,
     DateTime? toUpdatedOn,
-    String? erpNumber,
-    String? brandId,
-    String? sharedBy,
+    WishListFilterItemEntity? product,
+    WishListFilterItemEntity? brand,
+    WishListFilterItemEntity? sharedByUser,
     String? message,
   }) {
     return WishListState(
@@ -74,9 +74,9 @@ class WishListState extends Equatable {
       toCreatedDate: toCreatedDate ?? this.toCreatedDate,
       fromUpdatedOn: fromUpdatedOn ?? this.fromUpdatedOn,
       toUpdatedOn: toUpdatedOn ?? this.toUpdatedOn,
-      erpNumber: erpNumber ?? this.erpNumber,
-      brandId: brandId ?? this.brandId,
-      sharedBy: sharedBy ?? this.sharedBy,
+      product: product ?? this.product,
+      brand: brand ?? this.brand,
+      sharedByUser: sharedByUser ?? this.sharedByUser,
     );
   }
 }

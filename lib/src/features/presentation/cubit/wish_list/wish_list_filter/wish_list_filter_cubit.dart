@@ -1,5 +1,6 @@
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_item_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_parameters_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'wish_list_filter_state.dart';
 
@@ -7,16 +8,16 @@ class WishListFilterCubit extends Cubit<WishListFilterState> {
   WishListFilterCubit() : super(WishListFilterState());
 
   void initialize({
-    required WishListsQueryParameters wishListsQueryParameters,
+    required WishListFilterParametersEntity wishListFilterParameters,
   }) {
     var newState = state.copyWith();
-    newState.fromCreatedDate = wishListsQueryParameters.fromCreatedDate;
-    newState.toCreatedDate = wishListsQueryParameters.toCreatedDate;
-    newState.fromUpdatedOn = wishListsQueryParameters.fromUpdatedOn;
-    newState.toUpdatedOn = wishListsQueryParameters.toUpdatedOn;
-    newState.erpNumber = wishListsQueryParameters.erpNumber;
-    newState.brandId = wishListsQueryParameters.brandId;
-    newState.sharedBy = wishListsQueryParameters.sharedBy;
+    newState.fromCreatedDate = wishListFilterParameters.fromCreatedDate;
+    newState.toCreatedDate = wishListFilterParameters.toCreatedDate;
+    newState.fromUpdatedOn = wishListFilterParameters.fromUpdatedOn;
+    newState.toUpdatedOn = wishListFilterParameters.toUpdatedOn;
+    newState.product = wishListFilterParameters.product;
+    newState.brand = wishListFilterParameters.brand;
+    newState.sharedByUser = wishListFilterParameters.sharedByUser;
     emit(newState);
   }
 
@@ -48,21 +49,21 @@ class WishListFilterCubit extends Cubit<WishListFilterState> {
     emit(newState);
   }
 
-  void setErpNumber(String? erpNumber) {
+  void setProduct(WishListFilterItemEntity? product) {
     var newState = state.copyWith();
-    newState.erpNumber = erpNumber;
+    newState.product = product;
     emit(newState);
   }
 
-  void setBrandId(String? brandId) {
+  void setBrandId(WishListFilterItemEntity? brand) {
     var newState = state.copyWith();
-    newState.brandId = brandId;
+    newState.brand = brand;
     emit(newState);
   }
 
-  void setSharedBy(String? sharedBy) {
+  void setSharedBy(WishListFilterItemEntity? sharedByUser) {
     var newState = state.copyWith();
-    newState.sharedBy = sharedBy;
+    newState.sharedByUser = sharedByUser;
     emit(newState);
   }
 }

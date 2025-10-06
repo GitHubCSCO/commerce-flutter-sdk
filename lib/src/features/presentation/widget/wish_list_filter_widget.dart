@@ -3,6 +3,8 @@ import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_item_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_parameters_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_filter_autocomplete_screen.dart';
@@ -11,26 +13,25 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 
 class WishlistFilterWidget extends StatelessWidget {
-  final WishListsQueryParameters wishListsQueryParameters;
+  final WishListFilterParametersEntity wishListFilterParameters;
   final bool hasFilter;
   final void Function({
     DateTime? fromCreatedDate,
     DateTime? toCreatedDate,
     DateTime? fromUpdatedOn,
     DateTime? toUpdatedOn,
-    String? erpNumber,
-    String? brandId,
-    String? sharedBy,
+    WishListFilterItemEntity? product,
+    WishListFilterItemEntity? brand,
+    WishListFilterItemEntity? sharedByUser,
   }) onApply;
 
   const WishlistFilterWidget({
     super.key,
-    required this.wishListsQueryParameters,
+    required this.wishListFilterParameters,
     required this.hasFilter,
     required this.onApply,
   });
@@ -54,7 +55,7 @@ class WishlistFilterWidget extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               onPressed: () {
                 context.read<WishListFilterCubit>().initialize(
-                      wishListsQueryParameters: wishListsQueryParameters,
+                      wishListFilterParameters: wishListFilterParameters
                     );
 
                 _showWishListFilterWidget(
@@ -67,9 +68,9 @@ class WishlistFilterWidget extends StatelessWidget {
                       toCreatedDate: state.toCreatedDate,
                       fromUpdatedOn: state.fromUpdatedOn,
                       toUpdatedOn: state.toUpdatedOn,
-                      erpNumber: state.erpNumber,
-                      brandId: state.brandId,
-                      sharedBy: state.sharedBy,
+                      product: state.product,
+                      brand: state.brand,
+                      sharedByUser: state.sharedByUser,
                     );
                   },
                 );
@@ -133,7 +134,7 @@ void _showWishListFilterWidget(
               const SizedBox(height: 32),
               _WishListFilterAutocompleteWidget(
                 type: WishListFilterAutocompleteType.sharedBy,
-                selectedValue: state.sharedBy,
+                selectedValue: state.sharedByUser?.displayValue,
                 onValueSelected: (context, value) {
                   context.read<WishListFilterCubit>().setSharedBy(value);
                 },
@@ -141,15 +142,15 @@ void _showWishListFilterWidget(
               const SizedBox(height: 32),
               _WishListFilterAutocompleteWidget(
                 type: WishListFilterAutocompleteType.erpNumber,
-                selectedValue: state.erpNumber,
+                selectedValue: state.product?.displayValue,
                 onValueSelected: (context, value) {
-                  context.read<WishListFilterCubit>().setErpNumber(value);
+                  context.read<WishListFilterCubit>().setProduct(value);
                 },
               ),
               const SizedBox(height: 32),
               _WishListFilterAutocompleteWidget(
                 type: WishListFilterAutocompleteType.brandId,
-                selectedValue: state.brandId,
+                selectedValue: state.brand?.displayValue,
                 onValueSelected: (context, value) {
                   context.read<WishListFilterCubit>().setBrandId(value);
                 },
@@ -253,7 +254,8 @@ class _WishListFilterDatePickerWidget extends StatelessWidget {
 class _WishListFilterAutocompleteWidget extends StatelessWidget {
   final WishListFilterAutocompleteType type;
   final String? selectedValue;
-  final void Function(BuildContext context, String? value) onValueSelected;
+  final void Function(BuildContext context, WishListFilterItemEntity? value)
+      onValueSelected;
 
   const _WishListFilterAutocompleteWidget({
     required this.type,
@@ -292,7 +294,7 @@ class _WishListFilterAutocompleteWidget extends StatelessWidget {
                     WishListFilterAutocompleteType.sharedBy =>
                       WishListFilterAutocompleteType.sharedByKey,
                   }
-                }) as String?;
+                }) as WishListFilterItemEntity?;
 
             if (context.mounted) {
               if (selectedValue == null) {

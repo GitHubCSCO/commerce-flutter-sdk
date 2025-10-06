@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_item_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_parameters_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/wish_list_filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -162,9 +164,9 @@ class _WishListsPageState extends State<WishListsPage> {
                         toCreatedDate: state.toCreatedDate,
                         fromUpdatedOn: state.fromUpdatedOn,
                         toUpdatedOn: state.toUpdatedOn,
-                        erpNumber: state.erpNumber,
-                        brandId: state.brandId,
-                        sharedBy: state.sharedBy,
+                        product: state.product,
+                        brand: state.brand,
+                        sharedByUser: state.sharedByUser,
                       ),
                 );
               },
@@ -269,15 +271,15 @@ class _WishListsPageState extends State<WishListsPage> {
                                   selectedSortOrder: state.sortOrder,
                                 ),
                                 WishlistFilterWidget(
-                                  wishListsQueryParameters:
-                                      WishListsQueryParameters(
+                                  wishListFilterParameters:
+                                      WishListFilterParametersEntity(
                                     fromCreatedDate: state.fromCreatedDate,
                                     toCreatedDate: state.toCreatedDate,
                                     fromUpdatedOn: state.fromUpdatedOn,
                                     toUpdatedOn: state.toUpdatedOn,
-                                    erpNumber: state.erpNumber,
-                                    brandId: state.brandId,
-                                    sharedBy: state.sharedBy,
+                                    product: state.product,
+                                    brand: state.brand,
+                                    sharedByUser: state.sharedByUser,
                                   ),
                                   hasFilter:
                                       context.watch<WishListCubit>().hasFilter,
@@ -286,9 +288,9 @@ class _WishListsPageState extends State<WishListsPage> {
                                     DateTime? toCreatedDate,
                                     DateTime? fromUpdatedOn,
                                     DateTime? toUpdatedOn,
-                                    String? erpNumber,
-                                    String? brandId,
-                                    String? sharedBy,
+                                    WishListFilterItemEntity? product,
+                                    WishListFilterItemEntity? brand,
+                                    WishListFilterItemEntity? sharedByUser,
                                   }) {
                                     unawaited(
                                       context
@@ -298,9 +300,9 @@ class _WishListsPageState extends State<WishListsPage> {
                                             toCreatedDate: toCreatedDate,
                                             fromUpdatedOn: fromUpdatedOn,
                                             toUpdatedOn: toUpdatedOn,
-                                            erpNumber: erpNumber,
-                                            brandId: brandId,
-                                            sharedBy: sharedBy,
+                                            product: product,
+                                            brand: brand,
+                                            sharedByUser: sharedByUser,
                                           ),
                                     );
                                   },

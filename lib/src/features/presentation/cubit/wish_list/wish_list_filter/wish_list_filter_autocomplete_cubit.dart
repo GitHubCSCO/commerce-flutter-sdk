@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_filter_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -42,5 +43,9 @@ class WishListFilterAutocompleteCubit
     } else {
       emit(const WishListFilterError('Failed to load users'));
     }
+  }
+
+  void reset() {
+    emit(WishListFilterAutocompleteInitial());
   }
 }

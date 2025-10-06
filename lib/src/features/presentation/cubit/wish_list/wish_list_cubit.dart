@@ -5,6 +5,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/settings/wish_li
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_collection_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,9 +27,9 @@ class WishListCubit extends Cubit<WishListState> {
             toCreatedDate: null,
             fromUpdatedOn: null,
             toUpdatedOn: null,
-            erpNumber: null,
-            brandId: null,
-            sharedBy: null,
+            product: null,
+            brand: null,
+            sharedByUser: null,
           ),
         );
 
@@ -82,9 +83,9 @@ class WishListCubit extends Cubit<WishListState> {
     DateTime? toCreatedDate,
     DateTime? fromUpdatedOn,
     DateTime? toUpdatedOn,
-    String? erpNumber,
-    String? brandId,
-    String? sharedBy,
+    WishListFilterItemEntity? product,
+    WishListFilterItemEntity? brand,
+    WishListFilterItemEntity? sharedByUser,
   }) async {
     emit(state.copyWith(status: WishListStatus.loading));
 
@@ -98,9 +99,9 @@ class WishListCubit extends Cubit<WishListState> {
       toCreatedDate: toCreatedDate,
       fromUpdatedOn: fromUpdatedOn,
       toUpdatedOn: toUpdatedOn,
-      erpNumber: erpNumber,
-      brandId: brandId,
-      sharedBy: sharedBy,
+      erpNumber: product?.actualValue,
+      brandId: brand?.actualValue,
+      sharedBy: sharedByUser?.actualValue,
     );
 
     if (skipRecentlyPurchased) {
@@ -121,9 +122,9 @@ class WishListCubit extends Cubit<WishListState> {
               toCreatedDate: toCreatedDate,
               fromUpdatedOn: fromUpdatedOn,
               toUpdatedOn: toUpdatedOn,
-              erpNumber: erpNumber,
-              brandId: brandId,
-              sharedBy: sharedBy,
+              product: product,
+              brand: brand,
+              sharedByUser: sharedByUser,
             ),
           )
         : emit(state.copyWith(status: WishListStatus.failure));
@@ -189,9 +190,9 @@ class WishListCubit extends Cubit<WishListState> {
       toCreatedDate: state.toCreatedDate,
       fromUpdatedOn: state.fromUpdatedOn,
       toUpdatedOn: state.toUpdatedOn,
-      erpNumber: state.erpNumber,
-      brandId: state.brandId,
-      sharedBy: state.sharedBy,
+      erpNumber: state.product?.actualValue,
+      brandId: state.brand?.actualValue,
+      sharedBy: state.sharedByUser?.actualValue,
     );
 
     if (result == null) {
@@ -304,9 +305,9 @@ class WishListCubit extends Cubit<WishListState> {
       state.toCreatedDate != null ||
       state.fromUpdatedOn != null ||
       state.toUpdatedOn != null ||
-      !(state.erpNumber?.isNullOrEmpty ?? true) ||
-      !(state.brandId?.isNullOrEmpty ?? true) ||
-      !(state.sharedBy?.isNullOrEmpty ?? true);
+      !(state.product?.actualValue.isNullOrEmpty ?? true) ||
+      !(state.brand?.actualValue.isNullOrEmpty ?? true) ||
+      !(state.sharedByUser?.actualValue.isNullOrEmpty ?? true);
 
   String get listCountText =>
       '${totalWishListCount.toString()}  ${totalWishListCount != 1 ? LocalizationConstants.lists.localized() : LocalizationConstants.list.localized()}';
