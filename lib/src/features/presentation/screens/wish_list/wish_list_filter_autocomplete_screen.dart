@@ -244,7 +244,7 @@ class _WishListFilterAutocompletePageState
                           onTap: () {
                             context.pop(
                               WishListFilterItemEntity(
-                                actualValue: product.id,
+                                actualValue: product.erpNumber,
                                 displayValue: product.title,
                               ),
                             );
