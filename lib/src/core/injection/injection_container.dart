@@ -73,6 +73,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/vmi_usecase/vm
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_filter_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/auth/auth_cubit.dart';
@@ -183,6 +184,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/w
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_autocomplete_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
@@ -517,6 +519,9 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => WishListAddToCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListHandlerCubit())
     ..registerFactory(() => WishListFilterCubit())
+    ..registerFactory(() => WishListFilterUsecase())
+    ..registerFactory(
+        () => WishListFilterAutocompleteCubit(wishListFilterUsecase: sl()))
     ..registerFactory(
         () => WishListTagsControllerCubit(wishListDetailsUsecase: sl()))
 
