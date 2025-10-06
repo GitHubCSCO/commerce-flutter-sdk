@@ -6,11 +6,18 @@ class WishListFilterUsecase extends BaseUseCase {
   Future<List<AutocompleteBrand>?> getBrands(String searchQuery) async {
     final result = await commerceAPIServiceProvider
         .getAutocompleteService()
-        .getAutocompleteBrands(searchQuery);
+        .getAutocompleteResults(
+          AutocompleteQueryParameters(
+            query: searchQuery,
+            relevancy: true,
+            spireContent: true,
+            searchOnTyping: true,
+          ),
+        );
 
     switch (result) {
       case Success(value: final value):
-        return value;
+        return value?.brands;
       case Failure():
         return null;
     }
@@ -19,11 +26,21 @@ class WishListFilterUsecase extends BaseUseCase {
   Future<List<AutocompleteProduct>?> getProducts(String searchQuery) async {
     final result = await commerceAPIServiceProvider
         .getAutocompleteService()
-        .getAutocompleteProducts(searchQuery);
+        .getAutocompleteResults(
+          AutocompleteQueryParameters(
+            query: searchQuery,
+            brandEnabled: false,
+            categoryEnabled: false,
+            contentEnabled: false,
+            productEnabled: true,
+            relevancy: true,
+            spireContent: true,
+          ),
+        );
 
     switch (result) {
       case Success(value: final value):
-        return value;
+        return value?.products;
       case Failure():
         return null;
     }
