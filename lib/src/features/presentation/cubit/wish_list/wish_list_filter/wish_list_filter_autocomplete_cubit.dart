@@ -19,7 +19,16 @@ class WishListFilterAutocompleteCubit
     emit(WishListFilterAutocompleteLoading());
     final brands = await _wishListFilterUsecase.getBrands(searchQuery);
     if (brands != null) {
-      emit(WishListFilterAutocompleteBrandsLoaded(brands));
+      final uniqueBrands = brands.fold<List<AutocompleteBrand>>(
+        [],
+        (uniqueList, brand) {
+          if (!uniqueList.any((item) => item.id == brand.id)) {
+            uniqueList.add(brand);
+          }
+          return uniqueList;
+        },
+      );
+      emit(WishListFilterAutocompleteBrandsLoaded(uniqueBrands));
     } else {
       emit(const WishListFilterError('Failed to load brands'));
     }
