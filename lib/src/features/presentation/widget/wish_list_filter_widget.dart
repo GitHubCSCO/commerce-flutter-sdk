@@ -1,12 +1,16 @@
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_filter_autocomplete_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
@@ -126,6 +130,14 @@ void _showWishListFilterWidget(
                   context.read<WishListFilterCubit>().setToUpdatedOn(date);
                 },
               ),
+              const SizedBox(height: 32),
+              _WishListFilterAutocompleteWidget(
+                type: WishListFilterAutocompleteType.sharedBy,
+                selectedValue: state.sharedBy,
+                onValueSelected: (context, value) {
+                  context.read<WishListFilterCubit>().setSharedBy(value);
+                },
+              ),
             ],
           );
         },
@@ -156,10 +168,7 @@ class _WishListFilterDateSectionWidget extends StatelessWidget {
       children: [
         Text(
           sectionTitle,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: OptiTextStyles.subtitle,
         ),
         const SizedBox(height: 8),
         Row(
@@ -221,6 +230,89 @@ class _WishListFilterDatePickerWidget extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _WishListFilterAutocompleteWidget extends StatelessWidget {
+  final WishListFilterAutocompleteType type;
+  final String? selectedValue;
+  final void Function(BuildContext context, String? value) onValueSelected;
+
+  const _WishListFilterAutocompleteWidget({
+    required this.type,
+    required this.selectedValue,
+    required this.onValueSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          switch (type) {
+            WishListFilterAutocompleteType.erpNumber =>
+              LocalizationConstants.product.localized(),
+            WishListFilterAutocompleteType.brandId =>
+              LocalizationConstants.brand.localized(),
+            WishListFilterAutocompleteType.sharedBy =>
+              LocalizationConstants.sharedByNoFormat.localized(),
+          },
+          style: OptiTextStyles.subtitle,
+        ),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: () async {
+            final selectedValue = await context.pushNamed(
+                AppRoute.wishListFilterAutocomplete.name,
+                pathParameters: {
+                  'filterType': switch (type) {
+                    WishListFilterAutocompleteType.erpNumber =>
+                      WishListFilterAutocompleteType.erpNumberKey,
+                    WishListFilterAutocompleteType.brandId =>
+                      WishListFilterAutocompleteType.brandIdKey,
+                    WishListFilterAutocompleteType.sharedBy =>
+                      WishListFilterAutocompleteType.sharedByKey,
+                  }
+                }) as String?;
+
+            if (context.mounted) {
+              if (selectedValue == null) {
+                return;
+              }
+
+              onValueSelected(context, selectedValue);
+            }
+          },
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: ShapeDecoration(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
+              color: OptiAppColors.backgroundGray,
+            ),
+            child: Text(
+              selectedValue ??
+                  switch (type) {
+                    WishListFilterAutocompleteType.erpNumber =>
+                      LocalizationConstants.searchForAProduct.localized(),
+                    WishListFilterAutocompleteType.brandId =>
+                      LocalizationConstants.searchForABrand.localized(),
+                    WishListFilterAutocompleteType.sharedBy =>
+                      LocalizationConstants.searchByUsername.localized(),
+                  },
+              style: selectedValue == null
+                  ? OptiTextStyles.body
+                      .copyWith(color: OptiAppColors.buttonTextDisabledColor)
+                  : OptiTextStyles.body,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

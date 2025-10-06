@@ -170,6 +170,7 @@ enum LocalizationConstants {
   renameFailed(keyword: "Rename Failed"),
   sharedWith(keyword: "Shared with %s others"),
   sharedBy(keyword: "Shared by %s"),
+  sharedByNoFormat(keyword: "Shared By"),
   items(keyword: "%s Items"),
   item(keyword: "%s Item"),
   itemNumber(keyword: "Item # %s"),
@@ -477,6 +478,10 @@ enum LocalizationConstants {
   error(keyword: "Error"),
   retry(keyword: "Retry"),
   search(keyword: "Search"),
+  product(keyword: "Product"),
+  searchForAProduct(keyword: "Search for a product"),
+  searchForABrand(keyword: "Search for a brand"),
+  searchByUsername(keyword: "Search by username"),
   success(keyword: "Success"),
   failed(keyword: "Failed"),
   failedDueToTimeout(
