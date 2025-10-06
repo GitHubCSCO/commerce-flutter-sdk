@@ -46,10 +46,14 @@ Map<String, dynamic> _$WishListsQueryParametersToJson(
         'expand': value,
       if (instance.wishListLinesSort case final value?)
         'wishListLinesSort': value,
-      'fromCreatedDate': DateFormatter.toYyyyMmDd(instance.fromCreatedDate),
-      'toCreatedDate': DateFormatter.toYyyyMmDd(instance.toCreatedDate),
-      'fromUpdatedOn': DateFormatter.toYyyyMmDd(instance.fromUpdatedOn),
-      'toUpdatedOn': DateFormatter.toYyyyMmDd(instance.toUpdatedOn),
+      if (DateFormatter.toYyyyMmDd(instance.fromCreatedDate) case final value?)
+        'fromCreatedDate': value,
+      if (DateFormatter.toYyyyMmDd(instance.toCreatedDate) case final value?)
+        'toCreatedDate': value,
+      if (DateFormatter.toYyyyMmDd(instance.fromUpdatedOn) case final value?)
+        'fromUpdatedOn': value,
+      if (DateFormatter.toYyyyMmDd(instance.toUpdatedOn) case final value?)
+        'toUpdatedOn': value,
       if (instance.erpNumber case final value?) 'erpNumber': value,
       if (instance.brandId case final value?) 'brandId': value,
       if (instance.sharedByQuery case final value?) 'sharedByQuery': value,

@@ -812,8 +812,6 @@ List<NavigationNode> _getNavigationRoot() {
         _ => null,
       }!;
 
-      print('filterType: $filterType');
-
       return WishListFilterAutocompleteScreen(
         type: filterType,
       );
