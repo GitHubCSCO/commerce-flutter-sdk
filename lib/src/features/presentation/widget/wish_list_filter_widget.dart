@@ -138,6 +138,22 @@ void _showWishListFilterWidget(
                   context.read<WishListFilterCubit>().setSharedBy(value);
                 },
               ),
+              const SizedBox(height: 32),
+              _WishListFilterAutocompleteWidget(
+                type: WishListFilterAutocompleteType.erpNumber,
+                selectedValue: state.erpNumber,
+                onValueSelected: (context, value) {
+                  context.read<WishListFilterCubit>().setErpNumber(value);
+                },
+              ),
+              const SizedBox(height: 32),
+              _WishListFilterAutocompleteWidget(
+                type: WishListFilterAutocompleteType.brandId,
+                selectedValue: state.brandId,
+                onValueSelected: (context, value) {
+                  context.read<WishListFilterCubit>().setBrandId(value);
+                },
+              ),
             ],
           );
         },
