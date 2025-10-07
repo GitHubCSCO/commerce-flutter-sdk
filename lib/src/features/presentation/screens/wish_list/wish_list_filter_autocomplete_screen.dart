@@ -167,7 +167,8 @@ class _WishListFilterAutocompletePageState
                       child: Padding(
                         padding: const EdgeInsets.all(32.0),
                         child: Text(
-                          'Start typing to see suggestions',
+                          LocalizationConstants.startTypingToSeeSuggestions
+                              .localized(),
                           style: OptiTextStyles.body,
                           textAlign: TextAlign.center,
                         ),

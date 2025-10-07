@@ -302,6 +302,7 @@ enum LocalizationConstants {
   searchNoHistoryAvailable(keyword: "No Search History Available"),
   clearHistory(keyword: "Clear History"),
   searchNoResults(keyword: "Your search returned no results."),
+  startTypingToSeeSuggestions(keyword: "Start typing to see suggestions."),
   noOptions(keyword: "No Options"),
   searchPrompt(keyword: "Search for products."),
   sort(keyword: "Sort"),
