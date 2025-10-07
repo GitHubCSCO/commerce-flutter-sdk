@@ -62,7 +62,15 @@ class WishListCubit extends Cubit<WishListState> {
 
     wishListUsecase.trackEvent(analyticsEvent);
 
-    await loadWishLists();
+    await loadWishLists(
+      brand: state.brand,
+      product: state.product,
+      sharedByUser: state.sharedByUser,
+      fromCreatedDate: state.fromCreatedDate,
+      toCreatedDate: state.toCreatedDate,
+      fromUpdatedOn: state.fromUpdatedOn,
+      toUpdatedOn: state.toUpdatedOn,
+    );
   }
 
   void cancelSort() {
