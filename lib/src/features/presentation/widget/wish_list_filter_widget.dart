@@ -55,7 +55,7 @@ class WishlistFilterWidget extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               onPressed: () {
                 context.read<WishListFilterCubit>().initialize(
-                      wishListFilterParameters: wishListFilterParameters
+                      wishListFilterParameters: wishListFilterParameters,
                     );
 
                 _showWishListFilterWidget(
