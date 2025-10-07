@@ -34,7 +34,7 @@ class NetworkImageWithFallback extends StatelessWidget {
                 borderRadius: BorderRadius.circular(borderRadius),
               ),
               child: const Icon(
-                Icons.image_not_supported,
+                Icons.image,
                 color: Colors.grey,
                 size: 20,
               ),
