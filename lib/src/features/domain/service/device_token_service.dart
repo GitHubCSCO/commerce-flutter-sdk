@@ -18,11 +18,13 @@ class DeviceTokenService implements IDeviceTokenService {
       return _cachedFcmToken!;
     }
 
-    // Request user permission for notifications
-    await _firebaseMessaging.requestPermission();
-
-    // Fetch FCM token
-    final fcmToken = await _firebaseMessaging.getToken();
+    late final String? fcmToken;
+    try {
+      await _firebaseMessaging.requestPermission();
+      fcmToken = await _firebaseMessaging.getToken();
+    } catch (e) {
+      return '';
+    }
 
     // Cache token for future use
     if (fcmToken != null) {
