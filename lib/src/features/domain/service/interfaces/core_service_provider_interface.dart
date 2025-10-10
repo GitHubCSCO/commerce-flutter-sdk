@@ -4,6 +4,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/cont
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/geo_location_service_interface.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/localization_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/location_search_history_service.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/search_history_service_interface.dart';
