@@ -39,13 +39,15 @@ class AuthUsecase extends BaseUseCase {
           return;
         }
 
-        await commerceAPIServiceProvider
-            .getPushNotificationService()
-            .registerDeviceToken(
-              DeviceTokenRegistrationParameters(
-                deviceToken: deviceToken,
-              ),
-            );
+        if (!deviceToken.isNullOrEmpty) {
+          await commerceAPIServiceProvider
+              .getPushNotificationService()
+              .registerDeviceToken(
+                DeviceTokenRegistrationParameters(
+                  deviceToken: deviceToken,
+                ),
+              );
+        }
     }
   }
 }
