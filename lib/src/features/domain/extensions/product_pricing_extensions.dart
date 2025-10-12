@@ -8,7 +8,7 @@ extension ProductPriceExtensions on ProductPriceEntity? {
       return SiteMessageConstants.valueRealTimePricingLoadFail;
     }
 
-    if (this?.unitNetPrice == 0 && allowZeroPricing != true) {
+    if (this?.unitNetPrice == 0) {
       return SiteMessageConstants.valuePricingZeroPriceMessage;
     }
 

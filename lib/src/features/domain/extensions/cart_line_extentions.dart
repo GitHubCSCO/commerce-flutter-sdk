@@ -1,4 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -68,4 +70,44 @@ extension CartLineExtensions on CartLineEntity? {
 
     return uomText.isEmpty ? '' : ' / $uomText';
   }
+
+  // <XNG-Change>: XSD-21774 always show zero price message
+  bool isZeroPrice() {
+    return this?.pricing?.unitNetPrice == 0;
+  }
+
+  String getPriceValueText() {
+    if (this == null) {
+      return '';
+    }
+
+    return isZeroPrice()
+        ? SiteMessageConstants.valuePricingZeroPriceMessage
+        : (this!.pricing?.unitNetPriceDisplay ?? '');
+  }
+
+  String? getUnitOfMeasureText() {
+    if (this == null) {
+      return null;
+    }
+
+    if (isZeroPrice()) {
+      return null;
+    }
+
+    return this!.unitOfMeasureDisplay != null
+        ? ' / ${this!.unitOfMeasureDisplay}'
+        : null;
+  }
+
+  String getDiscountMessage() {
+    if (this == null) {
+      return '';
+    }
+
+    return isZeroPrice()
+        ? ''
+        : (DiscountValueConverter().convert(this) ?? '').toString();
+  }
+  // </XNG-Change>
 }
