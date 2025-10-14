@@ -54,4 +54,14 @@ extension OrderLineExtensions on OrderLineEntity? {
         ? ' / ${this!.unitOfMeasureDisplay}'
         : null;
   }
+
+  String getSubtotalPriceText() {
+    if (this == null) {
+      return '';
+    }
+
+    return isZeroPrice()
+        ? SiteMessageConstants.valuePricingZeroPriceMessage
+        : (this!.extendedUnitNetPriceDisplay ?? '');
+  }
 }

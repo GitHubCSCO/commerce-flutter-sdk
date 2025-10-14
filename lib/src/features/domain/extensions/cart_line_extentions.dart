@@ -109,5 +109,15 @@ extension CartLineExtensions on CartLineEntity? {
         ? ''
         : (DiscountValueConverter().convert(this) ?? '').toString();
   }
+
+  String getSubtotalPriceText() {
+    if (this == null) {
+      return '';
+    }
+
+    return isZeroPrice()
+        ? SiteMessageConstants.valuePricingZeroPriceMessage
+        : (this!.pricing?.extendedUnitNetPriceDisplay ?? '');
+  }
   // </XNG-Change>
 }

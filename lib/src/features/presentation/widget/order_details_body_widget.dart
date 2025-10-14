@@ -360,9 +360,9 @@ class OrderProductsSectionWidget extends StatelessWidget {
               discountMessage: orderLine.getDiscountMessage(),
               priceValueText: orderLine.getPriceValueText(),
               unitOfMeasureValueText: orderLine.getUnitOfMeasureText(),
+              subtotalPriceText: orderLine.getSubtotalPriceText(),
               // </XNG-Change>
               qtyOrdered: orderLine.qtyOrdered?.round().toString(),
-              subtotalPriceText: orderLine.extendedUnitNetPriceDisplay,
               canEditQty: false,
               showViewAvailabilityByWarehouse: false,
               showViewQuantityPricing: false,

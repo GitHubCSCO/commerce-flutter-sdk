@@ -237,8 +237,7 @@ class CheckoutSuccessPage extends StatelessWidget {
               priceValueText: cartLineEntity?.getPriceValueText() ?? '',
               unitOfMeasureValueText: cartLineEntity?.getUnitOfMeasureText(),
               qtyOrdered: cartLineEntity?.qtyOrdered?.round().toString(),
-              subtotalPriceText:
-                  cartLineEntity?.pricing?.extendedUnitNetPriceDisplay,
+              subtotalPriceText: cartLineEntity?.getSubtotalPriceText() ?? '',
               canEditQty: false,
               showViewAvailabilityByWarehouse: false,
               showViewQuantityPricing: false,
