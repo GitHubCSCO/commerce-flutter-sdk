@@ -308,14 +308,21 @@ class WishListCubit extends Cubit<WishListState> {
 
   int get totalWishListCount => state.wishLists.pagination?.totalItemCount ?? 0;
 
-  bool get hasFilter =>
-      state.fromCreatedDate != null ||
-      state.toCreatedDate != null ||
-      state.fromUpdatedOn != null ||
-      state.toUpdatedOn != null ||
-      !(state.product?.actualValue.isNullOrEmpty ?? true) ||
-      !(state.brand?.actualValue.isNullOrEmpty ?? true) ||
-      !(state.sharedByUser?.actualValue.isNullOrEmpty ?? true);
+  /// Returns the count of active filters applied to the wish list.
+  /// Counts date filters (created/updated), product, brand, and shared by user filters.
+  /// String filters are considered active only if they are non-empty.
+  int get filterCount => [
+        state.fromCreatedDate,
+        state.toCreatedDate,
+        state.fromUpdatedOn,
+        state.toUpdatedOn,
+        state.product?.actualValue,
+        state.brand?.actualValue,
+        state.sharedByUser?.actualValue
+      ]
+          .where((filter) =>
+              filter != null && (filter is! String || filter.isNotEmpty))
+          .length;
 
   String get listCountText =>
       '${totalWishListCount.toString()}  ${totalWishListCount != 1 ? LocalizationConstants.lists.localized() : LocalizationConstants.list.localized()}';

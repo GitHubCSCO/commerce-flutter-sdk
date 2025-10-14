@@ -18,7 +18,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 
 class WishlistFilterWidget extends StatelessWidget {
   final WishListFilterParametersEntity wishListFilterParameters;
-  final bool hasFilter;
+  final int filterCount;
   final void Function({
     DateTime? fromCreatedDate,
     DateTime? toCreatedDate,
@@ -32,7 +32,7 @@ class WishlistFilterWidget extends StatelessWidget {
   const WishlistFilterWidget({
     super.key,
     required this.wishListFilterParameters,
-    required this.hasFilter,
+    required this.filterCount,
     required this.onApply,
   });
 
@@ -43,6 +43,10 @@ class WishlistFilterWidget extends StatelessWidget {
       child: Builder(
         builder: (BuildContext context) {
           return badges.Badge(
+            badgeContent: Text(
+              filterCount.toString(),
+              style: OptiTextStyles.badgesStyle,
+            ),
             position: badges.BadgePosition.topEnd(top: 0, end: 0),
             badgeStyle: const badges.BadgeStyle(
               shape: badges.BadgeShape.circle,
@@ -50,7 +54,7 @@ class WishlistFilterWidget extends StatelessWidget {
               padding: EdgeInsets.all(6),
               elevation: 0,
             ),
-            showBadge: hasFilter,
+            showBadge: filterCount > 0,
             child: IconButton(
               padding: const EdgeInsets.all(10),
               onPressed: () {
