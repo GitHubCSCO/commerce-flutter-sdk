@@ -198,12 +198,14 @@ class _WishListFilterDateSectionWidget extends StatelessWidget {
               selectedDate: fromDate,
               title: LocalizationConstants.from.localized(),
               onDateSelected: onFromDateSelected,
+              maxDate: toDate,
             ),
             const SizedBox(width: 16),
             _WishListFilterDatePickerWidget(
               selectedDate: toDate,
               title: LocalizationConstants.to.localized(),
               onDateSelected: onToDateSelected,
+              minDate: fromDate,
             ),
           ],
         ),
@@ -215,12 +217,16 @@ class _WishListFilterDateSectionWidget extends StatelessWidget {
 class _WishListFilterDatePickerWidget extends StatelessWidget {
   final DateTime? selectedDate;
   final String title;
+  final DateTime? minDate;
+  final DateTime? maxDate;
   final void Function(BuildContext context, DateTime? date) onDateSelected;
 
   const _WishListFilterDatePickerWidget({
     required this.selectedDate,
     required this.title,
     required this.onDateSelected,
+    this.minDate,
+    this.maxDate,
   });
 
   @override
@@ -243,8 +249,8 @@ class _WishListFilterDatePickerWidget extends StatelessWidget {
             ),
             child: DatePickerWidget(
               key: UniqueKey(),
-              minDate: DateTime(1970),
-              maxDate: null,
+              minDate: minDate ?? DateTime(1970),
+              maxDate: maxDate,
               selectedDateTime: selectedDate,
               callback: onDateSelected,
             ),
