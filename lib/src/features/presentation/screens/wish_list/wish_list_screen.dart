@@ -281,8 +281,9 @@ class _WishListsPageState extends State<WishListsPage> {
                                     brand: state.brand,
                                     sharedByUser: state.sharedByUser,
                                   ),
-                                  hasFilter:
-                                      context.watch<WishListCubit>().hasFilter,
+                                  filterCount: context
+                                      .watch<WishListCubit>()
+                                      .filterCount,
                                   onApply: ({
                                     DateTime? fromCreatedDate,
                                     DateTime? toCreatedDate,
