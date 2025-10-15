@@ -26,10 +26,12 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/number
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/helper/extra/delayer.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 void _updateCart(BuildContext context, bool shouldEagerReloadCart) {
   unawaited(context.read<CartCountCubit>().onCartItemChange());
@@ -223,7 +225,7 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
   }
 }
 
-class ProductDetailsAddCartRow extends StatelessWidget {
+class ProductDetailsAddCartRow extends StatefulWidget {
   final ProductDetailsAddtoCartEntity detailsAddToCartEntity;
   final ValueChanged<int?> onQuantityChanged;
 
@@ -231,10 +233,55 @@ class ProductDetailsAddCartRow extends StatelessWidget {
       {super.key});
 
   @override
+  State<ProductDetailsAddCartRow> createState() =>
+      _ProductDetailsAddCartRowState();
+}
+
+class _ProductDetailsAddCartRowState extends State<ProductDetailsAddCartRow> {
+  final _delayer = Delayer(milliseconds: 500);
+
+  @override
+  void dispose() {
+    _delayer.dispose();
+    super.dispose();
+  }
+
+  void onQuantityChanged(num? quantity) {
+    _delayer.run(() {
+      if (quantity == null) {
+        return;
+      }
+
+      context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+          AnalyticsConstants.eventQtyIncDec,
+          AnalyticsConstants.screenNameProductDetail)));
+
+      widget.onQuantityChanged(quantity.toInt());
+      var pricingState = context.read<ProductDetailsPricingBloc>().state;
+      if (pricingState is ProductDetailsPricingLoaded) {
+        var productDetailsPricingEntity =
+            pricingState.productDetailsPriceEntity;
+        var productDetailsBloc = context.read<ProductDetailsBloc>();
+        productDetailsBloc.updateQuantity(quantity.toInt());
+
+        context.read<ProductDetailsPricingBloc>().add(LoadProductDetailsPricing(
+              productDetailsPricingEntity: productDetailsPricingEntity,
+              productDetailsDataEntity:
+                  productDetailsBloc.productDetailDataEntity,
+              quantity: quantity.toInt(),
+            ));
+      } else {
+        context.read<ProductDetailsBloc>().add(ProductDetailsReloadEvent());
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isUnitOfMeasureEnabled =
-        detailsAddToCartEntity.productUnitOfMeasures != null &&
-            (detailsAddToCartEntity.productUnitOfMeasures?.length ?? 0) > 0;
+        widget.detailsAddToCartEntity.productUnitOfMeasures != null &&
+            (widget.detailsAddToCartEntity.productUnitOfMeasures?.length ?? 0) >
+                0;
 
     return SizedBox(
       height: 170,
@@ -272,46 +319,38 @@ class ProductDetailsAddCartRow extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: 2,
-                  child: NumberTextField(
-                      max: CoreConstants.maximumOrderQuantity,
-                      initialText: detailsAddToCartEntity.quantityText,
-                      shouldShowIncrementDecrementIcon: true,
-                      onSubmitted: (num? quantity) {
-                        if (quantity == null) {
-                          return;
-                        }
+                BlocBuilder<ProductDetailsPricingBloc,
+                    ProductDetailsPricingState>(
+                  builder: (context, state) {
+                    switch (state) {
+                      case ProductDetailsPricingLoading():
+                        return Expanded(
+                          flex: 2,
+                          child: SizedBox(
+                            height:
+                                50, // Constrain height to match NumberTextField
+                            child: Center(
+                              child: LoadingAnimationWidget.progressiveDots(
+                                color: OptiAppColors.iconPrimary,
+                                size: 30, // Reduced size to take less space
+                              ),
+                            ),
+                          ),
+                        );
 
-                        context.read<RootBloc>().add(RootAnalyticsEvent(
-                            AnalyticsEvent(AnalyticsConstants.eventQtyIncDec,
-                                AnalyticsConstants.screenNameProductDetail)));
-
-                        onQuantityChanged(quantity.toInt());
-                        var pricingState =
-                            context.read<ProductDetailsPricingBloc>().state;
-                        if (pricingState is ProductDetailsPricingLoaded) {
-                          var productDetailsPricingEntity =
-                              pricingState.productDetailsPriceEntity;
-                          var productDetailsBloc =
-                              context.read<ProductDetailsBloc>();
-                          productDetailsBloc.updateQuantity(quantity.toInt());
-
-                          context
-                              .read<ProductDetailsPricingBloc>()
-                              .add(LoadProductDetailsPricing(
-                                productDetailsPricingEntity:
-                                    productDetailsPricingEntity,
-                                productDetailsDataEntity:
-                                    productDetailsBloc.productDetailDataEntity,
-                                quantity: quantity.toInt(),
-                              ));
-                        } else {
-                          context
-                              .read<ProductDetailsBloc>()
-                              .add(ProductDetailsReloadEvent());
-                        }
-                      }),
+                      default:
+                        return Expanded(
+                          flex: 2,
+                          child: NumberTextField(
+                            max: CoreConstants.maximumOrderQuantity,
+                            initialText:
+                                widget.detailsAddToCartEntity.quantityText,
+                            shouldShowIncrementDecrementIcon: true,
+                            onSubmitted: onQuantityChanged,
+                          ),
+                        );
+                    }
+                  },
                 ),
                 const SizedBox(
                   width: 15.0,
@@ -320,12 +359,12 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                     flex: 2, child: _buildUnitOFMeasureChangeWidget(context)),
               ],
             ),
-            if (!(detailsAddToCartEntity.hidePricing ?? false))
+            if (!(widget.detailsAddToCartEntity.hidePricing ?? false))
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: ProductDetailsAddCartTtitleSubTitleColumn(
                     LocalizationConstants.subtotal.localized(),
-                    detailsAddToCartEntity.subtotalValueText ?? ''),
+                    widget.detailsAddToCartEntity.subtotalValueText ?? ''),
               ),
           ],
         ),
@@ -356,7 +395,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
       return 0;
     }
 
-    final defaultUom = detailsAddToCartEntity.productUnitOfMeasures
+    final defaultUom = widget.detailsAddToCartEntity.productUnitOfMeasures
         ?.firstWhereOrNull((o) => o.isDefault == true);
 
     final alternateUnitsOfMeasureEnabled = context
@@ -367,8 +406,8 @@ class ProductDetailsAddCartRow extends StatelessWidget {
         false;
 
     final showMultipleUoM =
-        detailsAddToCartEntity.productUnitOfMeasures != null &&
-            detailsAddToCartEntity.productUnitOfMeasures!.length > 1 &&
+        widget.detailsAddToCartEntity.productUnitOfMeasures != null &&
+            widget.detailsAddToCartEntity.productUnitOfMeasures!.length > 1 &&
             alternateUnitsOfMeasureEnabled;
 
     return Column(
@@ -384,9 +423,11 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: ListPickerWidget(
-                      items: detailsAddToCartEntity.productUnitOfMeasures ?? [],
+                      items:
+                          widget.detailsAddToCartEntity.productUnitOfMeasures ??
+                              [],
                       selectedIndex: getIndexOfUOM(
-                          detailsAddToCartEntity.productUnitOfMeasures,
+                          widget.detailsAddToCartEntity.productUnitOfMeasures,
                           context
                               .read<ProductDetailsBloc>()
                               .productDetailDataEntity
@@ -395,10 +436,13 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                 ),
               )
             : () {
-                if (detailsAddToCartEntity.productUnitOfMeasures != null &&
-                    detailsAddToCartEntity.productUnitOfMeasures!.length == 1) {
+                if (widget.detailsAddToCartEntity.productUnitOfMeasures !=
+                        null &&
+                    widget.detailsAddToCartEntity.productUnitOfMeasures!
+                            .length ==
+                        1) {
                   return Text(
-                      detailsAddToCartEntity.productUnitOfMeasures?.first
+                      widget.detailsAddToCartEntity.productUnitOfMeasures?.first
                               .unitOfMeasureTextDisplayWithQuantity ??
                           "",
                       style: OptiTextStyles.header3);
