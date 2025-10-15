@@ -81,6 +81,9 @@ class MockTrackingService extends Mock implements ITrackingService {}
 class MockContentConfigurationService extends Mock
     implements IContentConfigurationService {}
 
+class MockAppConfigurationService extends Mock
+    implements IAppConfigurationService {}
+
 class MockCoreServiceProvider extends Mock implements ICoreServiceProvider {}
 
 class MockLocalizationService extends Mock implements ILocalizationService {}
