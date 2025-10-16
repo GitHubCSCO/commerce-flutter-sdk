@@ -109,9 +109,10 @@ jobs:
 
       - run: flutter doctor -v
 
-      - name: Install Mono
+      - name: Brew update with mono and openssl
         run: |
-          brew update
+          brew update && brew upgrade openssl
+          brew reinstall ca-certificates
           brew install mono
 
       - uses: shimataro/ssh-key-action@v2
@@ -136,8 +137,14 @@ jobs:
           echo "Using TEST_GROUP: $TEST_GROUP"
           echo "Using UPLOAD_BUILD: $UPLOAD_BUILD"
 
+          gem install bundler
+          bundle add abbrev
+          bundle add mutex_m
+          bundle add logger
+          bundle install
+
           # Build the fastlane command
-          FASTLANE_CMD="fastlane ios $RELEASE_ENV"
+          FASTLANE_CMD="bundle exec fastlane ios $RELEASE_ENV"
 
           if [ -n "$TEST_GROUP" ] && [ "$TEST_GROUP" != "none" ]; then
               FASTLANE_CMD="$FASTLANE_CMD release:$TEST_GROUP"
