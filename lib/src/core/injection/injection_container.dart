@@ -190,6 +190,7 @@ import 'package:commerce_flutter_sdk/src/initializers/analytics_initializer.dart
 import 'package:commerce_flutter_sdk/src/services/local_storage_service.dart';
 import 'package:commerce_flutter_sdk/src/services/secure_storage_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -788,7 +789,11 @@ Future<void> initInjectionContainer() async {
           appConfigurationService: sl(),
         );
 
-        await AnalyticsInitializer.init(cfg: cfg);
+        try {
+          await AnalyticsInitializer.init(cfg: cfg);
+        } catch (e) {
+          debugPrint('Analytics initialization failed: $e');
+        }
         return cfg;
       },
       dependsOn: [IAppConfigurationService],
