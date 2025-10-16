@@ -138,7 +138,7 @@ class QuoteLineWidget extends StatelessWidget {
                 onCartQuantityChangedCallback(qty);
               },
               subtotalPriceText:
-                  quoteLineEntity.pricing?.extendedUnitNetPriceDisplay ?? "",
+                  QuoteLineExtensions(quoteLineEntity).getSubtotalPriceText(),
             ),
           ),
         ],
