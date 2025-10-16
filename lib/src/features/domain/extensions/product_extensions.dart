@@ -115,4 +115,14 @@ extension QuoteLineExtensions on QuoteLineEntity? {
   String getProductNumber() {
     return this?.erpNumber ?? '';
   }
+
+  String getSubtotalPriceText() {
+    if (this == null) {
+      return '';
+    }
+
+    return this?.pricing?.unitNetPrice == 0
+        ? SiteMessageConstants.valuePricingZeroPriceMessage
+        : (this!.pricing?.extendedUnitNetPriceDisplay ?? '');
+  }
 }
