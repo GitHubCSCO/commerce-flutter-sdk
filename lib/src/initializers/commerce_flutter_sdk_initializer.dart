@@ -51,14 +51,11 @@ class CommerceFlutterSDK {
     // 2️⃣ Theme / essentials
     await EssentialsInitializer().init();
 
-    // 3️⃣ Analytics & crash reporting
-    await AnalyticsInitializer().init();
-
     // Initialize notification handler with core service provider
     final coreServiceProvider = sl<ICoreServiceProvider>();
     await NotificationHandler.getInstance(coreServiceProvider).initialize();
 
-    // 4️⃣ Error & Bloc observer
+    // 3️⃣ Error & Bloc observer
     final logger = GetIt.I<OptiLoggerService>();
     if (!logger.isErrorLogEnabled) {
       FlutterError.presentError = (_) {};
@@ -67,7 +64,7 @@ class CommerceFlutterSDK {
       Bloc.observer = const AppBlocObserver();
     }
 
-    // 5️⃣ Finally: run the SDK’s own root app,
+    // 4️⃣ Finally: run the SDK’s own root app,
     // wrapped in all the BlocProviders/Listeners
     runApp(_withBlocsAndListeners(const CommerceApp()));
   }
