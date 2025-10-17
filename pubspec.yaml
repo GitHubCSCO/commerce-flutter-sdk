@@ -1,7 +1,7 @@
 name: commerce_flutter_sdk
 description: A new Flutter project.
 publish_to: "none"
-version: 4.4.1+140000086
+version: 4.4.2+140000087
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
@@ -38,7 +38,7 @@ dependencies:
   camera: ^0.10.6
   image: ^4.1.7
   collection: ^1.18.0
-  firebase_core: 4.0.0
+  firebase_core: ^4.1.1
   firebase_crashlytics: ^5.0.0
   connectivity_plus: ^6.1.1
   google_maps_flutter: ^2.6.1
