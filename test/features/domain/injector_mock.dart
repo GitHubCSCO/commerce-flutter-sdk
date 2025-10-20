@@ -11,6 +11,8 @@ Future<void> initInjectionContainerMock() async {
     //commerce api service provider
     ..registerLazySingleton<ICommerceAPIServiceProvider>(
         () => MockAPIServiceProvider())
+    ..registerLazySingleton<IAppConfigurationService>(
+        () => MockAppConfigurationService())
     ..registerLazySingleton<ICoreServiceProvider>(
         () => MockCoreServiceProvider())
     //services
