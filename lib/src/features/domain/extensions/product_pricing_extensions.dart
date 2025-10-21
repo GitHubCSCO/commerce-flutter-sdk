@@ -8,7 +8,8 @@ extension ProductPriceExtensions on ProductPriceEntity? {
       return SiteMessageConstants.valueRealTimePricingLoadFail;
     }
 
-    if (this?.unitNetPrice == 0 && allowZeroPricing != true) {
+    // XNG-Change: XSD-21774 always show zero price message
+    if (this?.unitNetPrice == 0) {
       return SiteMessageConstants.valuePricingZeroPriceMessage;
     }
 
@@ -20,7 +21,8 @@ extension ProductPriceExtensions on ProductPriceEntity? {
       return SiteMessageConstants.valueRealTimePricingLoadFail;
     }
 
-    if (this?.unitNetPrice == 0 && allowZeroPricing != true) {
+    // XNG-Change: XSD-21774 always show zero price message
+    if (this?.unitNetPrice == 0) {
       return SiteMessageConstants.valuePricingZeroPriceMessage;
     }
 
