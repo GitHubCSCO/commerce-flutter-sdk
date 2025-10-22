@@ -1,12 +1,11 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/extensions/html_string_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/widget/html_content_webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class ProductDetailsExpansionItemWidget extends StatefulWidget {
   final ProductDetailItemEntity specification;
@@ -19,7 +18,7 @@ class ProductDetailsExpansionItemWidget extends StatefulWidget {
   });
 
   @override
-  _ProductDetailsExpansionItemWidgetState createState() =>
+  State<ProductDetailsExpansionItemWidget> createState() =>
       _ProductDetailsExpansionItemWidgetState();
 }
 
@@ -60,19 +59,19 @@ class _ProductDetailsExpansionItemWidgetState
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: HtmlWidget(
-                    widget.specification.htmlContent.styleHtmlContent() ?? '',
+                  child: HtmlContentWebView(
+                    htmlContent: widget.specification.htmlContent,
                     textStyle: OptiTextStyles.body,
                   ),
                 ),
               ],
               onExpansionChanged: (bool expanded) {
-                if (expanded) {
-                  trackAttributesEvent();
-                }
                 setState(() {
                   _isExpanded = expanded;
                 });
+                if (expanded) {
+                  trackAttributesEvent();
+                }
               },
             ),
           ),
