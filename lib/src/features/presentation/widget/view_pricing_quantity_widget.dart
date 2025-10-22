@@ -53,7 +53,7 @@ void viewPricingQuantityWidget(
                                 Expanded(
                                     child: Text(breakPrice.breakPriceDisplay
                                         .toString())),
-                                Expanded(
+                                Expanded( 
                                     child: Text(
                                         breakPrice.savingsMessage.toString())),
                               ],
