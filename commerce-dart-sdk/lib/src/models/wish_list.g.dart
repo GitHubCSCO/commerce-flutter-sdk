@@ -32,6 +32,7 @@ WishList _$WishListFromJson(Map<String, dynamic> json) => WishList(
       wishListTags: (json['wishListTags'] as List<dynamic>?)
           ?.map((e) => WishListTagModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      sharedByUserName: json['sharedByUserName'] as String?,
     )
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
@@ -56,6 +57,8 @@ Map<String, dynamic> _$WishListToJson(WishList instance) => <String, dynamic>{
       if (instance.isSharedList case final value?) 'isSharedList': value,
       if (instance.sharedByDisplayName case final value?)
         'sharedByDisplayName': value,
+      if (instance.sharedByUserName case final value?)
+        'sharedByUserName': value,
       if (instance.pagination?.toJson() case final value?) 'pagination': value,
       if (instance.wishListLineCollection?.map((e) => e.toJson()).toList()
           case final value?)

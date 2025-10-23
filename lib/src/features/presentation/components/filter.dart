@@ -376,12 +376,16 @@ class FilterShipToPickerWidget extends StatelessWidget {
 class FilterDatePickerWidget extends StatelessWidget {
   final DateTime? selectedDate;
   final String title;
+  final DateTime? minDate;
+  final DateTime? maxDate;
   final void Function(BuildContext context, DateTime) onSelectDate;
 
   const FilterDatePickerWidget({
     required this.selectedDate,
     required this.onSelectDate,
     required this.title,
+    this.minDate,
+    this.maxDate,
     super.key,
   });
 
@@ -405,8 +409,8 @@ class FilterDatePickerWidget extends StatelessWidget {
               Expanded(
                 child: DatePickerWidget(
                   key: UniqueKey(),
-                  minDate: DateTime(1970),
-                  maxDate: null,
+                  minDate: minDate ?? DateTime(1970),
+                  maxDate: maxDate,
                   selectedDateTime: selectedDate,
                   callback: onSelectDate,
                 ),
