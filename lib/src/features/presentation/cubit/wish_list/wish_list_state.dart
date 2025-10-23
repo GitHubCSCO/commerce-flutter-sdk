@@ -7,6 +7,13 @@ class WishListState extends Equatable {
   final String searchQuery;
   final WishListSettingsEntity settings;
   final String? message;
+  final DateTime? fromCreatedDate;
+  final DateTime? toCreatedDate;
+  final DateTime? fromUpdatedOn;
+  final DateTime? toUpdatedOn;
+  final WishListFilterItemEntity? product;
+  final WishListFilterItemEntity? brand;
+  final WishListFilterItemEntity? sharedByUser;
 
   const WishListState({
     required this.wishLists,
@@ -14,20 +21,48 @@ class WishListState extends Equatable {
     required this.sortOrder,
     required this.searchQuery,
     required this.settings,
+    required this.fromCreatedDate,
+    required this.toCreatedDate,
+    required this.fromUpdatedOn,
+    required this.toUpdatedOn,
+    required this.product,
+    required this.brand,
+    required this.sharedByUser,
     this.message,
   });
 
   @override
-  List<Object> get props =>
-      [wishLists, status, sortOrder, searchQuery, settings, message ?? ''];
+  List<Object> get props => [
+        wishLists,
+        status,
+        sortOrder,
+        searchQuery,
+        settings,
+        fromCreatedDate ?? DateTime(0),
+        toCreatedDate ?? DateTime(0),
+        fromUpdatedOn ?? DateTime(0),
+        toUpdatedOn ?? DateTime(0),
+        product ?? '',
+        brand ?? '',
+        sharedByUser ?? '',
+        message ?? '',
+      ];
 
-  WishListState copyWith(
-      {WishListCollectionEntity? wishLists,
-      WishListStatus? status,
-      WishListSortOrder? sortOrder,
-      String? searchQuery,
-      WishListSettingsEntity? settings,
-      String? message}) {
+  WishListState copyWith({
+    WishListCollectionEntity? wishLists,
+    WishListStatus? status,
+    WishListSortOrder? sortOrder,
+    String? searchQuery,
+    WishListSettingsEntity? settings,
+    DateTime? fromCreatedDate,
+    DateTime? toCreatedDate,
+    DateTime? fromUpdatedOn,
+    DateTime? toUpdatedOn,
+    WishListFilterItemEntity? product,
+    WishListFilterItemEntity? brand,
+    WishListFilterItemEntity? sharedByUser,
+    String? message,
+  }) {
     return WishListState(
       wishLists: wishLists ?? this.wishLists,
       status: status ?? this.status,
@@ -35,6 +70,13 @@ class WishListState extends Equatable {
       searchQuery: searchQuery ?? this.searchQuery,
       settings: settings ?? this.settings,
       message: message ?? this.message,
+      fromCreatedDate: fromCreatedDate ?? this.fromCreatedDate,
+      toCreatedDate: toCreatedDate ?? this.toCreatedDate,
+      fromUpdatedOn: fromUpdatedOn ?? this.fromUpdatedOn,
+      toUpdatedOn: toUpdatedOn ?? this.toUpdatedOn,
+      product: product ?? this.product,
+      brand: brand ?? this.brand,
+      sharedByUser: sharedByUser ?? this.sharedByUser,
     );
   }
 }

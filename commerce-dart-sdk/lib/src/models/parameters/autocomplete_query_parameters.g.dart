@@ -17,4 +17,7 @@ Map<String, dynamic> _$AutocompleteQueryParametersToJson(
       if (instance.contentEnabled case final value?) 'contentEnabled': value,
       if (instance.productEnabled case final value?) 'productEnabled': value,
       if (instance.brandEnabled case final value?) 'brandEnabled': value,
+      if (instance.searchOnTyping case final value?) 'searchOnTyping': value,
+      if (instance.relevancy case final value?) 'relevancy': value,
+      if (instance.spireContent case final value?) 'spireContent': value,
     };
