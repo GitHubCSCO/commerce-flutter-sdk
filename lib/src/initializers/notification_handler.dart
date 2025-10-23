@@ -52,7 +52,7 @@ class NotificationHandler {
 
       _isInitialized = true;
     } catch (e) {
-      await _coreServiceProvider.getTrackingService().trackError(e);
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
     }
   }
 
@@ -76,7 +76,7 @@ class NotificationHandler {
         _hasNotificationPermissions = true;
       }
     } catch (e) {
-      await _coreServiceProvider.getTrackingService().trackError(e);
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
     }
   }
 
@@ -100,13 +100,13 @@ class NotificationHandler {
       await _localNotifications.initialize(
         initSettings,
         onDidReceiveNotificationResponse: (response) async {
-          await _onNotificationResponse(response);
+          unawaited(_onNotificationResponse(response));
         },
       );
 
       await _createNotificationChannel();
     } catch (e) {
-      await _coreServiceProvider.getTrackingService().trackError(e);
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
     }
   }
 
@@ -128,7 +128,7 @@ class NotificationHandler {
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
     } catch (e) {
-      await _coreServiceProvider.getTrackingService().trackError(e);
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
     }
   }
 
@@ -144,7 +144,9 @@ class NotificationHandler {
       _backgroundSubscription = FirebaseMessaging.onMessageOpenedApp.listen(
         _handleMessageOpenedApp,
       );
-    } catch (e) {}
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   /// Handle initial message when app opens from terminated state
@@ -153,10 +155,10 @@ class NotificationHandler {
       final initialMessage =
           await FirebaseMessaging.instance.getInitialMessage();
       if (initialMessage != null) {
-        await _trackNotificationClicked();
+        unawaited(_trackNotificationClicked());
       }
     } catch (e) {
-      await _coreServiceProvider.getTrackingService().trackError(e);
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
     }
   }
 
@@ -168,16 +170,16 @@ class NotificationHandler {
         await _showLocalNotification(message);
       }
     } catch (e) {
-      await _coreServiceProvider.getTrackingService().trackError(e);
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
     }
   }
 
   /// Handle message when app is opened from background
   Future<void> _handleMessageOpenedApp(RemoteMessage message) async {
     try {
-      await _trackNotificationClicked();
+      unawaited(_trackNotificationClicked());
     } catch (e) {
-      await _coreServiceProvider.getTrackingService().trackError(e);
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
     }
   }
 
@@ -229,16 +231,16 @@ class NotificationHandler {
         payload: _createPayload(message),
       );
     } catch (e) {
-      await _coreServiceProvider.getTrackingService().trackError(e);
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
     }
   }
 
   /// Handle notification response (when user taps notification)
   Future<void> _onNotificationResponse(NotificationResponse response) async {
     try {
-      await _trackNotificationClicked();
+      unawaited(_trackNotificationClicked());
     } catch (e) {
-      await _coreServiceProvider.getTrackingService().trackError(e);
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
     }
   }
 
@@ -268,9 +270,9 @@ class NotificationHandler {
         'Push Notification',
       );
 
-      await trackingService.trackEvent(analyticsEvent);
+      unawaited(trackingService.trackEvent(analyticsEvent));
     } catch (e) {
-      await trackingService.trackError(e);
+      unawaited(trackingService.trackError(e));
     }
   }
 }
