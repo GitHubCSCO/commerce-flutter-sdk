@@ -39,17 +39,70 @@ The SDK is built using Clean Architecture principles with clear separation of co
 The SDK provides numerous interfaces that can be implemented for custom behavior:
 
 ```dart
-// Custom service implementation
-class CustomTrackingService implements ITrackingService {
-  @override
-  Future<void> trackEvent(String eventName, Map<String, dynamic> parameters) async {
-    // Your custom tracking logic
-    await analytics.logCustomEvent(eventName, parameters);
-  }
-}
+// Example: Custom service implementation
+class CustomBiometricAuthService implements IBiometricAuthenticationService {
+  final ICommerceAPIServiceProvider _commerceAPIServiceProvider;
+  
+  CustomBiometricAuthService({
+    required ICommerceAPIServiceProvider commerceAPIServiceProvider,
+  }) : _commerceAPIServiceProvider = commerceAPIServiceProvider;
 
-// Register in dependency injection
-sl.registerLazySingleton<ITrackingService>(() => CustomTrackingService());
+  @override
+  Future<bool> authenticate(String password) async {
+    // Add your custom pre-authentication logic
+    await logAuthenticationAttempt();
+    await validateWithCustomSecurityRules(password);
+    
+    // Use SDK's commerce API services
+    final userName = _commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession()
+        ?.userName;
+    
+    if (userName == null) return false;
+    
+    final response = await _commerceAPIServiceProvider
+        .getAuthenticationService()
+        .logInAsync(userName, password);
+    
+    switch (response) {
+      case Success(value: bool? value):
+        // Add custom post-authentication logic
+        await trackSuccessfulAuth(userName);
+        return value ?? false;
+      case Failure():
+        return false;
+    }
+  }
+  
+  Future<void> logAuthenticationAttempt() async {
+    // Your custom logging logic
+  }
+  
+  Future<void> validateWithCustomSecurityRules(String password) async {
+    // Your custom validation logic (e.g., check against breached passwords)
+  }
+  
+  Future<void> trackSuccessfulAuth(String userName) async {
+    // Your custom analytics tracking
+  }
+  
+  // Implement other required interface methods with your custom logic
+  @override
+  Future<bool> enableBiometricAuthentication(String password) async {
+    // Your implementation
+  }
+  
+  // ... other interface methods
+}
+```
+```dart
+// Register in dependency injection to override default service
+sl.registerLazySingleton<IBiometricAuthenticationService>(
+  () => CustomBiometricAuthService(
+    commerceAPIServiceProvider: sl(),
+  ),
+);
 ```
 
 ### 2. UseCase Extension
@@ -57,27 +110,53 @@ sl.registerLazySingleton<ITrackingService>(() => CustomTrackingService());
 Extend base use cases for custom business logic:
 
 ```dart
-class CustomProductDetailsUseCase extends ProductDetailsUseCase {
+class CustomOrderUsecase extends OrderUsecase {
   @override
-  Future<Result<ProductDetailsEntity, ErrorResponse>> getProductDetails(String productId) async {
+  Future<GetOrderCollectionResultEntity?> getOrderHistory({
+    int? page,
+    OrderSortOrder sortOrder = OrderSortOrder.orderDateDescending,
+    bool showMyOrders = false,
+    List<String> filterAttributes = const [],
+    bool isFromVMI = false,
+    required String searchText,
+  }) async {
     // Add custom pre-processing
-    await performCustomValidation(productId);
+    await logOrderHistoryRequest(searchText);
+    await validateOrderPermissions();
     
     // Call parent implementation
-    var result = await super.getProductDetails(productId);
+    final result = await super.getOrderHistory(
+      page: page,
+      sortOrder: sortOrder,
+      showMyOrders: showMyOrders,
+      filterAttributes: filterAttributes,
+      isFromVMI: isFromVMI,
+      searchText: searchText,
+    );
     
     // Add custom post-processing
-    switch (result) {
-      case Success(value: final data):
-        return Success(await enrichProductData(data));
-      case Failure(errorResponse: final error):
-        return Failure(error);
+    if (result != null && result.orders != null) {
+      return GetOrderCollectionResultEntity(
+        pagination: result.pagination,
+        orders: await enrichOrdersWithCustomData(result.orders!),
+        showErpOrderNumber: result.showErpOrderNumber,
+      );
     }
+    
+    return result;
   }
   
-  Future<ProductDetailsEntity> enrichProductData(ProductDetailsEntity product) async {
-    // Your custom product enrichment logic
-    return product;
+  Future<void> logOrderHistoryRequest(String searchText) async {
+    // Your custom analytics/logging logic
+  }
+  
+  Future<void> validateOrderPermissions() async {
+    // Your custom permission validation
+  }
+  
+  Future<List<OrderEntity>> enrichOrdersWithCustomData(List<OrderEntity> orders) async {
+    // Add custom data like estimated delivery dates, loyalty points, etc.
+    return orders;
   }
 }
 ```
@@ -135,64 +214,9 @@ lib/
 
 #### 3. Theme and Styling
 
-```dart
-// Custom theme extension
-extension CustomTheme on ThemeData {
-  Color get customPrimaryColor => const Color(0xFF123456);
-  TextStyle get customHeadingStyle => const TextStyle(
-    fontSize: 24,
-    fontWeight: FontWeight.bold,
-  );
-}
+See the [Theme Customization](#theme-customization) section for detailed guidance on customizing colors and themes using `OptiAppColors` and backend-driven configuration.
 
-// Apply in app initialization
-class CustomApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: getTheme().copyWith(
-        // Add your custom theme modifications
-        primaryColor: CustomColors.brandPrimary,
-        appBarTheme: CustomAppBarTheme.theme,
-      ),
-    );
-  }
-}
-```
-
-#### 4. CMS Widget Extensions
-
-```dart
-// Custom CMS widget
-class CustomPromoBannerWidget extends WidgetEntity {
-  final String promoText;
-  final String imageUrl;
-  
-  const CustomPromoBannerWidget({
-    String? id,
-    WidgetType? type,
-    required this.promoText,
-    required this.imageUrl,
-  }) : super(id: id, type: type, subType: 'custom_promo_banner');
-}
-
-// Custom widget builder
-class CustomWidgetBuilder {
-  static Widget buildCustomPromoBanner(CustomPromoBannerWidget widget) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Image.network(widget.imageUrl),
-          Text(widget.promoText, style: Theme.of(context).headlineSmall),
-        ],
-      ),
-    );
-  }
-}
-```
-
-#### 5. Custom API Extensions
+#### 4. Custom API Extensions
 
 ```dart
 // Custom API service
@@ -217,26 +241,42 @@ class CustomProductService extends BaseUseCase implements ICustomProductService 
 
 ### 1. Dependency Injection Pattern
 
-```dart
-// Register custom services in a separate injection file
-class CustomInjectionContainer {
-  static void registerCustomServices() {
-    // Custom services
-    sl.registerLazySingleton<ICustomAnalytics>(() => CustomAnalyticsService());
-    sl.registerLazySingleton<ICustomProductService>(() => CustomProductService());
-    
-    // Override default services if needed
-    sl.registerLazySingleton<ITrackingService>(() => CustomTrackingService());
-  }
-}
+The SDK uses `CommerceFlutterSDK.initialize()` as the entry point. Use the `overrideServices` callback to register your custom services after the SDK's core injection container is initialized.
 
-// Call during app initialization
-void main() async {
-  await setupDependencyInjection();
-  CustomInjectionContainer.registerCustomServices(); // Add after base setup
-  runApp(MyApp());
-}
+```dart
+await CommerceFlutterSDK.initialize(
+  config: CommerceConfig(
+    isRunningAsPackage: false,
+    overrideServices: (serviceLocator) async {
+      // Register custom services
+      serviceLocator.registerLazySingleton<ICustomAnalytics>(
+        () => CustomAnalyticsService(),
+      );
+      
+      serviceLocator.registerLazySingleton<ICustomProductService>(
+        () => CustomProductService(),
+      );
+      
+      // Override default SDK services if needed
+      // Note: Unregister the existing service first, then register your custom one
+      if (serviceLocator.isRegistered<IBiometricAuthenticationService>()) {
+        await serviceLocator.unregister<IBiometricAuthenticationService>();
+      }
+      serviceLocator.registerLazySingleton<IBiometricAuthenticationService>(
+        () => CustomBiometricAuthService(
+          commerceAPIServiceProvider: serviceLocator(),
+        ),
+      );
+    },
+  ),
+);
 ```
+
+**Important Notes:**
+- The `overrideServices` callback is executed after `initInjectionContainer()` completes
+- Use `serviceLocator.unregister()` before overriding existing SDK services
+- Register custom services that extend SDK functionality
+- Keep all custom service registrations in the `overrideServices` callback to avoid conflicts with SDK updates
 
 ### 2. Configuration-Driven Customization
 
@@ -267,41 +307,7 @@ class CustomConfigService {
 }
 ```
 
-### 3. Event-Driven Extensions
-
-```dart
-// Custom event bus for communication
-class CustomEventBus {
-  static final _controller = StreamController<CustomEvent>.broadcast();
-  
-  static Stream<CustomEvent> get events => _controller.stream;
-  
-  static void emit(CustomEvent event) {
-    _controller.add(event);
-  }
-}
-
-// Custom event types
-abstract class CustomEvent {}
-
-class ProductViewedEvent extends CustomEvent {
-  final String productId;
-  ProductViewedEvent(this.productId);
-}
-
-// Listen to events in your custom services
-class CustomAnalyticsService {
-  void initialize() {
-    CustomEventBus.events.listen((event) {
-      if (event is ProductViewedEvent) {
-        trackProductView(event.productId);
-      }
-    });
-  }
-}
-```
-
-### 4. Custom BLoC/Cubit Implementation
+### 3. Custom BLoC/Cubit Implementation
 
 ```dart
 // Custom feature BLoC
@@ -662,15 +668,21 @@ class CustomPaymentService implements IPaymentService {
 
 ## ⚙️ Configuration Management
 
-### Custom Configuration Files
+The SDK includes an `AppConfigurationService` that automatically loads configuration from two files:
+- `assets/config/base_config.json` - Base SDK configuration
+- `assets/config/custom_config.json` - Your custom configuration
+
+### Using Custom Configuration
+
+The SDK's `CustomConfiguration` class is already loaded by `AppConfigurationService` during initialization. Add your custom settings to `assets/config/custom_config.json`:
 
 ```json
 // assets/config/custom_config.json
 {
   "features": {
-    "customAnalytics": true,
-    "customCheckout": false,
-    "customProductRecommendations": true
+    "enableCustomAnalytics": true,
+    "enableLoyaltyProgram": false,
+    "customRecommendations": true
   },
   "integrations": {
     "customPaymentGateway": {
@@ -678,43 +690,129 @@ class CustomPaymentService implements IPaymentService {
       "environment": "sandbox"
     },
     "customAnalytics": {
-      "trackingId": "your-tracking-id"
+      "trackingId": "your-tracking-id",
+      "endpoint": "https://analytics.yourcompany.com"
     }
   },
   "ui": {
-    "customTheme": "dark",
+    "customLayoutGrid": 3,
     "showCustomBadges": true,
-    "customLayoutGrid": 3
+    "enableDarkMode": false
+  },
+  "businessLogic": {
+    "maxCartItems": 100,
+    "enableBackorders": true,
+    "shippingCalculationMode": "realtime"
   }
 }
 ```
 
-### Configuration Service
+### Accessing Configuration in Your Code
+
+Access the configuration through the SDK's `AppConfigurationService`:
 
 ```dart
-class CustomConfigurationService {
-  static Map<String, dynamic>? _config;
-  
-  static Future<void> initialize() async {
-    final configString = await rootBundle.loadString('assets/config/custom_config.json');
-    _config = json.decode(configString);
-  }
-  
-  static bool isFeatureEnabled(String feature) {
-    return _config?['features']?[feature] ?? false;
-  }
-  
-  static T? getConfigValue<T>(String path) {
-    final keys = path.split('.');
-    dynamic value = _config;
-    
-    for (final key in keys) {
-      value = value?[key];
-    }
-    
-    return value as T?;
-  }
+// Get the configuration service
+final appConfigService = sl<IAppConfigurationService>();
+
+// Access custom configuration
+final customConfig = appConfigService.customConfig;
+
+// Check feature flags
+if (customConfig?.features?['enableCustomAnalytics'] == true) {
+  // Initialize custom analytics
+  await CustomAnalyticsService.initialize();
 }
+
+// Access integration settings
+final apiKey = customConfig?.integrations?['customPaymentGateway']?['apiKey'];
+final environment = customConfig?.integrations?['customPaymentGateway']?['environment'];
+
+// Access UI settings
+final gridSize = customConfig?.ui?['customLayoutGrid'] ?? 2;
+final showBadges = customConfig?.ui?['showCustomBadges'] ?? false;
+
+// Access business logic settings
+final maxCartItems = customConfig?.businessLogic?['maxCartItems'] ?? 50;
+```
+
+### Extending CustomConfiguration
+
+If you need strongly-typed access to your custom settings, create extension methods:
+
+```dart
+extension CustomConfigurationExtensions on CustomConfiguration {
+  // Feature flags
+  bool get enableCustomAnalytics => 
+      features?['enableCustomAnalytics'] == true;
+  
+  bool get enableLoyaltyProgram => 
+      features?['enableLoyaltyProgram'] == true;
+  
+  // Integration settings
+  String? get customAnalyticsEndpoint => 
+      integrations?['customAnalytics']?['endpoint'];
+  
+  String? get customPaymentApiKey => 
+      integrations?['customPaymentGateway']?['apiKey'];
+  
+  // UI settings
+  int get customLayoutGrid => 
+      ui?['customLayoutGrid'] ?? 2;
+  
+  bool get showCustomBadges => 
+      ui?['showCustomBadges'] ?? false;
+  
+  // Business logic settings
+  int get maxCartItems => 
+      businessLogic?['maxCartItems'] ?? 50;
+  
+  bool get enableBackorders => 
+      businessLogic?['enableBackorders'] ?? false;
+}
+
+// Usage
+final appConfigService = sl<IAppConfigurationService>();
+final customConfig = appConfigService.customConfig;
+
+if (customConfig?.enableCustomAnalytics ?? false) {
+  await initializeCustomAnalytics(
+    endpoint: customConfig?.customAnalyticsEndpoint,
+  );
+}
+```
+
+### Configuration-Based Service Initialization
+
+Use custom configuration to conditionally initialize services:
+
+```dart
+await CommerceFlutterSDK.initialize(
+  config: CommerceConfig(
+    isRunningAsPackage: false,
+    overrideServices: (serviceLocator) async {
+      // Get configuration service
+      final appConfigService = serviceLocator<IAppConfigurationService>();
+      final customConfig = appConfigService.customConfig;
+      
+      // Conditionally register services based on configuration
+      if (customConfig?.features?['enableCustomAnalytics'] == true) {
+        serviceLocator.registerLazySingleton<ICustomAnalytics>(
+          () => CustomAnalyticsService(
+            trackingId: customConfig?.integrations?['customAnalytics']?['trackingId'],
+            endpoint: customConfig?.integrations?['customAnalytics']?['endpoint'],
+          ),
+        );
+      }
+      
+      if (customConfig?.features?['enableLoyaltyProgram'] == true) {
+        serviceLocator.registerLazySingleton<ILoyaltyService>(
+          () => LoyaltyService(),
+        );
+      }
+    },
+  ),
+);
 ```
 
 ## 🎨 Custom Widget Development
@@ -856,77 +954,174 @@ class EnhancedProductService {
 
 ## 🎨 Theme Customization
 
-### Safe Theme Extension
+The SDK uses a centralized theming system with `OptiAppColors` and backend-driven theme configuration. Colors and styles are dynamically loaded from your Optimizely Commerce backend.
+
+### Understanding SDK Theme Architecture
+
+The SDK's theme is managed through:
+- **`OptiAppColors`** - Centralized color constants that can be modified at runtime
+- **`getTheme()`** - Returns the base theme using current `OptiAppColors.primaryColor`
+- **Backend Configuration** - Primary colors are loaded from your commerce backend
+- **`CommerceApp`** - Root app widget that applies the theme
+
+### Option 1: Backend-Driven Theme (Recommended)
+
+The SDK automatically loads theme colors from your Optimizely Commerce backend. This is the preferred method as it allows non-developers to manage branding.
 
 ```dart
-// Custom theme data
-class CustomThemeData {
-  static const Color primaryBrand = Color(0xFF1B365D);
-  static const Color secondaryBrand = Color(0xFF00A9CE);
-  static const Color accentBrand = Color(0xFFFF6B35);
+// The SDK handles this automatically
+// Colors are fetched from backend and stored in OptiAppColors.primaryColor
+// No code changes needed - configure in your Commerce admin panel
+```
+
+### Option 2: Customize OptiAppColors at Runtime
+
+Override the primary color before SDK initialization or at runtime:
+
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   
-  static ThemeData get lightTheme {
-    final baseTheme = getTheme(); // Get SDK base theme
+  // Set custom primary color before initializing SDK
+  OptiAppColors.primaryColor = const Color(0xFF1B365D);
+  
+  await CommerceFlutterSDK.initialize(
+    config: CommerceConfig(
+      isRunningAsPackage: false,
+      overrideServices: (serviceLocator) async {
+        // Optional: Register custom services here
+      },
+    ),
+  );
+}
+```
+
+### Option 3: Modify OptiAppColors Class Directly
+
+For persistent color changes across the entire app:
+
+```dart
+// Create a custom colors file that extends/modifies OptiAppColors
+class CustomBrandColors {
+  static void applyCustomBranding() {
+    // Override the primary color used throughout the SDK
+    OptiAppColors.primaryColor = const Color(0xFF1B365D);
     
-    return baseTheme.copyWith(
-      primaryColor: primaryBrand,
-      colorScheme: baseTheme.colorScheme.copyWith(
-        primary: primaryBrand,
-        secondary: secondaryBrand,
-        tertiary: accentBrand,
-      ),
-      appBarTheme: baseTheme.appBarTheme.copyWith(
-        backgroundColor: primaryBrand,
-        foregroundColor: Colors.white,
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryBrand,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      ),
-    );
+    // Note: Other OptiAppColors are const and cannot be changed at runtime
+    // To modify them, you would need to edit the OptiAppColors class directly
   }
 }
 
-// Apply custom theme
-class CustomApp extends StatelessWidget {
+// Apply before SDK initialization
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  CustomBrandColors.applyCustomBranding();
+  
+  await CommerceFlutterSDK.initialize(config: CommerceConfig());
+}
+```
+
+### Option 4: Service Override for Advanced Theming
+
+Use the service override mechanism to customize theme loading:
+
+```dart
+await CommerceFlutterSDK.initialize(
+  config: CommerceConfig(
+    isRunningAsPackage: false,
+    overrideServices: (serviceLocator) async {
+      // Override color loading service if needed
+      // This runs after SDK's core setup but before theme initialization
+      
+      // Load custom brand configuration
+      final customColor = await loadCustomBrandColor();
+      OptiAppColors.primaryColor = customColor;
+    },
+  ),
+);
+
+Future<Color> loadCustomBrandColor() async {
+  // Load from your custom configuration source
+  // Could be a different API, local config, or environment variable
+  return const Color(0xFF1B365D);
+}
+```
+
+### Best Practices for Theme Customization
+
+1. **Use Backend Configuration** - Manage colors through Commerce admin panel
+2. **Set Before Initialization** - Modify `OptiAppColors.primaryColor` before calling `CommerceFlutterSDK.initialize()`
+3. **Avoid Modifying SDK Files** - Don't edit `OptiAppColors` or `getTheme()` directly
+4. **Test Theme Changes** - Verify colors work across light/dark modes and all screens
+5. **Consider Accessibility** - Ensure sufficient contrast ratios for readability
+
+### How SDK Theme System Works
+
+```dart
+// SDK's theme system (for reference - don't modify)
+ThemeData getTheme() {
+  return ThemeData(
+    colorScheme: colorScheme.copyWith(
+      primary: OptiAppColors.primaryColor, // Dynamic color
+    ),
+    iconTheme: IconThemeData(
+      color: OptiAppColors.primaryColor, // Used throughout SDK
+    ),
+    appBarTheme: AppBarTheme(
+      iconTheme: IconThemeData(
+        color: OptiAppColors.primaryColor,
+      ),
+    ),
+    // ... other theme properties
+  );
+}
+
+// CommerceApp applies the theme automatically
+class CommerceApp extends StatelessWidget {
+  const CommerceApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: CustomThemeData.lightTheme,
-      // ... rest of app configuration
+    return MaterialApp.router(
+      theme: getTheme(), // SDK theme with OptiAppColors.primaryColor
+      // ... router and other configuration
     );
   }
 }
 ```
 
-### Brand Color Management
+### Persisting Custom Colors
+
+If you need to persist custom colors across app restarts:
 
 ```dart
-// Custom color service that integrates with SDK
-class CustomBrandService {
-  static Future<void> initializeBrandColors() async {
-    // Load custom brand colors from your API or config
-    final brandConfig = await loadBrandConfiguration();
-    
-    // Update SDK colors while preserving functionality
-    OptiAppColors.primaryColor = brandConfig.primaryColor;
-    
-    // Store for persistence (following SDK pattern)
-    await sl<ILocalStorageService>().save(
-      CoreConstants.primaryColorCachingKey,
-      brandConfig.primaryColor.value.toRadixString(16),
-    );
+class CustomColorPersistence {
+  static const String _colorKey = 'custom_primary_color';
+  
+  static Future<void> saveCustomColor(Color color) async {
+    final hexColor = color.value.toRadixString(16);
+    await sl<ILocalStorageService>().save(_colorKey, hexColor);
+    OptiAppColors.primaryColor = color;
   }
   
-  static Future<BrandConfiguration> loadBrandConfiguration() async {
-    // Your custom brand loading logic
-    return BrandConfiguration.fromApi();
+  static Future<void> loadCustomColor() async {
+    final hexColor = await sl<ILocalStorageService>().load(_colorKey);
+    if (hexColor != null && hexColor.isNotEmpty) {
+      final colorValue = int.tryParse(hexColor, radix: 16);
+      if (colorValue != null) {
+        OptiAppColors.primaryColor = Color(colorValue);
+      }
+    }
   }
+}
+
+// Use before SDK initialization
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initInjectionContainer(); // Initialize service locator first
+  await CustomColorPersistence.loadCustomColor();
+  
+  await CommerceFlutterSDK.initialize(config: CommerceConfig());
 }
 ```
 
