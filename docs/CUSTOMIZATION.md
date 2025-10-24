@@ -889,30 +889,152 @@ class CustomCMSService extends CmsUseCase {
 
 ## 🔌 Service Extension
 
-### Custom Service Implementation
+### Custom Tracking Service Implementation
+
+The SDK uses a `CompositeTrackingService` that allows multiple tracking services to work together. To add your own custom tracker:
+
+#### Step 1: Create Your Custom Tracking Service
 
 ```dart
-// Custom analytics service
+// File: lib/custom_features/custom_tracking/custom_analytics_service.dart
 class CustomAnalyticsService implements ITrackingService {
-  final FirebaseAnalytics _firebaseAnalytics;
+  final ISessionService _sessionService;
+  final IAccountService _accountService;
+  final AnalyticsConfig _analyticsConfig;
   final CustomAnalyticsSDK _customSDK;
   
-  CustomAnalyticsService(this._firebaseAnalytics, this._customSDK);
+  CustomAnalyticsService({
+    required ISessionService sessionService,
+    required IAccountService accountService,
+    required AnalyticsConfig analyticsConfig,
+    required CustomAnalyticsSDK customSDK,
+  })  : _sessionService = sessionService,
+        _accountService = accountService,
+        _analyticsConfig = analyticsConfig,
+        _customSDK = customSDK;
   
   @override
   Future<void> trackEvent(String eventName, Map<String, dynamic> parameters) async {
-    // Send to multiple analytics providers
-    await _firebaseAnalytics.logEvent(name: eventName, parameters: parameters);
-    await _customSDK.trackEvent(eventName, parameters);
+    // Add user context from session
+    final userId = _sessionService.currentSession?.userId;
+    final accountId = _accountService.currentAccount?.id;
     
-    // Custom business logic
+    // Enrich parameters with custom data
+    final enrichedParams = {
+      ...parameters,
+      'user_id': userId,
+      'account_id': accountId,
+      'app_version': _analyticsConfig.appVersion,
+      'environment': _analyticsConfig.environment,
+    };
+    
+    // Send to your custom analytics provider
+    await _customSDK.track(eventName, enrichedParams);
+    
+    // Add custom logic for specific event types
     if (eventName == 'product_viewed') {
-      await _trackProductRecommendations(parameters['product_id']);
+      await _trackProductRecommendations(parameters['productId']);
     }
   }
   
-  Future<void> _trackProductRecommendations(String productId) async {
-    // Custom recommendation tracking logic
+  @override
+  Future<void> trackScreen(String screenName) async {
+    await _customSDK.trackPageView(screenName);
+  }
+  
+  Future<void> _trackProductRecommendations(String? productId) async {
+    if (productId == null) return;
+    // Your custom recommendation tracking logic
+    await _customSDK.trackRecommendation(productId);
+  }
+  
+  // Implement other ITrackingService interface methods
+  @override
+  Future<void> setUserProperties(Map<String, dynamic> properties) async {
+    await _customSDK.setUserAttributes(properties);
+  }
+}
+```
+
+#### Step 2: Register Your Custom Tracker
+
+Use the SDK's `overrideServices` callback to add your custom tracker to the `CompositeTrackingService`:
+
+```dart
+await CommerceFlutterSDK.initialize(
+  config: CommerceConfig(
+    isRunningAsPackage: false,
+    overrideServices: (serviceLocator) {
+      // Initialize your custom analytics SDK
+      final customSDK = CustomAnalyticsSDK(
+        apiKey: 'your-api-key',
+        endpoint: 'https://analytics.yourcompany.com',
+      );
+      
+      // Register the CompositeTrackingService with your custom tracker
+      serviceLocator.unregister<ITrackingService>();
+      serviceLocator.registerLazySingleton<ITrackingService>(
+        () => CompositeTrackingService(
+          trackers: [
+            // SDK's default Firebase tracker
+            FirebaseTrackingService(
+              sessionService: serviceLocator(),
+              accountService: serviceLocator(),
+              analyticsConfig: serviceLocator(),
+            ),
+            // SDK's AppCenter tracker (if enabled)
+            AppCenterTrackingService(
+              sessionService: serviceLocator(),
+              accountService: serviceLocator(),
+              analyticsConfig: serviceLocator(),
+            ),
+            // Your custom tracker
+            CustomAnalyticsService(
+              sessionService: serviceLocator(),
+              accountService: serviceLocator(),
+              analyticsConfig: serviceLocator(),
+              customSDK: customSDK,
+            ),
+          ],
+        ),
+      );
+    },
+  ),
+);
+```
+
+#### How CompositeTrackingService Works
+
+The `CompositeTrackingService` automatically forwards all tracking calls to each registered tracker:
+
+```dart
+// When you call tracking anywhere in the app:
+sl<ITrackingService>().trackEvent('add_to_cart', {'productId': '123'});
+
+// The event is automatically sent to all trackers:
+// 1. FirebaseTrackingService
+// 2. AppCenterTrackingService  
+// 3. CustomAnalyticsService (your custom tracker)
+```
+
+#### Best Practices for Custom Trackers
+
+1. **Implement Full Interface**: Ensure your tracker implements all methods of `ITrackingService`
+2. **Error Handling**: Wrap API calls in try-catch to prevent one tracker from breaking others
+3. **Performance**: Consider async batching for high-frequency events
+4. **Configuration**: Use feature flags to enable/disable specific trackers
+
+```dart
+class CustomAnalyticsService implements ITrackingService {
+  @override
+  Future<void> trackEvent(String eventName, Map<String, dynamic> parameters) async {
+    try {
+      // Your tracking logic
+      await _customSDK.track(eventName, parameters);
+    } catch (e) {
+      // Log error but don't throw - don't break other trackers
+      debugPrint('Custom analytics error: $e');
+    }
   }
 }
 ```
