@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
@@ -13,7 +12,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_men
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_approval_filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderApprovalScreen extends StatelessWidget {
@@ -264,10 +262,17 @@ class _OrderApprovalItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  cart.orderNumber ?? '',
-                  style: OptiTextStyles.body
-                      .copyWith(color: OptiAppColors.primaryColor),
+                Flexible(
+                  child: Text(
+                    cart.orderNumber ?? '',
+                    style: OptiTextStyles.body
+                        .copyWith(color: OptiAppColors.primaryColor),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
                 ),
                 Text(
                   cart.orderDate != null
