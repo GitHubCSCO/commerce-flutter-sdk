@@ -13,6 +13,13 @@ class WishListUsecase extends BaseUseCase {
     int? page,
     WishListSortOrder sortOrder = WishListSortOrder.modifiedOnDescending,
     required String searchText,
+    DateTime? fromCreatedDate,
+    DateTime? toCreatedDate,
+    DateTime? fromUpdatedOn,
+    DateTime? toUpdatedOn,
+    String? erpNumber,
+    String? brandId,
+    String? sharedBy,
   }) async {
     final result =
         await commerceAPIServiceProvider.getWishListService().getWishLists(
@@ -21,6 +28,13 @@ class WishListUsecase extends BaseUseCase {
                 pageSize: CoreConstants.defaultPageSize,
                 page: page,
                 query: searchText != '' ? searchText : null,
+                fromCreatedDate: fromCreatedDate,
+                toCreatedDate: toCreatedDate,
+                fromUpdatedOn: fromUpdatedOn,
+                toUpdatedOn: toUpdatedOn,
+                erpNumber: erpNumber,
+                brandId: brandId,
+                sharedBy: sharedBy,
                 expand: [
                   'top3products',
                   'favorite',

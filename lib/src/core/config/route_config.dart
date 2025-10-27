@@ -63,6 +63,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/vmi/vmi_l
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/vmi/vmi_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_create_screen.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_filter_autocomplete_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_info_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/login/login_screen.dart';
@@ -806,6 +807,27 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  final wishListFilterAutocomplete = createNode(
+    name: AppRoute.wishListFilterAutocomplete.name,
+    path: AppRoute.wishListFilterAutocomplete.fullPath,
+    builder: (context, state) {
+      final filterType = switch (state.pathParameters['filterType']) {
+        WishListFilterAutocompleteType.erpNumberKey =>
+          WishListFilterAutocompleteType.erpNumber,
+        WishListFilterAutocompleteType.brandIdKey =>
+          WishListFilterAutocompleteType.brandId,
+        WishListFilterAutocompleteType.sharedByKey =>
+          WishListFilterAutocompleteType.sharedBy,
+        _ => null,
+      }!;
+
+      return WishListFilterAutocompleteScreen(
+        type: filterType,
+      );
+    },
+    parent: null,
+  );
+
   return [
     root,
     landing,
@@ -845,7 +867,8 @@ List<NavigationNode> _getNavigationRoot() {
     quoteLineNotes,
     inAppBrowser,
     fullScreenImageCarousel,
-    cartAllList
+    cartAllList,
+    wishListFilterAutocomplete
   ];
 }
 

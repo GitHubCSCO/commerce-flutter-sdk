@@ -4,6 +4,8 @@ import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart
 import 'package:commerce_flutter_sdk/src/core/utils/asset_provider.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/opti_logger_service_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/core_service_provider_interface.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/show_hide/inventory/show_hide_inventory_bloc.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/initializers/analytics_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/commerce_sdk_initializer.dart';
@@ -49,14 +51,11 @@ class CommerceFlutterSDK {
     // 2️⃣ Theme / essentials
     await EssentialsInitializer().init();
 
-    // 3️⃣ Analytics & crash reporting
-    await AnalyticsInitializer().init();
-
     // Initialize notification handler with core service provider
     final coreServiceProvider = sl<ICoreServiceProvider>();
     await NotificationHandler.getInstance(coreServiceProvider).initialize();
 
-    // 4️⃣ Error & Bloc observer
+    // 3️⃣ Error & Bloc observer
     final logger = GetIt.I<OptiLoggerService>();
     if (!logger.isErrorLogEnabled) {
       FlutterError.presentError = (_) {};
@@ -65,7 +64,7 @@ class CommerceFlutterSDK {
       Bloc.observer = const AppBlocObserver();
     }
 
-    // 5️⃣ Finally: run the SDK’s own root app,
+    // 4️⃣ Finally: run the SDK’s own root app,
     // wrapped in all the BlocProviders/Listeners
     runApp(_withBlocsAndListeners(const CommerceApp()));
   }
@@ -87,6 +86,12 @@ class CommerceFlutterSDK {
         BlocProvider(
             create: (_) => GetIt.I<SearchHistoryCubit>()..getSearchHistory()),
         BlocProvider(create: (_) => GetIt.I<LocationSearchHandlerCubit>()),
+        BlocProvider<ShowHidePricingBloc>(
+          create: (context) => sl<ShowHidePricingBloc>(),
+        ),
+        BlocProvider<ShowHideInventoryBloc>(
+          create: (context) => sl<ShowHideInventoryBloc>(),
+        ),
       ],
       child: MultiBlocListener(
         listeners: [

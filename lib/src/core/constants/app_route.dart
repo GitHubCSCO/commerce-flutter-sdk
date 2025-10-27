@@ -76,6 +76,7 @@ class RouteNames {
   static const String inAppBrowser = 'inAppBrowser';
   static const String fullScreenImageCarousel = 'fullScreenImageCarousel';
   static const String cartAllList = 'cartAllList';
+  static const String wishListFilterAutocomplete = 'wishListFilterAutocomplete';
 }
 
 class RoutePaths {
@@ -172,6 +173,8 @@ class RoutePaths {
   static const String fullScreenImageCarousel =
       '/${RouteNames.fullScreenImageCarousel}/:initialIndex';
   static const String cartAllList = '/${RouteNames.cartAllList}';
+  static const String wishListFilterAutocomplete =
+      '/${RouteNames.wishListFilterAutocomplete}/:filterType';
 }
 
 enum AppRoute {
@@ -326,6 +329,10 @@ enum AppRoute {
   cartAllList(
     name: RouteNames.cartAllList,
     fullPath: RoutePaths.cartAllList,
+  ),
+  wishListFilterAutocomplete(
+    name: RouteNames.wishListFilterAutocomplete,
+    fullPath: RoutePaths.wishListFilterAutocomplete,
   ),
   fullScreenImageCarousel(
     name: RouteNames.fullScreenImageCarousel,
