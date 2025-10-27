@@ -220,16 +220,19 @@ See the [Theme Customization](#theme-customization) section for detailed guidanc
 
 ```dart
 // Custom API service
-class CustomProductService extends BaseUseCase implements ICustomProductService {
+class CustomProductService extends ServiceBase implements ICustomProductService {
   Future<Result<List<ProductEntity>, ErrorResponse>> getRecommendedProducts() async {
-    // Custom API call
-    final result = await commerceAPIServiceProvider
-        .getClientService()
-        .getAsync('/api/custom/recommended-products');
+    // Use REST API methods available through inheriting ServiceBase
+    // instead of directly using ClientService
+    final result = await getAsyncNoCache<GetRecommendedProductEntity>(
+        '/api/custom/recommended-products', 
+        GetRecommendedProductEntity.fromJson,
+    );
     
     switch (result) {
-      case Success(value: final response):
-        return Success(parseProducts(response.data));
+      case Success(value: final value):
+        // assuming GetRecommendedProductEntity has a `products` property
+        return Success(value.products);
       case Failure(errorResponse: final error):
         return Failure(error);
     }
