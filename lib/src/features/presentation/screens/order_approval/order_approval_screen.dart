@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
@@ -20,14 +22,20 @@ class OrderApprovalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<OrderApprovalCubit>()..loadOrderApprovalList(),
+      create: (context) {
+        final cubit = sl<OrderApprovalCubit>();
+        unawaited(cubit.loadOrderApprovalList());
+        return cubit;
+      },
       child: Builder(builder: (context) {
         return BlocListener<OrderApprovalHandlerCubit,
             OrderApprovalHandlerState>(
           listener: (context, state) {
             if (state.status ==
                 OrderApprovalHandlerStatus.shouldRefreshOrderApproval) {
-              context.read<OrderApprovalCubit>().loadOrderApprovalList();
+              unawaited(
+                context.read<OrderApprovalCubit>().loadOrderApprovalList(),
+              );
               context.read<OrderApprovalHandlerCubit>().resetState();
             }
           },
@@ -66,7 +74,9 @@ class OrderApprovalPage extends StatelessWidget {
             case OrderStatus.failure:
               return RefreshIndicator(
                 onRefresh: () async {
-                  context.read<OrderApprovalCubit>().loadOrderApprovalList();
+                  unawaited(
+                    context.read<OrderApprovalCubit>().loadOrderApprovalList(),
+                  );
                 },
                 child: CustomScrollView(
                   slivers: <Widget>[
@@ -83,7 +93,9 @@ class OrderApprovalPage extends StatelessWidget {
             default:
               return RefreshIndicator(
                 onRefresh: () async {
-                  context.read<OrderApprovalCubit>().loadOrderApprovalList();
+                  unawaited(
+                    context.read<OrderApprovalCubit>().loadOrderApprovalList(),
+                  );
                 },
                 child: Column(
                   children: [
@@ -112,14 +124,16 @@ class OrderApprovalPage extends StatelessWidget {
                               toDate,
                               shipTo,
                             }) {
-                              context.read<OrderApprovalCubit>().applyFilter(
-                                    orderNumber: orderNumber,
-                                    orderTotal: orderTotal,
-                                    orderTotalOperator: orderTotalOperator,
-                                    fromDate: fromDate,
-                                    toDate: toDate,
-                                    shipTo: shipTo,
-                                  );
+                              unawaited(
+                                context.read<OrderApprovalCubit>().applyFilter(
+                                      orderNumber: orderNumber,
+                                      orderTotal: orderTotal,
+                                      orderTotalOperator: orderTotalOperator,
+                                      fromDate: fromDate,
+                                      toDate: toDate,
+                                      shipTo: shipTo,
+                                    ),
+                              );
                             },
                             hasFilter:
                                 context.read<OrderApprovalCubit>().hasFilter,
@@ -161,7 +175,9 @@ class __OrderApprovalListWidgetState extends State<_OrderApprovalListWidget> {
 
   void _onScroll() {
     if (_isBottom) {
-      context.read<OrderApprovalCubit>().loadMoreOrderApprovalList();
+      unawaited(
+        context.read<OrderApprovalCubit>().loadMoreOrderApprovalList(),
+      );
     }
   }
 
