@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
@@ -8,7 +7,6 @@ import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class ListNameInputWidget extends StatelessWidget {
   const ListNameInputWidget({
@@ -153,9 +151,16 @@ class _ListDetailsPropertiesRow extends StatelessWidget {
           title,
           style: OptiTextStyles.subtitle,
         ),
-        Text(
-          value,
-          style: OptiTextStyles.body,
+        const SizedBox(
+          width: 10,
+        ),
+        Flexible(
+          child: Text(
+            value,
+            style: OptiTextStyles.body,
+            textAlign: TextAlign.right,
+            maxLines: 2,
+          ),
         ),
       ],
     );
