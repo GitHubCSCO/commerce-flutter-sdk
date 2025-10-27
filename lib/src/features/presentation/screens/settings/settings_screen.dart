@@ -187,6 +187,15 @@ final settingsItems = [
     },
     showTrailing: true,
   ),
+
+  _SettingsListItemWidget(
+    title: LocalizationConstants.currencies.localized(),
+    onTap: (BuildContext context) {
+      AppRoute.currency.navigate(context);
+    },
+    showTrailing: true,
+  ),
+
   // TODO - Enable this later when we implement admin login
   // _SettingsListItemWidget(
   //   title: LocalizationConstants.adminLogin.localized(),

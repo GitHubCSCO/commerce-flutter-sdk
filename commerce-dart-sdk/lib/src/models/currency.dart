@@ -8,11 +8,11 @@ class Currency extends BaseModel {
     this.currencyCode,
     this.currencySymbol,
     this.description,
-    this.iD,
+    this.id,
     this.isDefault,
   });
 
-  String? iD;
+  String? id;
 
   String? currencyCode;
 
