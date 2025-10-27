@@ -51,7 +51,9 @@ class NotificationHandler {
       }
 
       _isInitialized = true;
-    } catch (e) {}
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   Future<void> _requestPermissions() async {
@@ -73,7 +75,9 @@ class NotificationHandler {
       } else {
         _hasNotificationPermissions = true;
       }
-    } catch (e) {}
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   Future<void> _initializeLocalNotifications() async {
@@ -96,12 +100,14 @@ class NotificationHandler {
       await _localNotifications.initialize(
         initSettings,
         onDidReceiveNotificationResponse: (response) async {
-          await _onNotificationResponse(response);
+          unawaited(_onNotificationResponse(response));
         },
       );
 
       await _createNotificationChannel();
-    } catch (e) {}
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   /// Create notification channel for Android
@@ -121,7 +127,9 @@ class NotificationHandler {
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
-    } catch (e) {}
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   /// Setup Firebase message listeners
@@ -136,7 +144,9 @@ class NotificationHandler {
       _backgroundSubscription = FirebaseMessaging.onMessageOpenedApp.listen(
         _handleMessageOpenedApp,
       );
-    } catch (e) {}
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   /// Handle initial message when app opens from terminated state
@@ -145,9 +155,11 @@ class NotificationHandler {
       final initialMessage =
           await FirebaseMessaging.instance.getInitialMessage();
       if (initialMessage != null) {
-        await _trackNotificationClicked();
+        unawaited(_trackNotificationClicked());
       }
-    } catch (e) {}
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   /// Handle foreground messages
@@ -157,14 +169,18 @@ class NotificationHandler {
       if (hasNotificationPermissions) {
         await _showLocalNotification(message);
       }
-    } catch (e) {}
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   /// Handle message when app is opened from background
   Future<void> _handleMessageOpenedApp(RemoteMessage message) async {
     try {
-      await _trackNotificationClicked();
-    } catch (e) {}
+      unawaited(_trackNotificationClicked());
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   /// Show local notification
@@ -214,14 +230,18 @@ class NotificationHandler {
         notificationDetails,
         payload: _createPayload(message),
       );
-    } catch (e) {}
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   /// Handle notification response (when user taps notification)
   Future<void> _onNotificationResponse(NotificationResponse response) async {
     try {
-      await _trackNotificationClicked();
-    } catch (e) {}
+      unawaited(_trackNotificationClicked());
+    } catch (e) {
+      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
+    }
   }
 
   /// Generate unique notification ID
@@ -250,9 +270,9 @@ class NotificationHandler {
         'Push Notification',
       );
 
-      await trackingService.trackEvent(analyticsEvent);
+      unawaited(trackingService.trackEvent(analyticsEvent));
     } catch (e) {
-      await trackingService.trackError(e);
+      unawaited(trackingService.trackError(e));
     }
   }
 }
