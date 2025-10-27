@@ -278,36 +278,7 @@ await CommerceFlutterSDK.initialize(
 - Register custom services that extend SDK functionality
 - Keep all custom service registrations in the `overrideServices` callback to avoid conflicts with SDK updates
 
-### 2. Configuration-Driven Customization
-
-```dart
-// Custom configuration model
-class CustomConfiguration {
-  final bool enableCustomFeature;
-  final String customApiEndpoint;
-  final Map<String, dynamic> customSettings;
-  
-  CustomConfiguration.fromJson(Map<String, dynamic> json)
-    : enableCustomFeature = json['enableCustomFeature'] ?? false,
-      customApiEndpoint = json['customApiEndpoint'] ?? '',
-      customSettings = json['customSettings'] ?? {};
-}
-
-// Load and use configuration
-class CustomConfigService {
-  static CustomConfiguration? _config;
-  
-  static Future<void> loadConfiguration() async {
-    final configString = await rootBundle.loadString('assets/config/custom_config.json');
-    final configJson = json.decode(configString);
-    _config = CustomConfiguration.fromJson(configJson);
-  }
-  
-  static CustomConfiguration get config => _config!;
-}
-```
-
-### 3. Custom BLoC/Cubit Implementation
+### 2. Custom BLoC/Cubit Implementation
 
 ```dart
 // Custom feature BLoC
