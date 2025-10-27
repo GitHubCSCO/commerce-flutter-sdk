@@ -18,6 +18,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/helper/routing/ro
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/brand/brand_category_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/cart/cart_all_list/cart_all_list_screen.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/currency/currency_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/invoice_history/invoice_detail_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/invoice_history/invoice_email_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/invoice_history/invoice_history_screen.dart';
@@ -774,6 +775,14 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.language.name,
     path: AppRoute.language.suffix,
     builder: (context, state) => LanguageScreen(),
+    parent: settings,
+  );
+
+  // path: /account/settings/currency
+  final currency = createNode(
+    name: AppRoute.currency.name,
+    path: AppRoute.currency.suffix,
+    builder: (context, state) => CurrencyScreen(),
     parent: settings,
   );
 

@@ -24,6 +24,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/category_useca
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/currency_usecase/currency_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/dealer_location_usecase/dealer_location_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/in_app_browser/in_app_browser_usecase.dart';
@@ -90,6 +91,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/category/cat
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/currency_bloc/currency_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/language/language_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
@@ -216,6 +218,10 @@ Future<void> initInjectionContainer() async {
     //language
     ..registerFactory(() => LanguageBloc(languageUsecase: sl()))
     ..registerLazySingleton(() => LanguageUsecase())
+
+    //currency
+    ..registerFactory(() => CurrencyBloc(currencyUsecase: sl()))
+    ..registerLazySingleton(() => CurrencyUsecase())
 
     //biometric options
     ..registerFactory(() => BiometricOptionsCubit(biometricUsecase: sl()))

@@ -151,6 +151,7 @@ class ClientService implements IClientService {
     "CurrentLanguageId",
     "SetContextLanguageCode",
     "SetContextPersonaIds",
+    "CurrentCurrencyId",
   ];
 
   @override

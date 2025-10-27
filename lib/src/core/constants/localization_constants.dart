@@ -118,6 +118,7 @@ enum LocalizationConstants {
   changeDomain(keyword: "Change Domain"),
   changeEnvironment(keyword: "Change Environment"),
   languages(keyword: "Languages"),
+  currencies(keyword: "Currencies"),
   cacheCleared(keyword: "The cache has been cleared."),
   cacheNotCleared(keyword: "The cache has not been cleared."),
   enterPassword(keyword: "Enter Password"),

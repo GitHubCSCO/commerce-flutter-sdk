@@ -71,6 +71,7 @@ class RouteNames {
   static const String jobQuoteDetails = 'jobQuoteDetails';
   static const String quoteLineNotes = 'quoteLineNotes';
   static const String language = 'language';
+  static const String currency = 'currency';
   static const String invoiceEmail = 'invoiceEmail';
   static const String inAppBrowser = 'inAppBrowser';
   static const String fullScreenImageCarousel = 'fullScreenImageCarousel';
@@ -165,6 +166,8 @@ class RoutePaths {
   static const String quoteLineNotes = '/${RouteNames.quoteLineNotes}';
   static const String language =
       '${RoutePaths.settings}/${RouteNames.language}';
+  static const String currency =
+      '${RoutePaths.settings}/${RouteNames.currency}';
   static const String invoiceEmail = '/${RoutePaths.invoiceDetail}/email';
   static const String inAppBrowser = '/${RouteNames.inAppBrowser}';
   static const String fullScreenImageCarousel =
@@ -310,6 +313,10 @@ enum AppRoute {
   language(
     name: RouteNames.language,
     fullPath: RoutePaths.language,
+  ),
+  currency(
+    name: RouteNames.currency,
+    fullPath: RoutePaths.currency,
   ),
   invoiceEmail(
     name: RouteNames.invoiceEmail,
