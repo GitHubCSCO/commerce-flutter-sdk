@@ -2,11 +2,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/devi
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class DeviceTokenService implements IDeviceTokenService {
-  DeviceTokenService({
-    required FirebaseMessaging firebaseMessaging,
-  }) : _firebaseMessaging = firebaseMessaging;
-
-  final FirebaseMessaging _firebaseMessaging;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String? _cachedFcmToken;
 
   /// Requests notification permission (especially required on iOS)
@@ -18,11 +14,13 @@ class DeviceTokenService implements IDeviceTokenService {
       return _cachedFcmToken!;
     }
 
-    // Request user permission for notifications
-    await _firebaseMessaging.requestPermission();
-
-    // Fetch FCM token
-    final fcmToken = await _firebaseMessaging.getToken();
+    late final String? fcmToken;
+    try {
+      await _firebaseMessaging.requestPermission();
+      fcmToken = await _firebaseMessaging.getToken();
+    } catch (e) {
+      return '';
+    }
 
     // Cache token for future use
     if (fcmToken != null) {

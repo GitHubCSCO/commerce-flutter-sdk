@@ -9,6 +9,9 @@ class AutocompleteQueryParameters extends BaseQueryParameters {
   bool? contentEnabled;
   bool? productEnabled;
   bool? brandEnabled;
+  bool? searchOnTyping;
+  bool? relevancy;
+  bool? spireContent;
 
   AutocompleteQueryParameters({
     this.query,
@@ -16,6 +19,9 @@ class AutocompleteQueryParameters extends BaseQueryParameters {
     this.contentEnabled,
     this.productEnabled,
     this.brandEnabled,
+    this.searchOnTyping,
+    this.relevancy,
+    this.spireContent,
     super.page,
     super.pageSize,
     super.sort,

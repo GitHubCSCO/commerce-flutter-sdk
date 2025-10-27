@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_item_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_parameters_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/widget/wish_list_filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -154,8 +157,17 @@ class _WishListsPageState extends State<WishListsPage> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
+                final state = context.read<WishListCubit>().state;
                 unawaited(
-                  context.read<WishListCubit>().loadWishLists(),
+                  context.read<WishListCubit>().loadWishLists(
+                        fromCreatedDate: state.fromCreatedDate,
+                        toCreatedDate: state.toCreatedDate,
+                        fromUpdatedOn: state.fromUpdatedOn,
+                        toUpdatedOn: state.toUpdatedOn,
+                        product: state.product,
+                        brand: state.brand,
+                        sharedByUser: state.sharedByUser,
+                      ),
                 );
               },
               child: BlocConsumer<WishListCubit, WishListState>(
@@ -223,59 +235,102 @@ class _WishListsPageState extends State<WishListsPage> {
                   } else if (state.status == WishListStatus.failure) {
                     return Center(
                         child: Text(LocalizationConstants.error.localized()));
-                  } else if (context.read<WishListCubit>().noWishListFound) {
-                    return CustomScrollView(
-                      slivers: <Widget>[
-                        SliverFillRemaining(
-                          child: Center(
-                            child: Text(LocalizationConstants.noListsAvailable
-                                .localized()),
-                          ),
-                        ),
-                      ],
-                    );
                   }
                   return Column(
                     children: [
-                      if (!context.read<WishListCubit>().noWishListFound)
-                        Container(
-                          height: 50,
-                          padding: const EdgeInsetsDirectional.symmetric(
-                            horizontal: 16,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(width: 10),
-                                  SortToolMenu(
-                                    availableSortOrders: context
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsetsDirectional.symmetric(
+                          horizontal: 16,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              context.watch<WishListCubit>().listCountText,
+                              style: OptiTextStyles.header3,
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(width: 10),
+                                SortToolMenu(
+                                  availableSortOrders: context
+                                      .read<WishListCubit>()
+                                      .availableSortOrders,
+                                  onSortOrderChanged:
+                                      (SortOrderAttribute sortOrder) async {
+                                    await context
                                         .read<WishListCubit>()
-                                        .availableSortOrders,
-                                    onSortOrderChanged:
-                                        (SortOrderAttribute sortOrder) async {
-                                      await context
+                                        .changeSortOrder(
+                                          sortOrder as WishListSortOrder,
+                                        );
+                                  },
+                                  onSortOrderCancel:
+                                      context.read<WishListCubit>().cancelSort,
+                                  selectedSortOrder: state.sortOrder,
+                                ),
+                                WishlistFilterWidget(
+                                  wishListFilterParameters:
+                                      WishListFilterParametersEntity(
+                                    fromCreatedDate: state.fromCreatedDate,
+                                    toCreatedDate: state.toCreatedDate,
+                                    fromUpdatedOn: state.fromUpdatedOn,
+                                    toUpdatedOn: state.toUpdatedOn,
+                                    product: state.product,
+                                    brand: state.brand,
+                                    sharedByUser: state.sharedByUser,
+                                  ),
+                                  filterCount: context
+                                      .watch<WishListCubit>()
+                                      .filterCount,
+                                  onApply: ({
+                                    DateTime? fromCreatedDate,
+                                    DateTime? toCreatedDate,
+                                    DateTime? fromUpdatedOn,
+                                    DateTime? toUpdatedOn,
+                                    WishListFilterItemEntity? product,
+                                    WishListFilterItemEntity? brand,
+                                    WishListFilterItemEntity? sharedByUser,
+                                  }) {
+                                    unawaited(
+                                      context
                                           .read<WishListCubit>()
-                                          .changeSortOrder(
-                                            sortOrder as WishListSortOrder,
-                                          );
-                                    },
-                                    onSortOrderCancel: context
-                                        .read<WishListCubit>()
-                                        .cancelSort,
-                                    selectedSortOrder: state.sortOrder,
+                                          .loadWishLists(
+                                            fromCreatedDate: fromCreatedDate,
+                                            toCreatedDate: toCreatedDate,
+                                            fromUpdatedOn: fromUpdatedOn,
+                                            toUpdatedOn: toUpdatedOn,
+                                            product: product,
+                                            brand: brand,
+                                            sharedByUser: sharedByUser,
+                                          ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      (context.read<WishListCubit>().noWishListFound)
+                          ? Expanded(
+                              child: CustomScrollView(
+                                slivers: <Widget>[
+                                  SliverFillRemaining(
+                                    child: Center(
+                                      child: Text(LocalizationConstants
+                                          .noListsAvailable
+                                          .localized()),
+                                    ),
                                   ),
                                 ],
-                              )
-                            ],
-                          ),
-                        ),
-                      _WishListsSection(
-                        wishListEntities:
-                            state.wishLists.wishListCollection ?? [],
-                      ),
+                              ),
+                            )
+                          : _WishListsSection(
+                              wishListEntities:
+                                  state.wishLists.wishListCollection ?? [],
+                            ),
                     ],
                   );
                 },

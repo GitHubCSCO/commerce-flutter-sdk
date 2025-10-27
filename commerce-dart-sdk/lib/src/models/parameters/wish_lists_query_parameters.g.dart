@@ -16,6 +16,22 @@ WishListsQueryParameters _$WishListsQueryParametersFromJson(
       page: (json['page'] as num?)?.toInt(),
       pageSize: (json['pageSize'] as num?)?.toInt(),
       sort: json['sort'] as String?,
+      fromCreatedDate: json['fromCreatedDate'] == null
+          ? null
+          : DateTime.parse(json['fromCreatedDate'] as String),
+      toCreatedDate: json['toCreatedDate'] == null
+          ? null
+          : DateTime.parse(json['toCreatedDate'] as String),
+      fromUpdatedOn: json['fromUpdatedOn'] == null
+          ? null
+          : DateTime.parse(json['fromUpdatedOn'] as String),
+      toUpdatedOn: json['toUpdatedOn'] == null
+          ? null
+          : DateTime.parse(json['toUpdatedOn'] as String),
+      erpNumber: json['erpNumber'] as String?,
+      brandId: json['brandId'] as String?,
+      sharedByQuery: json['sharedByQuery'] as String?,
+      sharedBy: json['sharedBy'] as String?,
     );
 
 Map<String, dynamic> _$WishListsQueryParametersToJson(
@@ -30,4 +46,16 @@ Map<String, dynamic> _$WishListsQueryParametersToJson(
         'expand': value,
       if (instance.wishListLinesSort case final value?)
         'wishListLinesSort': value,
+      if (DateFormatter.toYyyyMmDd(instance.fromCreatedDate) case final value?)
+        'fromCreatedDate': value,
+      if (DateFormatter.toYyyyMmDd(instance.toCreatedDate) case final value?)
+        'toCreatedDate': value,
+      if (DateFormatter.toYyyyMmDd(instance.fromUpdatedOn) case final value?)
+        'fromUpdatedOn': value,
+      if (DateFormatter.toYyyyMmDd(instance.toUpdatedOn) case final value?)
+        'toUpdatedOn': value,
+      if (instance.erpNumber case final value?) 'erpNumber': value,
+      if (instance.brandId case final value?) 'brandId': value,
+      if (instance.sharedByQuery case final value?) 'sharedByQuery': value,
+      if (instance.sharedBy case final value?) 'sharedBy': value,
     };
