@@ -160,6 +160,7 @@ class _ListDetailsPropertiesRow extends StatelessWidget {
             style: OptiTextStyles.body,
             textAlign: TextAlign.right,
             maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
