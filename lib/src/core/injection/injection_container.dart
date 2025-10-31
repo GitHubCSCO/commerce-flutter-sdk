@@ -24,6 +24,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/category_useca
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/currency_usecase/currency_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/dealer_location_usecase/dealer_location_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/in_app_browser/in_app_browser_usecase.dart';
@@ -73,6 +74,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/vmi_usecase/vm
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_filter_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/auth/auth_cubit.dart';
@@ -89,6 +91,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/category/cat
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/currency_bloc/currency_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/language/language_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
@@ -183,12 +186,15 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/w
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_autocomplete_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_information/wish_list_tags_controller_cubit.dart';
+import 'package:commerce_flutter_sdk/src/initializers/analytics_initializer.dart';
 import 'package:commerce_flutter_sdk/src/services/local_storage_service.dart';
 import 'package:commerce_flutter_sdk/src/services/secure_storage_service.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -209,15 +215,13 @@ Future<void> initInjectionContainer() async {
         () => AuthCubit(authUsecase: sl(), authStreamService: sl()))
     ..registerFactory(() => AuthUsecase())
 
-    //firebase messaging
-    ..registerLazySingleton(() => FirebaseMessaging.instance)
-    ..registerLazySingleton<IDeviceTokenService>(
-      () => DeviceTokenService(firebaseMessaging: sl()),
-    )
-
     //language
     ..registerFactory(() => LanguageBloc(languageUsecase: sl()))
     ..registerLazySingleton(() => LanguageUsecase())
+
+    //currency
+    ..registerFactory(() => CurrencyBloc(currencyUsecase: sl()))
+    ..registerLazySingleton(() => CurrencyUsecase())
 
     //biometric options
     ..registerFactory(() => BiometricOptionsCubit(biometricUsecase: sl()))
@@ -515,6 +519,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => WishListCreateCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListAddToCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListHandlerCubit())
+    ..registerFactory(() => WishListFilterCubit())
+    ..registerFactory(() => WishListFilterUsecase())
+    ..registerFactory(
+        () => WishListFilterAutocompleteCubit(wishListFilterUsecase: sl()))
     ..registerFactory(
         () => WishListTagsControllerCubit(wishListDetailsUsecase: sl()))
 
@@ -590,20 +598,6 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => InAppBrowserUsecase())
 
     //services
-    ..registerLazySingleton<ITrackingService>(() => CompositeTrackingService(
-          trackers: [
-            FirebaseTrackingService(
-              sessionService: sl(),
-              accountService: sl(),
-              analyticsConfig: sl(),
-            ),
-            AppCenterTrackingService(
-              sessionService: sl(),
-              accountService: sl(),
-              analyticsConfig: sl(),
-            ),
-          ],
-        ))
     ..registerLazySingleton<IRealTimePricingService>(
         () => RealTimePricingService(
               clientService: sl(),
@@ -773,19 +767,6 @@ Future<void> initInjectionContainer() async {
           commerceAPIServiceProvider: sl(),
           coreServiceProvider: sl(),
         ))
-    ..registerSingletonAsync<IAppConfigurationService>(() async {
-      final service = AppConfigurationService(
-        commerceAPIServiceProvider: sl(),
-        clientService: sl(),
-        cacheService: sl(),
-        networkService: sl(),
-      );
-      await service.init();
-      return service;
-    }, dependsOn: [ICacheService])
-    ..registerLazySingleton<AnalyticsConfig>(() => AnalyticsConfig(
-          appConfigurationService: sl(),
-        ))
     ..registerLazySingleton<IWishListService>(() => WishListService(
           clientService: sl(),
           cacheService: sl(),
@@ -801,7 +782,58 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
-    ..registerLazySingleton<IAuthStreamService>(() => AuthStreamService());
+    ..registerLazySingleton<IAuthStreamService>(() => AuthStreamService())
+    ..registerSingletonAsync<IAppConfigurationService>(() async {
+      final service = AppConfigurationService(
+        commerceAPIServiceProvider: sl(),
+        clientService: sl(),
+        cacheService: sl(),
+        networkService: sl(),
+      );
+      await service.init();
+      return service;
+    }, dependsOn: [ICacheService])
+
+    //analytics config - must be registered before firebase messaging and tracking services
+    ..registerSingletonAsync<AnalyticsConfig>(
+      () async {
+        final cfg = AnalyticsConfig(
+          appConfigurationService: sl(),
+        );
+
+        try {
+          await AnalyticsInitializer.init(cfg: cfg);
+        } catch (e) {
+          debugPrint('Analytics initialization failed: $e');
+        }
+        return cfg;
+      },
+      dependsOn: [IAppConfigurationService],
+    )
+    ..registerSingletonWithDependencies<ITrackingService>(
+        () => CompositeTrackingService(
+              trackers: [
+                FirebaseTrackingService(
+                  sessionService: sl(),
+                  accountService: sl(),
+                  analyticsConfig: sl(),
+                ),
+                AppCenterTrackingService(
+                  sessionService: sl(),
+                  accountService: sl(),
+                  analyticsConfig: sl(),
+                ),
+              ],
+            ),
+        dependsOn: [AnalyticsConfig])
+
+    // firebase messaging
+    // depends on analytics config for proper firebase initialization order
+    // AnalyticsConfig already initializes firebase app once
+    ..registerSingletonWithDependencies<IDeviceTokenService>(
+      () => DeviceTokenService(),
+      dependsOn: [AnalyticsConfig],
+    );
 
   await sl.allReady();
 }

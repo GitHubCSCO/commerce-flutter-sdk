@@ -120,7 +120,7 @@ void main() {
         ]),
         currencies: CurrencyCollection(currencies: [
           Currency(
-            iD: "CUR1",
+            id: "CUR1",
             currencyCode: "USD",
             currencySymbol: "\$",
             description: "US Dollar",

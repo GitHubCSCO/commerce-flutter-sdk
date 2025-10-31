@@ -49,6 +49,7 @@ class WishListEntityMapper {
         wishListTags: wishList.wishListTags
             ?.map((e) => WishListTagMapper.toEntity(e))
             .toList(),
+        sharedByUserName: wishList.sharedByUserName,
       );
 
   static WishList toModel(WishListEntity wishListEntity) => WishList(
@@ -76,6 +77,7 @@ class WishListEntityMapper {
         wishListTags: wishListEntity.wishListTags
             ?.map((e) => WishListTagMapper.toModel(e))
             .toList(),
+        sharedByUserName: wishListEntity.sharedByUserName,
       );
 }
 

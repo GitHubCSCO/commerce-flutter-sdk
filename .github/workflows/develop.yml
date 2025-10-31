@@ -305,20 +305,6 @@ jobs:
           echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
           echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
 
-      - name: Trigger Android Debug Build
-        if: github.event.inputs.build_debug == 'true'
-        run: |
-          flutter clean
-          flutter pub get
-          flutter build apk --debug
-      - name: Upload Android Debug Build as artifact
-        if: github.event.inputs.build_debug == 'true'
-        id: upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-debug-app
-          path: build/app/outputs/flutter-apk/app-debug.apk
-          if-no-files-found: warn
       - name: Cloning build scripts
         if: github.event.inputs.build_debug != 'true'
         uses: actions/checkout@master
@@ -370,6 +356,20 @@ jobs:
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
           RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
           RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
+      - name: Trigger Android Debug Build
+        if: github.event.inputs.build_debug == 'true'
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build apk --debug
+      - name: Upload Android Debug Build as artifact
+        if: github.event.inputs.build_debug == 'true'
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-app
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: warn
   # trigger-android-automation:
   #   runs-on: ubuntu-latest
   #   needs: android
