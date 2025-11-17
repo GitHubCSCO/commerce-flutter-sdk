@@ -654,7 +654,8 @@ class _CartPageState extends State<CartPage> {
 
     if (cartPageBloc.checkoutButtonVisible) {
       return PrimaryButton(
-        isEnabled: cartPageBloc.isCheckoutButtonEnabled,
+        isEnabled: cartPageBloc.isCheckoutButtonEnabled &&
+            (cartPageBloc.approvalButtonVisible && cartPageBloc.hasApprover),
         onPressed: () {
           final currentState = authCubit.state;
           handleAuthStatusForCheckout(
