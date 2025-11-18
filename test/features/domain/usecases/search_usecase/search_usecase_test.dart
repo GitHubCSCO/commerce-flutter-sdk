@@ -150,7 +150,8 @@ void main() {
       test('should properly extend BaseUseCase', () {
         expect(searchUseCase, isA<SearchUseCase>());
         // Verify that it can access BaseUseCase properties
-        expect(searchUseCase.coreServiceProvider, equals(mockCoreServiceProvider));
+        expect(
+            searchUseCase.coreServiceProvider, equals(mockCoreServiceProvider));
         expect(searchUseCase.commerceAPIServiceProvider,
             equals(mockCommerceAPIServiceProvider));
       });
@@ -169,7 +170,8 @@ void main() {
     });
 
     group('loadAutocompleteResults', () {
-      test('should return Success when autocomplete service succeeds', () async {
+      test('should return Success when autocomplete service succeeds',
+          () async {
         // Arrange
         const searchQuery = 'test query';
         final mockResult = MockAutocompleteResult();
@@ -193,9 +195,10 @@ void main() {
         }
 
         // Verify the correct parameters were passed
-        final captured = verify(() => mockAutocompleteService.getAutocompleteResults(
-              captureAny(that: isA<AutocompleteQueryParameters>()),
-            )).captured;
+        final captured =
+            verify(() => mockAutocompleteService.getAutocompleteResults(
+                  captureAny(that: isA<AutocompleteQueryParameters>()),
+                )).captured;
 
         final capturedParams = captured.first as AutocompleteQueryParameters;
         expect(capturedParams.query, equals(searchQuery));
@@ -215,7 +218,8 @@ void main() {
         when(() => mockAutocompleteService.getAutocompleteResults(
               any(that: isA<AutocompleteQueryParameters>()),
             )).thenAnswer(
-          (_) async => Failure<AutocompleteResult, ErrorResponse>(errorResponse),
+          (_) async =>
+              Failure<AutocompleteResult, ErrorResponse>(errorResponse),
         );
 
         // Act
@@ -254,9 +258,10 @@ void main() {
         expect(result, isA<Success<AutocompleteResult, ErrorResponse>>());
 
         // Verify empty query was passed
-        final captured = verify(() => mockAutocompleteService.getAutocompleteResults(
-              captureAny(that: isA<AutocompleteQueryParameters>()),
-            )).captured;
+        final captured =
+            verify(() => mockAutocompleteService.getAutocompleteResults(
+                  captureAny(that: isA<AutocompleteQueryParameters>()),
+                )).captured;
 
         final capturedParams = captured.first as AutocompleteQueryParameters;
         expect(capturedParams.query, equals(''));
@@ -264,11 +269,13 @@ void main() {
     });
 
     group('loadVmiAutocompleteResults', () {
-      test('should return Success with converted products when service succeeds', () async {
+      test(
+          'should return Success with converted products when service succeeds',
+          () async {
         // Arrange
         const searchQuery = 'vmi query';
         const vmiLocationId = 'location123';
-        
+
         final mockVmiLocationModel = MockVmiLocationModel();
         final mockProduct = MockProduct();
         final mockBrand = MockBrand();
@@ -276,11 +283,13 @@ void main() {
         final mockGetVmiBinResult = MockGetVmiBinResult();
 
         when(() => mockVmiLocationModel.id).thenReturn(vmiLocationId);
-        when(() => mockVmiService.currentVmiLocation).thenReturn(mockVmiLocationModel);
+        when(() => mockVmiService.currentVmiLocation)
+            .thenReturn(mockVmiLocationModel);
 
         // Mock product properties
         when(() => mockProduct.id).thenReturn('product123');
-        when(() => mockProduct.shortDescription).thenReturn('Short Description');
+        when(() => mockProduct.shortDescription)
+            .thenReturn('Short Description');
         when(() => mockProduct.pageTitle).thenReturn('Page Title');
         when(() => mockProduct.mediumImagePath).thenReturn('/image/path.jpg');
         when(() => mockProduct.name).thenReturn('Product Name');
@@ -297,11 +306,13 @@ void main() {
         when(() => mockVmiLocationsService.getVmiBins(
               parameters: any(named: 'parameters'),
             )).thenAnswer(
-          (_) async => Success<GetVmiBinResult, ErrorResponse>(mockGetVmiBinResult),
+          (_) async =>
+              Success<GetVmiBinResult, ErrorResponse>(mockGetVmiBinResult),
         );
 
         // Act
-        final result = await searchUseCase.loadVmiAutocompleteResults(searchQuery);
+        final result =
+            await searchUseCase.loadVmiAutocompleteResults(searchQuery);
 
         // Assert
         expect(result, isA<Success<AutocompleteResult, ErrorResponse>>());
@@ -309,7 +320,7 @@ void main() {
           case Success(value: final data):
             expect(data?.products, isNotNull);
             expect(data?.products!, hasLength(1));
-            
+
             final product = data?.products!.first;
             expect(product?.id, equals('product123'));
             expect(product?.title, equals('Short Description'));
@@ -347,11 +358,13 @@ void main() {
         when(() => mockVmiLocationsService.getVmiBins(
               parameters: any(named: 'parameters'),
             )).thenAnswer(
-          (_) async => Success<GetVmiBinResult, ErrorResponse>(mockGetVmiBinResult),
+          (_) async =>
+              Success<GetVmiBinResult, ErrorResponse>(mockGetVmiBinResult),
         );
 
         // Act
-        final result = await searchUseCase.loadVmiAutocompleteResults(searchQuery);
+        final result =
+            await searchUseCase.loadVmiAutocompleteResults(searchQuery);
 
         // Assert
         expect(result, isA<Success<AutocompleteResult, ErrorResponse>>());
@@ -372,17 +385,20 @@ void main() {
         final mockGetVmiBinResult = MockGetVmiBinResult();
 
         when(() => mockVmiLocationModel.id).thenReturn('location123');
-        when(() => mockVmiService.currentVmiLocation).thenReturn(mockVmiLocationModel);
+        when(() => mockVmiService.currentVmiLocation)
+            .thenReturn(mockVmiLocationModel);
         when(() => mockGetVmiBinResult.vmiBins).thenReturn([]);
 
         when(() => mockVmiLocationsService.getVmiBins(
               parameters: any(named: 'parameters'),
             )).thenAnswer(
-          (_) async => Success<GetVmiBinResult, ErrorResponse>(mockGetVmiBinResult),
+          (_) async =>
+              Success<GetVmiBinResult, ErrorResponse>(mockGetVmiBinResult),
         );
 
         // Act
-        final result = await searchUseCase.loadVmiAutocompleteResults(searchQuery);
+        final result =
+            await searchUseCase.loadVmiAutocompleteResults(searchQuery);
 
         // Assert
         expect(result, isA<Success<AutocompleteResult, ErrorResponse>>());
@@ -401,17 +417,20 @@ void main() {
         final mockGetVmiBinResult = MockGetVmiBinResult();
 
         when(() => mockVmiLocationModel.id).thenReturn('location123');
-        when(() => mockVmiService.currentVmiLocation).thenReturn(mockVmiLocationModel);
+        when(() => mockVmiService.currentVmiLocation)
+            .thenReturn(mockVmiLocationModel);
         when(() => mockGetVmiBinResult.vmiBins).thenReturn(<VmiBinModel>[]);
 
         when(() => mockVmiLocationsService.getVmiBins(
               parameters: any(named: 'parameters'),
             )).thenAnswer(
-          (_) async => Success<GetVmiBinResult, ErrorResponse>(mockGetVmiBinResult),
+          (_) async =>
+              Success<GetVmiBinResult, ErrorResponse>(mockGetVmiBinResult),
         );
 
         // Act
-        final result = await searchUseCase.loadVmiAutocompleteResults(searchQuery);
+        final result =
+            await searchUseCase.loadVmiAutocompleteResults(searchQuery);
 
         // Assert
         expect(result, isA<Success<AutocompleteResult, ErrorResponse>>());
@@ -433,7 +452,8 @@ void main() {
         );
 
         when(() => mockVmiLocationModel.id).thenReturn('location123');
-        when(() => mockVmiService.currentVmiLocation).thenReturn(mockVmiLocationModel);
+        when(() => mockVmiService.currentVmiLocation)
+            .thenReturn(mockVmiLocationModel);
 
         when(() => mockVmiLocationsService.getVmiBins(
               parameters: any(named: 'parameters'),
@@ -442,7 +462,8 @@ void main() {
         );
 
         // Act
-        final result = await searchUseCase.loadVmiAutocompleteResults(searchQuery);
+        final result =
+            await searchUseCase.loadVmiAutocompleteResults(searchQuery);
 
         // Assert
         expect(result, isA<Failure<AutocompleteResult, ErrorResponse>>());
@@ -466,7 +487,8 @@ void main() {
         when(() => mockProductService.getProducts(
               any(that: isA<ProductsQueryParameters>()),
             )).thenAnswer(
-          (_) async => Success<GetProductCollectionResult, ErrorResponse>(mockResult),
+          (_) async =>
+              Success<GetProductCollectionResult, ErrorResponse>(mockResult),
         );
 
         // Act
@@ -476,7 +498,8 @@ void main() {
         );
 
         // Assert
-        expect(result, isA<Success<GetProductCollectionResult, ErrorResponse>>());
+        expect(
+            result, isA<Success<GetProductCollectionResult, ErrorResponse>>());
         switch (result) {
           case Success(value: final data):
             expect(data, equals(mockResult));
@@ -522,7 +545,8 @@ void main() {
         when(() => mockProductService.getProducts(
               any(that: isA<ProductsQueryParameters>()),
             )).thenAnswer(
-          (_) async => Success<GetProductCollectionResult, ErrorResponse>(mockResult),
+          (_) async =>
+              Success<GetProductCollectionResult, ErrorResponse>(mockResult),
         );
 
         // Act
@@ -539,7 +563,8 @@ void main() {
         );
 
         // Assert
-        expect(result, isA<Success<GetProductCollectionResult, ErrorResponse>>());
+        expect(
+            result, isA<Success<GetProductCollectionResult, ErrorResponse>>());
 
         // Verify all parameters were passed correctly
         final captured = verify(() => mockProductService.getProducts(
@@ -550,11 +575,13 @@ void main() {
         expect(capturedParams.query, equals(searchQuery));
         expect(capturedParams.page, equals(currentPage));
         expect(capturedParams.sort, equals(selectedSortOrder.value));
-        expect(capturedParams.attributeValueIds, equals(selectedAttributeValueIds));
+        expect(capturedParams.attributeValueIds,
+            equals(selectedAttributeValueIds));
         expect(capturedParams.brandIds, equals(selectedBrandIds));
         expect(capturedParams.productLineIds, equals(selectedProductLineIds));
         expect(capturedParams.categoryId, equals(selectedCategoryId));
-        expect(capturedParams.previouslyPurchasedProducts, equals(previouslyPurchased));
+        expect(capturedParams.previouslyPurchasedProducts,
+            equals(previouslyPurchased));
         expect(capturedParams.stockedItemsOnly, equals(selectedStockedItems));
       });
 
@@ -570,7 +597,8 @@ void main() {
         when(() => mockProductService.getProducts(
               any(that: isA<ProductsQueryParameters>()),
             )).thenAnswer(
-          (_) async => Failure<GetProductCollectionResult, ErrorResponse>(errorResponse),
+          (_) async =>
+              Failure<GetProductCollectionResult, ErrorResponse>(errorResponse),
         );
 
         // Act
@@ -580,7 +608,8 @@ void main() {
         );
 
         // Assert
-        expect(result, isA<Failure<GetProductCollectionResult, ErrorResponse>>());
+        expect(
+            result, isA<Failure<GetProductCollectionResult, ErrorResponse>>());
         switch (result) {
           case Success():
             fail('Expected Failure but got Success');
@@ -807,9 +836,16 @@ void main() {
       test('should return correct selected sort order', () {
         // Arrange
         final availableSortOrders = [
-          SortOrderAttribute(groupTitle: 'Price', title: 'Price Low to High', value: 'price_asc'),
-          SortOrderAttribute(groupTitle: 'Price', title: 'Price High to Low', value: 'price_desc'),
-          SortOrderAttribute(groupTitle: 'Name', title: 'Name A-Z', value: 'name_asc'),
+          SortOrderAttribute(
+              groupTitle: 'Price',
+              title: 'Price Low to High',
+              value: 'price_asc'),
+          SortOrderAttribute(
+              groupTitle: 'Price',
+              title: 'Price High to Low',
+              value: 'price_desc'),
+          SortOrderAttribute(
+              groupTitle: 'Name', title: 'Name A-Z', value: 'name_asc'),
         ];
         const selectedSortOrderType = 'price_desc';
 
@@ -827,13 +863,15 @@ void main() {
     });
 
     group('canAddToCartInProductList', () {
-      test('should return true when mobile settings allow add to cart', () async {
+      test('should return true when mobile settings allow add to cart',
+          () async {
         // Arrange
         final mockMobileSettings = MockMobileAppSettings();
         when(() => mockMobileSettings.addToCartInProductList).thenReturn(true);
 
         when(() => mockSettingsService.getMobileAppSettingAsync()).thenAnswer(
-          (_) async => Success<MobileAppSettings, ErrorResponse>(mockMobileSettings),
+          (_) async =>
+              Success<MobileAppSettings, ErrorResponse>(mockMobileSettings),
         );
 
         // Act
@@ -844,13 +882,15 @@ void main() {
         verify(() => mockSettingsService.getMobileAppSettingAsync()).called(1);
       });
 
-      test('should return false when mobile settings disable add to cart', () async {
+      test('should return false when mobile settings disable add to cart',
+          () async {
         // Arrange
         final mockMobileSettings = MockMobileAppSettings();
         when(() => mockMobileSettings.addToCartInProductList).thenReturn(false);
 
         when(() => mockSettingsService.getMobileAppSettingAsync()).thenAnswer(
-          (_) async => Success<MobileAppSettings, ErrorResponse>(mockMobileSettings),
+          (_) async =>
+              Success<MobileAppSettings, ErrorResponse>(mockMobileSettings),
         );
 
         // Act
@@ -881,7 +921,8 @@ void main() {
         when(() => mockMobileSettings.addToCartInProductList).thenReturn(null);
 
         when(() => mockSettingsService.getMobileAppSettingAsync()).thenAnswer(
-          (_) async => Success<MobileAppSettings, ErrorResponse>(mockMobileSettings),
+          (_) async =>
+              Success<MobileAppSettings, ErrorResponse>(mockMobileSettings),
         );
 
         // Act
@@ -913,7 +954,8 @@ void main() {
     });
 
     group('Error handling and edge cases', () {
-      test('should handle exceptions during loadAutocompleteResults gracefully', () async {
+      test('should handle exceptions during loadAutocompleteResults gracefully',
+          () async {
         // Arrange
         const searchQuery = 'test query';
         when(() => mockAutocompleteService.getAutocompleteResults(
@@ -927,7 +969,9 @@ void main() {
         );
       });
 
-      test('should handle exceptions during loadSearchProductsResults gracefully', () async {
+      test(
+          'should handle exceptions during loadSearchProductsResults gracefully',
+          () async {
         // Arrange
         const searchQuery = 'search products';
         const currentPage = 1;
@@ -937,12 +981,15 @@ void main() {
 
         // Act & Assert
         expect(
-          () => searchUseCase.loadSearchProductsResults(searchQuery, currentPage),
+          () =>
+              searchUseCase.loadSearchProductsResults(searchQuery, currentPage),
           throwsA(isA<Exception>()),
         );
       });
 
-      test('should handle exceptions during canAddToCartInProductList gracefully', () async {
+      test(
+          'should handle exceptions during canAddToCartInProductList gracefully',
+          () async {
         // Arrange
         when(() => mockSettingsService.getMobileAppSettingAsync())
             .thenThrow(Exception('Unexpected error'));
@@ -956,12 +1003,14 @@ void main() {
     });
 
     group('Integration tests', () {
-      test('should maintain service provider consistency throughout multiple calls', () async {
+      test(
+          'should maintain service provider consistency throughout multiple calls',
+          () async {
         // Arrange
         const searchQuery = 'test';
         const categoryId = 'cat123';
         const brandId = 'brand123';
-        
+
         final mockAutocompleteResult = MockAutocompleteResult();
         final mockCategory = MockCategory();
         final mockBrand = MockBrand();
@@ -969,7 +1018,8 @@ void main() {
         when(() => mockAutocompleteService.getAutocompleteResults(
               any(that: isA<AutocompleteQueryParameters>()),
             )).thenAnswer(
-          (_) async => Success<AutocompleteResult, ErrorResponse>(mockAutocompleteResult),
+          (_) async => Success<AutocompleteResult, ErrorResponse>(
+              mockAutocompleteResult),
         );
         when(() => mockCategoryService.getCategory(categoryId)).thenAnswer(
           (_) async => Success<Category, ErrorResponse>(mockCategory),
@@ -986,7 +1036,8 @@ void main() {
         // Assert service provider consistency
         expect(searchUseCase.commerceAPIServiceProvider,
             equals(mockCommerceAPIServiceProvider));
-        expect(searchUseCase.coreServiceProvider, equals(mockCoreServiceProvider));
+        expect(
+            searchUseCase.coreServiceProvider, equals(mockCoreServiceProvider));
 
         verify(() => mockAutocompleteService.getAutocompleteResults(
               any(that: isA<AutocompleteQueryParameters>()),

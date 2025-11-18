@@ -70,8 +70,7 @@ void main() {
   setUpAll(() {
     // Register fallback values for mocktail
     registerFallbackValue(const AuthenticationOptions());
-    registerFallbackValue(
-        DeviceTokenUnregistrationParameters(deviceToken: ''));
+    registerFallbackValue(DeviceTokenUnregistrationParameters(deviceToken: ''));
   });
 
   setUp(() async {
@@ -472,7 +471,8 @@ void main() {
             .logoutWithStoredCredentials()).called(1);
       });
 
-      test('should skip push notification unregister when device token is empty',
+      test(
+          'should skip push notification unregister when device token is empty',
           () async {
         // Arrange
         when(() => mockBiometricAuthenticationService

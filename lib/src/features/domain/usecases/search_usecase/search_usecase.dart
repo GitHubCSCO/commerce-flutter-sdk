@@ -150,7 +150,8 @@ class SearchUseCase extends BaseUseCase {
         .getSettingsService()
         .getMobileAppSettingAsync();
     MobileAppSettings? mobileSettings = (mobileSettingsResponse is Success)
-        ? (mobileSettingsResponse as Success<MobileAppSettings, ErrorResponse>).value
+        ? (mobileSettingsResponse as Success<MobileAppSettings, ErrorResponse>)
+            .value
         : null;
 
     return mobileSettings?.addToCartInProductList ?? false;

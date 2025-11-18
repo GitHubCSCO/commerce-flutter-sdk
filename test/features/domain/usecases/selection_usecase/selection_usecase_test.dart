@@ -103,17 +103,19 @@ void main() {
     });
 
     group('getUsersList', () {
-      test('should return list of CatalogTypeDto when getAccountsAsync succeeds', () async {
+      test(
+          'should return list of CatalogTypeDto when getAccountsAsync succeeds',
+          () async {
         // Arrange
         final mockAccount1 = MockAccount();
         final mockAccount2 = MockAccount();
         final mockAccountResult = MockAccountResult();
-        
+
         when(() => mockAccount1.id).thenReturn('account1');
         when(() => mockAccount1.userName).thenReturn('User One');
         when(() => mockAccount2.id).thenReturn('account2');
         when(() => mockAccount2.userName).thenReturn('User Two');
-        
+
         when(() => mockAccountResult.accounts)
             .thenReturn([mockAccount1, mockAccount2]);
 
@@ -137,14 +139,15 @@ void main() {
         verify(() => mockAccountService.getAccountsAsync()).called(1);
       });
 
-      test('should exclude current account when removeMyself is true', () async {
+      test('should exclude current account when removeMyself is true',
+          () async {
         // Arrange
         final mockAccount1 = MockAccount();
         final mockAccount2 = MockAccount();
         final mockAccount3 = MockAccount();
         final mockAccountResult = MockAccountResult();
         final mockCurrentAccount = MockAccount();
-        
+
         when(() => mockAccount1.id).thenReturn('account1');
         when(() => mockAccount1.userName).thenReturn('User One');
         when(() => mockAccount2.id).thenReturn('account2');
@@ -152,7 +155,7 @@ void main() {
         when(() => mockAccount3.id).thenReturn('current_account');
         when(() => mockAccount3.userName).thenReturn('Current User');
         when(() => mockCurrentAccount.id).thenReturn('current_account');
-        
+
         when(() => mockAccountResult.accounts)
             .thenReturn([mockAccount1, mockAccount2, mockAccount3]);
 
@@ -160,7 +163,8 @@ void main() {
           (_) async => Success<AccountResult, ErrorResponse>(mockAccountResult),
         );
 
-        when(() => mockAccountService.currentAccount).thenReturn(mockCurrentAccount);
+        when(() => mockAccountService.currentAccount)
+            .thenReturn(mockCurrentAccount);
 
         // Act
         final result = await selectionUsecase.getUsersList(removeMyself: true);
@@ -168,7 +172,8 @@ void main() {
         // Assert
         expect(result, isNotNull);
         expect(result, hasLength(2));
-        expect(result!.every((account) => account.id != 'current_account'), isTrue);
+        expect(result!.every((account) => account.id != 'current_account'),
+            isTrue);
         expect(result.any((account) => account.id == 'account1'), isTrue);
         expect(result.any((account) => account.id == 'account2'), isTrue);
 
@@ -176,19 +181,20 @@ void main() {
         verify(() => mockAccountService.currentAccount).called(1);
       });
 
-      test('should include current account when removeMyself is false', () async {
+      test('should include current account when removeMyself is false',
+          () async {
         // Arrange
         final mockAccount1 = MockAccount();
         final mockAccount2 = MockAccount();
         final mockAccountResult = MockAccountResult();
         final mockCurrentAccount = MockAccount();
-        
+
         when(() => mockAccount1.id).thenReturn('account1');
         when(() => mockAccount1.userName).thenReturn('User One');
         when(() => mockAccount2.id).thenReturn('current_account');
         when(() => mockAccount2.userName).thenReturn('Current User');
         when(() => mockCurrentAccount.id).thenReturn('current_account');
-        
+
         when(() => mockAccountResult.accounts)
             .thenReturn([mockAccount1, mockAccount2]);
 
@@ -196,7 +202,8 @@ void main() {
           (_) async => Success<AccountResult, ErrorResponse>(mockAccountResult),
         );
 
-        when(() => mockAccountService.currentAccount).thenReturn(mockCurrentAccount);
+        when(() => mockAccountService.currentAccount)
+            .thenReturn(mockCurrentAccount);
 
         // Act
         final result = await selectionUsecase.getUsersList(removeMyself: false);
@@ -204,7 +211,8 @@ void main() {
         // Assert
         expect(result, isNotNull);
         expect(result, hasLength(2));
-        expect(result!.any((account) => account.id == 'current_account'), isTrue);
+        expect(
+            result!.any((account) => account.id == 'current_account'), isTrue);
         expect(result.any((account) => account.id == 'account1'), isTrue);
 
         verify(() => mockAccountService.getAccountsAsync()).called(1);
@@ -232,7 +240,7 @@ void main() {
       test('should return empty list when accounts is null', () async {
         // Arrange
         final mockAccountResult = MockAccountResult();
-        
+
         when(() => mockAccountResult.accounts).thenReturn(null);
 
         when(() => mockAccountService.getAccountsAsync()).thenAnswer(
@@ -253,7 +261,7 @@ void main() {
       test('should return empty list when accounts is empty', () async {
         // Arrange
         final mockAccountResult = MockAccountResult();
-        
+
         when(() => mockAccountResult.accounts).thenReturn(<Account>[]);
 
         when(() => mockAccountService.getAccountsAsync()).thenAnswer(
@@ -271,17 +279,18 @@ void main() {
         verify(() => mockAccountService.getAccountsAsync()).called(1);
       });
 
-      test('should handle accounts with null id or userName gracefully', () async {
+      test('should handle accounts with null id or userName gracefully',
+          () async {
         // Arrange
         final mockAccount1 = MockAccount();
         final mockAccount2 = MockAccount();
         final mockAccountResult = MockAccountResult();
-        
+
         when(() => mockAccount1.id).thenReturn(null);
         when(() => mockAccount1.userName).thenReturn('User One');
         when(() => mockAccount2.id).thenReturn('account2');
         when(() => mockAccount2.userName).thenReturn(null);
-        
+
         when(() => mockAccountResult.accounts)
             .thenReturn([mockAccount1, mockAccount2]);
 
@@ -367,7 +376,8 @@ void main() {
         expect(capturedParams.expand, equals(['saleslist']));
       });
 
-      test('should use correct page parameter for different page values', () async {
+      test('should use correct page parameter for different page values',
+          () async {
         // Arrange
         const page = 5;
         final mockQuoteResult = MockQuoteResult();
@@ -393,7 +403,8 @@ void main() {
         expect(capturedParams.page, equals(page));
       });
 
-      test('should always use default page size and saleslist expand', () async {
+      test('should always use default page size and saleslist expand',
+          () async {
         // Arrange
         const page = 10;
         final mockQuoteResult = MockQuoteResult();
@@ -432,7 +443,8 @@ void main() {
         );
       });
 
-      test('should handle exceptions during getSalesRepList gracefully', () async {
+      test('should handle exceptions during getSalesRepList gracefully',
+          () async {
         // Arrange
         when(() => mockQuoteService.getQuotes(
               quoteQueryParameters: any(named: 'quoteQueryParameters'),
@@ -503,7 +515,7 @@ void main() {
         // Arrange for getUsersList
         final mockAccount = MockAccount();
         final mockAccountResult = MockAccountResult();
-        
+
         when(() => mockAccount.id).thenReturn('account1');
         when(() => mockAccount.userName).thenReturn('User One');
         when(() => mockAccountResult.accounts).thenReturn([mockAccount]);
@@ -521,7 +533,8 @@ void main() {
         );
 
         // Act
-        final usersResult = await selectionUsecase.getUsersList(removeMyself: false);
+        final usersResult =
+            await selectionUsecase.getUsersList(removeMyself: false);
         final salesRepResult = await selectionUsecase.getSalesRepList(page: 1);
 
         // Assert
@@ -536,11 +549,12 @@ void main() {
             )).called(1);
       });
 
-      test('should maintain correct service provider throughout multiple calls', () async {
+      test('should maintain correct service provider throughout multiple calls',
+          () async {
         // Arrange
         final mockAccountResult = MockAccountResult();
         final mockQuoteResult = MockQuoteResult();
-        
+
         when(() => mockAccountResult.accounts).thenReturn(<Account>[]);
         when(() => mockAccountService.getAccountsAsync()).thenAnswer(
           (_) async => Success<AccountResult, ErrorResponse>(mockAccountResult),
