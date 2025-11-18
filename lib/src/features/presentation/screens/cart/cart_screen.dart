@@ -652,16 +652,20 @@ class _CartPageState extends State<CartPage> {
     var cartPageBloc = context.watch<CartPageBloc>();
     var authCubit = context.read<AuthCubit>();
 
+    final isOrderApproval = cartPageBloc.approvalButtonVisible;
+    final isOrderApprovalAndHasApprover =
+        cartPageBloc.approvalButtonVisible && cartPageBloc.hasApprover;
+
     if (cartPageBloc.checkoutButtonVisible) {
       return PrimaryButton(
         isEnabled: cartPageBloc.isCheckoutButtonEnabled &&
-            (cartPageBloc.approvalButtonVisible && cartPageBloc.hasApprover),
+            (!isOrderApproval || isOrderApprovalAndHasApprover),
         onPressed: () {
           final currentState = authCubit.state;
           handleAuthStatusForCheckout(
               context, currentState.status, context.read<CartPageBloc>());
         },
-        text: cartPageBloc.approvalButtonVisible
+        text: isOrderApproval
             ? LocalizationConstants.checkoutForApproval.localized()
             : LocalizationConstants.checkout.localized(),
       );
