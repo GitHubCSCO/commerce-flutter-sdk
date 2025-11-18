@@ -46,33 +46,35 @@ class QuoteAllPage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocConsumer<QuoteAllCubit, QuoteAllState>(
-        listener: (_, state) {
-          if (state is QuoteAllValidationState) {
-            context.read<QuoteAllCubit>().quoteAll();
-          } else if (state is QuoteAllAppliedSuccessState) {
-            CustomSnackBar.showSuccesss(context);
-            Navigator.pop(context);
-          }
-        },
-        buildWhen: (previous, current) {
-          if (current is! QuoteAllValidationState &&
-              current is! QuoteAllAppliedSuccessState) {
-            return true;
-          }
-          return false;
-        },
-        builder: (context, state) {
-          if (state is QuoteAllLoadingState) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is QuoteAllLoadedState) {
-            return _buildQuoteAllWidget(state, context);
-          } else {
-            return Container();
-          }
-        },
+      body: SafeArea(
+        child: BlocConsumer<QuoteAllCubit, QuoteAllState>(
+          listener: (_, state) {
+            if (state is QuoteAllValidationState) {
+              context.read<QuoteAllCubit>().quoteAll();
+            } else if (state is QuoteAllAppliedSuccessState) {
+              CustomSnackBar.showSuccesss(context);
+              Navigator.pop(context);
+            }
+          },
+          buildWhen: (previous, current) {
+            if (current is! QuoteAllValidationState &&
+                current is! QuoteAllAppliedSuccessState) {
+              return true;
+            }
+            return false;
+          },
+          builder: (context, state) {
+            if (state is QuoteAllLoadingState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is QuoteAllLoadedState) {
+              return _buildQuoteAllWidget(state, context);
+            } else {
+              return Container();
+            }
+          },
+        ),
       ),
     );
   }

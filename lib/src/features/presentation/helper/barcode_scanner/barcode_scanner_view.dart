@@ -82,47 +82,50 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView>
           });
         }
       },
-      child: Column(
-        children: [
-          Expanded(
-            child: DetectorView(
-              customPaint: _customPaint,
-              barcodeFullView: widget.barcodeFullView,
-              onImage: _canScan && _canProcessFrame && !_isDialogShowing
-                  ? _processImage
-                  : null,
-              initialCameraLensDirection: _cameraLensDirection,
-              onCameraLensDirectionChanged: (value) =>
-                  _cameraLensDirection = value,
-            ),
-          ),
-          Visibility(
-            visible: widget.barcodeFullView,
-            child: Container(
-              height: bottomViewHeight,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              clipBehavior: Clip.antiAlias,
-              decoration: const BoxDecoration(color: Colors.white),
-              child: PrimaryButton(
-                onPressed: () {
-                  setState(() {
-                    _canScan = !_canScan;
-                    if (_canScan) {
-                      _canProcessFrame = true;
-                    }
-                    rectanglePainter?.reset();
-                  });
-                },
-                backgroundColor: _canScan
-                    ? OptiAppColors.buttonDarkRedBackgroudColor
-                    : OptiAppColors.primaryColor,
-                text: _canScan
-                    ? LocalizationConstants.cancel.localized()
-                    : LocalizationConstants.tapToScan.localized(),
+      child: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: DetectorView(
+                customPaint: _customPaint,
+                barcodeFullView: widget.barcodeFullView,
+                onImage: _canScan && _canProcessFrame && !_isDialogShowing
+                    ? _processImage
+                    : null,
+                initialCameraLensDirection: _cameraLensDirection,
+                onCameraLensDirectionChanged: (value) =>
+                    _cameraLensDirection = value,
               ),
             ),
-          )
-        ],
+            Visibility(
+              visible: widget.barcodeFullView,
+              child: Container(
+                height: bottomViewHeight,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                clipBehavior: Clip.antiAlias,
+                decoration: const BoxDecoration(color: Colors.white),
+                child: PrimaryButton(
+                  onPressed: () {
+                    setState(() {
+                      _canScan = !_canScan;
+                      if (_canScan) {
+                        _canProcessFrame = true;
+                      }
+                      rectanglePainter?.reset();
+                    });
+                  },
+                  backgroundColor: _canScan
+                      ? OptiAppColors.buttonDarkRedBackgroudColor
+                      : OptiAppColors.primaryColor,
+                  text: _canScan
+                      ? LocalizationConstants.cancel.localized()
+                      : LocalizationConstants.tapToScan.localized(),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

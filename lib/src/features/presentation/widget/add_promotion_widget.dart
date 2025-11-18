@@ -16,12 +16,14 @@ class AddPromotionWidget extends StatefulWidget {
   final bool shouldShowPromotionList;
   final bool fromCartPage;
   final bool isAddDiscountEnable;
+  final Function? onApplyPromoCode;
 
   const AddPromotionWidget({
     super.key,
     required this.shouldShowPromotionList,
     required this.fromCartPage,
     this.isAddDiscountEnable = true,
+    this.onApplyPromoCode,
   });
 
   @override
@@ -54,6 +56,9 @@ class _AddPromotionWidgetState extends State<AddPromotionWidget> {
           }
 
           CustomSnackBar.showPromotionApplied(context);
+          if (widget.onApplyPromoCode != null) {
+            widget.onApplyPromoCode!();
+          }
         } else if (state is PromoCodeFailureState) {
           CustomSnackBar.showPromotionNotApplied(context);
         }

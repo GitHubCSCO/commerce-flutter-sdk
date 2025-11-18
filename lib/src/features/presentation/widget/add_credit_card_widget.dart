@@ -83,21 +83,23 @@ class AddCreditCardScreen extends StatelessWidget {
           title: Text(getTitle()),
           centerTitle: false,
         ),
-        body: MultiBlocProvider(
-            providers: [
-              BlocProvider<AddCreditCardBloc>(
-                  create: (context) => sl<AddCreditCardBloc>()
-                    ..add(SetUpDataSourceEvent(
-                        addCreditCardEntity: addCreditCardEntity))),
-              BlocProvider<BillingAddressCubit>(
-                  create: (context) => sl<BillingAddressCubit>()
-                    ..setUpDataBillingAddress(addCreditCardEntity)),
-              BlocProvider<CardExpirationCubit>(
-                  create: (context) => sl<CardExpirationCubit>()),
-            ],
-            child: AddCreditCardPage(
-              addCreditCardEntity: addCreditCardEntity,
-            )));
+        body: SafeArea(
+          child: MultiBlocProvider(
+              providers: [
+                BlocProvider<AddCreditCardBloc>(
+                    create: (context) => sl<AddCreditCardBloc>()
+                      ..add(SetUpDataSourceEvent(
+                          addCreditCardEntity: addCreditCardEntity))),
+                BlocProvider<BillingAddressCubit>(
+                    create: (context) => sl<BillingAddressCubit>()
+                      ..setUpDataBillingAddress(addCreditCardEntity)),
+                BlocProvider<CardExpirationCubit>(
+                    create: (context) => sl<CardExpirationCubit>()),
+              ],
+              child: AddCreditCardPage(
+                addCreditCardEntity: addCreditCardEntity,
+              )),
+        ));
   }
 }
 

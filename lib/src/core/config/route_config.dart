@@ -18,6 +18,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/helper/routing/ro
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/brand/brand_category_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/cart/cart_all_list/cart_all_list_screen.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/currency/currency_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/invoice_history/invoice_detail_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/invoice_history/invoice_email_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/invoice_history/invoice_history_screen.dart';
@@ -62,6 +63,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/vmi/vmi_l
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/vmi/vmi_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_create_screen.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_filter_autocomplete_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_info_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/login/login_screen.dart';
@@ -776,6 +778,14 @@ List<NavigationNode> _getNavigationRoot() {
     parent: settings,
   );
 
+  // path: /account/settings/currency
+  final currency = createNode(
+    name: AppRoute.currency.name,
+    path: AppRoute.currency.suffix,
+    builder: (context, state) => CurrencyScreen(),
+    parent: settings,
+  );
+
   final fullScreenImageCarousel = createNode(
     name: AppRoute.fullScreenImageCarousel.name,
     path: AppRoute.fullScreenImageCarousel.fullPath,
@@ -794,6 +804,27 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.cartAllList.name,
     path: AppRoute.cartAllList.suffix,
     builder: (context, state) => const CartAllListScreen(),
+    parent: null,
+  );
+
+  final wishListFilterAutocomplete = createNode(
+    name: AppRoute.wishListFilterAutocomplete.name,
+    path: AppRoute.wishListFilterAutocomplete.fullPath,
+    builder: (context, state) {
+      final filterType = switch (state.pathParameters['filterType']) {
+        WishListFilterAutocompleteType.erpNumberKey =>
+          WishListFilterAutocompleteType.erpNumber,
+        WishListFilterAutocompleteType.brandIdKey =>
+          WishListFilterAutocompleteType.brandId,
+        WishListFilterAutocompleteType.sharedByKey =>
+          WishListFilterAutocompleteType.sharedBy,
+        _ => null,
+      }!;
+
+      return WishListFilterAutocompleteScreen(
+        type: filterType,
+      );
+    },
     parent: null,
   );
 
@@ -836,7 +867,8 @@ List<NavigationNode> _getNavigationRoot() {
     quoteLineNotes,
     inAppBrowser,
     fullScreenImageCarousel,
-    cartAllList
+    cartAllList,
+    wishListFilterAutocomplete
   ];
 }
 

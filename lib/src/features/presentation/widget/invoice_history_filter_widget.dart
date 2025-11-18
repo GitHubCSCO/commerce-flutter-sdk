@@ -122,11 +122,9 @@ void _showInvoiceHistoryFilter(
                     context.read<InvoiceHistoryFilterCubit>().setInvoiceNumber,
                 hintText: LocalizationConstants.invoiceNumber.localized(),
                 onListen: (context, state, textController) {
-                  if (state.invoiceNumber != textController.text) {
-                    textController.text = state.invoiceNumber ?? '';
-                    textController.selection = TextSelection.fromPosition(
-                      TextPosition(offset: textController.text.length),
-                    );
+                  if (state.invoiceNumber != textController.text &&
+                      state.invoiceNumber.isNullOrEmpty) {
+                    textController.value = const TextEditingValue(text: '');
                   }
                 },
               ),
@@ -137,11 +135,9 @@ void _showInvoiceHistoryFilter(
                     context.read<InvoiceHistoryFilterCubit>().setPoNumber,
                 hintText: LocalizationConstants.pONumber.localized(),
                 onListen: (context, state, textController) {
-                  if (state.poNumber != textController.text) {
-                    textController.text = state.poNumber ?? '';
-                    textController.selection = TextSelection.fromPosition(
-                      TextPosition(offset: textController.text.length),
-                    );
+                  if (state.poNumber != textController.text &&
+                      state.poNumber.isNullOrEmpty) {
+                    textController.value = const TextEditingValue(text: '');
                   }
                 },
               ),
@@ -152,11 +148,9 @@ void _showInvoiceHistoryFilter(
                     context.read<InvoiceHistoryFilterCubit>().setOrderNumber,
                 hintText: LocalizationConstants.orderNumber.localized(),
                 onListen: (context, state, textController) {
-                  if (state.orderNumber != textController.text) {
-                    textController.text = state.orderNumber ?? '';
-                    textController.selection = TextSelection.fromPosition(
-                      TextPosition(offset: textController.text.length),
-                    );
+                  if (state.orderNumber != textController.text &&
+                      state.orderNumber.isNullOrEmpty) {
+                    textController.value = const TextEditingValue(text: '');
                   }
                 },
               ),
@@ -225,7 +219,7 @@ class _FilterTextFieldWidgetState extends State<_FilterTextFieldWidget> {
   void initState() {
     super.initState();
     widget.existingValue != null
-        ? textController.text = widget.existingValue!
+        ? textController.value = TextEditingValue(text: widget.existingValue!)
         : null;
     textController.addListener(submit);
   }

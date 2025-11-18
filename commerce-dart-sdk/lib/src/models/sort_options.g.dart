@@ -11,16 +11,8 @@ SortOption _$SortOptionFromJson(Map<String, dynamic> json) => SortOption(
       sortType: json['sortType'] as String?,
     );
 
-Map<String, dynamic> _$SortOptionToJson(SortOption instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('displayName', instance.displayName);
-  writeNotNull('sortType', instance.sortType);
-  return val;
-}
+Map<String, dynamic> _$SortOptionToJson(SortOption instance) =>
+    <String, dynamic>{
+      if (instance.displayName case final value?) 'displayName': value,
+      if (instance.sortType case final value?) 'sortType': value,
+    };

@@ -94,6 +94,11 @@ class CheckoutPaymentDetails extends StatelessWidget {
                     AddPromotionWidget(
                       shouldShowPromotionList: false,
                       fromCartPage: false,
+                      onApplyPromoCode: () {
+                        context.read<CheckoutBloc>().add(
+                              LoadCheckoutEvent(cartId: cart.id ?? ''),
+                            );
+                      },
                     ),
                   _buildPaymentMethodPicker(state, context),
                   if (state.cardDetails != null) ...{

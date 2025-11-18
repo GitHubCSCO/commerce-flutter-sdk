@@ -98,6 +98,8 @@ export 'wish_list_tag.dart';
 export 'wish_list_tag_collection.dart';
 export 'user_event.dart';
 export 'screen_view.dart';
+export 'device_token_registration.dart';
+export 'device_token_unregistration.dart';
 
 export './results/results.dart';
 export './parameters/parameters.dart';

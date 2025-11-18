@@ -17,37 +17,39 @@ class LandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: SizedBox(
-                height: 150,
-                width: 150,
-                child: Image.asset(AssetConstants.logo),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Image.asset(AssetConstants.logo),
+                ),
               ),
             ),
-          ),
-          OrderBottomSectionWidget(
-            actions: [
-              PrimaryButton(
-                text: LocalizationConstants.signIn.localized(),
-                onPressed: () async {
-                  var goToShop = await context.pushNamed(AppRoute.login.name);
-                  if (goToShop == true && context.mounted) {
-                    AppRoute.shop.navigate(context);
-                  }
-                },
-              ),
-              if (domainChangePossible)
-                PlainButton(
-                  text: LocalizationConstants.changeDomain.localized(),
-                  onPressed: () =>
-                      AppRoute.domainSelection.navigateBackStack(context),
+            OrderBottomSectionWidget(
+              actions: [
+                PrimaryButton(
+                  text: LocalizationConstants.signIn.localized(),
+                  onPressed: () async {
+                    var goToShop = await context.pushNamed(AppRoute.login.name);
+                    if (goToShop == true && context.mounted) {
+                      AppRoute.shop.navigate(context);
+                    }
+                  },
                 ),
-            ],
-          ),
-        ],
+                if (domainChangePossible)
+                  PlainButton(
+                    text: LocalizationConstants.changeDomain.localized(),
+                    onPressed: () =>
+                        AppRoute.domainSelection.navigateBackStack(context),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -18,7 +18,7 @@ class QuoteCommunicationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<QuoteCommunicationBloc>()
-        ..add((LoadQuoteQummunicationMessagesEvent(quoteDto))),
+        ..add(LoadQuoteQummunicationMessagesEvent(quoteDto)),
       child: QuoteCommunicationPage(
         quoteDto: quoteDto,
       ),
@@ -40,31 +40,33 @@ class QuoteCommunicationPage extends StatelessWidget {
           title: Text(
         quoteDto.quoteNumber ?? "",
       )),
-      body: BlocConsumer<QuoteCommunicationBloc, QuoteCommunicationState>(
-        listener: (context, state) {
-          if (state is QuoteCommunicationFailureState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-              ),
-            );
-          } else if (state is QuoteCommunicationMessageSendSuccessState) {
-            context.read<QuoteCommunicationBloc>().add(
-                  LoadQuoteQummunicationMessagesEvent(state.quoteDto),
-                );
-          }
-        },
-        builder: (context, state) {
-          if (state is QuoteCommunicationLoadingState) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is QuoteCommunicationLoadedState) {
-            return _buildQuoteCommunicationWidget(context, state.quoteDto);
-          } else {
-            return Container();
-          }
-        },
+      body: SafeArea(
+        child: BlocConsumer<QuoteCommunicationBloc, QuoteCommunicationState>(
+          listener: (context, state) {
+            if (state is QuoteCommunicationFailureState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            } else if (state is QuoteCommunicationMessageSendSuccessState) {
+              context.read<QuoteCommunicationBloc>().add(
+                    LoadQuoteQummunicationMessagesEvent(state.quoteDto),
+                  );
+            }
+          },
+          builder: (context, state) {
+            if (state is QuoteCommunicationLoadingState) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is QuoteCommunicationLoadedState) {
+              return _buildQuoteCommunicationWidget(context, state.quoteDto);
+            } else {
+              return Container();
+            }
+          },
+        ),
       ),
     );
   }

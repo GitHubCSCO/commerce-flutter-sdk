@@ -8,7 +8,7 @@ class VmiCountModel extends BaseModel {
   String? productId;
   double? count;
   String? createdBy;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DateTime? createdOn;
 
   VmiCountModel({

@@ -11,6 +11,10 @@
 # (the recommended set includes the core lints).
 # The core lints are also what is used by pub.dev for scoring packages.
 
+analyzer:
+  exclude:
+    - /**/*.g.dart
+
 include: package:lints/recommended.yaml
 
 # Uncomment the following section to specify additional rules.
@@ -26,13 +30,3 @@ linter:
     - prefer_void_to_null
     - always_put_control_body_on_new_line
     - avoid_relative_lib_imports
-
-# analyzer:
-#   exclude:
-#     - path/to/excluded/files/**
-
-# For more information about the core and recommended set of lints, see
-# https://dart.dev/go/core-lints
-
-# For additional information about configuring this file, see
-# https://dart.dev/guides/language/analysis-options

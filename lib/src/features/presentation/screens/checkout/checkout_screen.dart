@@ -143,228 +143,239 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context),
-      body: BlocConsumer<CheckoutBloc, CheckoutState>(
-        listener: (_, state) async {
-          if (state is CheckoutShipToAddressAddedState) {
-            context.read<CheckoutBloc>().add(LoadCheckoutEvent(
-                cartId: context.read<CheckoutBloc>().cart?.id ?? ''));
-            context.read<RootBloc>().add(RootCartUpdateEvent());
-          } else if (state is CheckoutPlaceOrder) {
-            context.read<CartCountCubit>().onCartItemChange();
-            context
-                .read<OrderApprovalHandlerCubit>()
-                .shouldRefreshOrderApproval();
-            AppRoute.checkoutSuccess.navigate(context,
-                extra: CheckoutSuccessEntity(
-                    orderNumber: state.orderNumber,
-                    isVmiCheckout: false,
-                    cart: context.read<CheckoutBloc>().cart!,
-                    isOrderApproval:
-                        context.read<CheckoutBloc>().cart?.requiresApproval ??
-                            false,
-                    reviewOrderEntity: state.reviewOrderEntity,
-                    message: state.message));
-          } else if (state is CheckoutPlaceOrderFailed) {
-            context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
-            showAlert(context,
-                message: LocalizationConstants.orderFailed.localized());
-          } else if (state is CheckoutPlaceOrderPending) {
-            await _handle3DSAuthentication(context, state.cartId,
-                state.environmentKey, state.transactionToken);
-          }
-        },
-        builder: (_, state) {
-          return BlocBuilder<CheckoutBloc, CheckoutState>(
-            builder: (_, state) {
-              switch (state) {
-                case CheckoutInitial():
-                case CheckoutLoading():
-                  return const Center(child: CircularProgressIndicator());
-                case CheckoutDataFetchFailed():
-                  //Send some analytics event here from state.error so we can analyze what was the root cause
-                  return Center(
-                      child: Text(LocalizationConstants.somethingWentWrong
-                          .localized()));
-                case CheckoutDataLoaded():
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              buildSummary(state.cart, state.promotions),
-                              BlocBuilder<ExpansionPanelCubit,
-                                  ExpansionPanelState>(
-                                builder: (_, panelState) {
-                                  final list =
-                                      panelState is ExpansionPanelChangeState
-                                          ? panelState.list
-                                          : null;
+      body: SafeArea(
+        child: BlocConsumer<CheckoutBloc, CheckoutState>(
+          listener: (_, state) async {
+            if (state is CheckoutShipToAddressAddedState) {
+              context.read<CheckoutBloc>().add(LoadCheckoutEvent(
+                  cartId: context.read<CheckoutBloc>().cart?.id ?? ''));
+              context.read<RootBloc>().add(RootCartUpdateEvent());
+            } else if (state is CheckoutPlaceOrder) {
+              context.read<CartCountCubit>().onCartItemChange();
+              context
+                  .read<OrderApprovalHandlerCubit>()
+                  .shouldRefreshOrderApproval();
+              AppRoute.checkoutSuccess.navigate(context,
+                  extra: CheckoutSuccessEntity(
+                      orderNumber: state.orderNumber,
+                      isVmiCheckout: false,
+                      cart: context.read<CheckoutBloc>().cart!,
+                      isOrderApproval:
+                          context.read<CheckoutBloc>().cart?.requiresApproval ??
+                              false,
+                      reviewOrderEntity: state.reviewOrderEntity,
+                      message: state.message));
+            } else if (state is CheckoutPlaceOrderFailed) {
+              context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
+              showAlert(context,
+                  message: LocalizationConstants.orderFailed.localized());
+            } else if (state is CheckoutPlaceOrderPending) {
+              await _handle3DSAuthentication(context, state.cartId,
+                  state.environmentKey, state.transactionToken);
+            }
+          },
+          builder: (_, state) {
+            return BlocBuilder<CheckoutBloc, CheckoutState>(
+              builder: (_, state) {
+                switch (state) {
+                  case CheckoutInitial():
+                  case CheckoutLoading():
+                    return const Center(child: CircularProgressIndicator());
+                  case CheckoutDataFetchFailed():
+                    //Send some analytics event here from state.error so we can analyze what was the root cause
+                    return Center(
+                        child: Text(LocalizationConstants.somethingWentWrong
+                            .localized()));
+                  case CheckoutDataLoaded():
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                buildSummary(state.cart, state.promotions),
+                                BlocBuilder<ExpansionPanelCubit,
+                                    ExpansionPanelState>(
+                                  builder: (_, panelState) {
+                                    final list =
+                                        panelState is ExpansionPanelChangeState
+                                            ? panelState.list
+                                            : null;
 
-                                  final billingShippingEntity =
-                                      prepareBillingShippingEntity(state);
-                                  final paymentSummaryEntity =
-                                      preparePaymentSummaryEntity(state);
-                                  final reviewOrderEntity =
-                                      prepareReviewOrderEntity(state, context);
+                                    final billingShippingEntity =
+                                        prepareBillingShippingEntity(state);
+                                    final paymentSummaryEntity =
+                                        preparePaymentSummaryEntity(state);
+                                    final reviewOrderEntity =
+                                        prepareReviewOrderEntity(
+                                            state, context);
 
-                                  final checkoutBloc =
-                                      context.watch<CheckoutBloc>();
-                                  final requiresApproval =
-                                      checkoutBloc.cart?.requiresApproval ==
-                                          true;
+                                    final checkoutBloc =
+                                        context.watch<CheckoutBloc>();
+                                    final requiresApproval =
+                                        checkoutBloc.cart?.requiresApproval ==
+                                            true;
 
-                                  return ExpansionPanelList(
-                                    expansionCallback:
-                                        (int index, bool isExpanded) {
-                                      context
-                                          .read<ExpansionPanelCubit>()
-                                          .onPanelExpansionChange(index);
-                                    },
-                                    children: [
-                                      ExpansionPanel(
-                                        headerBuilder: (BuildContext context,
-                                            bool isExpanded) {
-                                          return ListTile(
-                                            title: Text(LocalizationConstants
-                                                .billingShipping
-                                                .localized()),
-                                          );
-                                        },
-                                        body: BillingShippingWidget(
-                                          billingShippingEntity:
-                                              billingShippingEntity,
-                                          onCallBack:
-                                              _handleAddressSelectionCallBack,
-                                        ),
-                                        isExpanded: list?[0].isExpanded ?? true,
-                                        canTapOnHeader: true,
-                                      ),
-                                      if (!requiresApproval)
+                                    return ExpansionPanelList(
+                                      expansionCallback:
+                                          (int index, bool isExpanded) {
+                                        context
+                                            .read<ExpansionPanelCubit>()
+                                            .onPanelExpansionChange(index);
+                                      },
+                                      children: [
                                         ExpansionPanel(
                                           headerBuilder: (BuildContext context,
                                               bool isExpanded) {
                                             return ListTile(
                                               title: Text(LocalizationConstants
-                                                  .paymentDetails
+                                                  .billingShipping
                                                   .localized()),
                                             );
                                           },
-                                          body: CheckoutPaymentDetails(
-                                            cart: checkoutBloc.cart!,
-                                            onCompleteCheckoutPaymentSection:
-                                                () {
-                                              final paymentDetailsBloc = context
-                                                  .read<PaymentDetailsBloc>();
-                                              checkoutBloc.add(
-                                                SelectPaymentEvent(
-                                                    paymentDetailsBloc
-                                                        .cart!.paymentOptions!),
-                                              );
-                                            },
+                                          body: BillingShippingWidget(
+                                            billingShippingEntity:
+                                                billingShippingEntity,
+                                            onCallBack:
+                                                _handleAddressSelectionCallBack,
                                           ),
                                           isExpanded:
-                                              list?[1].isExpanded ?? false,
+                                              list?[0].isExpanded ?? true,
                                           canTapOnHeader: true,
                                         ),
-                                      ExpansionPanel(
-                                        headerBuilder: (BuildContext context,
-                                            bool isExpanded) {
-                                          return ListTile(
-                                            title: Text(LocalizationConstants
-                                                .reviewOrder
-                                                .localized()),
-                                          );
-                                        },
-                                        body: ReviewOrderWidget(
-                                          reviewOrderEntity: reviewOrderEntity,
-                                          paymentSummaryEntity:
-                                              paymentSummaryEntity,
+                                        if (!requiresApproval)
+                                          ExpansionPanel(
+                                            headerBuilder:
+                                                (BuildContext context,
+                                                    bool isExpanded) {
+                                              return ListTile(
+                                                title: Text(
+                                                    LocalizationConstants
+                                                        .paymentDetails
+                                                        .localized()),
+                                              );
+                                            },
+                                            body: CheckoutPaymentDetails(
+                                              cart: checkoutBloc.cart!,
+                                              onCompleteCheckoutPaymentSection:
+                                                  () {
+                                                final paymentDetailsBloc =
+                                                    context.read<
+                                                        PaymentDetailsBloc>();
+                                                checkoutBloc.add(
+                                                  SelectPaymentEvent(
+                                                      paymentDetailsBloc.cart!
+                                                          .paymentOptions!),
+                                                );
+                                              },
+                                            ),
+                                            isExpanded:
+                                                list?[1].isExpanded ?? false,
+                                            canTapOnHeader: true,
+                                          ),
+                                        ExpansionPanel(
+                                          headerBuilder: (BuildContext context,
+                                              bool isExpanded) {
+                                            return ListTile(
+                                              title: Text(LocalizationConstants
+                                                  .reviewOrder
+                                                  .localized()),
+                                            );
+                                          },
+                                          body: ReviewOrderWidget(
+                                            reviewOrderEntity:
+                                                reviewOrderEntity,
+                                            paymentSummaryEntity:
+                                                paymentSummaryEntity,
+                                          ),
+                                          isExpanded:
+                                              list?.last.isExpanded ?? false,
+                                          canTapOnHeader: true,
                                         ),
-                                        isExpanded:
-                                            list?.last.isExpanded ?? false,
-                                        canTapOnHeader: true,
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                              ProductListWithBasicInfo(
-                                totalItemsTitle: LocalizationConstants
-                                    .cartContentsItems
-                                    .localized(),
-                                list: CartLineListMapper.toEntity(CartLineList(
-                                            cartLines:
-                                                state.cart.cartLines ?? []))
-                                        .cartLines ??
-                                    [],
-                              ),
-                              const SizedBox(height: 8),
-                            ],
+                                      ],
+                                    );
+                                  },
+                                ),
+                                ProductListWithBasicInfo(
+                                  totalItemsTitle: LocalizationConstants
+                                      .cartContentsItems
+                                      .localized(),
+                                  list: CartLineListMapper.toEntity(
+                                              CartLineList(
+                                                  cartLines:
+                                                      state.cart.cartLines ??
+                                                          []))
+                                          .cartLines ??
+                                      [],
+                                ),
+                                const SizedBox(height: 8),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        height: 80,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 16),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(color: Colors.white),
-                        child: StreamBuilder<String>(
-                          stream: context
-                              .read<ExpansionPanelCubit>()
-                              .buttonTextStream,
-                          initialData:
-                              LocalizationConstants.continueText.localized(),
-                          builder: (context, snapshot) {
-                            final buttonText = snapshot.data ??
-                                LocalizationConstants.continueText.localized();
-                            final expansionPanelCubit =
-                                context.read<ExpansionPanelCubit>();
-                            final checkoutBloc = context.read<CheckoutBloc>();
-                            final index = expansionPanelCubit.expansionIndex;
-                            final requiresApproval =
-                                checkoutBloc.cart?.requiresApproval == true;
-                            final isCheckoutStep =
-                                index == (requiresApproval ? 1 : 2);
+                        Container(
+                          height: 80,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 16),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: const BoxDecoration(color: Colors.white),
+                          child: StreamBuilder<String>(
+                            stream: context
+                                .read<ExpansionPanelCubit>()
+                                .buttonTextStream,
+                            initialData:
+                                LocalizationConstants.continueText.localized(),
+                            builder: (context, snapshot) {
+                              final buttonText = snapshot.data ??
+                                  LocalizationConstants.continueText
+                                      .localized();
+                              final expansionPanelCubit =
+                                  context.read<ExpansionPanelCubit>();
+                              final checkoutBloc = context.read<CheckoutBloc>();
+                              final index = expansionPanelCubit.expansionIndex;
+                              final requiresApproval =
+                                  checkoutBloc.cart?.requiresApproval == true;
+                              final isCheckoutStep =
+                                  index == (requiresApproval ? 1 : 2);
 
-                            return PrimaryButton(
-                              onPressed: () {
-                                switch (index) {
-                                  case 0:
-                                    handleCareerService(context, state);
-                                  case 1:
-                                    if (!requiresApproval) {
-                                      handlePayment(context, state);
-                                    } else {
-                                      handleReviewOrder(context, state);
-                                    }
-                                  case 2:
-                                    if (!requiresApproval) {
-                                      handleReviewOrder(context, state);
-                                    } else {
+                              return PrimaryButton(
+                                onPressed: () {
+                                  switch (index) {
+                                    case 0:
+                                      handleCareerService(context, state);
+                                    case 1:
+                                      if (!requiresApproval) {
+                                        handlePayment(context, state);
+                                      } else {
+                                        handleReviewOrder(context, state);
+                                      }
+                                    case 2:
+                                      if (!requiresApproval) {
+                                        handleReviewOrder(context, state);
+                                      } else {
+                                        expansionPanelCubit.onContinueClick();
+                                      }
+                                    default:
                                       expansionPanelCubit.onContinueClick();
-                                    }
-                                  default:
-                                    expansionPanelCubit.onContinueClick();
-                                }
-                              },
-                              text: buttonText,
-                              isEnabled:
-                                  !(isCheckoutStep && !isCheckoutButtonEnabled),
-                            );
-                          },
+                                  }
+                                },
+                                text: buttonText,
+                                isEnabled: !(isCheckoutStep &&
+                                    !isCheckoutButtonEnabled),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                default:
-                  return const Center();
-              }
-            },
-          );
-        },
+                      ],
+                    );
+                  default:
+                    return const Center();
+                }
+              },
+            );
+          },
+        ),
       ),
     );
   }

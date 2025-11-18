@@ -71,10 +71,12 @@ class RouteNames {
   static const String jobQuoteDetails = 'jobQuoteDetails';
   static const String quoteLineNotes = 'quoteLineNotes';
   static const String language = 'language';
+  static const String currency = 'currency';
   static const String invoiceEmail = 'invoiceEmail';
   static const String inAppBrowser = 'inAppBrowser';
   static const String fullScreenImageCarousel = 'fullScreenImageCarousel';
   static const String cartAllList = 'cartAllList';
+  static const String wishListFilterAutocomplete = 'wishListFilterAutocomplete';
 }
 
 class RoutePaths {
@@ -164,11 +166,15 @@ class RoutePaths {
   static const String quoteLineNotes = '/${RouteNames.quoteLineNotes}';
   static const String language =
       '${RoutePaths.settings}/${RouteNames.language}';
+  static const String currency =
+      '${RoutePaths.settings}/${RouteNames.currency}';
   static const String invoiceEmail = '/${RoutePaths.invoiceDetail}/email';
   static const String inAppBrowser = '/${RouteNames.inAppBrowser}';
   static const String fullScreenImageCarousel =
       '/${RouteNames.fullScreenImageCarousel}/:initialIndex';
   static const String cartAllList = '/${RouteNames.cartAllList}';
+  static const String wishListFilterAutocomplete =
+      '/${RouteNames.wishListFilterAutocomplete}/:filterType';
 }
 
 enum AppRoute {
@@ -308,6 +314,10 @@ enum AppRoute {
     name: RouteNames.language,
     fullPath: RoutePaths.language,
   ),
+  currency(
+    name: RouteNames.currency,
+    fullPath: RoutePaths.currency,
+  ),
   invoiceEmail(
     name: RouteNames.invoiceEmail,
     fullPath: RoutePaths.invoiceEmail,
@@ -319,6 +329,10 @@ enum AppRoute {
   cartAllList(
     name: RouteNames.cartAllList,
     fullPath: RoutePaths.cartAllList,
+  ),
+  wishListFilterAutocomplete(
+    name: RouteNames.wishListFilterAutocomplete,
+    fullPath: RoutePaths.wishListFilterAutocomplete,
   ),
   fullScreenImageCarousel(
     name: RouteNames.fullScreenImageCarousel,

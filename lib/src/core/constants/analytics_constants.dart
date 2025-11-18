@@ -29,6 +29,7 @@ class AnalyticsConstants {
   static const String screenNameSignIn = "Sign In";
   static const String screenNameSettings = "Settings";
   static const String screenNameLanguages = "Languages";
+  static const String screenNameCurrencies = "Currencies";
   static const String screenNameWishListAddTo = "Select a List";
   static const String screenNameTopCategories = "Top Categories";
   static const String screenNameQuickOrder = "Quick Order";
@@ -210,4 +211,8 @@ class AnalyticsConstants {
   static const String eventPropertyVmiLocationId = "vmi_location_id";
   static const String eventPropertyVmiBinId = "vmi_bin_id";
   static const String eventPropertyActionType = "action_type";
+
+  // Notification Events
+  static const String eventNotificationReceived = "notification_received";
+  static const String eventNotificationClicked = "notification_clicked";
 }

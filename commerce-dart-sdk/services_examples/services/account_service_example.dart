@@ -1,6 +1,4 @@
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-import 'package:optimizely_commerce_api/src/fakes/services/fake_auth_stream_service.dart';
-import 'package:optimizely_commerce_api/src/fakes/services/logger_fake.dart';
 import '../env/test_config_constants.dart';
 
 void main() async {

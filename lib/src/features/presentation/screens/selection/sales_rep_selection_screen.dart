@@ -40,22 +40,24 @@ class SalesRepSelectionPage extends StatelessWidget {
         title: Text(LocalizationConstants.selectSalesRep.localized()),
         centerTitle: false,
       ),
-      body: BlocBuilder<SalesRepSelectionCubit, SalesRepSelectionState>(
-        builder: (context, state) {
-          if (state.status == SalesRepStatus.loading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      body: SafeArea(
+        child: BlocBuilder<SalesRepSelectionCubit, SalesRepSelectionState>(
+          builder: (context, state) {
+            if (state.status == SalesRepStatus.loading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
 
-          if (state.status == SalesRepStatus.failiure) {
-            return Center(
-              child: Text(LocalizationConstants.error.localized()),
-            );
-          }
+            if (state.status == SalesRepStatus.failiure) {
+              return Center(
+                child: Text(LocalizationConstants.error.localized()),
+              );
+            }
 
-          return _SalesRepListWidget(salesRepList: state.salesRepList ?? []);
-        },
+            return _SalesRepListWidget(salesRepList: state.salesRepList ?? []);
+          },
+        ),
       ),
     );
   }

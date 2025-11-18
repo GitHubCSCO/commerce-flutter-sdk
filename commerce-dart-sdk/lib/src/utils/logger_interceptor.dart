@@ -3,8 +3,10 @@ import 'package:logger/logger.dart';
 
 /// This interceptor is used to show request and response logs
 class LoggerInterceptor extends Interceptor {
-  Logger logger =
-      Logger(printer: PrettyPrinter(methodCount: 0, printTime: true));
+  Logger logger = Logger(
+      printer: PrettyPrinter(
+          methodCount: 0,
+          dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart));
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {

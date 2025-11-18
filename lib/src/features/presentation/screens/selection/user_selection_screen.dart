@@ -40,44 +40,46 @@ class UserSelectionPage extends StatelessWidget {
         title: Text(LocalizationConstants.selectUser.localized()),
         centerTitle: false,
       ),
-      body: BlocBuilder<UserSelectionCubit, UserSelectionState>(
-        builder: (context, state) {
-          if (state.status == UserStatus.loading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (state.status == UserStatus.failiure) {
-            return Center(
-              child: Text(LocalizationConstants.error.localized()),
-            );
-          }
-
-          return ListView.separated(
-            itemCount: state.userList?.length ?? 0,
-            separatorBuilder: (context, index) => const Divider(),
-            itemBuilder: (context, index) {
-              final user = state.userList![index];
-              return Container(
-                color: OptiAppColors.backgroundWhite,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SelectionItemWidget(
-                  item: user,
-                  label: user.title ?? '',
-                  isSelected: user.id == state.selectedId,
-                  onCallBack: (context, selectedUser) {
-                    context.read<UserSelectionCubit>().setSelectedUser(
-                          selectedUser: selectedUser as CatalogTypeDto,
-                        );
-
-                    context.pop(selectedUser);
-                  },
-                ),
+      body: SafeArea(
+        child: BlocBuilder<UserSelectionCubit, UserSelectionState>(
+          builder: (context, state) {
+            if (state.status == UserStatus.loading) {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            },
-          );
-        },
+            }
+
+            if (state.status == UserStatus.failiure) {
+              return Center(
+                child: Text(LocalizationConstants.error.localized()),
+              );
+            }
+
+            return ListView.separated(
+              itemCount: state.userList?.length ?? 0,
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, index) {
+                final user = state.userList![index];
+                return Container(
+                  color: OptiAppColors.backgroundWhite,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SelectionItemWidget(
+                    item: user,
+                    label: user.title ?? '',
+                    isSelected: user.id == state.selectedId,
+                    onCallBack: (context, selectedUser) {
+                      context.read<UserSelectionCubit>().setSelectedUser(
+                            selectedUser: selectedUser as CatalogTypeDto,
+                          );
+
+                      context.pop(selectedUser);
+                    },
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

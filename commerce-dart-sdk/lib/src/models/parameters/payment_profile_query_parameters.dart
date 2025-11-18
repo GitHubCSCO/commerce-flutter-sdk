@@ -10,10 +10,10 @@ class PaymentProfileQueryParameters extends BaseQueryParameters {
 
   PaymentProfileQueryParameters({
     this.expand,
-    int? page,
-    int? pageSize,
-    String? sort,
-  }) : super(page: page, pageSize: pageSize, sort: sort);
+    super.page,
+    super.pageSize,
+    super.sort,
+  });
 
   @override
   Map<String, dynamic> toJson() =>

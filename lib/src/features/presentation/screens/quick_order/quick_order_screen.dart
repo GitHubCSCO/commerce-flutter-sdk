@@ -173,421 +173,425 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
             _buildAppBarMenu(),
           ],
         ),
-        body: BlocConsumer<QuickOrderAutoCompleteBloc,
-            QuickOrderAutoCompleteState>(
-          listener: (context, state) {
-            if (state is QuickOrderInitialState) {
-              setState(() {
-                isSearching = false;
-              });
-            } else {
-              setState(() {
-                isSearching = true;
-              });
-            }
-          },
-          builder: (context, state) {
-            switch (state) {
-              case QuickOrderInitialState():
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Container(
-                      color: Colors.black,
-                      child: BarcodeScannerView(
-                          callback: _handleBarcodeValue,
-                          barcodeFullView: false),
-                    ),
-                    Positioned.fill(
-                      top: CoreConstants.barcodeRectangleSize,
-                      child: ColoredBox(
-                        color: OptiAppColors.backgroundGray,
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 24),
-                              child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        AppStyle.borderRadius),
-                                    color: AppStyle.neutral100,
-                                  ),
-                                  child: TextButton(
-                                    onPressed: () {
-                                      autoFocusNode = FocusNode();
-                                      context
-                                          .read<QuickOrderAutoCompleteBloc>()
-                                          .add(QuickOrderStartSearchEvent(
-                                              autoFocus: true));
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Icons.search,
-                                          color: OptiAppColors.primaryColor,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            LocalizationConstants.search
-                                                .localized(),
-                                            style: OptiTextStyles.bodyFade,
-                                          ),
-                                        ),
-                                      ],
+        body: SafeArea(
+          child: BlocConsumer<QuickOrderAutoCompleteBloc,
+              QuickOrderAutoCompleteState>(
+            listener: (context, state) {
+              if (state is QuickOrderInitialState) {
+                setState(() {
+                  isSearching = false;
+                });
+              } else {
+                setState(() {
+                  isSearching = true;
+                });
+              }
+            },
+            builder: (context, state) {
+              switch (state) {
+                case QuickOrderInitialState():
+                  return Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Container(
+                        color: Colors.black,
+                        child: BarcodeScannerView(
+                            callback: _handleBarcodeValue,
+                            barcodeFullView: false),
+                      ),
+                      Positioned.fill(
+                        top: CoreConstants.barcodeRectangleSize,
+                        child: ColoredBox(
+                          color: OptiAppColors.backgroundGray,
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 24),
+                                child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          AppStyle.borderRadius),
+                                      color: AppStyle.neutral100,
                                     ),
-                                  )),
-                            ),
-                            BlocConsumer<OrderListBloc, OrderListState>(
-                              listener: (context, state) {
-                                if (state is OrderListNavigateToCartState) {
-                                  context
-                                      .read<CartCountCubit>()
-                                      .onCartItemChange();
-                                  context
-                                      .read<CartCountCubit>()
-                                      .onSelectCartTab();
-                                  AppRoute.cart.navigate(context);
-                                } else if (state
-                                    is OrderListNavigateToVmiCheckoutState) {
-                                  _handleVmiCheckout(state.cart);
-                                } else if (state
-                                    is OrderListAddToListSuccessState) {
-                                  WishListCallbackHelper.addItemsToWishList(
-                                      context,
-                                      addToCartCollection: state.wishListLines,
-                                      onAddedToCart: () {
+                                    child: TextButton(
+                                      onPressed: () {
+                                        autoFocusNode = FocusNode();
+                                        context
+                                            .read<QuickOrderAutoCompleteBloc>()
+                                            .add(QuickOrderStartSearchEvent(
+                                                autoFocus: true));
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.search,
+                                            color: OptiAppColors.primaryColor,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              LocalizationConstants.search
+                                                  .localized(),
+                                              style: OptiTextStyles.bodyFade,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                              ),
+                              BlocConsumer<OrderListBloc, OrderListState>(
+                                listener: (context, state) {
+                                  if (state is OrderListNavigateToCartState) {
                                     context
-                                        .read<OrderListBloc>()
-                                        .add(OrderListRemoveEvent());
-                                  });
-                                  CustomSnackBar.showSnackBarMessage(
-                                      context, state.message ?? '');
-                                } else if (state
-                                    is OrderListAddToListFailedState) {
-                                  showSignInDialog(context,
-                                      message: LocalizationConstants
-                                          .pleaseSignInBeforeAddingToList
-                                          .localized());
-                                } else if (state is OrderListAddFailedState) {
-                                  context
-                                      .read<BarcodeScanBloc>()
-                                      .add(ScannerProductNotFoundEvent());
-                                  _showAlert(context, message: state.message,
-                                      onDismissAlert: () {
+                                        .read<CartCountCubit>()
+                                        .onCartItemChange();
+                                    context
+                                        .read<CartCountCubit>()
+                                        .onSelectCartTab();
+                                    AppRoute.cart.navigate(context);
+                                  } else if (state
+                                      is OrderListNavigateToVmiCheckoutState) {
+                                    _handleVmiCheckout(state.cart);
+                                  } else if (state
+                                      is OrderListAddToListSuccessState) {
+                                    WishListCallbackHelper.addItemsToWishList(
+                                        context,
+                                        addToCartCollection: state
+                                            .wishListLines, onAddedToCart: () {
+                                      context
+                                          .read<OrderListBloc>()
+                                          .add(OrderListRemoveEvent());
+                                    });
+                                    CustomSnackBar.showSnackBarMessage(
+                                        context, state.message ?? '');
+                                  } else if (state
+                                      is OrderListAddToListFailedState) {
+                                    showSignInDialog(context,
+                                        message: LocalizationConstants
+                                            .pleaseSignInBeforeAddingToList
+                                            .localized());
+                                  } else if (state is OrderListAddFailedState) {
                                     context
                                         .read<BarcodeScanBloc>()
-                                        .add(ScannerScanEvent(canProcess));
-                                  });
-                                } else if (state
-                                        is OrderListQuickOrderProductAddState ||
-                                    state
-                                        is OrderListVmiQuickOrderProductAddState) {
-                                  context
-                                      .read<BarcodeScanBloc>()
-                                      .add(ScannerProductFoundEvent());
-                                } else if (state
-                                    is OrderListStyleProductAddState) {
-                                  context
-                                      .read<BarcodeScanBloc>()
-                                      .add(ScannerProductFoundEvent());
-                                  handleStyleProductAdd(state.productEntity);
-                                } else if (state
-                                    is OrderListVmiStyleProductAddState) {
-                                  context
-                                      .read<BarcodeScanBloc>()
-                                      .add(ScannerProductFoundEvent());
-                                  handleVmiStyleProductAdd(state.vmiBinEntity);
-                                } else if (state
-                                    is OrderListVmiProductAddState) {
-                                  context
-                                      .read<BarcodeScanBloc>()
-                                      .add(ScannerProductFoundEvent());
-                                  handleVmiBinAdd(state.vmiBinEntity,
-                                      state.previousOrderEntity);
-                                }
-                              },
-                              buildWhen: (previous, current) =>
-                                  current is OrderListInitialState ||
-                                  current is OrderListLoadingState ||
-                                  current is OrderListLoadedState ||
-                                  current is OrderListFailedState,
-                              builder: (context, state) {
-                                subTotal = context
-                                    .read<OrderListBloc>()
-                                    .calculateSubtotal();
-                                final hidePricingEnable = context
-                                    .read<OrderListBloc>()
-                                    .hidePricingEnable();
-                                return Expanded(
-                                  child: isProcessingOrder
-                                      ? const Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : Column(
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 16),
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    right: 8),
-                                                            child: Text(
-                                                              _getContentTitle(
-                                                                  widget
-                                                                      .scanningMode),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .start,
-                                                              style:
-                                                                  OptiTextStyles
-                                                                      .titleSmall,
+                                        .add(ScannerProductNotFoundEvent());
+                                    _showAlert(context, message: state.message,
+                                        onDismissAlert: () {
+                                      context
+                                          .read<BarcodeScanBloc>()
+                                          .add(ScannerScanEvent(canProcess));
+                                    });
+                                  } else if (state
+                                          is OrderListQuickOrderProductAddState ||
+                                      state
+                                          is OrderListVmiQuickOrderProductAddState) {
+                                    context
+                                        .read<BarcodeScanBloc>()
+                                        .add(ScannerProductFoundEvent());
+                                  } else if (state
+                                      is OrderListStyleProductAddState) {
+                                    context
+                                        .read<BarcodeScanBloc>()
+                                        .add(ScannerProductFoundEvent());
+                                    handleStyleProductAdd(state.productEntity);
+                                  } else if (state
+                                      is OrderListVmiStyleProductAddState) {
+                                    context
+                                        .read<BarcodeScanBloc>()
+                                        .add(ScannerProductFoundEvent());
+                                    handleVmiStyleProductAdd(
+                                        state.vmiBinEntity);
+                                  } else if (state
+                                      is OrderListVmiProductAddState) {
+                                    context
+                                        .read<BarcodeScanBloc>()
+                                        .add(ScannerProductFoundEvent());
+                                    handleVmiBinAdd(state.vmiBinEntity,
+                                        state.previousOrderEntity);
+                                  }
+                                },
+                                buildWhen: (previous, current) =>
+                                    current is OrderListInitialState ||
+                                    current is OrderListLoadingState ||
+                                    current is OrderListLoadedState ||
+                                    current is OrderListFailedState,
+                                builder: (context, state) {
+                                  subTotal = context
+                                      .read<OrderListBloc>()
+                                      .calculateSubtotal();
+                                  final hidePricingEnable = context
+                                      .read<OrderListBloc>()
+                                      .hidePricingEnable();
+                                  return Expanded(
+                                    child: isProcessingOrder
+                                        ? const Center(
+                                            child: CircularProgressIndicator(),
+                                          )
+                                        : Column(
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 16),
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Expanded(
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right: 8),
+                                                              child: Text(
+                                                                _getContentTitle(
+                                                                    widget
+                                                                        .scanningMode),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                style: OptiTextStyles
+                                                                    .titleSmall,
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        Visibility(
-                                                          visible: state
+                                                          Visibility(
+                                                            visible: state
+                                                                    is OrderListLoadedState &&
+                                                                state
+                                                                    .quickOrderItemList
+                                                                    .isNotEmpty,
+                                                            child: TextButton(
+                                                              onPressed: () {
+                                                                _clearAllCart(
+                                                                    context);
+                                                              },
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  const Icon(
+                                                                    Icons
+                                                                        .delete_outline,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      width: 8),
+                                                                  Text(
+                                                                    LocalizationConstants
+                                                                        .clear
+                                                                        .localized(),
+                                                                    style: OptiTextStyles
+                                                                        .bodyFade,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Expanded(
+                                                        child: QuickOrderListWidget(
+                                                            scanningMode: widget
+                                                                .scanningMode,
+                                                            callback:
+                                                                _handleQuickOrderListCallback),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 32,
+                                                        vertical: 8),
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: const BoxDecoration(
+                                                    color: Colors.white),
+                                                child: Column(
+                                                  children: [
+                                                    Visibility(
+                                                      visible: widget
+                                                              .scanningMode !=
+                                                          ScanningMode.count,
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Expanded(
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right: 8),
+                                                              child: Text(
+                                                                (state is OrderListLoadedState &&
+                                                                        state
+                                                                            .quickOrderItemList
+                                                                            .isNotEmpty)
+                                                                    ? LocalizationConstants
+                                                                        .listTotalProducts
+                                                                        .localized()
+                                                                        .format([
+                                                                        state
+                                                                            .quickOrderItemList
+                                                                            .length
+                                                                      ])
+                                                                    : LocalizationConstants
+                                                                        .listTotal
+                                                                        .localized(),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    OptiTextStyles
+                                                                        .subtitle,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          if (!hidePricingEnable)
+                                                            Expanded(
+                                                              child: Text(
+                                                                subTotal,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .right,
+                                                                style:
+                                                                    OptiTextStyles
+                                                                        .subtitle,
+                                                              ),
+                                                            )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    TertiaryButton(
+                                                      isEnabled: (state
                                                                   is OrderListLoadedState &&
                                                               state
                                                                   .quickOrderItemList
-                                                                  .isNotEmpty,
-                                                          child: TextButton(
-                                                            onPressed: () {
-                                                              _clearAllCart(
-                                                                  context);
-                                                            },
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              children: [
-                                                                const Icon(
-                                                                  Icons
-                                                                      .delete_outline,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ),
-                                                                const SizedBox(
-                                                                    width: 8),
-                                                                Text(
-                                                                  LocalizationConstants
-                                                                      .clear
-                                                                      .localized(),
-                                                                  style: OptiTextStyles
-                                                                      .bodyFade,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        )
-                                                      ],
+                                                                  .isNotEmpty)
+                                                          ? true
+                                                          : false,
+                                                      onPressed: () {
+                                                        _addToCart(
+                                                            context,
+                                                            widget
+                                                                .scanningMode);
+                                                      },
+                                                      text:
+                                                          _getCheckoutButtonTitle(
+                                                              widget
+                                                                  .scanningMode),
                                                     ),
-                                                    Expanded(
-                                                      child: QuickOrderListWidget(
-                                                          scanningMode: widget
-                                                              .scanningMode,
-                                                          callback:
-                                                              _handleQuickOrderListCallback),
+                                                    const SizedBox(height: 4),
+                                                    PrimaryButton(
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          canProcess =
+                                                              !canProcess;
+                                                        });
+                                                        context
+                                                            .read<
+                                                                BarcodeScanBloc>()
+                                                            .add(ScannerScanEvent(
+                                                                canProcess));
+                                                      },
+                                                      backgroundColor: canProcess
+                                                          ? OptiAppColors
+                                                              .buttonDarkRedBackgroudColor
+                                                          : OptiAppColors
+                                                              .primaryColor,
+                                                      text: canProcess
+                                                          ? LocalizationConstants
+                                                              .cancel
+                                                              .localized()
+                                                          : LocalizationConstants
+                                                              .tapToScan
+                                                              .localized(),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 32,
-                                                      vertical: 8),
-                                              clipBehavior: Clip.antiAlias,
-                                              decoration: const BoxDecoration(
-                                                  color: Colors.white),
-                                              child: Column(
-                                                children: [
-                                                  Visibility(
-                                                    visible:
-                                                        widget.scanningMode !=
-                                                            ScanningMode.count,
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    right: 8),
-                                                            child: Text(
-                                                              (state is OrderListLoadedState &&
-                                                                      state
-                                                                          .quickOrderItemList
-                                                                          .isNotEmpty)
-                                                                  ? LocalizationConstants
-                                                                      .listTotalProducts
-                                                                      .localized()
-                                                                      .format([
-                                                                      state
-                                                                          .quickOrderItemList
-                                                                          .length
-                                                                    ])
-                                                                  : LocalizationConstants
-                                                                      .listTotal
-                                                                      .localized(),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style:
-                                                                  OptiTextStyles
-                                                                      .subtitle,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        if (!hidePricingEnable)
-                                                          Expanded(
-                                                            child: Text(
-                                                              subTotal,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .right,
-                                                              style:
-                                                                  OptiTextStyles
-                                                                      .subtitle,
-                                                            ),
-                                                          )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  TertiaryButton(
-                                                    isEnabled: (state
-                                                                is OrderListLoadedState &&
-                                                            state
-                                                                .quickOrderItemList
-                                                                .isNotEmpty)
-                                                        ? true
-                                                        : false,
-                                                    onPressed: () {
-                                                      _addToCart(context,
-                                                          widget.scanningMode);
-                                                    },
-                                                    text:
-                                                        _getCheckoutButtonTitle(
-                                                            widget
-                                                                .scanningMode),
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  PrimaryButton(
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        canProcess =
-                                                            !canProcess;
-                                                      });
-                                                      context
-                                                          .read<
-                                                              BarcodeScanBloc>()
-                                                          .add(ScannerScanEvent(
-                                                              canProcess));
-                                                    },
-                                                    backgroundColor: canProcess
-                                                        ? OptiAppColors
-                                                            .buttonDarkRedBackgroudColor
-                                                        : OptiAppColors
-                                                            .primaryColor,
-                                                    text: canProcess
-                                                        ? LocalizationConstants
-                                                            .cancel
-                                                            .localized()
-                                                        : LocalizationConstants
-                                                            .tapToScan
-                                                            .localized(),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                );
-              default:
-                return Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 24),
-                      child: Input(
-                        hintText: LocalizationConstants.search.localized(),
-                        suffixIcon: IconButton(
-                          icon: SvgAssetImage(
-                            assetName: AssetConstants.iconClear,
-                            semanticsLabel: 'search query clear icon',
-                            fit: BoxFit.fitWidth,
+                                            ],
+                                          ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                          onPressed: () {
-                            textEditingController.clear();
-                            context
-                                .read<QuickOrderAutoCompleteBloc>()
-                                .add(QuickOrderTypingEvent(''));
-                          },
                         ),
-                        textInputAction: TextInputAction.search,
-                        focusListener: (bool hasFocus) {
-                          if (hasFocus) {
+                      )
+                    ],
+                  );
+                default:
+                  return Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 24),
+                        child: Input(
+                          hintText: LocalizationConstants.search.localized(),
+                          suffixIcon: IconButton(
+                            icon: SvgAssetImage(
+                              assetName: AssetConstants.iconClear,
+                              semanticsLabel: 'search query clear icon',
+                              fit: BoxFit.fitWidth,
+                            ),
+                            onPressed: () {
+                              textEditingController.clear();
+                              context
+                                  .read<QuickOrderAutoCompleteBloc>()
+                                  .add(QuickOrderTypingEvent(''));
+                            },
+                          ),
+                          textInputAction: TextInputAction.search,
+                          focusListener: (bool hasFocus) {
+                            if (hasFocus) {
+                              context
+                                  .read<QuickOrderAutoCompleteBloc>()
+                                  .add(QuickOrderFocusEvent());
+                            } else {
+                              context
+                                  .read<QuickOrderAutoCompleteBloc>()
+                                  .add(QuickOrderUnFocusEvent());
+                            }
+                          },
+                          onChanged: (String searchQuery) {
                             context
                                 .read<QuickOrderAutoCompleteBloc>()
-                                .add(QuickOrderFocusEvent());
-                          } else {
-                            context
-                                .read<QuickOrderAutoCompleteBloc>()
-                                .add(QuickOrderUnFocusEvent());
-                          }
-                        },
-                        onChanged: (String searchQuery) {
-                          context
-                              .read<QuickOrderAutoCompleteBloc>()
-                              .add(QuickOrderTypingEvent(searchQuery));
-                        },
-                        controller: textEditingController,
-                        autoFocusNode: autoFocusNode,
+                                .add(QuickOrderTypingEvent(searchQuery));
+                          },
+                          controller: textEditingController,
+                          autoFocusNode: autoFocusNode,
+                        ),
                       ),
-                    ),
-                    Expanded(child: _buildAutoCompleteContainer(state)),
-                  ],
-                );
-            }
-          },
+                      Expanded(child: _buildAutoCompleteContainer(state)),
+                    ],
+                  );
+              }
+            },
+          ),
         ),
       ),
     );

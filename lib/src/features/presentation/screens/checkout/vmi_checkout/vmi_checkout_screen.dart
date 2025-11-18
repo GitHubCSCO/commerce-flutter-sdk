@@ -8,8 +8,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart/cart_co
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
@@ -19,7 +17,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/cart/cart
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/base_checkout.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/payment_details/spreedly_utils.dart';
@@ -88,116 +85,171 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context),
-      body: BlocConsumer<CheckoutBloc, CheckoutState>(
-        listener: (_, state) async {
-          if (state is CheckoutPlaceOrder) {
-            AppRoute.checkoutSuccess.navigate(context,
-                extra: CheckoutSuccessEntity(
-                    orderNumber: state.orderNumber,
-                    reviewOrderEntity: state.reviewOrderEntity,
-                    isVmiCheckout: true,
-                    cart: context.read<CheckoutBloc>().cart!));
-          } else if (state is CheckoutPlaceOrderFailed) {
-            showAlert(context,
-                message: LocalizationConstants.orderFailed.localized());
-          } else if (state is CheckoutPlaceOrderPending) {
-            await _handle3DSAuthentication(context, state.cartId,
-                state.environmentKey, state.transactionToken);
-          }
-        },
-        buildWhen: (previous, current) =>
-            current is CheckoutInitial ||
-            current is CheckoutLoading ||
-            current is CheckoutDataLoaded,
-        builder: (_, state) {
-          return BlocBuilder<CheckoutBloc, CheckoutState>(
-            builder: (_, state) {
-              switch (state) {
-                case CheckoutInitial():
-                case CheckoutLoading():
-                  return const Center(child: CircularProgressIndicator());
-                case CheckoutDataLoaded():
-                  final billingShippingEntity = BillingShippingEntity(
-                    billTo: state.billToAddress,
-                    shipTo: state.shipToAddress,
-                    warehouse: state.wareHouse,
-                    shippingMethod: (state.shippingMethod
-                            .equalsIgnoreCase(ShippingOption.pickUp.name)
-                        ? ShippingOption.pickUp
-                        : ShippingOption.ship),
-                    carriers: state.cart.carriers,
-                    cartSettings: state.cartSettings,
-                    selectedCarrier: state.selectedCarrier,
-                    selectedService: state.selectedService,
-                    requestDeliveryDate: state.requestDeliveryDate,
-                    allowCreateNewShipToAddress:
-                        state.allowCreateNewShipToAddress,
-                  );
+      body: SafeArea(
+        child: BlocConsumer<CheckoutBloc, CheckoutState>(
+          listener: (_, state) async {
+            if (state is CheckoutPlaceOrder) {
+              AppRoute.checkoutSuccess.navigate(context,
+                  extra: CheckoutSuccessEntity(
+                      orderNumber: state.orderNumber,
+                      reviewOrderEntity: state.reviewOrderEntity,
+                      isVmiCheckout: true,
+                      cart: context.read<CheckoutBloc>().cart!));
+            } else if (state is CheckoutPlaceOrderFailed) {
+              showAlert(context,
+                  message: LocalizationConstants.orderFailed.localized());
+            } else if (state is CheckoutPlaceOrderPending) {
+              await _handle3DSAuthentication(context, state.cartId,
+                  state.environmentKey, state.transactionToken);
+            }
+          },
+          buildWhen: (previous, current) =>
+              current is CheckoutInitial ||
+              current is CheckoutLoading ||
+              current is CheckoutDataLoaded,
+          builder: (_, state) {
+            return BlocBuilder<CheckoutBloc, CheckoutState>(
+              builder: (_, state) {
+                switch (state) {
+                  case CheckoutInitial():
+                  case CheckoutLoading():
+                    return const Center(child: CircularProgressIndicator());
+                  case CheckoutDataLoaded():
+                    final billingShippingEntity = BillingShippingEntity(
+                      billTo: state.billToAddress,
+                      shipTo: state.shipToAddress,
+                      warehouse: state.wareHouse,
+                      shippingMethod: (state.shippingMethod
+                              .equalsIgnoreCase(ShippingOption.pickUp.name)
+                          ? ShippingOption.pickUp
+                          : ShippingOption.ship),
+                      carriers: state.cart.carriers,
+                      cartSettings: state.cartSettings,
+                      selectedCarrier: state.selectedCarrier,
+                      selectedService: state.selectedService,
+                      requestDeliveryDate: state.requestDeliveryDate,
+                      allowCreateNewShipToAddress:
+                          state.allowCreateNewShipToAddress,
+                    );
 
-                  return Container(
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
+                    return Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  if (state.cartWarningMsg.isNotEmpty)
+                                    BuildCartErrorWidget(
+                                        cartErrorMsg: state.cartWarningMsg),
+                                  buildSummary(state.cart, state.promotions),
+                                  BillingShippingWidget(
+                                    billingShippingEntity:
+                                        billingShippingEntity,
+                                    onCallBack: _handleAddressSelectionCallBack,
+                                    isVmiCheckout: true,
+                                  ),
+                                  CheckoutPaymentDetails(
+                                      cart: context.read<CheckoutBloc>().cart!,
+                                      isVmiCheckout: true,
+                                      onCompleteCheckoutPaymentSection: () {
+                                        context.read<CheckoutBloc>().add(
+                                            SelectPaymentEvent(context
+                                                .read<PaymentDetailsBloc>()
+                                                .cart!
+                                                .paymentOptions!));
+                                        // context
+                                        //     .read<ExpansionPanelCubit>()
+                                        //     .onContinueClick();
+                                      }),
+                                  buildOrderNote(),
+                                  const SizedBox(height: 8),
+                                  BlocProvider<CartContentBloc>(
+                                    create: (context) => sl<CartContentBloc>(),
+                                    child: CartLineWidgetList(
+                                      orderNumber: context
+                                          .read<CheckoutBloc>()
+                                          .cart
+                                          ?.orderNumber,
+                                      showClearCart: false,
+                                      cartLineEntities: context
+                                          .read<CheckoutBloc>()
+                                          .getCartLines(),
+                                      onCartChangeCallBack: (context) {
+                                        context.read<CheckoutBloc>().add(
+                                            LoadCheckoutEvent(
+                                                cartId:
+                                                    vmiCheckoutEntity.cart.id ??
+                                                        ''));
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 16),
+                            clipBehavior: Clip.antiAlias,
+                            decoration:
+                                const BoxDecoration(color: Colors.white),
                             child: Column(
                               children: [
-                                if (state.cartWarningMsg.isNotEmpty)
-                                  BuildCartErrorWidget(
-                                      cartErrorMsg: state.cartWarningMsg),
-                                buildSummary(state.cart, state.promotions),
-                                BillingShippingWidget(
-                                  billingShippingEntity: billingShippingEntity,
-                                  onCallBack: _handleAddressSelectionCallBack,
-                                  isVmiCheckout: true,
+                                TertiaryButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  text: scanningMode == ScanningMode.count
+                                      ? LocalizationConstants
+                                          .backToCountInventory
+                                          .localized()
+                                      : LocalizationConstants.backToCreateOrder
+                                          .localized(),
                                 ),
-                                CheckoutPaymentDetails(
-                                    cart: context.read<CheckoutBloc>().cart!,
-                                    isVmiCheckout: true,
-                                    onCompleteCheckoutPaymentSection: () {
-                                      context.read<CheckoutBloc>().add(
-                                          SelectPaymentEvent(context
-                                              .read<PaymentDetailsBloc>()
-                                              .cart!
-                                              .paymentOptions!));
-                                      // context
-                                      //     .read<ExpansionPanelCubit>()
-                                      //     .onContinueClick();
-                                    }),
-                                buildOrderNote(),
-                                const SizedBox(height: 8),
-                                BlocProvider<CartContentBloc>(
-                                  create: (context) => sl<CartContentBloc>(),
-                                  child: CartLineWidgetList(
-                                    orderNumber: context
-                                        .read<CheckoutBloc>()
-                                        .cart
-                                        ?.orderNumber,
-                                    showClearCart: false,
-                                    cartLineEntities: context
-                                        .read<CheckoutBloc>()
-                                        .getCartLines(),
-                                    onCartChangeCallBack: (context) {
-                                      context.read<CheckoutBloc>().add(
-                                          LoadCheckoutEvent(
-                                              cartId:
-                                                  vmiCheckoutEntity.cart.id ??
-                                                      ''));
+                                const SizedBox(height: 4.0),
+                                Visibility(
+                                  visible: context
+                                      .watch<CheckoutBloc>()
+                                      .checkoutButtonVisible,
+                                  child: PrimaryButton(
+                                    onPressed: () {
+                                      _handleSubmitOrderClick(context, state);
                                     },
+                                    isEnabled: context
+                                        .watch<CheckoutBloc>()
+                                        .isCheckoutButtonEnabled,
+                                    text: LocalizationConstants.submitOrder
+                                        .localized(),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 16),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: const BoxDecoration(color: Colors.white),
-                          child: Column(
-                            children: [
-                              TertiaryButton(
+                        ],
+                      ),
+                    );
+                  case CheckoutNoDataState():
+                    return CustomScrollView(slivers: <Widget>[
+                      SliverFillRemaining(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 50,
+                              height: 50,
+                              padding: const EdgeInsets.all(10),
+                              child: SvgAssetImage(
+                                assetName: AssetConstants.iconCart,
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                            Text(state.message ?? ''),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 32, vertical: 16),
+                              child: TertiaryButton(
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
@@ -207,68 +259,18 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                     : LocalizationConstants.backToCreateOrder
                                         .localized(),
                               ),
-                              const SizedBox(height: 4.0),
-                              Visibility(
-                                visible: context
-                                    .watch<CheckoutBloc>()
-                                    .checkoutButtonVisible,
-                                child: PrimaryButton(
-                                  onPressed: () {
-                                    _handleSubmitOrderClick(context, state);
-                                  },
-                                  isEnabled: context
-                                      .watch<CheckoutBloc>()
-                                      .isCheckoutButtonEnabled,
-                                  text: LocalizationConstants.submitOrder
-                                      .localized(),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                case CheckoutNoDataState():
-                  return CustomScrollView(slivers: <Widget>[
-                    SliverFillRemaining(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 50,
-                            height: 50,
-                            padding: const EdgeInsets.all(10),
-                            child: SvgAssetImage(
-                              assetName: AssetConstants.iconCart,
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                          Text(state.message ?? ''),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            child: TertiaryButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              text: scanningMode == ScanningMode.count
-                                  ? LocalizationConstants.backToCountInventory
-                                      .localized()
-                                  : LocalizationConstants.backToCreateOrder
-                                      .localized(),
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
-                  ]);
-                default:
-                  return const Center();
-              }
-            },
-          );
-        },
+                    ]);
+                  default:
+                    return const Center();
+                }
+              },
+            );
+          },
+        ),
       ),
     );
   }

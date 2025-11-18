@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -18,6 +19,11 @@ class MockBiometricAuthenticationService extends Mock
     implements IBiometricAuthenticationService {}
 
 class MockDeviceService extends Mock implements IDeviceService {}
+
+class MockDeviceTokenService extends Mock implements IDeviceTokenService {}
+
+class MockPushNotificationService extends Mock
+    implements IPushNotificationService {}
 
 class MockLocalAuthentication extends Mock implements LocalAuthentication {}
 
@@ -54,6 +60,8 @@ void main() {
   late MockCoreServiceProvider mockCoreServiceProvider;
   late MockBiometricAuthenticationService mockBiometricAuthenticationService;
   late MockDeviceService mockDeviceService;
+  late MockDeviceTokenService mockDeviceTokenService;
+  late MockPushNotificationService mockPushNotificationService;
   late MockAuthenticationService mockAuthenticationService;
   late MockCacheService mockCacheService;
   late MockTrackingService mockTrackingService;
@@ -62,6 +70,8 @@ void main() {
   setUpAll(() {
     // Register fallback values for mocktail
     registerFallbackValue(const AuthenticationOptions());
+    registerFallbackValue(
+        DeviceTokenUnregistrationParameters(deviceToken: ''));
   });
 
   setUp(() async {
@@ -73,6 +83,8 @@ void main() {
     mockCoreServiceProvider = MockCoreServiceProvider();
     mockBiometricAuthenticationService = MockBiometricAuthenticationService();
     mockDeviceService = MockDeviceService();
+    mockDeviceTokenService = MockDeviceTokenService();
+    mockPushNotificationService = MockPushNotificationService();
     mockAuthenticationService = MockAuthenticationService();
     mockCacheService = MockCacheService();
     mockTrackingService = MockTrackingService();
@@ -90,10 +102,14 @@ void main() {
         .thenReturn(mockBiometricAuthenticationService);
     when(() => mockCoreServiceProvider.getDeviceService())
         .thenReturn(mockDeviceService);
+    when(() => mockCoreServiceProvider.getDeviceTokenService())
+        .thenReturn(mockDeviceTokenService);
     when(() => mockCommerceAPIServiceProvider.getAuthenticationService())
         .thenReturn(mockAuthenticationService);
     when(() => mockCommerceAPIServiceProvider.getCacheService())
         .thenReturn(mockCacheService);
+    when(() => mockCommerceAPIServiceProvider.getPushNotificationService())
+        .thenReturn(mockPushNotificationService);
     when(() => mockCoreServiceProvider.getTrackingService())
         .thenReturn(mockTrackingService);
 
@@ -413,10 +429,16 @@ void main() {
       test('should call all required services to cancel biometric sign in',
           () async {
         // Arrange
+        const deviceToken = 'test-device-token';
         when(() => mockBiometricAuthenticationService
             .logoutWithStoredCredentials()).thenAnswer((_) async {});
         when(() => mockCacheService.invalidateAllObjectsExcept(any()))
             .thenAnswer((_) async {});
+        when(() => mockDeviceTokenService.getDeviceToken())
+            .thenAnswer((_) async => deviceToken);
+        when(() => mockPushNotificationService.unRegisterDeviceToken(any()))
+            .thenAnswer(
+                (_) async => Success(DeviceTokenResponse(success: true)));
         when(() => mockAuthenticationService.logoutAsync())
             .thenAnswer((_) async => const Success(true));
 
@@ -428,6 +450,9 @@ void main() {
             .logoutWithStoredCredentials()).called(1);
         verify(() => mockCacheService
             .invalidateAllObjectsExcept([CoreConstants.domainKey])).called(1);
+        verify(() => mockDeviceTokenService.getDeviceToken()).called(1);
+        verify(() => mockPushNotificationService.unRegisterDeviceToken(any()))
+            .called(1);
         verify(() => mockAuthenticationService.logoutAsync()).called(1);
       });
 
@@ -445,6 +470,32 @@ void main() {
         expect(() => biometricUsecase.cancelBiometricSignIn(), throwsException);
         verify(() => mockBiometricAuthenticationService
             .logoutWithStoredCredentials()).called(1);
+      });
+
+      test('should skip push notification unregister when device token is empty',
+          () async {
+        // Arrange
+        when(() => mockBiometricAuthenticationService
+            .logoutWithStoredCredentials()).thenAnswer((_) async {});
+        when(() => mockCacheService.invalidateAllObjectsExcept(any()))
+            .thenAnswer((_) async {});
+        when(() => mockDeviceTokenService.getDeviceToken())
+            .thenAnswer((_) async => '');
+        when(() => mockAuthenticationService.logoutAsync())
+            .thenAnswer((_) async => const Success(true));
+
+        // Act
+        await biometricUsecase.cancelBiometricSignIn();
+
+        // Assert
+        verify(() => mockBiometricAuthenticationService
+            .logoutWithStoredCredentials()).called(1);
+        verify(() => mockCacheService
+            .invalidateAllObjectsExcept([CoreConstants.domainKey])).called(1);
+        verify(() => mockDeviceTokenService.getDeviceToken()).called(1);
+        verifyNever(
+            () => mockPushNotificationService.unRegisterDeviceToken(any()));
+        verify(() => mockAuthenticationService.logoutAsync()).called(1);
       });
     });
 
@@ -656,10 +707,16 @@ void main() {
 
       test('should handle complete cancellation workflow', () async {
         // Arrange
+        const deviceToken = 'test-device-token';
         when(() => mockBiometricAuthenticationService
             .logoutWithStoredCredentials()).thenAnswer((_) async {});
         when(() => mockCacheService.invalidateAllObjectsExcept(any()))
             .thenAnswer((_) async {});
+        when(() => mockDeviceTokenService.getDeviceToken())
+            .thenAnswer((_) async => deviceToken);
+        when(() => mockPushNotificationService.unRegisterDeviceToken(any()))
+            .thenAnswer(
+                (_) async => Success(DeviceTokenResponse(success: true)));
         when(() => mockAuthenticationService.logoutAsync())
             .thenAnswer((_) async => const Success(true));
         when(() => mockBiometricAuthenticationService
@@ -675,6 +732,9 @@ void main() {
             .logoutWithStoredCredentials()).called(1);
         verify(() => mockCacheService
             .invalidateAllObjectsExcept([CoreConstants.domainKey])).called(1);
+        verify(() => mockDeviceTokenService.getDeviceToken()).called(1);
+        verify(() => mockPushNotificationService.unRegisterDeviceToken(any()))
+            .called(1);
         verify(() => mockAuthenticationService.logoutAsync()).called(1);
         verify(() => mockBiometricAuthenticationService
             .markCurrentUserAsSeenEnableBiometricOptionView()).called(1);

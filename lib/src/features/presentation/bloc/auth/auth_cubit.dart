@@ -42,7 +42,10 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void authenticated() => emit(const AuthState.authenticated());
+  void authenticated() {
+    emit(const AuthState.authenticated());
+    unawaited(sendDeviceTokenOnAuth());
+  }
 
   void unauthenticated() => emit(const AuthState.unauthenticated());
   void autoLogout() => emit(const AuthState.autoLogout());
@@ -59,6 +62,10 @@ class AuthCubit extends Cubit<AuthState> {
     _authSubscription
         .cancel(); // Cancel the subscription when the cubit is closed
     return super.close();
+  }
+
+  Future<void> sendDeviceTokenOnAuth() async {
+    await _authUsecase.sendDeviceToken();
   }
 }
 

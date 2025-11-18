@@ -7,7 +7,7 @@ class VMILocationService extends ServiceBase implements IVmiLocationsService {
     required super.cacheService,
     required super.networkService,
   });
-  CancelToken _cancellationTokenSource = CancelToken();
+  final CancelToken _cancellationTokenSource = CancelToken();
   @override
   Future<Result<VmiCountModel, ErrorResponse>> deleteBinCount(
       String vmiLocationId, String vmiBinId, String vmiCountId) {
