@@ -101,12 +101,14 @@ mixin PaymentSummaryMixin {
                   color: Colors.amber[400],
                 ),
                 const SizedBox(width: 10),
-                Text(
-                  title,
-                  style: textStyle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.start,
+                Flexible(
+                  child: Text(
+                    title,
+                    style: textStyle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                  ),
                 ),
               ],
             ),

@@ -31,3 +31,5 @@ class QuoteAllAppliedSuccessState extends QuoteAllState {
     required this.quoteDto,
   });
 }
+
+class QuoteAllAppliedFailureState extends QuoteAllState {}

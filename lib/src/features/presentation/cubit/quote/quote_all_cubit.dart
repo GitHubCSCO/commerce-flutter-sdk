@@ -36,9 +36,9 @@ class QuoteAllCubit extends Cubit<QuoteAllState> {
   Future<void> quoteAll() async {
     emit(QuoteAllLoadingState());
     var quoteAllQueryParameters = QuoteAllQueryParameters(
-        calculationMethod: selectedCalculationMethod!.value,
+        calculationMethod: selectedCalculationMethod?.value,
         percent: quantity,
-        quoteId: quoteDto!.id);
+        quoteId: quoteDto?.id);
     var quoteAllResponse =
         await _quoteAllUsecase.quoteAll(quoteAllQueryParameters);
 
@@ -46,7 +46,7 @@ class QuoteAllCubit extends Cubit<QuoteAllState> {
       case Success(value: final data):
         emit(QuoteAllAppliedSuccessState(quoteDto: data!));
       case Failure(errorResponse: final errorResponse):
-      default:
+        emit(QuoteAllAppliedFailureState());
     }
   }
 
