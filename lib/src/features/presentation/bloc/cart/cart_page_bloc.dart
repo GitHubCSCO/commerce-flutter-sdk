@@ -188,6 +188,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
 
   bool get approvalButtonVisible => cart?.requiresApproval ?? false;
 
+  bool get hasApprover => cart?.hasApprover == true;
+
   bool get isCartEmpty =>
       // ignore: prefer_is_empty
       cart?.cartLines == null || (cart?.cartLines?.length == 0);

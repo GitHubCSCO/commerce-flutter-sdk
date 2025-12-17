@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
@@ -13,7 +14,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_men
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_approval_filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderApprovalScreen extends StatelessWidget {
@@ -22,14 +22,20 @@ class OrderApprovalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<OrderApprovalCubit>()..loadOrderApprovalList(),
+      create: (context) {
+        final cubit = sl<OrderApprovalCubit>();
+        unawaited(cubit.loadOrderApprovalList());
+        return cubit;
+      },
       child: Builder(builder: (context) {
         return BlocListener<OrderApprovalHandlerCubit,
             OrderApprovalHandlerState>(
           listener: (context, state) {
             if (state.status ==
                 OrderApprovalHandlerStatus.shouldRefreshOrderApproval) {
-              context.read<OrderApprovalCubit>().loadOrderApprovalList();
+              unawaited(
+                context.read<OrderApprovalCubit>().loadOrderApprovalList(),
+              );
               context.read<OrderApprovalHandlerCubit>().resetState();
             }
           },
@@ -68,7 +74,9 @@ class OrderApprovalPage extends StatelessWidget {
             case OrderStatus.failure:
               return RefreshIndicator(
                 onRefresh: () async {
-                  context.read<OrderApprovalCubit>().loadOrderApprovalList();
+                  unawaited(
+                    context.read<OrderApprovalCubit>().loadOrderApprovalList(),
+                  );
                 },
                 child: CustomScrollView(
                   slivers: <Widget>[
@@ -85,7 +93,9 @@ class OrderApprovalPage extends StatelessWidget {
             default:
               return RefreshIndicator(
                 onRefresh: () async {
-                  context.read<OrderApprovalCubit>().loadOrderApprovalList();
+                  unawaited(
+                    context.read<OrderApprovalCubit>().loadOrderApprovalList(),
+                  );
                 },
                 child: Column(
                   children: [
@@ -114,14 +124,16 @@ class OrderApprovalPage extends StatelessWidget {
                               toDate,
                               shipTo,
                             }) {
-                              context.read<OrderApprovalCubit>().applyFilter(
-                                    orderNumber: orderNumber,
-                                    orderTotal: orderTotal,
-                                    orderTotalOperator: orderTotalOperator,
-                                    fromDate: fromDate,
-                                    toDate: toDate,
-                                    shipTo: shipTo,
-                                  );
+                              unawaited(
+                                context.read<OrderApprovalCubit>().applyFilter(
+                                      orderNumber: orderNumber,
+                                      orderTotal: orderTotal,
+                                      orderTotalOperator: orderTotalOperator,
+                                      fromDate: fromDate,
+                                      toDate: toDate,
+                                      shipTo: shipTo,
+                                    ),
+                              );
                             },
                             hasFilter:
                                 context.read<OrderApprovalCubit>().hasFilter,
@@ -163,7 +175,9 @@ class __OrderApprovalListWidgetState extends State<_OrderApprovalListWidget> {
 
   void _onScroll() {
     if (_isBottom) {
-      context.read<OrderApprovalCubit>().loadMoreOrderApprovalList();
+      unawaited(
+        context.read<OrderApprovalCubit>().loadMoreOrderApprovalList(),
+      );
     }
   }
 
@@ -264,10 +278,17 @@ class _OrderApprovalItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  cart.orderNumber ?? '',
-                  style: OptiTextStyles.body
-                      .copyWith(color: OptiAppColors.primaryColor),
+                Flexible(
+                  child: Text(
+                    cart.orderNumber ?? '',
+                    style: OptiTextStyles.body
+                        .copyWith(color: OptiAppColors.primaryColor),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
                 ),
                 Text(
                   cart.orderDate != null

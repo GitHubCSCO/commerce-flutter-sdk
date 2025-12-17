@@ -124,9 +124,15 @@ class SearchUseCase extends BaseUseCase {
   List<SortOrderAttribute> getAvailableSortOrders({
     required List<SortOption> sortOptions,
   }) {
-    return SortToolMenuHelper.convertOptionToAttribute(
-      sortOptions: sortOptions,
-    );
+    return sortOptions
+        .map(
+          (e) => SortOrderAttribute(
+            groupTitle: e.displayName ?? '',
+            title: e.displayName ?? '',
+            value: e.sortType ?? '',
+          ),
+        )
+        .toList();
   }
 
   SortOrderAttribute getSelectedSortOrder({
@@ -144,7 +150,8 @@ class SearchUseCase extends BaseUseCase {
         .getSettingsService()
         .getMobileAppSettingAsync();
     MobileAppSettings? mobileSettings = (mobileSettingsResponse is Success)
-        ? (mobileSettingsResponse as Success).value as MobileAppSettings
+        ? (mobileSettingsResponse as Success<MobileAppSettings, ErrorResponse>)
+            .value
         : null;
 
     return mobileSettings?.addToCartInProductList ?? false;

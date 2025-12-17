@@ -54,6 +54,8 @@ class QuoteAllPage extends StatelessWidget {
             } else if (state is QuoteAllAppliedSuccessState) {
               CustomSnackBar.showSuccesss(context);
               Navigator.pop(context);
+            } else if (state is QuoteAllAppliedFailureState) {
+              CustomSnackBar.showFailure(context);
             }
           },
           buildWhen: (previous, current) {

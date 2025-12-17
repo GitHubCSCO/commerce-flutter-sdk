@@ -200,6 +200,7 @@ class _InputDialogState extends State<_InputDialog> {
       title: Text(widget.title),
       content: TextField(
         obscureText: widget.obscureText,
+        autofocus: true,
         onSubmitted: (text) => context.closeKeyboard(),
         controller: _textEditingController,
         decoration: InputDecoration(
