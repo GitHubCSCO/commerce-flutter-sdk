@@ -289,13 +289,8 @@ class CmsUseCase extends BaseUseCase {
     }
 
     if (pageWidget.translatableFields != null) {
-      var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
-      String? targetLanguageId = currentSession?.language?.id;
-
-      // If no specific language match found, use the first available language
-      if (targetLanguageId == null || !titles.containsKey(targetLanguageId)) {
-        targetLanguageId = titles.keys.first;
-      }
+      var titles = pageWidget.translatableFields!.title!;
+      var targetLanguageId = currentSession?.language?.id;
 
       if (titles.containsKey(targetLanguageId)) {
         searchHistoryWidget =
@@ -319,13 +314,8 @@ class CmsUseCase extends BaseUseCase {
     }
 
     if (pageWidget.translatableFields != null) {
-      var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
-      String? targetLanguageId = currentSession?.language?.id;
-
-      // If no specific language match found, use the first available language
-      if (targetLanguageId == null || !titles.containsKey(targetLanguageId)) {
-        targetLanguageId = titles.keys.first;
-      }
+      var titles = pageWidget.translatableFields!.title!;
+      var targetLanguageId = currentSession?.language?.id;
 
       if (titles.containsKey(targetLanguageId)) {
         productCarouselWidget =
@@ -354,13 +344,8 @@ class CmsUseCase extends BaseUseCase {
         ));
       }
     } else if (pageWidget.translatableFields?.links != null) {
-      var links = pageWidget.translatableFields?.links as Map<String, dynamic>;
-      String? targetLanguageId = currentSession?.language?.id;
-
-      // If no specific language match found, use the first available language
-      if (targetLanguageId == null || !links.containsKey(targetLanguageId)) {
-        targetLanguageId = links.keys.first;
-      }
+      var links = pageWidget.translatableFields!.links!;
+      var targetLanguageId = currentSession?.language?.id;
 
       if (links.containsKey(targetLanguageId)) {
         var value = links[targetLanguageId];
@@ -415,14 +400,8 @@ class CmsUseCase extends BaseUseCase {
         carouselWidget =
             carouselWidget.copyWith(childWidgets: carouselSlideEntityList);
       } else if (pageWidget.translatableFields?.slides != null) {
-        var slides =
-            pageWidget.translatableFields?.slides as Map<String, dynamic>;
-        String? targetLanguageId = currentSession?.language?.id;
-
-        // If no specific language match found, use the first available language
-        if (targetLanguageId == null || !slides.containsKey(targetLanguageId)) {
-          targetLanguageId = slides.keys.first;
-        }
+        var slides = pageWidget.translatableFields!.slides!;
+        var targetLanguageId = currentSession?.language?.id;
 
         if (slides.containsKey(targetLanguageId)) {
           var value = slides[targetLanguageId];
