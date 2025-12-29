@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/promo_code_usecase/promo_code_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/promo_code_cubit/promo_code_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,12 +21,30 @@ class PromoCodeCubit extends Cubit<PromoCodeState> {
               AnalyticsConstants.screenNameCart)
           .withProperty(
               name: AnalyticsConstants.eventPromoCode, strValue: promoCode));
+
+      _promoCodeUsecase.trackTelemetryEvent(
+        TelemetryEvent(
+          eventName: AnalyticsConstants.eventApplyPromoCart,
+        ).withProperty(
+          name: AnalyticsConstants.eventPromoCode,
+          strValue: promoCode,
+        ),
+      );
     } else {
       _promoCodeUsecase.trackEvent(AnalyticsEvent(
               AnalyticsConstants.eventAddDiscountCheckout,
               AnalyticsConstants.screenNameCheckout)
           .withProperty(
               name: AnalyticsConstants.eventPromoCode, strValue: promoCode));
+
+      _promoCodeUsecase.trackTelemetryEvent(
+        TelemetryEvent(
+          eventName: AnalyticsConstants.eventAddDiscountCheckout,
+        ).withProperty(
+          name: AnalyticsConstants.eventPromoCode,
+          strValue: promoCode,
+        ),
+      );
     }
 
     var promoCodeResponse = await _promoCodeUsecase

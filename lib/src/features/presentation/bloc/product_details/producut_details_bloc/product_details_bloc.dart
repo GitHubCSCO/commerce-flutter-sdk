@@ -5,8 +5,8 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/legacy_configura
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_data_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
@@ -152,6 +152,13 @@ class ProductDetailsBloc
             name: AnalyticsConstants.eventPropertyProductNumber,
             strValue: product?.getProductNumber());
     _productDetailsUseCase.trackEvent(viewScreenEvent);
+
+    var telemetryEvent =
+        TelemetryEvent(screenName: AnalyticsConstants.screenNameProductDetail)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyProductNumber,
+                strValue: product?.getProductNumber());
+    _productDetailsUseCase.trackTelemetryEvent(telemetryEvent);
   }
 
   void _extractValuesFromData(ProductEntity productEntity) {

@@ -2,6 +2,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
@@ -38,6 +39,20 @@ class CartContentBloc extends Bloc<CartContentEvent, CartContentState> {
           strValue: event.orderNumber,
         ));
 
+    _contentUseCase.trackTelemetryEvent(
+      TelemetryEvent(
+        eventName: AnalyticsConstants.eventUpdateCartLine,
+      )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyErpNumber,
+            strValue: cartLineEntity.erpNumber,
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyOrderNumber,
+            strValue: event.orderNumber,
+          ),
+    );
+
     final result = await _contentUseCase
         .updateCartLine(CartLineEntityMapper.toModel(cartLineEntity));
 
@@ -71,6 +86,20 @@ class CartContentBloc extends Bloc<CartContentEvent, CartContentState> {
           name: AnalyticsConstants.eventPropertyOrderNumber,
           strValue: event.orderNumber,
         ));
+
+    _contentUseCase.trackTelemetryEvent(
+      TelemetryEvent(
+        eventName: AnalyticsConstants.eventRemoveCartLine,
+      )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyErpNumber,
+            strValue: event.cartLine.erpNumber,
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyOrderNumber,
+            strValue: event.orderNumber,
+          ),
+    );
 
     final result = await _contentUseCase.deleteCartLine(event.cartLine);
     switch (result) {

@@ -3,6 +3,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/login_usecase.dart';
@@ -42,6 +43,17 @@ class LoginCubit extends Cubit<LoginState> {
         .withProperty(
             name: AnalyticsConstants.eventPropertyLoginType,
             strValue: loginType));
+
+    loginUsecase.trackTelemetryEvent(
+      TelemetryEvent(
+        eventName: AnalyticsConstants.eventSignIn,
+      )
+          .withProperty(
+              name: AnalyticsConstants.eventPropertySuccessful, boolValue: true)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyLoginType,
+              strValue: loginType),
+    );
   }
 
   Future<void> initialize() async {
