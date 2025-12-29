@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/settings/account_settings_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,12 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
       AnalyticsConstants.eventForgotPassword,
       AnalyticsConstants.screenNameSignIn,
     ));
+
+    _forgotPasswordUseCase.trackTelemetryEvent(
+      TelemetryEvent(
+        eventName: AnalyticsConstants.eventForgotPassword,
+      ),
+    );
 
     emit(state.copyWith(status: ForgotPasswordStatus.loading));
     final status = await _forgotPasswordUseCase.forgotPassword(

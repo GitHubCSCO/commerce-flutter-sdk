@@ -7,6 +7,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_status_mapping_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/settings/order_settings_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/order_usecase/order_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
@@ -67,6 +68,23 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           );
 
       _orderUsecase.trackEvent(analyticEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameOrderDetail,
+      )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyOrderId,
+            strValue: order.id ?? '',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyErpOrderNumber,
+            strValue: order.erpOrderNumber ?? '',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyWebOrderNumber,
+            strValue: order.webOrderNumber ?? '',
+          );
+      _orderUsecase.trackTelemetryEvent(telemetryEvent);
     } else {
       final analyticEvent = AnalyticsEvent(
         AnalyticsConstants.eventViewScreen,
@@ -74,6 +92,11 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       );
 
       _orderUsecase.trackEvent(analyticEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameOrderDetail,
+      );
+      _orderUsecase.trackTelemetryEvent(telemetryEvent);
     }
 
     if (order == null || orderSettings == null) {
@@ -149,6 +172,23 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       );
 
       _orderUsecase.trackEvent(currentOrderAnalyticEvent(analyticsEvent));
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventReorder,
+      )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyOrderId,
+            strValue: state.order.id ?? '',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyErpOrderNumber,
+            strValue: state.order.erpOrderNumber ?? '',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyWebOrderNumber,
+            strValue: state.order.webOrderNumber ?? '',
+          );
+      _orderUsecase.trackTelemetryEvent(telemetryEvent);
 
       final message = await _orderUsecase.getSiteMessage(
           SiteMessageConstants.nameAddToCartSuccess,
