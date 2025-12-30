@@ -74,6 +74,15 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
 
     _orderUsecase.trackEvent(analyticEvent);
 
+    final telemetryEvent = TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameFilterSelection,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyReferenceType,
+      strValue: AnalyticsConstants.screenNameOrders,
+    );
+
+    _orderUsecase.trackTelemetryEvent(telemetryEvent);
+
     final result = await _orderUsecase.getFilterValues();
 
     result != null
@@ -135,6 +144,15 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     );
 
     _orderUsecase.trackEvent(analyticsEvent);
+
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventResetFilter,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyReferenceType,
+      strValue: AnalyticsConstants.screenNameOrders,
+    );
+
+    _orderUsecase.trackTelemetryEvent(telemetryEvent);
   }
 
   Future<void> changeSortOrder(OrderSortOrder orderSortOrder) async {
@@ -159,6 +177,20 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
 
     _orderUsecase.trackEvent(analyticsEvent);
 
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventSort,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceType,
+          strValue: AnalyticsConstants.screenNameOrders,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertySortOption,
+          strValue: orderSortOrder.value,
+        );
+
+    _orderUsecase.trackTelemetryEvent(telemetryEvent);
+
     await loadOrderHistory();
   }
 
@@ -172,6 +204,15 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     );
 
     _orderUsecase.trackEvent(analyticsEvent);
+
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventCancelSort,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyReferenceType,
+      strValue: AnalyticsConstants.screenNameOrders,
+    );
+
+    _orderUsecase.trackTelemetryEvent(telemetryEvent);
   }
 
   Future<void> applyFilter() async {
@@ -197,6 +238,20 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
 
     _orderUsecase.trackEvent(analyticsEvent);
 
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventFilter,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyFilterCount,
+          strValue: state.numberOfFilters.toString(),
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceType,
+          strValue: AnalyticsConstants.screenNameOrders,
+        );
+
+    _orderUsecase.trackTelemetryEvent(telemetryEvent);
+
     await loadOrderHistory();
   }
 
@@ -212,6 +267,15 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     );
 
     _orderUsecase.trackEvent(analyticsEvent);
+
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventSearchOrders,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertySearchTerm,
+      strValue: query,
+    );
+
+    _orderUsecase.trackTelemetryEvent(telemetryEvent);
 
     await loadOrderHistory();
   }

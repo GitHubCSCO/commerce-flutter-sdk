@@ -127,6 +127,28 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
 
     _wishListDetailsUsecase.trackEvent(analyticsEvent);
 
+    final telemetryEvent = TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameSortSelection,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceId,
+          strValue: state.wishList.id,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceName,
+          strValue: state.wishList.name,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceType,
+          strValue: AnalyticsConstants.screenNameListDetail,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertySortOption,
+          strValue: sortOrder.value,
+        );
+
+    _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
+
     await loadWishListLines(state.wishList);
   }
 
@@ -149,6 +171,24 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
         );
 
     _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventCancelSort,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceId,
+          strValue: state.wishList.id,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceName,
+          strValue: state.wishList.name,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceType,
+          strValue: AnalyticsConstants.screenNameListDetail,
+        );
+
+    _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
   }
 
   Future<void> searchQueryChanged(String query) async {
@@ -347,6 +387,15 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       );
 
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventAddListToCart,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
     }
   }
 
@@ -450,6 +499,15 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       );
 
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventDeleteProduct,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
     }
   }
 
@@ -475,6 +533,15 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       );
 
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventRenameList,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
     } else {
       emit(state.copyWith(status: result));
     }
@@ -496,6 +563,15 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       );
 
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventDeleteList,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
     }
 
     emit(state.copyWith(status: result));
@@ -511,6 +587,15 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     );
 
     _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventCopyList,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyListId,
+      strValue: state.wishList.id,
+    );
+
+    _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
 
     emit(state.copyWith(status: WishListStatus.listCopyLoading));
     final result = await _wishListDetailsUsecase.copyWishList(
@@ -539,6 +624,15 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       );
 
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventLeaveList,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
     }
   }
 
@@ -575,6 +669,17 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       );
 
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: state.wishList.isFavorite == true
+            ? AnalyticsConstants.eventRemoveFavoriteList
+            : AnalyticsConstants.eventFavoriteList,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
 
       emit(
         state.copyWith(
