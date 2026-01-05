@@ -108,22 +108,23 @@ class ProductCollectionBloc extends Bloc<ProductEvent, ProductState> {
                   boolValue: apiCallIsSuccessful);
       _searchUseCase.trackEvent(viewScreenEvent);
 
-      var viewTelemetryEvent = TelemetryEvent(screenName: screenName)
-          .withProperty(
-              name: AnalyticsConstants.eventPropertySearchTerm,
-              strValue: entity.query)
-          .withProperty(
-              name: AnalyticsConstants.eventPropertyReferenceId,
-              strValue: eventPropertyReferenceId)
-          .withProperty(
-              name: AnalyticsConstants.eventPropertyReferenceName,
-              strValue: eventPropertyReferenceName)
-          .withProperty(
-              name: AnalyticsConstants.eventPropertyResultsCount,
-              strValue: resultsCount.toString())
-          .withProperty(
-              name: AnalyticsConstants.eventPropertySuccessful,
-              boolValue: apiCallIsSuccessful);
+      var viewTelemetryEvent =
+          TelemetryEvent(eventName: AnalyticsConstants.eventViewSearchResults)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertySearchTerm,
+                  strValue: entity.query)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyReferenceId,
+                  strValue: eventPropertyReferenceId)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyReferenceName,
+                  strValue: eventPropertyReferenceName)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyResultsCount,
+                  strValue: resultsCount.toString())
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertySuccessful,
+                  boolValue: apiCallIsSuccessful);
       _searchUseCase.trackTelemetryEvent(viewTelemetryEvent);
     }
   }

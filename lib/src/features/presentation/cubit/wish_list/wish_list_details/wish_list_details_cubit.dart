@@ -294,7 +294,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
 
       var viewTelemetryEvent = TelemetryEvent(
-        screenName: AnalyticsConstants.screenNameListDetail,
+        eventName: AnalyticsConstants.eventViewSearchResults,
       )
           .withProperty(
             name: AnalyticsConstants.eventPropertySearchTerm,

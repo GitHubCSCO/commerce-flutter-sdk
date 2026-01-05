@@ -80,7 +80,7 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
         _brandUseCase.trackEvent(viewScreenEvent);
 
         var viewTelemetryEvent = TelemetryEvent(
-          screenName: AnalyticsConstants.screenNameBrands,
+          eventName: AnalyticsConstants.eventViewSearchResults,
         )
             .withProperty(
                 name: AnalyticsConstants.eventPropertySearchTerm,

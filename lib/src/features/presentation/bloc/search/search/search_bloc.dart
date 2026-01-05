@@ -293,7 +293,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     _searchUseCase.trackEvent(viewScreenEvent);
 
     var viewTelemetryEvent =
-        TelemetryEvent(screenName: AnalyticsConstants.screenNameSearch)
+        TelemetryEvent(eventName: AnalyticsConstants.eventViewSearchResults)
             .withProperty(
                 name: AnalyticsConstants.eventPropertySearchTerm,
                 strValue: query)
