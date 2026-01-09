@@ -38,5 +38,5 @@ class BarcodeSearchScreen extends BaseStatelessWidget {
 
   @override
   TelemetryEvent getTelemetryScreenEvent() =>
-      TelemetryEvent(screenName: AnalyticsConstants.screenNameSearch);
+      TelemetryEvent(eventName: AnalyticsConstants.eventViewBarcode);
 }
