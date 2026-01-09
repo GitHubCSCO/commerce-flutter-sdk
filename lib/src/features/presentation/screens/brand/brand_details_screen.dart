@@ -60,7 +60,7 @@ class BrandDetailsScreen extends BaseStatelessWidget {
   @override
   TelemetryEvent getTelemetryScreenEvent() {
     return TelemetryEvent(
-      screenName: AnalyticsConstants.eventViewScreen,
+      screenName: AnalyticsConstants.screenNameBrandDetail,
     )
         .withProperty(
             name: AnalyticsConstants.eventPropertyBrandName,

@@ -340,7 +340,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       _orderUsecase.trackEvent(analyticsEvent);
 
       var screenTelemetryEvent = TelemetryEvent(
-        screenName: AnalyticsConstants.screenNameOrders,
+        eventName: AnalyticsConstants.eventViewSearchResults,
       )
           .withProperty(
             name: AnalyticsConstants.eventPropertySearchTerm,
