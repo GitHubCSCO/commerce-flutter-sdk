@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
@@ -57,7 +60,14 @@ class InvoiceDetailScreen extends BaseStatelessWidget {
               case BottomMenuWebsiteUrlLoaded():
                 final isWebViewEnabled =
                     await PlatformUtils.isSystemWebViewEnabled(state.url);
-                if (isWebViewEnabled) {
+                if (Platform.isAndroid) {
+                  unawaited(
+                    launchUrlString(
+                      state.url,
+                      mode: LaunchMode.inAppBrowserView,
+                    ),
+                  );
+                } else if (isWebViewEnabled) {
                   await context.pushNamed(
                     AppRoute.inAppBrowser.name,
                     extra: state.url,
