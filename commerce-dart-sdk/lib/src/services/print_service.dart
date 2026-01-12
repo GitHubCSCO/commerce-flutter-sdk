@@ -12,7 +12,7 @@ class PrintService extends ServiceBase implements IPrintService {
 
   @override
   Future<Result<Uint8List, ErrorResponse>> getPdf(String printPath) async {
-    var url = Uri.parse(printPath);
+    var url = Uri.parse('/$printPath');
     return await getAsyncBinaryDataNoCache(
       url.toString(),
     );

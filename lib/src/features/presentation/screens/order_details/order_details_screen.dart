@@ -8,7 +8,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/utils/platform_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
@@ -17,8 +16,8 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/button
 import 'package:commerce_flutter_sdk/src/features/presentation/components/custom_dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/bottom_menu_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/print/print_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
@@ -27,8 +26,9 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_deta
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:path_provider/path_provider.dart';
 
 class OrderDetailsScreen extends BaseStatelessWidget {
   final String orderNumber;
@@ -53,62 +53,59 @@ class OrderDetailsScreen extends BaseStatelessWidget {
           },
         ),
         BlocProvider(
-          create: (context) => sl<BottomMenuCubit>(), // for print path
+          create: (context) => sl<PrintCubit>(),
         ),
       ],
       child: Builder(builder: (context) {
-        return BlocListener<BottomMenuCubit, BottomMenuState>(
-          // for determining the print path
+        return BlocListener<PrintCubit, PrintState>(
           listener: (context, state) async {
-            switch (state) {
-              case BottomMenuWebsiteUrlLoaded():
-                final isWebViewEnabled =
-                    await PlatformUtils.isSystemWebViewEnabled(state.url);
-                if (Platform.isAndroid) {
-                  unawaited(
-                    launchUrlString(
-                      state.url,
-                      mode: LaunchMode.inAppBrowserView,
-                    ),
-                  );
-                }
-                else if (isWebViewEnabled) {
-                  await context.pushNamed(
-                    AppRoute.inAppBrowser.name,
-                    extra: state.url,
-                  );
-                } else {
-                  // Show prompt to the user
-                  displayDialogWidget(
-                    context: context,
-                    title: LocalizationConstants.externalBrowserOpenWarningTitle
-                        .localized(),
-                    message: LocalizationConstants.externalBrowserOpenWarningMsg
-                        .localized(),
-                    actions: [
-                      DialogPlainButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          unawaited(launchUrlString(state.url));
-                        },
-                        child: Text(LocalizationConstants.oK.localized()),
-                      ),
-                    ],
-                  );
-                }
+            if (state is PrintLoading) {
+              showPleaseWait(context);
+            } else if (state is PrintLoaded) {
+              Navigator.of(context, rootNavigator: true).pop();
 
-              case BottomMenuWebsiteUrlFailed():
-                displayDialogWidget(
-                  context: context,
-                  title: LocalizationConstants.error.localized(),
-                  message: state.message,
-                  actions: [
-                    DialogPlainButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(LocalizationConstants.oK.localized()),
-                    ),
-                  ],
-                );
+              // Get order number before async operations
+              final orderNumber =
+                  context.read<OrderDetailsCubit>().orderNumber ?? 'order';
+
+              // Save PDF to temporary directory and open it
+              try {
+                final tempDir = await getTemporaryDirectory();
+                final file = File('${tempDir.path}/$orderNumber.pdf');
+                await file.writeAsBytes(state.pdfData);
+
+                // Open the PDF file - this will show app chooser on Android
+                final result = await OpenFilex.open(file.path);
+
+                if (result.type != ResultType.done) {
+                  if (context.mounted) {
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      result.message,
+                    );
+                  }
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  CustomSnackBar.showSnackBarMessage(
+                    context,
+                    'Failed to open PDF: ${e.toString()}',
+                  );
+                }
+              }
+            } else if (state is PrintError) {
+              Navigator.of(context, rootNavigator: true).pop();
+              displayDialogWidget(
+                context: context,
+                title: LocalizationConstants.error.localized(),
+                message: state.message,
+                actions: [
+                  DialogPlainButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(LocalizationConstants.oK.localized()),
+                  ),
+                ],
+              );
             }
           },
           child: const OrderDetailsPage(),
@@ -328,9 +325,11 @@ class OrderDetailsPage extends StatelessWidget {
                                   await cubit.loadOrderDetails(
                                       cubit.orderNumber ?? '',
                                       isFromVMI: false);
-                                  context
-                                      .read<RootBloc>()
-                                      .add(RootOrderHistoryInitialEvent());
+                                  if (context.mounted) {
+                                    context
+                                        .read<RootBloc>()
+                                        .add(RootOrderHistoryInitialEvent());
+                                  }
                                 }
                               },
                             ),
@@ -426,9 +425,7 @@ class _OptionsMenu extends StatelessWidget {
               title: LocalizationConstants.print.localized(),
               action: () {
                 unawaited(
-                  context.read<BottomMenuCubit>().loadWebsiteUrl(
-                        printPath,
-                      ),
+                  context.read<PrintCubit>().loadPdf(printPath),
                 );
                 context.read<RootBloc>().add(
                       RootAnalyticsEvent(
