@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-import 'package:optimizely_commerce_api/src/interfaces/print_interface.dart';
 
 class PrintService extends ServiceBase implements IPrintService {
   PrintService({
