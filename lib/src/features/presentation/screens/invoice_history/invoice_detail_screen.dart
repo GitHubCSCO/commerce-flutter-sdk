@@ -79,9 +79,28 @@ class InvoiceDetailScreen extends BaseStatelessWidget {
 
                 if (result.type != ResultType.done) {
                   if (context.mounted) {
-                    CustomSnackBar.showSnackBarMessage(
-                      context,
-                      result.message,
+                    displayDialogWidget(
+                      context: context,
+                      actions: [
+                        DialogPlainButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(LocalizationConstants.oK.localized()),
+                        ),
+                      ],
+                      title: LocalizationConstants.unableToOpen.localized(),
+                      message: switch (result.type) {
+                        ResultType.fileNotFound => LocalizationConstants
+                            .cantOpenPdfFileNotFound
+                            .localized(),
+                        ResultType.noAppToOpen => Platform.isAndroid
+                            ? LocalizationConstants.pdfNoAppFoundGooglePlay
+                                .localized()
+                            : LocalizationConstants.pdfNoAppFoundAppStore
+                                .localized(),
+                        ResultType.permissionDenied =>
+                          LocalizationConstants.pdfPermissionDenied.localized(),
+                        _ => result.message,
+                      },
                     );
                   }
                 }
