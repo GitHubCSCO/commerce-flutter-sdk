@@ -124,7 +124,10 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
       path: phoneNumber,
     );
     if (await canLaunchUrl(call)) {
-      await launchUrl(call);
+      await launchUrl(
+        call,
+        mode: LaunchMode.externalApplication,
+      );
     }
   }
 

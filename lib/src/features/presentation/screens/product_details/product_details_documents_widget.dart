@@ -78,7 +78,10 @@ class ProductDetailsDocumentsWidget extends StatelessWidget {
   void _launchURL(String url, BuildContext context) async {
     var uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
     } else {
       if (context.mounted) {
         CustomSnackBar.showSnackBarMessage(
