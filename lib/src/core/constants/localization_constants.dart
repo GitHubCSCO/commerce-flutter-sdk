@@ -203,6 +203,15 @@ enum LocalizationConstants {
   filter(keyword: "Filter"),
   status(keyword: "Status"),
   print(keyword: "Print"),
+  unableToOpen(keyword: "Unable to Open PDF"),
+  cantOpenPdfFileNotFound(keyword: "Cannot open PDF. File not found."),
+  pdfNoAppFoundGooglePlay(
+      keyword:
+          "No app was found to open this file. Please install a PDF viewer from Google Play."),
+  pdfNoAppFoundAppStore(
+      keyword:
+          "No app was found to open this file. Please install a PDF viewer from App Store."),
+  pdfPermissionDenied(keyword: "Cannot open PDF. Permission denied."),
   reorder(keyword: "Reorder"),
   promo(keyword: "Promo {0}"),
   shipments(keyword: "SHIPMENTS"),

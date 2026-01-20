@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
@@ -6,7 +8,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
-import 'package:commerce_flutter_sdk/src/core/utils/platform_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
@@ -14,18 +15,20 @@ import 'package:commerce_flutter_sdk/src/features/domain/enums/invoice_status.da
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/two_texts_row.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/bottom_menu_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/print/print_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_detail/invoice_detail_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_widget.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:path_provider/path_provider.dart';
 
 class InvoiceDetailScreen extends BaseStatelessWidget {
   final String invoiceNumber;
@@ -40,61 +43,88 @@ class InvoiceDetailScreen extends BaseStatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => sl<InvoiceDetailCubit>()
-            ..loadInvoiceDetails(
-              invoiceNumber: invoiceNumber,
-            ),
+          create: (context) {
+            final cubit = sl<InvoiceDetailCubit>();
+            unawaited(
+              cubit.loadInvoiceDetails(
+                invoiceNumber: invoiceNumber,
+              ),
+            );
+            return cubit;
+          },
         ),
         BlocProvider(
-          create: (context) => sl<BottomMenuCubit>(), // for print path
+          create: (context) => sl<PrintCubit>(),
         ),
       ],
       child: Builder(builder: (context) {
-        return BlocListener<BottomMenuCubit, BottomMenuState>(
-          // for determining the print path
+        return BlocListener<PrintCubit, PrintState>(
           listener: (context, state) async {
-            switch (state) {
-              case BottomMenuWebsiteUrlLoaded():
-                final isWebViewEnabled =
-                    await PlatformUtils.isSystemWebViewEnabled(state.url);
-                if (isWebViewEnabled) {
-                  await context.pushNamed(
-                    AppRoute.inAppBrowser.name,
-                    extra: state.url,
-                  );
-                } else {
-                  // Show prompt to the user
-                  displayDialogWidget(
-                    context: context,
-                    title: LocalizationConstants.externalBrowserOpenWarningTitle
-                        .localized(),
-                    message: LocalizationConstants.externalBrowserOpenWarningMsg
-                        .localized(),
-                    actions: [
-                      DialogPlainButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          launchUrlString(state.url);
-                        },
-                        child: Text(LocalizationConstants.oK.localized()),
-                      ),
-                    ],
+            if (state is PrintLoading) {
+              showPleaseWait(context);
+            } else if (state is PrintLoaded) {
+              Navigator.of(context, rootNavigator: true).pop();
+
+              // Get invoice number before async operations
+              final invoiceNum = invoiceNumber;
+
+              // Save PDF to temporary directory and open it
+              try {
+                final tempDir = await getTemporaryDirectory();
+                final file = File('${tempDir.path}/invoice_$invoiceNum.pdf');
+                await file.writeAsBytes(state.pdfData);
+
+                // Open the PDF file - this will show app chooser on Android
+                final result = await OpenFilex.open(file.path);
+
+                if (result.type != ResultType.done) {
+                  if (context.mounted) {
+                    displayDialogWidget(
+                      context: context,
+                      actions: [
+                        DialogPlainButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(LocalizationConstants.oK.localized()),
+                        ),
+                      ],
+                      title: LocalizationConstants.unableToOpen.localized(),
+                      message: switch (result.type) {
+                        ResultType.fileNotFound => LocalizationConstants
+                            .cantOpenPdfFileNotFound
+                            .localized(),
+                        ResultType.noAppToOpen => Platform.isAndroid
+                            ? LocalizationConstants.pdfNoAppFoundGooglePlay
+                                .localized()
+                            : LocalizationConstants.pdfNoAppFoundAppStore
+                                .localized(),
+                        ResultType.permissionDenied =>
+                          LocalizationConstants.pdfPermissionDenied.localized(),
+                        _ => result.message,
+                      },
+                    );
+                  }
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  CustomSnackBar.showSnackBarMessage(
+                    context,
+                    'Failed to open PDF: ${e.toString()}',
                   );
                 }
-                break;
-              case BottomMenuWebsiteUrlFailed():
-                displayDialogWidget(
-                  context: context,
-                  title: LocalizationConstants.error.localized(),
-                  message: state.message,
-                  actions: [
-                    DialogPlainButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(LocalizationConstants.oK.localized()),
-                    ),
-                  ],
-                );
-                break;
+              }
+            } else if (state is PrintError) {
+              Navigator.of(context, rootNavigator: true).pop();
+              displayDialogWidget(
+                context: context,
+                title: LocalizationConstants.error.localized(),
+                message: state.message,
+                actions: [
+                  DialogPlainButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(LocalizationConstants.oK.localized()),
+                  ),
+                ],
+              );
             }
           },
           child: InvoiceDetailPage(
@@ -162,10 +192,12 @@ class InvoiceDetailPage extends StatelessWidget {
                                   .format([invoiceNumber])),
                         ),
                       );
-                  context.read<BottomMenuCubit>().loadWebsiteUrl(
-                        PrintPaths.invoiceDetailPrintPath
-                            .format([invoiceNumber]),
-                      );
+                  unawaited(
+                    context.read<PrintCubit>().loadPdf(
+                          PrintPaths.invoiceDetailPrintPath
+                              .format([invoiceNumber]),
+                        ),
+                  );
                 },
               ),
               ToolMenu(

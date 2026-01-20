@@ -38,6 +38,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/logout_usecase
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/order_usecase/order_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/pickup_location_usecase/pickup_location_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/print_usecase/print_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
@@ -157,6 +158,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/login
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/print/print_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval_details/order_approval_details_cubit.dart';
@@ -323,6 +325,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => InvoiceHistoryFilterCubit(invoiceUseCase: sl()))
     ..registerFactory(() => InvoiceDetailCubit(invoiceUseCase: sl()))
     ..registerFactory(() => InvoiceEmailCubit(invoiceUseCase: sl()))
+
+    //Print
+    ..registerFactory(() => PrintUseCase())
+    ..registerFactory(() => PrintCubit(printUseCase: sl()))
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())
@@ -675,6 +681,8 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<IPushNotificationService>(() =>
         PushNotificationService(
             cacheService: sl(), networkService: sl(), clientService: sl()))
+    ..registerLazySingleton<IPrintService>(() => PrintService(
+        cacheService: sl(), networkService: sl(), clientService: sl()))
     ..registerLazySingleton<ILoggerService>(() => sl<OptiLoggerService>())
     ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
     ..registerLazySingleton<IMessageService>(() => MessageService(
