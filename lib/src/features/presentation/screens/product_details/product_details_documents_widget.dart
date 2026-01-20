@@ -3,6 +3,7 @@ import 'package:commerce_flutter_sdk/src/core/extensions/product_detail_document
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_documents_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -80,7 +81,9 @@ class ProductDetailsDocumentsWidget extends StatelessWidget {
     if (await canLaunchUrl(uri)) {
       await launchUrl(
         uri,
-        mode: LaunchMode.externalApplication,
+        mode: defaultTargetPlatform == TargetPlatform.android
+            ? LaunchMode.externalApplication
+            : LaunchMode.platformDefault,
       );
     } else {
       if (context.mounted) {

@@ -9,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/enums/location_search_t
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -126,7 +127,9 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
     if (await canLaunchUrl(call)) {
       await launchUrl(
         call,
-        mode: LaunchMode.externalApplication,
+        mode: defaultTargetPlatform == TargetPlatform.android
+            ? LaunchMode.externalApplication
+            : LaunchMode.platformDefault,
       );
     }
   }
