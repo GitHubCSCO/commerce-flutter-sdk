@@ -42,4 +42,5 @@ abstract class ICommerceAPIServiceProvider {
   IRealTimePricingService getRealTimePricingService();
   IRealTimeInventoryService getRealTimeInventoryService();
   IPushNotificationService getPushNotificationService();
+  IPrintService getPrintService();
 }

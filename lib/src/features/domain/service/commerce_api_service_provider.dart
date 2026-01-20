@@ -92,4 +92,6 @@ class CommerceAPIServiceProvider implements ICommerceAPIServiceProvider {
   @override
   IPushNotificationService getPushNotificationService() =>
       sl<IPushNotificationService>();
+  @override
+  IPrintService getPrintService() => sl<IPrintService>();
 }
