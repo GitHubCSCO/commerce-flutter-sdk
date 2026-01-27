@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:dio/dio.dart';
 
@@ -224,6 +226,41 @@ class ServiceBase {
           {
             var model = value?.data;
             return Success(model);
+          }
+        case Failure(errorResponse: final errorResponse):
+          {
+            return Failure(errorResponse);
+          }
+      }
+    } else {
+      return Failure(
+        ErrorResponse(
+          error: "No internet found",
+          exception: NoInternetFoundException(),
+        ),
+      );
+    }
+  }
+
+  ApiResult<Uint8List> getAsyncBinaryDataNoCache(
+    String path, {
+    Duration? timeout,
+    CancelToken? cancelToken,
+  }) async {
+    bool isOnline = await networkService.isOnline();
+    if (isOnline) {
+      var response = await clientService.getAsync(
+        path,
+        timeout: timeout,
+        cancelToken: cancelToken,
+        responseType: ResponseType.bytes,
+      );
+
+      switch (response) {
+        case Success(value: final value):
+          {
+            var data = value?.data as Uint8List;
+            return Success(data);
           }
         case Failure(errorResponse: final errorResponse):
           {

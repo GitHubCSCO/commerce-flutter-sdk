@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -40,6 +41,12 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
       _biometricUsecase.trackEvent(AnalyticsEvent(
           AnalyticsConstants.eventEnableBiometric,
           AnalyticsConstants.screenNameSettings));
+
+      _biometricUsecase.trackTelemetryEvent(
+        TelemetryEvent(
+          eventName: AnalyticsConstants.eventEnableBiometric,
+        ),
+      );
     }
   }
 
@@ -57,6 +64,11 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
     _biometricUsecase.trackEvent(AnalyticsEvent(
         AnalyticsConstants.eventDisableBiometric,
         AnalyticsConstants.screenNameSettings));
+    _biometricUsecase.trackTelemetryEvent(
+      TelemetryEvent(
+        eventName: AnalyticsConstants.eventDisableBiometric,
+      ),
+    );
 
     emit(BiometricControllerChangeLoading());
     final result = await _biometricUsecase.disableBiometricAuthentication();
@@ -79,5 +91,18 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
           strValue: biometricTypeName,
         );
     _biometricUsecase.trackEvent(biometricSetupEvent);
+
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventBiometricSetup,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyResult,
+          strValue: result,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyLoginType,
+          strValue: biometricTypeName,
+        );
+    _biometricUsecase.trackTelemetryEvent(telemetryEvent);
   }
 }

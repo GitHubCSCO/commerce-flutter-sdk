@@ -108,7 +108,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       String transactionId,
       String promoCode) {
     context.read<RootBloc>().add(RootTelemetryEvent(TelemetryEvent(
-            eventName: AnalyticsConstants.screenNameCheckout)
+            eventName: AnalyticsConstants.eventEcommercePurchase)
         .withProperty(
             name: AnalyticsConstants.eventPropertyCurrency, strValue: currency)
         .withProperty(

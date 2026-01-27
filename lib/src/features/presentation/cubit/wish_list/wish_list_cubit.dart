@@ -62,6 +62,20 @@ class WishListCubit extends Cubit<WishListState> {
 
     wishListUsecase.trackEvent(analyticsEvent);
 
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventSort,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceType,
+          strValue: AnalyticsConstants.screenNameLists,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertySortOption,
+          strValue: sortOrder.value,
+        );
+
+    wishListUsecase.trackTelemetryEvent(telemetryEvent);
+
     await loadWishLists(
       brand: state.brand,
       product: state.product,
@@ -83,6 +97,15 @@ class WishListCubit extends Cubit<WishListState> {
     );
 
     wishListUsecase.trackEvent(analyticsEvent);
+
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventCancelSort,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyReferenceType,
+      strValue: AnalyticsConstants.screenNameLists,
+    );
+
+    wishListUsecase.trackTelemetryEvent(telemetryEvent);
   }
 
   Future<void> loadWishLists({
@@ -158,7 +181,7 @@ class WishListCubit extends Cubit<WishListState> {
       wishListUsecase.trackEvent(analyticsEvent);
 
       var viewScreenTelemetry = TelemetryEvent(
-        screenName: AnalyticsConstants.screenNameLists,
+        eventName: AnalyticsConstants.eventViewSearchResults,
       )
           .withProperty(
             name: AnalyticsConstants.eventPropertySearchTerm,
@@ -244,6 +267,15 @@ class WishListCubit extends Cubit<WishListState> {
       );
 
       wishListUsecase.trackEvent(analyticsEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventDeleteList,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: wishListId,
+      );
+
+      wishListUsecase.trackTelemetryEvent(telemetryEvent);
     }
 
     emit(state.copyWith(status: result));
@@ -272,6 +304,17 @@ class WishListCubit extends Cubit<WishListState> {
       );
 
       wishListUsecase.trackEvent(analyticsEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: wishList.isFavorite == true
+            ? AnalyticsConstants.eventRemoveFavoriteList
+            : AnalyticsConstants.eventFavoriteList,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: wishList.id,
+      );
+
+      wishListUsecase.trackTelemetryEvent(telemetryEvent);
 
       final newCollection = state.wishLists.wishListCollection?.map(
         (item) {

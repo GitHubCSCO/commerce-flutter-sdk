@@ -89,7 +89,7 @@ void main() {
     });
 
     test('isExpired should return false if card is not expired', () {
-      final profile = AccountPaymentProfile(expirationDate: "12/25");
+      final profile = AccountPaymentProfile(expirationDate: "12/30");
       expect(profile.isExpired, isFalse);
     });
   });

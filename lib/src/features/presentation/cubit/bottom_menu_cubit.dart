@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,6 +23,12 @@ class BottomMenuCubit extends Cubit<BottomMenuState> {
                 .withProperty(
                     name: AnalyticsConstants.eventPropertyUrl, strValue: url);
         _platformUseCase.trackEvent(viewOnWebsiteEvent);
+
+        final telemetryEvent =
+            TelemetryEvent(eventName: AnalyticsConstants.eventViewOnWebsite)
+                .withProperty(
+                    name: AnalyticsConstants.eventPropertyUrl, strValue: url);
+        _platformUseCase.trackTelemetryEvent(telemetryEvent);
       }
       emit(BottomMenuWebsiteUrlLoaded(url));
     } else {
