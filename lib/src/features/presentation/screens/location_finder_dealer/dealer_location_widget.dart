@@ -7,21 +7,37 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/map_widget
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DealerLocationWidget extends StatelessWidget {
+class DealerLocationWidget extends StatefulWidget {
   const DealerLocationWidget();
 
   @override
-  Widget build(BuildContext context) {
-    context.read<DealerLocationCubit>().loadDealersLocation();
+  State<DealerLocationWidget> createState() => _DealerLocationWidgetState();
+}
 
+class _DealerLocationWidgetState extends State<DealerLocationWidget> {
+  @override
+  void initState() {
+    super.initState();
+    final cubit = context.read<DealerLocationCubit>();
+    if (cubit.state is DealerLocationInitialState) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await cubit.loadDealersLocation();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
         BlocListener<DealerLocationCubit, DealerLocationState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is DealerLocationLoadedState) {
-              context
+              await context
                   .read<GMapCubit>()
                   .updateMarkersFromDealerLocationFinder(state.dealers);
+            } else if (state is DealerLocationInitialState) {
+              await context.read<DealerLocationCubit>().loadDealersLocation();
             }
           },
         ),
