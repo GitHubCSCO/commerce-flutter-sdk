@@ -183,6 +183,11 @@ class LocationSearchPage extends StatelessWidget {
                             SearchVMILocationFromListEvent(
                                 searchKey: textEditingController.text));
                       }
+                    } else if (state is LocationSearchInitialState) {
+                      if (locationSearchType ==
+                          LocationSearchType.locationFinder) {
+                        context.read<DealerLocationCubit>().resetToInitial();
+                      }
                     }
                   },
                 ),
