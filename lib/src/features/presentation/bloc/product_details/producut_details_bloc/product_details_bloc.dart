@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
@@ -164,24 +165,16 @@ class ProductDetailsBloc
   void _extractValuesFromData(ProductEntity productEntity) {
     var product = productEntity;
     StyledProductEntity? styledProduct;
-    if (product.styledProducts != null) {
-      if (product.styleParentId != null) {
-        styledProduct = product.styledProducts
-            ?.firstWhere((o) => o.productId == product.id);
-      }
+    if (product.styledProducts != null && product.styleParentId != null) {
+      styledProduct = product.styledProducts
+          ?.firstWhereOrNull((o) => o.productId == product.id);
     }
     chosenUnitOfMeasure = styledProduct != null &&
             styledProduct.productUnitOfMeasures != null &&
             styledProduct.productUnitOfMeasures!.isNotEmpty
         ? styledProduct.productUnitOfMeasures?.first
-        : product.productUnitOfMeasures != null &&
-                product.productUnitOfMeasures!.isNotEmpty &&
-                product.productUnitOfMeasures!.firstWhere(
-                    // ignore: unnecessary_null_comparison
-                    (p) => p.unitOfMeasure == product.unitOfMeasure) != null
-            ? product.productUnitOfMeasures
-                ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure)
-            : null;
+        : product.productUnitOfMeasures
+            ?.firstWhereOrNull((p) => p.unitOfMeasure == product.unitOfMeasure);
     Map<String, ConfigSectionOptionEntity?> selectedConfigurations = {};
     if (!(product.styleTraits != null && product.styleTraits!.isNotEmpty) &&
         product.configurationDto != null &&
@@ -223,13 +216,13 @@ class ProductDetailsBloc
         await _productDetailsUseCase.makeAllDetailsItems(
       productData,
       productDetailDataEntity.styledProduct,
-      productDetailDataEntity.productPricingEnabled!,
-      productDetailDataEntity.availableStyleValues!,
-      productDetailDataEntity.selectedStyleValues!,
-      productDetailDataEntity.isProductConfigurable!,
-      productDetailDataEntity.isProductConfigurationCompleted!,
-      productDetailDataEntity.hasCheckout!,
-      productDetailDataEntity.addToCartEnabled!,
+      productDetailDataEntity.productPricingEnabled ?? false,
+      productDetailDataEntity.availableStyleValues ?? {},
+      productDetailDataEntity.selectedStyleValues ?? {},
+      productDetailDataEntity.isProductConfigurable ?? false,
+      productDetailDataEntity.isProductConfigurationCompleted ?? false,
+      productDetailDataEntity.hasCheckout ?? false,
+      productDetailDataEntity.addToCartEnabled ?? false,
     );
 
     emit(
@@ -270,6 +263,8 @@ class ProductDetailsBloc
             productDetailDataEntity.selectedStyleValues!.values
                 .every((value) => value == null))) {
       productDetailDataEntity.styledProduct = null;
+      productDetailDataEntity.availableStyleValues =
+          _productDetailsStyleTraitsUseCase.getAvailableStyleValues(product);
       productDetailDataEntity.selectedStyleValues =
           _productDetailsStyleTraitsUseCase.getSelectedStyleValues(
               product, null, productDetailDataEntity.selectedStyleValues);
@@ -288,20 +283,21 @@ class ProductDetailsBloc
 
     if (styledProduct != null) {
       if (chosenUnitOfMeasure?.unitOfMeasure != null) {
-        chosenUnitOfMeasure = styledProduct.productUnitOfMeasures?.firstWhere(
-            (p) => p.unitOfMeasure == chosenUnitOfMeasure?.unitOfMeasure);
+        chosenUnitOfMeasure = styledProduct.productUnitOfMeasures
+            ?.firstWhereOrNull(
+                (p) => p.unitOfMeasure == chosenUnitOfMeasure?.unitOfMeasure);
       } else {
-        chosenUnitOfMeasure =
-            styledProduct.productUnitOfMeasures?.firstWhere((element) => true);
+        chosenUnitOfMeasure = styledProduct.productUnitOfMeasures?.firstOrNull;
       }
     } else {
       if (product.productUnitOfMeasures!.isNotEmpty) {
         chosenUnitOfMeasure = product.productUnitOfMeasures
-            ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure);
+            ?.firstWhereOrNull((p) => p.unitOfMeasure == product.unitOfMeasure);
       }
     }
     productDetailDataEntity = productDetailDataEntity.copyWith(
-        styledProduct: styledProduct, chosenUnitOfMeasure: chosenUnitOfMeasure);
+        chosenUnitOfMeasure: chosenUnitOfMeasure);
+    productDetailDataEntity.styledProduct = styledProduct;
 
     await _makeAllDetailsItems(product, emit);
   }
