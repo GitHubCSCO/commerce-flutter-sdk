@@ -812,9 +812,9 @@ class _CartPageState extends State<CartPage> {
         hasWillCall: hasWillCall,
         warehouse: warehouse,
         shippingMethod:
-            (shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
-                ? ShippingOption.pickUp
-                : ShippingOption.ship));
+            (shippingMethod.equalsIgnoreCase(ShippingOption.PickUp.name)
+                ? ShippingOption.PickUp
+                : ShippingOption.Ship));
 
     list.add(BlocProvider<CartContentBloc>(
       create: (context) => sl<CartContentBloc>(),

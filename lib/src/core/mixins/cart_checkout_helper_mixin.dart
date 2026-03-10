@@ -69,9 +69,10 @@ mixin CartCheckoutHelperMixin {
   ) {
     final errorMessageBuilder = StringBuffer();
     if (cart!.hasInsufficientInventory!) {
-      if (shippingMethod == FulfillmentMethodType.Ship.name) {
+      if (shippingMethod.equalsIgnoreCase(FulfillmentMethodType.Ship.name)) {
         errorMessageBuilder.write(messageCartInsufficientInventoryAtCheckout);
-      } else if (shippingMethod == FulfillmentMethodType.PickUp.name) {
+      } else if (shippingMethod
+          .equalsIgnoreCase(FulfillmentMethodType.PickUp.name)) {
         errorMessageBuilder.write(messageCartInsufficientPickupInventory);
       }
     }

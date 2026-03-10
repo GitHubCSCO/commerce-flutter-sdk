@@ -7,6 +7,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
@@ -303,7 +304,8 @@ class _OrderApprovalItem extends StatelessWidget {
               style: OptiTextStyles.bodySmall,
             ),
             Text(
-              cart.fulfillmentMethod == 'PickUp'
+              cart.fulfillmentMethod
+                      .equalsIgnoreCase(FulfillmentMethodType.PickUp.name)
                   ? (cart.defaultWarehouse?.name ?? '')
                   : (cart.shipToLabel ?? ''),
               style: OptiTextStyles.bodySmall,

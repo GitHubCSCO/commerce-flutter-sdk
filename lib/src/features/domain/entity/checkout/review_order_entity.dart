@@ -13,6 +13,7 @@ class ReviewOrderEntity {
   final CarrierDto? selectedCarrier;
   final ShipViaDto? selectedService;
   final DateTime? requestDeliveryDate;
+  final DateTime? requestPickupDate;
   final bool? allowCreateNewShipToAddress;
   final String? orderNotes;
 
@@ -27,6 +28,7 @@ class ReviewOrderEntity {
       this.selectedCarrier,
       this.selectedService,
       this.requestDeliveryDate,
+      this.requestPickupDate,
       this.allowCreateNewShipToAddress,
       this.orderNotes});
 
@@ -44,6 +46,7 @@ class ReviewOrderEntity {
         selectedCarrier: selectedCarrier,
         selectedService: selectedService,
         requestDeliveryDate: requestDeliveryDate,
+        requestPickupDate: requestPickupDate,
         billTo: billTo ?? this.billTo,
         shipTo: shipTo ?? this.shipTo,
         warehouse: warehouse ?? this.warehouse,
@@ -68,6 +71,7 @@ class ReviewOrderEntity {
       'selectedCarrier': selectedCarrier?.toJson(),
       'selectedService': selectedService?.toJson(),
       'requestDeliveryDate': requestDeliveryDate?.millisecondsSinceEpoch,
+      'requestPickupDate': requestPickupDate?.millisecondsSinceEpoch,
       'allowCreateNewShipToAddress': allowCreateNewShipToAddress,
       'orderNotes': orderNotes,
     };
@@ -110,6 +114,10 @@ class ReviewOrderEntity {
           ? null
           : DateTime.fromMillisecondsSinceEpoch(
               json['requestDeliveryDate'] as int),
+      requestPickupDate: json['requestPickupDate'] == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(
+              json['requestPickupDate'] as int),
       allowCreateNewShipToAddress: json['allowCreateNewShipToAddress'] as bool?,
       orderNotes: json['orderNotes'] as String?,
     );

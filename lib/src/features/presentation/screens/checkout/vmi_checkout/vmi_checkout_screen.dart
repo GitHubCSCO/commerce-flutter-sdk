@@ -115,19 +115,23 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                   case CheckoutLoading():
                     return const Center(child: CircularProgressIndicator());
                   case CheckoutDataLoaded():
+                    final checkoutBloc = context.read<CheckoutBloc>();
+                    final isPickup = state.shippingMethod
+                        .equalsIgnoreCase(ShippingOption.PickUp.name);
                     final billingShippingEntity = BillingShippingEntity(
                       billTo: state.billToAddress,
                       shipTo: state.shipToAddress,
                       warehouse: state.wareHouse,
-                      shippingMethod: (state.shippingMethod
-                              .equalsIgnoreCase(ShippingOption.pickUp.name)
-                          ? ShippingOption.pickUp
-                          : ShippingOption.ship),
+                      shippingMethod: isPickup
+                          ? ShippingOption.PickUp
+                          : ShippingOption.Ship,
                       carriers: state.cart.carriers,
                       cartSettings: state.cartSettings,
                       selectedCarrier: state.selectedCarrier,
                       selectedService: state.selectedService,
-                      requestDeliveryDate: state.requestDeliveryDate,
+                      requestDeliveryDate: isPickup
+                          ? checkoutBloc.requestPickupDate
+                          : checkoutBloc.requestDeliveryDate,
                       allowCreateNewShipToAddress:
                           state.allowCreateNewShipToAddress,
                     );

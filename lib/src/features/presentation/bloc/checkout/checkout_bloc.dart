@@ -19,6 +19,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
     with CartCheckoutHelperMixin {
   final CheckoutUsecase _checkoutUseCase;
   DateTime? requestDeliveryDate;
+  DateTime? requestPickupDate;
   Cart? cart;
   CarrierDto? selectedCarrier;
   ShipViaDto? selectedService;
@@ -40,6 +41,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
         (event, emit) async => _onUpdateCartPaymentFailedEvent(event, emit));
     on<RequestDeliveryDateEvent>(
         (event, emit) => _onRequestDeliveryDateSelect(event, emit));
+    on<RequestPickupDateEvent>(
+        (event, emit) => _onRequestPickupDateSelect(event, emit));
     on<SelectCarrierEvent>(
         (event, emit) async => _onCarrierSelect(event, emit));
     on<SelectServiceEvent>(
@@ -70,6 +73,15 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
     this.cart = cart;
     selectedCarrier = cart.carrier;
     selectedService = cart.shipVia;
+    requestDeliveryDate ??= cart.requestedDeliveryDateDisplay;
+    requestPickupDate ??= cart.requestedPickUpDateDisplay;
+
+    if (requestDeliveryDate != null) {
+      this.cart?.requestedDeliveryDate = requestDeliveryDate!.toIso8601String();
+    }
+    if (requestPickupDate != null) {
+      this.cart?.requestedPickUpDate = requestPickupDate!.toIso8601String();
+    }
   }
 
   Future<void> _onCheckoutLoadEvent(
@@ -117,7 +129,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
         final cartWarningMsg = await getCartWarningMessage(
             cartData, shippingMethod, _checkoutUseCase);
         final message = shippingMethod
-                .equalsIgnoreCase(ShippingOption.pickUp.name)
+                .equalsIgnoreCase(ShippingOption.PickUp.name)
             ? await _checkoutUseCase.getSiteMessage(
                 SiteMessageConstants.nameCheckoutRequestedPickUpDateMessage,
                 SiteMessageConstants
@@ -142,6 +154,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
                 selectedCarrier: selectedCarrier,
                 selectedService: selectedService,
                 requestDeliveryDate: requestDeliveryDate,
+                requestPickupDate: requestPickupDate,
                 allowCreateNewShipToAddress: allowCreateNewShipToAddress,
                 requestDateWarningMessage: message,
                 cartWarningMsg: cartWarningMsg,
@@ -287,9 +300,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
               shipTo: shipToAddress,
               warehouse: wareHouse,
               shippingMethod:
-                  (shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
-                      ? ShippingOption.pickUp
-                      : ShippingOption.ship),
+                  (shippingMethod.equalsIgnoreCase(ShippingOption.PickUp.name)
+                      ? ShippingOption.PickUp
+                      : ShippingOption.Ship),
               carriers: cart!.carriers,
               cartSettings: cartSettings,
               paymentMethod: cart!.paymentMethod,
@@ -347,6 +360,12 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
       RequestDeliveryDateEvent event, Emitter<CheckoutState> emit) {
     requestDeliveryDate = event.dateTime;
     cart?.requestedDeliveryDate = event.dateTime.toIso8601String();
+  }
+
+  void _onRequestPickupDateSelect(
+      RequestPickupDateEvent event, Emitter<CheckoutState> emit) {
+    requestPickupDate = event.dateTime;
+    cart?.requestedPickUpDate = event.dateTime.toIso8601String();
   }
 
   Future<void> _onCarrierSelect(
