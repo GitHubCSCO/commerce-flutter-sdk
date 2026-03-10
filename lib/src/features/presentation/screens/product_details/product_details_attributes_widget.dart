@@ -1,5 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/mixins/product_list_item_mixin.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_attributes_entity.dart';
@@ -23,6 +23,8 @@ class ProductDetailsAttributesWidget extends StatefulWidget {
 
 class _ProductDetailsAttributesWidgetState
     extends State<ProductDetailsAttributesWidget> {
+  bool _showAll = false;
+
   void trackAttributesEvent() {
     context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
             AnalyticsConstants.eventViewAttributes,
@@ -34,76 +36,61 @@ class _ProductDetailsAttributesWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
+    var itemCount = _showAll
+        ? widget.productDetailsAttributesEntity.productAttributes.length
+        : (widget.productDetailsAttributesEntity.productAttributes.length > 3
+            ? 3
+            : widget.productDetailsAttributesEntity.productAttributes.length);
+
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Theme(
-            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-            child: ExpansionTile(
-              backgroundColor: Colors.white,
-              collapsedBackgroundColor: Colors.white,
-              title: Text(
-                LocalizationConstants.specifications.localized(),
-                style: OptiTextStyles.titleSmall,
-              ),
-              onExpansionChanged: (bool expanded) {
-                if (expanded) {
-                  trackAttributesEvent();
-                }
-              },
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 16.0),
-                  child: Column(
-                    children: List.generate(
-                      widget.productDetailsAttributesEntity.productAttributes
-                          .length,
-                      (index) {
-                        final attribute = widget.productDetailsAttributesEntity
-                            .productAttributes[index];
-                        final aggregatedValues = attribute.attributeValues
-                                ?.map((value) => value.valueDisplay)
-                                .where((valueDisplay) => valueDisplay != null)
-                                .join(' ') ??
-                            '';
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  attribute.label ?? '',
-                                  maxLines: null,
-                                  overflow: TextOverflow.visible,
-                                  style: OptiTextStyles.subtitle,
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  aggregatedValues,
-                                  maxLines: null,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+          ...List.generate(itemCount, (index) {
+            final attribute =
+                widget.productDetailsAttributesEntity.productAttributes[index];
+            final aggregatedValues = attribute.attributeValues
+                    ?.map((value) => value.valueDisplay)
+                    .where((valueDisplay) => valueDisplay != null)
+                    .join(' ') ??
+                '';
+            return Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    attribute.label ?? '',
+                    maxLines: null,
+                    overflow: TextOverflow.visible,
+                    style: OptiTextStyles.subtitle,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    aggregatedValues,
+                    maxLines: null,
+                    overflow: TextOverflow.visible,
                   ),
                 ),
               ],
+            );
+          }),
+          if (widget.productDetailsAttributesEntity.productAttributes.length >
+              5)
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _showAll = !_showAll;
+                  if (_showAll) {
+                    trackAttributesEvent();
+                  }
+                });
+              },
+              child: Text(_showAll ? 'Show less' : 'Show more'),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-            child: Divider(),
-          ),
         ],
       ),
     );
