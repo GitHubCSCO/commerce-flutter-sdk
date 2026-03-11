@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/payment_summary_mixin.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart/payment_summary_entity.dart';
@@ -318,8 +319,12 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
           Text(
             isVisible
                 ? (isPickup
-                    ? 'Pick up on ${DateFormat('E, MM/dd').format(dateTime)}'
-                    : 'Arrives between ${DateFormat('E, MM/dd').format(dateTime)}')
+                    ? LocalizationConstants.pickUpOn
+                        .localized()
+                        .format([DateFormat('E, MM/dd').format(dateTime)])
+                    : LocalizationConstants.arrivesBetween
+                        .localized()
+                        .format([DateFormat('E, MM/dd').format(dateTime)]))
                 : '',
             textAlign: TextAlign.center,
             style: OptiTextStyles.body,

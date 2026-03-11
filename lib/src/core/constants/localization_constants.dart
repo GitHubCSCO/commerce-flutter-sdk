@@ -394,6 +394,8 @@ enum LocalizationConstants {
   requestDeliveryDateOptional(keyword: "Request Delivery Date (optional)"),
   requestPickUpDateOptional(keyword: "Request Pick Up Date (optional)"),
   requestPickUpDateRequired(keyword: "Request Pick Up Date (required)"),
+  pickUpOn(keyword: "Pick up on %s"),
+  arrivesBetween(keyword: "Arrives between %s"),
   paymentMethod(keyword: "Payment Method"),
   pONumberOptional(keyword: "PO Number (Optional)"),
   pONumberRequired(keyword: "PO Number (Required)"),
