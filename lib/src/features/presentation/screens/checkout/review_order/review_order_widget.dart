@@ -283,7 +283,10 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
               reviewOrderEntity.requestDeliveryDate != DateTime(0),
           child: Text(
             reviewOrderEntity.requestDeliveryDate != null
-                ? LocalizationConstants.arrivesBetween.localized().format([DateFormat('E, MM/dd').format(reviewOrderEntity.requestDeliveryDate!)])
+                ? LocalizationConstants.arrivesBetween.localized().format([
+                    DateFormat('E, MM/dd')
+                        .format(reviewOrderEntity.requestDeliveryDate!)
+                  ])
                 : '',
             textAlign: TextAlign.center,
             style: OptiTextStyles.bodySmall,
