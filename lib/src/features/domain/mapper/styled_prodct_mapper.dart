@@ -1,10 +1,14 @@
 import 'package:commerce_flutter_sdk/src/features/domain/entity/availability_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/attribute_type_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/availability_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/document_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_image_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_unit_of_measure_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/specification_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/style_value_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/warehouse_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -42,6 +46,19 @@ class StyledProductEntityMapper {
         trackInventory: model.trackInventory,
         properties: model.properties,
         allowZeroPricing: model.allowZeroPricing,
+        specifications: model.specifications
+            ?.map((e) => SpecificationEntityMapper().toEntity(e))
+            .toList(),
+        documents: model.documents
+            ?.map((e) => DocumentEntityMapper().toEntity(e))
+            .toList(),
+        htmlContent: model.htmlContent,
+        attributeTypes: model.attributeTypes
+            ?.map((e) => AttributeTypeEntityMapper().toEntity(e))
+            .toList(),
+        crossSells: model.crossSells
+            ?.map((e) => ProductEntityMapper.toEntity(e))
+            .toList(),
       );
   StyledProduct toModel(StyledProductEntity entity) => StyledProduct(
         productId: entity.productId,

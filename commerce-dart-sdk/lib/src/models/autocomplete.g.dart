@@ -42,7 +42,8 @@ AutocompleteProduct _$AutocompleteProductFromJson(Map<String, dynamic> json) =>
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String?),
-      );
+      )
+      ..styleParentId = json['styleParentId'] as String?;
 
 Map<String, dynamic> _$AutocompleteProductToJson(
         AutocompleteProduct instance) =>
@@ -50,6 +51,7 @@ Map<String, dynamic> _$AutocompleteProductToJson(
       if (instance.uri case final value?) 'uri': value,
       if (instance.properties case final value?) 'properties': value,
       if (instance.id case final value?) 'id': value,
+      if (instance.styleParentId case final value?) 'styleParentId': value,
       if (instance.title case final value?) 'title': value,
       if (instance.subtitle case final value?) 'subtitle': value,
       if (instance.image case final value?) 'image': value,

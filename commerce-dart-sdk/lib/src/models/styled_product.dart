@@ -23,6 +23,11 @@ class StyledProduct extends BaseModel {
     this.trackInventory,
     this.warehouses,
     this.allowZeroPricing,
+    this.specifications,
+    this.documents,
+    this.htmlContent,
+    this.attributeTypes,
+    this.crossSells,
   });
 
   /// Gets or sets the product identifier.
@@ -77,6 +82,21 @@ class StyledProduct extends BaseModel {
   bool? trackInventory;
 
   bool? allowZeroPricing;
+
+  /// Gets or sets the specifications.
+  List<Specification>? specifications;
+
+  /// Gets or sets the documents.
+  List<Document>? documents;
+
+  /// Gets or sets the HTML content.
+  String? htmlContent;
+
+  /// Gets or sets the attributes assigned to the styled product.
+  List<AttributeType>? attributeTypes;
+
+  /// Gets or sets the product cross sells.
+  List<Product>? crossSells;
 
   factory StyledProduct.fromJson(Map<String, dynamic> json) =>
       _$StyledProductFromJson(json);

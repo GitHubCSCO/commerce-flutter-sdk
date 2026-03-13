@@ -18,6 +18,8 @@ class Autocomplete extends BaseModel {
 class AutocompleteProduct extends BaseModel {
   String? id;
 
+  String? styleParentId;
+
   String? title;
 
   String? subtitle;

@@ -10,12 +10,12 @@ class ProductDetailsStyleTraitsUseCase {
   ProductDetailsStyleTraitsUseCase();
 
   bool isProductStyleable(Map<String, StyleValueEntity?>? selectedStyleValues) {
-    return selectedStyleValues!.keys.isNotEmpty;
+    return selectedStyleValues != null && selectedStyleValues.keys.isNotEmpty;
   }
 
   bool isProductStyleSelectionCompleted(
       Map<String, StyleValueEntity?>? selectedStyleValues) {
-    if (selectedStyleValues!.isEmpty) {
+    if (selectedStyleValues == null || selectedStyleValues.isEmpty) {
       return false;
     }
 

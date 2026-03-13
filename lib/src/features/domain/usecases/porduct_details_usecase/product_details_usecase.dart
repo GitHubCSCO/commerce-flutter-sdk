@@ -265,31 +265,60 @@ class ProductDetailsUseCase extends BaseUseCase {
         isProductConfigurationCompleted);
     items.add(addToCartEntity);
 
-    var attributesEntity = makeProductDetailsAttributesEntity(product);
+    // Use styled product's htmlContent when available,
+    // falling back to the parent product's data.
+    final effectiveHtmlContent = (styledProduct?.htmlContent != null &&
+            styledProduct!.htmlContent!.isNotEmpty)
+        ? styledProduct.htmlContent
+        : product.htmlContent;
+
+    if (effectiveHtmlContent != null && effectiveHtmlContent.isNotEmpty) {
+      items.add(
+          makeProductDetailsDescriptionEntityFromHtml(effectiveHtmlContent));
+    }
+
+    // Use styled product's attributeTypes when available,
+    // falling back to the parent product's data.
+    final effectiveAttributeTypes =
+        (styledProduct?.attributeTypes?.isNotEmpty == true)
+            ? styledProduct!.attributeTypes
+            : product.attributeTypes;
+
+    var attributesEntity =
+        makeProductDetailsAttributesEntity(product, effectiveAttributeTypes);
 
     if (attributesEntity.productAttributes.isNotEmpty) {
       items.add(attributesEntity);
     }
 
-    if (product.htmlContent != null) {
-      items.add(makeProductDetailsDescriptionEntity(product));
+    // Use styled product's specifications/documents/crossSells when available,
+    // falling back to the parent product's data.
+    final effectiveSpecifications =
+        (styledProduct?.specifications?.isNotEmpty == true)
+            ? styledProduct!.specifications
+            : product.specifications;
+    final effectiveDocuments = (styledProduct?.documents?.isNotEmpty == true)
+        ? styledProduct!.documents
+        : product.documents;
+    final effectiveCrossSells = (styledProduct?.crossSells?.isNotEmpty == true)
+        ? styledProduct!.crossSells
+        : product.crossSells;
+
+    if (effectiveSpecifications != null) {
+      items.addAll(addSpecificationsFromList(effectiveSpecifications));
     }
 
-    if (product.specifications != null) {
-      items.addAll(addSpecifications(product));
+    if (effectiveDocuments != null && effectiveDocuments.isNotEmpty) {
+      items.add(makeProductDetailsDocumentsEntityFromList(effectiveDocuments));
     }
 
-    if (product.documents != null && product.documents!.isNotEmpty) {
-      items.add(makeProductDetailsDocumentsEntity(product));
-    }
-
-    if (product.crossSells != null && product.crossSells!.isNotEmpty) {
+    if (effectiveCrossSells != null && effectiveCrossSells.isNotEmpty) {
       var porductCarouselWidget = ProductCarouselWidgetEntity(
           carouselType: ProductCarouselType.webCrossSells,
           title: LocalizationConstants.recommendedProducts.localized());
 
       final List<ProductCarouselEntity> productCarouselList = [];
-      for (var crosSell in product.crossSells!) {
+      for (var crosSell in effectiveCrossSells) {
         productCarouselList.add(ProductCarouselEntity(
             product: crosSell, productPricingEnabled: productPricingEnabled));
       }
@@ -442,6 +471,36 @@ class ProductDetailsUseCase extends BaseUseCase {
         .toList();
   }
 
+  /// Creates specification detail items from a list of specifications.
+  /// Used to support styled product specifications.
+  List<ProductDetailItemEntity> addSpecificationsFromList(
+      List<SpecificationEntity> specifications) {
+    final sorted = List<SpecificationEntity>.from(specifications)
+      ..sort((a, b) => (a.sortOrder ?? 0).compareTo(b.sortOrder ?? 0));
+
+    return sorted
+        .map((specification) => ProductDetailItemEntity(
+              id: specification.specificationId ?? '',
+              title: specification.nameDisplay ?? '',
+              htmlContent: specification.htmlContent ?? '',
+              position: specification.sortOrder ?? 0,
+              detailsSectionType:
+                  ProdcutDeatilsPageWidgets.productDetailsSpecification,
+            ))
+        .toList();
+  }
+
+  /// Creates documents entity from a list of documents.
+  /// Used to support styled product documents.
+  ProductDetailsDocumentsEntity makeProductDetailsDocumentsEntityFromList(
+      List<DocumentEntity> documents) {
+    return ProductDetailsDocumentsEntity(
+        title: LocalizationConstants.documents.localized(),
+        documents: documents,
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsDocuments,
+        documentPaths: createDocumentPathsFromDocuments(documents));
+  }
+
   ProductDetailsStyletraitsEntity makeProductDetailsStyleTraitsEntity(
       ProductEntity product,
       Map<String, List<StyleValueEntity>?> availableStyleValues,
@@ -475,7 +534,8 @@ class ProductDetailsUseCase extends BaseUseCase {
   }
 
   ProductDetailsAttributesEntity makeProductDetailsAttributesEntity(
-      ProductEntity product) {
+      ProductEntity product,
+      List<AttributeTypeEntity>? effectiveAttributeTypes) {
     List<AttributeTypeEntity> attributes = [];
 
     if (product.brand != null && product.brand!.name != null) {
@@ -489,12 +549,22 @@ class ProductDetailsUseCase extends BaseUseCase {
       attributes.add(brandAttribute);
     }
 
-    if (product.attributeTypes != null && product.attributeTypes!.isNotEmpty) {
-      attributes.addAll(product.attributeTypes!);
+    if (effectiveAttributeTypes != null && effectiveAttributeTypes.isNotEmpty) {
+      attributes.addAll(effectiveAttributeTypes);
     }
 
     return ProductDetailsAttributesEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAttributes,
         productAttributes: attributes);
+  }
+
+  /// Creates description entity from an HTML string.
+  /// Used to support styled product htmlContent.
+  ProductDetailsDescriptionEntity makeProductDetailsDescriptionEntityFromHtml(
+      String htmlContent) {
+    return ProductDetailsDescriptionEntity(
+        htmlContent: htmlContent,
+        detailsSectionType:
+            ProdcutDeatilsPageWidgets.productDetailsDescription);
   }
 }

@@ -1,8 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:commerce_flutter_sdk/src/features/domain/entity/attribute_type_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/document._entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/specification_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/warehouse_entity.dart';
 import 'package:equatable/equatable.dart';
@@ -29,6 +33,11 @@ class StyledProductEntity extends Equatable {
   final bool? trackInventory;
   final Properties? properties;
   final bool? allowZeroPricing;
+  final List<SpecificationEntity>? specifications;
+  final List<DocumentEntity>? documents;
+  final String? htmlContent;
+  final List<AttributeTypeEntity>? attributeTypes;
+  final List<ProductEntity>? crossSells;
 
   const StyledProductEntity({
     this.availability,
@@ -50,6 +59,11 @@ class StyledProductEntity extends Equatable {
     this.warehouses,
     this.properties,
     this.allowZeroPricing,
+    this.specifications,
+    this.documents,
+    this.htmlContent,
+    this.attributeTypes,
+    this.crossSells,
   });
 
   @override
@@ -73,6 +87,11 @@ class StyledProductEntity extends Equatable {
         trackInventory,
         properties,
         allowZeroPricing,
+        specifications,
+        documents,
+        htmlContent,
+        attributeTypes,
+        crossSells,
       ];
 
   StyledProductEntity copyWith({
@@ -95,6 +114,11 @@ class StyledProductEntity extends Equatable {
     bool? trackInventory,
     Properties? properties,
     bool? allowZeroPricing,
+    List<SpecificationEntity>? specifications,
+    List<DocumentEntity>? documents,
+    String? htmlContent,
+    List<AttributeTypeEntity>? attributeTypes,
+    List<ProductEntity>? crossSells,
   }) {
     return StyledProductEntity(
       productId: productId ?? this.productId,
@@ -117,6 +141,11 @@ class StyledProductEntity extends Equatable {
       trackInventory: trackInventory ?? this.trackInventory,
       properties: properties ?? this.properties,
       allowZeroPricing: allowZeroPricing ?? this.allowZeroPricing,
+      specifications: specifications ?? this.specifications,
+      documents: documents ?? this.documents,
+      htmlContent: htmlContent ?? this.htmlContent,
+      attributeTypes: attributeTypes ?? this.attributeTypes,
+      crossSells: crossSells ?? this.crossSells,
     );
   }
 }

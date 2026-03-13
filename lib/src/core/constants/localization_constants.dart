@@ -286,6 +286,7 @@ enum LocalizationConstants {
       keyword: "Please sign in before adding to list."),
   noFiltersAvailable(keyword: "No Filters Available"),
   brand(keyword: "Brand"),
+  specifications(keyword: "Specifications"),
   productLine(keyword: "Product Line"),
   categories(keyword: "Categories"),
   warehouseInventory(keyword: "Warehouse Inventory"),

@@ -38,6 +38,19 @@ StyledProduct _$StyledProductFromJson(Map<String, dynamic> json) =>
           ?.map((e) => Warehouse.fromJson(e as Map<String, dynamic>))
           .toList(),
       allowZeroPricing: json['allowZeroPricing'] as bool?,
+      specifications: (json['specifications'] as List<dynamic>?)
+          ?.map((e) => Specification.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      documents: (json['documents'] as List<dynamic>?)
+          ?.map((e) => Document.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      htmlContent: json['htmlContent'] as String?,
+      attributeTypes: (json['attributeTypes'] as List<dynamic>?)
+          ?.map((e) => AttributeType.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      crossSells: (json['crossSells'] as List<dynamic>?)
+          ?.map((e) => Product.fromJson(e as Map<String, dynamic>))
+          .toList(),
     )
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
@@ -77,4 +90,16 @@ Map<String, dynamic> _$StyledProductToJson(StyledProduct instance) =>
       if (instance.trackInventory case final value?) 'trackInventory': value,
       if (instance.allowZeroPricing case final value?)
         'allowZeroPricing': value,
+      if (instance.specifications?.map((e) => e.toJson()).toList()
+          case final value?)
+        'specifications': value,
+      if (instance.documents?.map((e) => e.toJson()).toList() case final value?)
+        'documents': value,
+      if (instance.htmlContent case final value?) 'htmlContent': value,
+      if (instance.attributeTypes?.map((e) => e.toJson()).toList()
+          case final value?)
+        'attributeTypes': value,
+      if (instance.crossSells?.map((e) => e.toJson()).toList()
+          case final value?)
+        'crossSells': value,
     };
