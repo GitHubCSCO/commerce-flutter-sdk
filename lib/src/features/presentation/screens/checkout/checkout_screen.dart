@@ -204,7 +204,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                             : null;
 
                                     final billingShippingEntity =
-                                        prepareBillingShippingEntity(state);
+                                        prepareBillingShippingEntity(
+                                            state, context);
                                     final paymentSummaryEntity =
                                         preparePaymentSummaryEntity(state);
                                     final reviewOrderEntity =
@@ -386,9 +387,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
     final service = checkoutBloc.selectedService;
 
     final isShipMethod =
-        state.shippingMethod.equalsIgnoreCase(ShippingOption.ship.name);
+        state.shippingMethod.equalsIgnoreCase(ShippingOption.Ship.name);
     final isPickUpMethod =
-        state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name);
+        state.shippingMethod.equalsIgnoreCase(ShippingOption.PickUp.name);
 
     if ((isShipMethod && carrier != null && service != null) ||
         isPickUpMethod) {

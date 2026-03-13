@@ -230,9 +230,11 @@ class Cart extends BaseModel {
   DateTime? requestedDeliveryDateDisplay;
 
   /// Gets or sets a value delivery date with date time offset formated String?. For example "2019-02-04T11:13:19-06:00" .
+  @JsonKey(name: 'requestedPickupDate')
   String? requestedPickUpDate;
 
   /// Gets the current pick up date displayed in correct format defined by your session context.
+  @JsonKey(name: 'requestedPickupDateDisplay')
   DateTime? requestedPickUpDateDisplay;
 
   /// Gets or sets the cart not priced.

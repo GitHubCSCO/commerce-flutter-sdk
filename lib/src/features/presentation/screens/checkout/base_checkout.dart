@@ -38,40 +38,45 @@ mixin BaseCheckout {
     );
   }
 
-  BillingShippingEntity prepareBillingShippingEntity(CheckoutDataLoaded state) {
+  BillingShippingEntity prepareBillingShippingEntity(
+      CheckoutDataLoaded state, BuildContext context) {
+    final checkoutBloc = context.read<CheckoutBloc>();
+    final isPickup =
+        state.shippingMethod.equalsIgnoreCase(ShippingOption.PickUp.name);
     return BillingShippingEntity(
       billTo: state.billToAddress,
       shipTo: state.shipToAddress,
       warehouse: state.wareHouse,
-      shippingMethod:
-          (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
-              ? ShippingOption.pickUp
-              : ShippingOption.ship),
+      shippingMethod: isPickup ? ShippingOption.PickUp : ShippingOption.Ship,
       carriers: state.cart.carriers,
       cartSettings: state.cartSettings,
       selectedCarrier: state.selectedCarrier,
       selectedService: state.selectedService,
-      requestDeliveryDate: state.requestDeliveryDate,
+      requestDeliveryDate: isPickup
+          ? checkoutBloc.requestPickupDate
+          : checkoutBloc.requestDeliveryDate,
       allowCreateNewShipToAddress: state.allowCreateNewShipToAddress,
       requestDateWarningMessage: state.requestDateWarningMessage,
     );
   }
 
   BillingShippingEntity prepareVmiBillingShippingEntity(
-      CheckoutDataLoaded state) {
+      CheckoutDataLoaded state, BuildContext context) {
+    final checkoutBloc = context.read<CheckoutBloc>();
+    final isPickup =
+        state.shippingMethod.equalsIgnoreCase(ShippingOption.PickUp.name);
     return BillingShippingEntity(
       billTo: state.billToAddress,
       shipTo: state.shipToAddress,
       warehouse: state.wareHouse,
-      shippingMethod:
-          (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
-              ? ShippingOption.pickUp
-              : ShippingOption.ship),
+      shippingMethod: isPickup ? ShippingOption.PickUp : ShippingOption.Ship,
       carriers: state.cart.carriers,
       cartSettings: state.cartSettings,
       selectedCarrier: state.selectedCarrier,
       selectedService: state.selectedService,
-      requestDeliveryDate: state.requestDeliveryDate,
+      requestDeliveryDate: isPickup
+          ? checkoutBloc.requestPickupDate
+          : checkoutBloc.requestDeliveryDate,
       allowCreateNewShipToAddress: state.allowCreateNewShipToAddress,
     );
   }
@@ -86,22 +91,24 @@ mixin BaseCheckout {
 
   ReviewOrderEntity prepareReviewOrderEntity(
       CheckoutDataLoaded state, BuildContext context) {
+    final checkoutBloc = context.read<CheckoutBloc>();
     return ReviewOrderEntity(
         billTo: state.billToAddress,
         shipTo: state.shipToAddress,
         warehouse: state.wareHouse,
         shippingMethod:
-            (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
-                ? ShippingOption.pickUp
-                : ShippingOption.ship),
+            (state.shippingMethod.equalsIgnoreCase(ShippingOption.PickUp.name)
+                ? ShippingOption.PickUp
+                : ShippingOption.Ship),
         carriers: state.cart.carriers,
         cartSettings: state.cartSettings,
-        paymentMethod: context.read<CheckoutBloc>().cart!.paymentMethod,
+        paymentMethod: checkoutBloc.cart!.paymentMethod,
         selectedCarrier: state.selectedCarrier,
         selectedService: state.selectedService,
-        requestDeliveryDate: state.requestDeliveryDate,
+        requestDeliveryDate: checkoutBloc.requestDeliveryDate,
+        requestPickupDate: checkoutBloc.requestPickupDate,
         allowCreateNewShipToAddress: state.allowCreateNewShipToAddress,
-        orderNotes: context.read<CheckoutBloc>().getOrderNote());
+        orderNotes: checkoutBloc.getOrderNote());
   }
 
   Widget buildSummary(

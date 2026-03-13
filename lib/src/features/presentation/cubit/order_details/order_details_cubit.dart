@@ -286,7 +286,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       state.order.requestedDeliveryDateDisplay != null;
 
   String? get requestedDeliveryDateTitle => _requestedDeliveryDateVisible
-      ? (state.order.fulfillmentMethod == 'PickUp'
+      ? (state.order.fulfillmentMethod.equalsIgnoreCase('PickUp')
           ? LocalizationConstants.requestPickUpDate.localized()
           : LocalizationConstants.requestDeliveryDate.localized())
       : null;
@@ -296,7 +296,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       : null;
 
   bool get isShippingAddressVisible =>
-      state.order.fulfillmentMethod == 'Ship' ||
+      state.order.fulfillmentMethod.equalsIgnoreCase('Ship') ||
       state.order.fulfillmentMethod.isNullOrEmpty;
 
   // Billing Address
@@ -329,7 +329,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   String? get shippingCountryName => state.order.stCountry;
 
   // Pickup Location
-  bool get isPickupLocationVisible => state.order.fulfillmentMethod == 'PickUp';
+  bool get isPickupLocationVisible =>
+      state.order.fulfillmentMethod.equalsIgnoreCase('PickUp');
 
   String? get pickupLocationCityStatePostalCode =>
       '${state.order.shipToCity}, ${state.order.shipToState} ${state.order.shipToPostalCode}';

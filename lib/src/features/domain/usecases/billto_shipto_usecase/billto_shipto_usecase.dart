@@ -118,8 +118,9 @@ class BillToShipToUseCase extends BaseUseCase {
           commerceAPIServiceProvider.getAccountService().currentAccount;
 
       if (currentAccount?.defaultFulfillmentMethod != null &&
-          !(currentAccount?.defaultFulfillmentMethod ==
-              selectedShippingMethod.name)) {
+          !(currentAccount?.defaultFulfillmentMethod
+                  ?.equalsIgnoreCase(selectedShippingMethod.name) ??
+              false)) {
         return false;
       } else {
         if (wasShipToUpdated) {

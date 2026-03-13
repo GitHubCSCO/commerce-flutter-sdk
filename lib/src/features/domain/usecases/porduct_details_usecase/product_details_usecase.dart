@@ -113,7 +113,9 @@ class ProductDetailsUseCase extends BaseUseCase {
 
     var includeAlternateInventory =
         accountSettings?.enableWarehousePickup == false ||
-            session?.fulfillmentMethod != FulfillmentMethodType.PickUp.name;
+            !(session?.fulfillmentMethod
+                    .equalsIgnoreCase(FulfillmentMethodType.PickUp.name) ??
+                false);
 
     var parameters = ProductQueryParameters(
       addToRecentlyViewed: true,

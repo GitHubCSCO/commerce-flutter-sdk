@@ -51,7 +51,7 @@ class BillingShippingWidget extends StatelessWidget {
 
     list.add(_buildBillingAddress());
 
-    if (billingShippingEntity.shippingMethod == ShippingOption.ship) {
+    if (billingShippingEntity.shippingMethod == ShippingOption.Ship) {
       list.add(_buildShippingAddress(
           context,
           billingShippingEntity.allowCreateNewShipToAddress != false &&
@@ -200,7 +200,7 @@ class BillingShippingWidget extends StatelessWidget {
               Expanded(
                 child: ShippingAddressWidget(
                   visible: billingShippingEntity.shippingMethod ==
-                      ShippingOption.ship,
+                      ShippingOption.Ship,
                   companyName: billingShippingEntity.shipTo?.companyName,
                   fullAddress: billingShippingEntity.shipTo?.fullAddress,
                   countryName: billingShippingEntity.shipTo?.country?.name,
@@ -226,7 +226,7 @@ class BillingShippingWidget extends StatelessWidget {
 
   Widget _buildPickUpAddress() {
     return Visibility(
-      visible: billingShippingEntity.shippingMethod == ShippingOption.pickUp,
+      visible: billingShippingEntity.shippingMethod == ShippingOption.PickUp,
       child: PickupLocationWidget(
         description: billingShippingEntity.warehouse?.description,
         address: billingShippingEntity.warehouse?.wareHouseAddress(),
@@ -316,9 +316,9 @@ class BillingShippingWidget extends StatelessWidget {
       children: [
         const SizedBox(height: 12),
         Text(
-          (shippingOption == ShippingOption.ship)
-              ? LocalizationConstants.requestPickUpDateOptional.localized()
-              : LocalizationConstants.requestDeliveryDateOptional.localized(),
+          (shippingOption == ShippingOption.Ship)
+              ? LocalizationConstants.requestDeliveryDateOptional.localized()
+              : LocalizationConstants.requestPickUpDateOptional.localized(),
           textAlign: TextAlign.center,
           style: OptiTextStyles.subtitle,
         ),
@@ -390,7 +390,11 @@ class BillingShippingWidget extends StatelessWidget {
   }
 
   void _onSelectDate(BuildContext context, DateTime dateTime) {
-    context.read<CheckoutBloc>().add(RequestDeliveryDateEvent(dateTime));
+    if (billingShippingEntity.shippingMethod == ShippingOption.Ship) {
+      context.read<CheckoutBloc>().add(RequestDeliveryDateEvent(dateTime));
+    } else {
+      context.read<CheckoutBloc>().add(RequestPickupDateEvent(dateTime));
+    }
     context.read<ReviewOrderCubit>().onOrderConfigChange();
   }
 }

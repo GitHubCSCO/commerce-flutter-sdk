@@ -14,13 +14,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum ShippingOption {
-  ship,
-  pickUp,
+  Ship,
+  PickUp,
   ;
 
   factory ShippingOption.fromJson(Map<String, dynamic> json) =>
       ShippingOption.values.firstWhere(
-        (e) => e.toString().split('.').last == json['shippingOption'],
+        (e) =>
+            e.toString().split('.').last.toLowerCase() ==
+            json['shippingOption']?.toString().toLowerCase(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -77,7 +79,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                       Expanded(
                         child: RadioListTile<ShippingOption>(
                           title: Text(LocalizationConstants.ship.localized()),
-                          value: ShippingOption.ship,
+                          value: ShippingOption.Ship,
                           groupValue: shippingOption,
                           onChanged: (value) {
                             context
@@ -92,7 +94,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                           child: RadioListTile<ShippingOption>(
                             title:
                                 Text(LocalizationConstants.pickUp.localized()),
-                            value: ShippingOption.pickUp,
+                            value: ShippingOption.PickUp,
                             groupValue: shippingOption,
                             onChanged: (value) {
                               context
@@ -104,7 +106,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                       )
                     ],
                   ),
-                  if (shippingOption == ShippingOption.pickUp) ...{
+                  if (shippingOption == ShippingOption.PickUp) ...{
                     BlocListener<LocationSearchHandlerCubit,
                         LocationSearchHandlerState>(
                       listener: (context, state) {
