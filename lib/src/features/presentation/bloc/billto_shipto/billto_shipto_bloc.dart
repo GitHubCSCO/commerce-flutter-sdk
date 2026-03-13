@@ -100,7 +100,8 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       isDefaultSwitchEnable = isDefaultCustomerSelected;
 
       if (hasWillCall &&
-          session.fulfillmentMethod == FulfillmentMethodType.PickUp.name) {
+          session.fulfillmentMethod
+              .equalsIgnoreCase(FulfillmentMethodType.PickUp.name)) {
         recipientAddress = session.shipTo;
         selectedShippingMethod = FulfillmentMethodType.PickUp;
       } else {
