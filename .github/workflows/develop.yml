@@ -123,11 +123,12 @@ jobs:
 
       - run: flutter doctor -v
 
-      - name: Brew update with mono and openssl
+      - name: Brew update openssl, ca-certificates, and mono
         run: |
-          brew update && brew upgrade openssl
-          brew reinstall ca-certificates
-          brew install mono
+          brew update
+          brew upgrade openssl || true
+          brew reinstall ca-certificates || true
+          brew install --cask mono-mdk
 
       - uses: shimataro/ssh-key-action@v2
         with:
@@ -151,13 +152,18 @@ jobs:
           pod install
           cd ..
           flutter build ios --simulator
+      - name: Package iOS Debug Build
+        if: github.event.inputs.build_debug == 'true'
+        run: |
+          cd build/ios/iphonesimulator
+          zip -r $GITHUB_WORKSPACE/ios-debug-app.zip Runner.app
       - name: Upload iOS Debug Build as artifact
         if: github.event.inputs.build_debug == 'true'
         id: upload
         uses: actions/upload-artifact@v4
         with:
           name: ios-debug-app
-          path: build/ios/iphonesimulator/Runner.app
+          path: ios-debug-app.zip
           if-no-files-found: warn
       - name: Cloning build scripts
         if: github.event.inputs.build_debug != 'true'
@@ -288,11 +294,12 @@ jobs:
 
       - run: flutter doctor -v
 
-      - name: Brew update with mono and openssl
+      - name: Brew update openssl, ca-certificates, and mono
         run: |
-          brew update && brew upgrade openssl
-          brew reinstall ca-certificates
-          brew install mono
+          brew update
+          brew upgrade openssl || true
+          brew reinstall ca-certificates || true
+          brew install --cask mono-mdk
 
       - uses: shimataro/ssh-key-action@v2
         with:

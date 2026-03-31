@@ -118,11 +118,12 @@ jobs:
 
       - run: flutter doctor -v
 
-      - name: Brew update with mono and openssl
+      - name: Brew update openssl, ca-certificates, and mono
         run: |
-          brew update && brew upgrade openssl
-          brew reinstall ca-certificates
-          brew install mono
+          brew update
+          brew upgrade openssl || true
+          brew reinstall ca-certificates || true
+          brew install --cask mono-mdk
 
       - uses: shimataro/ssh-key-action@v2
         with:

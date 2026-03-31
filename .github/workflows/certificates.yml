@@ -55,7 +55,7 @@ jobs:
       - name: Install Mono
         run: |
           brew update
-          brew install mono
+          brew install --cask mono-mdk
 
       - name: Fastlane
         run: |
