@@ -80,7 +80,8 @@ class InvoiceHistoryCubit extends Cubit<InvoiceHistoryState> {
   Future<void> loadMoreInvoiceHistory() async {
     if (state.invoiceCollectionModel.pagination?.page == null ||
         state.invoiceCollectionModel.pagination!.page! + 1 >
-            state.invoiceCollectionModel.pagination!.numberOfPages!) {
+            state.invoiceCollectionModel.pagination!.numberOfPages! ||
+        state.status == InvoiceStatus.moreLoading) {
       return;
     }
 
