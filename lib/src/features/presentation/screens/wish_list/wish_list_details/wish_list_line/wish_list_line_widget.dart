@@ -200,9 +200,18 @@ class WishListLineWidget extends StatelessWidget {
         if (isDeleteButtonVisible)
           InkWell(
             onTap: () async {
-              await context.read<WishListDetailsCubit>().deleteWishListLine(
-                    wishListLineEntity,
-                  );
+              confirmDialog(
+                context: context,
+                title: LocalizationConstants.deleteListItem.localized(),
+                message: LocalizationConstants.areYouSureYouWantToDeleteThisItem
+                    .localized(),
+                confirmText: LocalizationConstants.delete.localized(),
+                onConfirm: () async {
+                  await context.read<WishListDetailsCubit>().deleteWishListLine(
+                        wishListLineEntity,
+                      );
+                },
+              );
             },
             child: Padding(
               padding: const EdgeInsets.all(10),
