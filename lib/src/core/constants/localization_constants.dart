@@ -679,6 +679,9 @@ enum LocalizationConstants {
   priceRequired(keyword: "Price is required"),
   priceInvalid(keyword: "Price is not valid"),
   noMessageItem(keyword: "There are no message item."),
+  deleteListItem(keyword: "Delete List Item"),
+  areYouSureYouWantToDeleteThisItem(
+      keyword: "Are you sure you want to delete this item?"),
   removeItemFromTheList(keyword: "Remove item from the list?"),
   favorite(keyword: "Favorite"),
   removeFavorite(keyword: "Remove Favorite"),

@@ -482,6 +482,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
   }
 
   Future<void> deleteWishListLine(WishListLineEntity wishListLine) async {
+    emit(state.copyWith(status: WishListStatus.loading));
     final result = await _wishListDetailsUsecase.deleteWishListLine(
       wishListEntity: state.wishList,
       wishListLineEntity: wishListLine,
