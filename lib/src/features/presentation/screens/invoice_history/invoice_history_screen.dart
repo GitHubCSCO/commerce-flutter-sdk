@@ -210,6 +210,8 @@ class __InvoiceHistoryListWidgetState extends State<_InvoiceHistoryListWidget> {
     return BlocBuilder<InvoiceHistoryCubit, InvoiceHistoryState>(
       builder: (context, state) {
         return ListView.separated(
+          physics: const AlwaysScrollableScrollPhysics(),
+          controller: _scrollController,
           itemBuilder: (context, index) {
             if (index >= (state.invoiceCollectionModel.invoices?.length ?? 0) &&
                 state.status == InvoiceStatus.moreLoading) {
