@@ -86,7 +86,8 @@ class _BillToShipToAddressSelectionPageState
     if (_isBottom) {
       context.read<BilltoShiptoAddressSelectionBloc>().add(
           BilltoShiptoAddressLoadMoreEvent(
-              searchQuery: '', selectionEntity: widget.selectionEntity));
+              searchQuery: textEditingController.text,
+              selectionEntity: widget.selectionEntity));
     }
   }
 
