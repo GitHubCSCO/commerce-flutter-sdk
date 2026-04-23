@@ -4,6 +4,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/wish_list_line_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
@@ -175,57 +176,81 @@ class WishListLineWidget extends StatelessWidget {
     bool isDeleteButtonVisible = true,
     required WishListLineEntity wishListLineEntity,
   }) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (canAddToCart)
-          InkWell(
-            onTap: () async {
-              await context.read<WishListDetailsCubit>().addWishListLineToCart(
-                    wishListLineEntity,
-                  );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: SizedBox(
-                width: 30,
-                height: 30,
-                child: SvgPicture.asset(
-                  AssetConstants.wishListLineAddToCartIcon,
-                  fit: BoxFit.fitWidth,
+    return BlocBuilder<WishListDetailsCubit, WishListDetailsState>(
+      builder: (context, state) {
+        final isLoading =
+            state.status == WishListStatus.listLineAddToCartLoading ||
+                state.status == WishListStatus.loading;
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (canAddToCart)
+              Opacity(
+                opacity: isLoading ? 0.3 : 1.0,
+                child: InkWell(
+                  onTap: isLoading
+                      ? null
+                      : () async {
+                          await context
+                              .read<WishListDetailsCubit>()
+                              .addWishListLineToCart(
+                                wishListLineEntity,
+                              );
+                        },
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: SvgPicture.asset(
+                        AssetConstants.wishListLineAddToCartIcon,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        if (isDeleteButtonVisible)
-          InkWell(
-            onTap: () async {
-              confirmDialog(
-                context: context,
-                title: LocalizationConstants.deleteListItem.localized(),
-                message: LocalizationConstants.areYouSureYouWantToDeleteThisItem
-                    .localized(),
-                confirmText: LocalizationConstants.delete.localized(),
-                onConfirm: () async {
-                  await context.read<WishListDetailsCubit>().deleteWishListLine(
-                        wishListLineEntity,
-                      );
-                },
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: SizedBox(
-                width: 30,
-                height: 30,
-                child: SvgPicture.asset(
-                  AssetConstants.cartItemRemoveIcon,
-                  fit: BoxFit.fitWidth,
+            if (isDeleteButtonVisible)
+              Opacity(
+                opacity: isLoading ? 0.3 : 1.0,
+                child: InkWell(
+                  onTap: isLoading
+                      ? null
+                      : () async {
+                          confirmDialog(
+                            context: context,
+                            title: LocalizationConstants.deleteListItem
+                                .localized(),
+                            message: LocalizationConstants
+                                .areYouSureYouWantToDeleteThisItem
+                                .localized(),
+                            confirmText:
+                                LocalizationConstants.delete.localized(),
+                            onConfirm: () async {
+                              await context
+                                  .read<WishListDetailsCubit>()
+                                  .deleteWishListLine(
+                                    wishListLineEntity,
+                                  );
+                            },
+                          );
+                        },
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: SvgPicture.asset(
+                        AssetConstants.cartItemRemoveIcon,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-      ],
+          ],
+        );
+      },
     );
   }
 }
