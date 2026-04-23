@@ -88,7 +88,7 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
       case Success(value: final data):
         state.list?.addAll(data?.billTos ?? []);
         emit(state.copyWith(
-            list: data?.billTos,
+            list: state.list,
             pagination: data?.pagination,
             status: StateStatus.success));
       case Failure(errorResponse: final error):
