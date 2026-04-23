@@ -31,8 +31,9 @@ class GetProductCollectionResult extends BaseModel {
 
   Object? searchTermRedirectUrl;
 
-  // for V2:
   PriceRange? priceRange;
+
+  String? attributionToken;
 
   GetProductCollectionResult({
     this.pagination,
@@ -49,6 +50,7 @@ class GetProductCollectionResult extends BaseModel {
     this.correctedQuery,
     this.searchTermRedirectUrl,
     this.priceRange,
+    this.attributionToken,
   });
 
   factory GetProductCollectionResult.fromJson(Map<String, dynamic> json) =>

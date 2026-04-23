@@ -102,9 +102,7 @@ class CommerceAPIConstants {
 
   static const String contentUrl = "/api/v2/content/pageByType?type=Mobile/";
 
-  static const String productsUrl = "/api/v1/products";
-
-  static const String productsV2Url = "/api/v2/products";
+  static const String productsUrl = "/api/v2/products";
 
   static const String realTimePricingUrl = "/api/v1/realtimepricing";
 

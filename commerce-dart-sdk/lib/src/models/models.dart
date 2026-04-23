@@ -12,7 +12,7 @@ export 'style_value.dart';
 export 'style_trait.dart';
 export 'product_unit_of_measure.dart';
 export 'product_image.dart';
-export 'styled_product.dart';
+export 'badge.dart';
 export 'attribute_value.dart';
 export 'attribute_type.dart';
 export 'document.dart';

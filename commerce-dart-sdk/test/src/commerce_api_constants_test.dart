@@ -64,8 +64,7 @@ void main() {
           "/api/v1/mobilecontent/{0}");
       expect(CommerceAPIConstants.contentUrl,
           "/api/v2/content/pageByType?type=Mobile/");
-      expect(CommerceAPIConstants.productsUrl, "/api/v1/products");
-      expect(CommerceAPIConstants.productsV2Url, "/api/v2/products");
+      expect(CommerceAPIConstants.productsUrl, "/api/v2/products");
       expect(
           CommerceAPIConstants.realTimePricingUrl, "/api/v1/realtimepricing");
       expect(CommerceAPIConstants.realTimeInventoryUrl,

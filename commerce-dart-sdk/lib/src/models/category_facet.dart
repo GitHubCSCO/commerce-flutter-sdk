@@ -6,23 +6,20 @@ part 'category_facet.g.dart';
 class CategoryFacet {
   String? categoryId;
 
-  String? websiteId;
-
   String? shortDescription;
 
   int? count;
 
   bool? selected;
 
-  List<CategoryFacet>? subCategoryDtos;
+  List<CategoryFacet>? subCategoryFacets;
 
   CategoryFacet({
     this.categoryId,
-    this.websiteId,
     this.shortDescription,
     this.count,
     this.selected,
-    this.subCategoryDtos,
+    this.subCategoryFacets,
   });
 
   factory CategoryFacet.fromJson(Map<String, dynamic> json) =>

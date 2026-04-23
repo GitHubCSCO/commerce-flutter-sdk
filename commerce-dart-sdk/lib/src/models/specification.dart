@@ -7,35 +7,26 @@ class Specification {
   Specification({
     this.description,
     this.htmlContent,
-    this.isActive,
+    this.id,
     this.name,
     this.nameDisplay,
-    this.parentSpecification,
     this.sortOrder,
-    this.specificationId,
-    this.specifications,
     this.value,
   });
 
-  String? specificationId;
+  String? id;
 
   String? name;
 
   String? nameDisplay;
 
-  String? value;
-
   String? description;
 
-  double? sortOrder;
-
-  bool? isActive;
-
-  Specification? parentSpecification;
+  String? value;
 
   String? htmlContent;
 
-  Specification? specifications;
+  double? sortOrder;
 
   factory Specification.fromJson(Map<String, dynamic> json) =>
       _$SpecificationFromJson(json);

@@ -37,6 +37,10 @@ class Pagination {
 
   /// full url to rest endpoint? to retrieve previous page or null if no previous page
   String? prevPageUri;
+
+  /// Token for cursor-based pagination
+  String? nextPageToken;
+
   Pagination({
     this.currentPage,
     this.page,
@@ -49,6 +53,7 @@ class Pagination {
     this.sortType,
     this.nextPageUri,
     this.prevPageUri,
+    this.nextPageToken,
   });
 
   factory Pagination.fromJson(Map<String, dynamic> json) =>

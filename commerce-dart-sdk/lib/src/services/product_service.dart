@@ -7,18 +7,12 @@ class ProductService extends ServiceBase implements IProductService {
     required super.networkService,
   });
 
-  void fixProduct(Product product) {
-    product.pricing ??= ProductPrice();
-    product.availability ??= Availability();
-  }
-
   @override
   Future<Result<GetProductResult, ErrorResponse>> getProduct(String productId,
       {ProductQueryParameters? parameters}) async {
     var url = Uri.parse('${CommerceAPIConstants.productsUrl}/$productId');
     if (parameters != null) {
       Map<String, dynamic> parametersMap = parameters.toJson();
-
       url = url.replace(queryParameters: parametersMap);
     }
 
@@ -33,10 +27,6 @@ class ProductService extends ServiceBase implements IProductService {
           if (productResult == null) {
             return response;
           }
-          if (productResult.product != null) {
-            fixProduct(productResult.product!);
-          }
-
           return Success(productResult);
         }
       case Failure(errorResponse: final errorResponse):
@@ -47,74 +37,9 @@ class ProductService extends ServiceBase implements IProductService {
   }
 
   @override
-  Future<Result<GetProductCollectionResult, ErrorResponse>>
-      getProductCrossSells(String productId) async {
-    final urlString =
-        '${CommerceAPIConstants.productsUrl}/$productId/crosssells';
-    var response = await getAsyncNoCache<GetProductCollectionResult>(
-        urlString, GetProductCollectionResult.fromJson);
-
-    switch (response) {
-      case Success(value: final value):
-        {
-          final productsResult = value;
-          if (productsResult == null || productsResult.products == null) {
-            return response;
-          }
-
-          for (Product product in productsResult.products!) {
-            fixProduct(product);
-          }
-
-          return Success(productsResult);
-        }
-
-      case Failure(errorResponse: final errorResponse):
-        {
-          return Failure(errorResponse);
-        }
-    }
-  }
-
-  @override
-  Future<Result<ProductPrice, ErrorResponse>> getProductPrice(
-      String productId, ProductPriceQueryParameter parameters) async {
-    var url = Uri.parse('${CommerceAPIConstants.productsUrl}/$productId/price');
-    if (parameters.configuration != null) {
-      if (parameters.configuration!.isNotEmpty) {
-        final Map<String, dynamic> parametersMap = parameters.toJson();
-
-        url = url.replace(queryParameters: parametersMap);
-      }
-    }
-
-    final urlString = url.toString();
-    final response =
-        await getAsyncNoCache<ProductPrice>(urlString, ProductPrice.fromJson);
-
-    switch (response) {
-      case Success(value: final value):
-        {
-          final productPrice = value;
-          if (productPrice == null) {
-            return response;
-          }
-
-          return Success(productPrice);
-        }
-
-      case Failure(errorResponse: final errorResponse):
-        {
-          return Failure(errorResponse);
-        }
-    }
-  }
-
-  @Deprecated('Caution: Will be removed in a future release.')
-  @override
   Future<Result<GetProductCollectionResult, ErrorResponse>> getProducts(
       ProductsQueryParameters parameters) async {
-    var url = Uri.parse('${CommerceAPIConstants.productsUrl}/');
+    var url = Uri.parse(CommerceAPIConstants.productsUrl);
     final parametersMap = parameters.toJson();
     url = url.replace(queryParameters: parametersMap);
     final urlString = url.toString();
@@ -128,14 +53,8 @@ class ProductService extends ServiceBase implements IProductService {
           if (productsResult == null || productsResult.products == null) {
             return response;
           }
-
-          for (Product product in productsResult.products!) {
-            fixProduct(product);
-          }
-
           return Success(productsResult);
         }
-
       case Failure(errorResponse: final errorResponse):
         {
           return Failure(errorResponse);
@@ -162,14 +81,8 @@ class ProductService extends ServiceBase implements IProductService {
           if (productsResult == null || productsResult.products == null) {
             return response;
           }
-
-          for (Product product in productsResult.products!) {
-            fixProduct(product);
-          }
-
           return Success(productsResult);
         }
-
       case Failure(errorResponse: final errorResponse):
         {
           return Failure(errorResponse);
@@ -188,5 +101,74 @@ class ProductService extends ServiceBase implements IProductService {
 
     bool result = await cacheService.hasOnlineCache(key);
     return result;
+  }
+
+  @override
+  Future<Result<GetProductCollectionResult, ErrorResponse>> getVariantChildren(
+      String productId) async {
+    final urlString =
+        '${CommerceAPIConstants.productsUrl}/$productId/variantchildren';
+    final response = await getAsyncNoCache<GetProductCollectionResult>(
+        urlString, GetProductCollectionResult.fromJson);
+
+    switch (response) {
+      case Success(value: final value):
+        {
+          if (value == null || value.products == null) {
+            return response;
+          }
+          return Success(value);
+        }
+      case Failure(errorResponse: final errorResponse):
+        {
+          return Failure(errorResponse);
+        }
+    }
+  }
+
+  @override
+  Future<Result<GetProductCollectionResult, ErrorResponse>> getRelatedProducts(
+      String productId) async {
+    final urlString =
+        '${CommerceAPIConstants.productsUrl}/$productId/relatedproducts';
+    final response = await getAsyncNoCache<GetProductCollectionResult>(
+        urlString, GetProductCollectionResult.fromJson);
+
+    switch (response) {
+      case Success(value: final value):
+        {
+          if (value == null || value.products == null) {
+            return response;
+          }
+          return Success(value);
+        }
+      case Failure(errorResponse: final errorResponse):
+        {
+          return Failure(errorResponse);
+        }
+    }
+  }
+
+  @override
+  Future<Result<GetProductCollectionResult, ErrorResponse>> getAlsoPurchased(
+      String productId) async {
+    final urlString =
+        '${CommerceAPIConstants.productsUrl}/$productId/alsopurchased';
+    final response = await getAsyncNoCache<GetProductCollectionResult>(
+        urlString, GetProductCollectionResult.fromJson);
+
+    switch (response) {
+      case Success(value: final value):
+        {
+          if (value == null || value.products == null) {
+            return response;
+          }
+          return Success(value);
+        }
+      case Failure(errorResponse: final errorResponse):
+        {
+          return Failure(errorResponse);
+        }
+    }
   }
 }

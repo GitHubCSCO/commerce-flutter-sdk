@@ -4,20 +4,19 @@ part 'style_trait.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class StyleTrait {
-  StyleTrait(
-      {this.id,
-      this.name,
-      this.nameDisplay,
-      this.sortOrder,
-      this.styleTraitId,
-      this.styleValues,
-      this.traitValues,
-      this.unselectedValue,
-      this.displayType,
-      this.numberOfSwatchesVisible,
-      this.displayTextWithSwatch});
+  StyleTrait({
+    this.id,
+    this.name,
+    this.nameDisplay,
+    this.unselectedValue,
+    this.displayType,
+    this.numberOfSwatchesVisible,
+    this.displayTextWithSwatch,
+    this.sortOrder,
+    this.traitValues,
+  });
 
-  String? styleTraitId;
+  String? id;
 
   String? name;
 
@@ -25,16 +24,13 @@ class StyleTrait {
 
   String? unselectedValue;
 
-  int? sortOrder;
-
-  List<StyleValue>? styleValues;
-
   String? displayType;
+
   int? numberOfSwatchesVisible;
+
   bool? displayTextWithSwatch;
 
-  // for V2
-  String? id;
+  int? sortOrder;
 
   List<StyleValue>? traitValues;
 

@@ -12,6 +12,7 @@ class ProductDetail {
     this.isGiftCard,
     this.isHazardousGood,
     this.isSpecialOrder,
+    this.isSubscription,
     this.modelNumber,
     this.multipleSaleQty,
     this.name,
@@ -26,6 +27,7 @@ class ProductDetail {
     this.shippingWidth,
     this.sku,
     this.sortOrder,
+    this.subscription,
     this.taxCategory,
     this.taxCode1,
     this.taxCode2,
@@ -65,6 +67,10 @@ class ProductDetail {
   bool? isSpecialOrder;
 
   bool? isGiftCard;
+
+  bool? isSubscription;
+
+  ProductSubscriptionDto? subscription;
 
   bool? allowAnyGiftCardAmount;
 

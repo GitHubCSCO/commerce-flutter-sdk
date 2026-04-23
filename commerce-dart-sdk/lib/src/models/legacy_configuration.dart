@@ -5,12 +5,12 @@ part 'legacy_configuration.g.dart';
 @JsonSerializable(explicitToJson: true)
 class LegacyConfiguration {
   LegacyConfiguration({
+    this.configSections,
     this.hasDefaults,
     this.isKit,
-    this.sections,
   });
 
-  List<ConfigSection>? sections;
+  List<ConfigSection>? configSections;
 
   bool? hasDefaults;
 
@@ -25,19 +25,21 @@ class LegacyConfiguration {
 class ConfigSection {
   ConfigSection({
     this.id,
-    this.options,
     this.sectionName,
+    this.label,
     this.sortOrder,
+    this.sectionOptions,
   });
+
+  String? id;
 
   String? sectionName;
 
-  List<ConfigSectionOption>? options;
-
-  // for V2
-  String? id;
+  String? label;
 
   int? sortOrder;
+
+  List<ConfigSectionOption>? sectionOptions;
 
   factory ConfigSection.fromJson(Map<String, dynamic> json) =>
       _$ConfigSectionFromJson(json);
@@ -47,44 +49,34 @@ class ConfigSection {
 @JsonSerializable(explicitToJson: true)
 class ConfigSectionOption {
   ConfigSectionOption({
-    this.description,
     this.id,
-    this.name,
-    this.price,
     this.productId,
-    this.productName,
-    this.quantity,
-    this.sectionName,
-    this.sectionOptionId,
+    this.name,
+    this.description,
+    this.price,
     this.selected,
     this.sortOrder,
-    this.userProductPrice,
+    this.quantity,
+    this.cantBuy,
   });
 
-  String? sectionOptionId;
-
-  String? sectionName;
-
-  String? productName;
+  String? id;
 
   String? productId;
+
+  String? name;
 
   String? description;
 
   num? price;
 
-  bool? userProductPrice;
-
   bool? selected;
 
   int? sortOrder;
 
-  // for V2
-  String? id;
-
-  String? name;
-
   num? quantity;
+
+  bool? cantBuy;
 
   factory ConfigSectionOption.fromJson(Map<String, dynamic> json) =>
       _$ConfigSectionOptionFromJson(json);

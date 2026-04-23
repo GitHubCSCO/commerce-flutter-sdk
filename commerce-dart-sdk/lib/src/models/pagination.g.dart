@@ -22,6 +22,7 @@ Pagination _$PaginationFromJson(Map<String, dynamic> json) => Pagination(
       sortType: json['sortType'] as String?,
       nextPageUri: json['nextPageUri'] as String?,
       prevPageUri: json['prevPageUri'] as String?,
+      nextPageToken: json['nextPageToken'] as String?,
     );
 
 Map<String, dynamic> _$PaginationToJson(Pagination instance) =>
@@ -39,4 +40,5 @@ Map<String, dynamic> _$PaginationToJson(Pagination instance) =>
       if (instance.sortType case final value?) 'sortType': value,
       if (instance.nextPageUri case final value?) 'nextPageUri': value,
       if (instance.prevPageUri case final value?) 'prevPageUri': value,
+      if (instance.nextPageToken case final value?) 'nextPageToken': value,
     };

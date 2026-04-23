@@ -18,6 +18,7 @@ ProductDetail _$ProductDetailFromJson(Map<String, dynamic> json) =>
       isGiftCard: json['isGiftCard'] as bool?,
       isHazardousGood: json['isHazardousGood'] as bool?,
       isSpecialOrder: json['isSpecialOrder'] as bool?,
+      isSubscription: json['isSubscription'] as bool?,
       modelNumber: json['modelNumber'] as String?,
       multipleSaleQty: (json['multipleSaleQty'] as num?)?.toInt(),
       name: json['name'] as String?,
@@ -32,6 +33,10 @@ ProductDetail _$ProductDetailFromJson(Map<String, dynamic> json) =>
       shippingWidth: json['shippingWidth'] as num?,
       sku: json['sku'] as String?,
       sortOrder: (json['sortOrder'] as num?)?.toInt(),
+      subscription: json['subscription'] == null
+          ? null
+          : ProductSubscriptionDto.fromJson(
+              json['subscription'] as Map<String, dynamic>),
       taxCategory: json['taxCategory'] as String?,
       taxCode1: json['taxCode1'] as String?,
       taxCode2: json['taxCode2'] as String?,
@@ -59,6 +64,9 @@ Map<String, dynamic> _$ProductDetailToJson(ProductDetail instance) =>
       if (instance.hasMsds case final value?) 'hasMsds': value,
       if (instance.isSpecialOrder case final value?) 'isSpecialOrder': value,
       if (instance.isGiftCard case final value?) 'isGiftCard': value,
+      if (instance.isSubscription case final value?) 'isSubscription': value,
+      if (instance.subscription?.toJson() case final value?)
+        'subscription': value,
       if (instance.allowAnyGiftCardAmount case final value?)
         'allowAnyGiftCardAmount': value,
       if (instance.taxCode1 case final value?) 'taxCode1': value,

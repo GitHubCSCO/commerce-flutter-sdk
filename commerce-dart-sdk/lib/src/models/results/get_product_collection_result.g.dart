@@ -39,6 +39,7 @@ GetProductCollectionResult _$GetProductCollectionResultFromJson(
       priceRange: json['priceRange'] == null
           ? null
           : PriceRange.fromJson(json['priceRange'] as Map<String, dynamic>),
+      attributionToken: json['attributionToken'] as String?,
     )
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
@@ -78,4 +79,6 @@ Map<String, dynamic> _$GetProductCollectionResultToJson(
       if (instance.searchTermRedirectUrl case final value?)
         'searchTermRedirectUrl': value,
       if (instance.priceRange?.toJson() case final value?) 'priceRange': value,
+      if (instance.attributionToken case final value?)
+        'attributionToken': value,
     };
