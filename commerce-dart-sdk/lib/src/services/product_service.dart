@@ -105,11 +105,16 @@ class ProductService extends ServiceBase implements IProductService {
 
   @override
   Future<Result<GetProductCollectionResult, ErrorResponse>> getVariantChildren(
-      String productId) async {
-    final urlString =
-        '${CommerceAPIConstants.productsUrl}/$productId/variantchildren';
+      String productId,
+      {VariantChildrenQueryParameters? parameters}) async {
+    var url = Uri.parse(
+        '${CommerceAPIConstants.productsUrl}/$productId/variantchildren');
+    if (parameters != null) {
+      url = url.replace(queryParameters: parameters.toJson());
+    }
+
     final response = await getAsyncNoCache<GetProductCollectionResult>(
-        urlString, GetProductCollectionResult.fromJson);
+        url.toString(), GetProductCollectionResult.fromJson);
 
     switch (response) {
       case Success(value: final value):
@@ -128,11 +133,16 @@ class ProductService extends ServiceBase implements IProductService {
 
   @override
   Future<Result<GetProductCollectionResult, ErrorResponse>> getRelatedProducts(
-      String productId) async {
-    final urlString =
-        '${CommerceAPIConstants.productsUrl}/$productId/relatedproducts';
+      String productId,
+      {RelatedProductsQueryParameters? parameters}) async {
+    var url = Uri.parse(
+        '${CommerceAPIConstants.productsUrl}/$productId/relatedproducts');
+    if (parameters != null) {
+      url = url.replace(queryParameters: parameters.toJson());
+    }
+
     final response = await getAsyncNoCache<GetProductCollectionResult>(
-        urlString, GetProductCollectionResult.fromJson);
+        url.toString(), GetProductCollectionResult.fromJson);
 
     switch (response) {
       case Success(value: final value):
@@ -151,11 +161,16 @@ class ProductService extends ServiceBase implements IProductService {
 
   @override
   Future<Result<GetProductCollectionResult, ErrorResponse>> getAlsoPurchased(
-      String productId) async {
-    final urlString =
-        '${CommerceAPIConstants.productsUrl}/$productId/alsopurchased';
+      String productId,
+      {AlsoPurchasedQueryParameters? parameters}) async {
+    var url = Uri.parse(
+        '${CommerceAPIConstants.productsUrl}/$productId/alsopurchased');
+    if (parameters != null) {
+      url = url.replace(queryParameters: parameters.toJson());
+    }
+
     final response = await getAsyncNoCache<GetProductCollectionResult>(
-        urlString, GetProductCollectionResult.fromJson);
+        url.toString(), GetProductCollectionResult.fromJson);
 
     switch (response) {
       case Success(value: final value):

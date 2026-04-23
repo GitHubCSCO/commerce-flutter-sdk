@@ -82,7 +82,7 @@ class SearchProductFilterWidget extends StatelessWidget {
                       categoryId: selectedCategoryId,
                       previouslyPurchasedProducts: previouslyPurchased,
                       stockedItemsOnly: selectedStockedItems,
-                      query: searchText,
+                      search: searchText,
                     ),
                   );
               _showProductFilterWidget(
@@ -169,7 +169,7 @@ class SearchProductFilterWidget extends StatelessWidget {
       categoryId: selectedCategoryId,
       previouslyPurchasedProducts: false,
       stockedItemsOnly: false,
-      query: searchText,
+      search: searchText,
     );
   }
 }

@@ -13,11 +13,14 @@ abstract class IProductService {
   Future<bool> hasProductCache(ProductsQueryParameters parameters);
 
   Future<Result<GetProductCollectionResult, ErrorResponse>> getVariantChildren(
-      String productId);
+      String productId,
+      {VariantChildrenQueryParameters? parameters});
 
   Future<Result<GetProductCollectionResult, ErrorResponse>> getRelatedProducts(
-      String productId);
+      String productId,
+      {RelatedProductsQueryParameters? parameters});
 
   Future<Result<GetProductCollectionResult, ErrorResponse>> getAlsoPurchased(
-      String productId);
+      String productId,
+      {AlsoPurchasedQueryParameters? parameters});
 }

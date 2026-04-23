@@ -1,24 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'product_query_parameters.dart';
+part of 'variant_children_query_parameters.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Map<String, dynamic> _$ProductQueryParametersToJson(
-        ProductQueryParameters instance) =>
+Map<String, dynamic> _$VariantChildrenQueryParametersToJson(
+        VariantChildrenQueryParameters instance) =>
     <String, dynamic>{
       if (instance.page case final value?) 'page': value,
       if (instance.pageSize case final value?) 'pageSize': value,
       if (instance.sort case final value?) 'sort': value,
-      if (instance.productId case final value?) 'productId': value,
-      if (instance.categoryId case final value?) 'categoryId': value,
-      if (instance.addToRecentlyViewed case final value?)
-        'addToRecentlyViewed': value,
-      if (instance.applyPersonalization case final value?)
-        'applyPersonalization': value,
+      if (instance.expand case final value?) 'expand': value,
       if (instance.includeAttributes case final value?)
         'includeAttributes': value,
-      if (instance.expand case final value?) 'expand': value,
+      if (instance.pageToken case final value?) 'pageToken': value,
     };

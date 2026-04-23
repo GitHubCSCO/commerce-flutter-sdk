@@ -21,7 +21,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/product_image_en
 import 'package:commerce_flutter_sdk/src/features/domain/entity/specification_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
@@ -111,20 +110,13 @@ class ProductDetailsUseCase extends BaseUseCase {
       }
     }
 
-    var includeAlternateInventory =
-        accountSettings?.enableWarehousePickup == false ||
-            !(session?.fulfillmentMethod
-                    .equalsIgnoreCase(FulfillmentMethodType.PickUp.name) ??
-                false);
-
     var parameters = ProductQueryParameters(
       addToRecentlyViewed: true,
       applyPersonalization: true,
       includeAttributes: "IncludeOnProduct",
-      includeAlternateInventory: includeAlternateInventory,
       productId: productId,
       expand:
-          "documents,specifications,styledproducts,htmlcontent,attributes,crosssells,pricing,brand",
+          "documents,specifications,htmlcontent,attributes,brand",
     );
 
     var resultResponse = await commerceAPIServiceProvider

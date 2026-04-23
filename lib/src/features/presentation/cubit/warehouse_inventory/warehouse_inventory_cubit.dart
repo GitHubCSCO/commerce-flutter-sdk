@@ -45,9 +45,7 @@ class WarehouseInventoryCubit extends Cubit<WareHouseInventoryState> {
   Future<List<InventoryWarehouse>> _getProductInventory(
       String? productId, String unitOfMeasure) async {
     var productParameters = ProductQueryParameters(
-        expand: "warehouses",
-        unitOfMeasure: unitOfMeasure,
-        replaceProducts: false);
+        expand: "warehouses");
     var productWithWarehousesResponse = await _warehouseInventoryUsecase
         .getProduct(productId, productParameters);
 

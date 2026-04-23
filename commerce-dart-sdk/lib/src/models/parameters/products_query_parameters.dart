@@ -62,91 +62,25 @@ class BaseProductsQueryParameters extends BaseQueryParameters {
 
   bool? applyPersonalization;
 
-  // Automatic conversion of map values ([int], [bool] etc.) to [String]
-  // this is required since [toJson()] method converts an object to [Map]
-  // and for sending request, the [queryParameters] needs to be set with a [Map]
-  // and [queryParameters] Map cannot have any value that is in types like [int] or [bool]
   @override
   Map<String, dynamic> toJson() =>
       JsonEncodingMethods.convertAttributesToString(
           _$BaseProductsQueryParametersToJson(this));
 }
 
-/// The class for all products V1 related query parameters
-///
-/// Doesn't create [fromJson].
-/// [JsonSerializable] is required to convert an object to a map
-/// while requesting with an [Uri], the [queryparameters] need to be a map
-/// so by using [Uri("...", queryParameter: ProductsQueryParameters.toJson())]
-/// the object is automatically converted to be used as query parameter.
+/// The class for all products query parameters (V2 API)
 @JsonSerializable(createFactory: false)
 class ProductsQueryParameters extends BaseProductsQueryParameters {
   ProductsQueryParameters({
-    this.erpNumbers,
-    this.query,
-    this.replaceProducts,
-    this.getAllAttributeFacets,
-    this.includeAlternateInventory,
-    this.makeBrandUrls,
-    this.topSellersMaxResults,
-    this.previouslyPurchasedProducts,
-    this.stockedItemsOnly,
-    super.attributeValueIds,
-    super.brandIds,
-    super.categoryId,
-    super.expand,
-    super.extendedNames,
-    super.filter,
-    super.includeAttributes,
-    super.includeSuggestions,
-    super.names,
-    super.priceFilters,
-    super.productIds,
-    super.productLineIds,
-    super.searchWithin,
-    super.topSellersCategoryIds,
-    super.page,
-    super.pageSize,
-    super.sort,
-    super.applyPersonalization,
-  });
-
-  List<String?>? erpNumbers;
-  String? query;
-  bool? replaceProducts;
-  bool? getAllAttributeFacets;
-  bool? includeAlternateInventory;
-  bool? makeBrandUrls;
-  int? topSellersMaxResults;
-  bool? previouslyPurchasedProducts;
-  bool? stockedItemsOnly;
-
-  //  Automatic conversion of map values ([int], [bool] etc.) to [String]
-  //  this is required since [toJson()] method converts an object to [Map]
-  //  and for sending request, the [queryParameters] needs to be set with a [Map]
-  //  and [queryParameters] Map cannot have any value that is in types like [int] or [bool]
-  @override
-  Map<String, dynamic> toJson() =>
-      JsonEncodingMethods.convertAttributesToString(
-          _$ProductsQueryParametersToJson(this));
-}
-
-/// The class for all products V2 related query parameters
-///
-/// Doesn't create [fromJson].
-/// [JsonSerializable] is required to convert an object to a map
-/// while requesting with an [Uri], the [queryparameters] need to be a map
-/// so by using [Uri("...", queryParameter: ProductsQueryV2Parameters.toJson())]
-/// the object is automatically converted to be used as query parameter.
-@JsonSerializable(createFactory: false)
-class ProductsQueryV2Parameters extends BaseProductsQueryParameters {
-  ProductsQueryV2Parameters({
     this.search,
+    this.productNumbers,
     this.includeProductsInSubCategories,
     this.minimumPrice,
     this.maximumPrice,
     this.topSellersPersonaIds,
-    this.cardId,
+    this.cartId,
+    this.pageToken,
+    this.relevancy,
     this.stockedItemsOnly,
     this.previouslyPurchasedProducts,
     super.attributeValueIds,
@@ -170,20 +104,19 @@ class ProductsQueryV2Parameters extends BaseProductsQueryParameters {
   });
 
   String? search;
+  List<String>? productNumbers;
   bool? includeProductsInSubCategories;
   num? minimumPrice;
   num? maximumPrice;
   List<String>? topSellersPersonaIds;
-  String? cardId;
+  String? cartId;
+  String? pageToken;
+  String? relevancy;
   bool? stockedItemsOnly;
   bool? previouslyPurchasedProducts;
 
-  // Automatic conversion of map values ([int], [bool] etc.) to [String]
-  // this is required since [toJson()] method converts an object to [Map]
-  // and for sending request, the [queryParameters] needs to be set with a [Map]
-  // and [queryParameters] Map cannot have any value that is in types like [int] or [bool]
   @override
   Map<String, dynamic> toJson() =>
       JsonEncodingMethods.convertAttributesToString(
-          _$ProductsQueryV2ParametersToJson(this));
+          _$ProductsQueryParametersToJson(this));
 }

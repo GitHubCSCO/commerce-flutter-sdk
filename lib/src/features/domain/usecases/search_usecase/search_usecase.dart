@@ -75,7 +75,7 @@ class SearchUseCase extends BaseUseCase {
     bool? selectedStockedItems,
   }) async {
     var parameters = ProductsQueryParameters(
-      query: searchQuery,
+      search: searchQuery,
       page: currentPage,
       // Sort = this.sortViewModel?.CurrentlySelectedSortOption?.SortType,
       // AttributeValueIds = this.SelectedAttributeValueIds,

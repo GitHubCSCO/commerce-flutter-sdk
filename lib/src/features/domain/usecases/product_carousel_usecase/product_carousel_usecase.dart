@@ -115,10 +115,7 @@ class ProductCarouselUseCase extends BaseUseCase {
 
     return ProductsQueryParameters(
         filter: "topsellers",
-        topSellersMaxResults:
-            productCarouselWidgetEntity.numberOfProductsToDisplay,
         topSellersCategoryIds: topSellersCategoryIds,
-        makeBrandUrls: false,
         expand: ["brand"]);
   }
 

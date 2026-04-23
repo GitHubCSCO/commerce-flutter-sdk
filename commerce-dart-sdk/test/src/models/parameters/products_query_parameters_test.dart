@@ -3,7 +3,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final queryParams = ProductsQueryParameters(query: 's');
+  final queryParams = ProductsQueryParameters(search: 's');
 
   group(
       'Product query parameters',
