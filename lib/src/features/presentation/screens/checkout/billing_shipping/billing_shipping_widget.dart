@@ -278,31 +278,31 @@ class BillingShippingWidget extends StatelessWidget {
             ),
           ],
         ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              flex: 1,
-              child: Text(
-                LocalizationConstants.service.localized(),
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Row(
-                children: [
-                  Expanded(
-                      child: ListPickerWidget(
-                          items: services ?? [],
-                          selectedIndex: selectedServiceIndex,
-                          callback: _onServiceSelect)),
-                ],
-              ),
-            ),
-          ],
-        ),
+        // Row(
+        //   mainAxisSize: MainAxisSize.max,
+        //   children: [
+        //     Expanded(
+        //       flex: 1,
+        //       child: Text(
+        //         LocalizationConstants.service.localized(),
+        //         textAlign: TextAlign.start,
+        //         style: OptiTextStyles.body,
+        //       ),
+        //     ),
+        //     Expanded(
+        //       flex: 2,
+        //       child: Row(
+        //         children: [
+        //           Expanded(
+        //               child: ListPickerWidget(
+        //                   items: services ?? [],
+        //                   selectedIndex: selectedServiceIndex,
+        //                   callback: _onServiceSelect)),
+        //         ],
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }

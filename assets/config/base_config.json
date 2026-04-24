@@ -1,5 +1,6 @@
 {
-    "domain": "",
+    "shouldUseStaticDomain": true,
+    "domain": "consolidatedsupply.com",
     "checkoutUrl": null,
     "startingCategoryForBrowsing": null,
     "hasCheckout": true,
