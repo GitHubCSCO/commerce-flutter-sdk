@@ -8,11 +8,8 @@ class DocumentEntityMapper {
         description: model.description,
         filePath: model.filePath,
         documentType: model.documentType,
-        createdOn: null,
-        fileUrl: null,
-        languageId: null,
-        fileTypeString: null,
       );
+
   Document toModel(DocumentEntity entity) => Document(
         id: entity.id,
         name: entity.name,

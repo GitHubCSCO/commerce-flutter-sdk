@@ -5,26 +5,22 @@ class BrandEntityMapper {
   static BrandEntity toEntity(Brand? model) => BrandEntity(
         id: model?.id,
         name: model?.name,
+        urlSegment: model?.urlSegment,
         detailPagePath: model?.detailPagePath,
         logoSmallImagePath: model?.logoSmallImagePath,
         logoLargeImagePath: model?.logoLargeImagePath,
         logoAltText: model?.logoImageAltText,
-        manufacturer: null,
-        externalUrl: null,
-        productListPagePage: null,
-        featuredImagePath: null,
-        featuredImageAltText: null,
-        htmlContent: null,
-        topSellerProducts: null,
+        logoImageAltText: model?.logoImageAltText,
       );
 
   static Brand toModel(BrandEntity entity) => Brand(
         id: entity.id,
         name: entity.name,
+        urlSegment: entity.urlSegment,
         detailPagePath: entity.detailPagePath,
         logoSmallImagePath: entity.logoSmallImagePath,
         logoLargeImagePath: entity.logoLargeImagePath,
-        logoImageAltText: entity.logoAltText,
+        logoImageAltText: entity.logoImageAltText ?? entity.logoAltText,
       );
 }
 

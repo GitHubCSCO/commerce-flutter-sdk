@@ -30,6 +30,7 @@ class ProductDetailEntity extends Equatable {
   final num? shippingWidth;
   final num? shippingHeight;
   final num? shippingWeight;
+  final bool? isSubscription;
   final LegacyConfigurationEntity? configuration;
 
   const ProductDetailEntity({
@@ -40,6 +41,7 @@ class ProductDetailEntity extends Equatable {
     this.isGiftCard,
     this.isHazardousGood,
     this.isSpecialOrder,
+    this.isSubscription,
     this.modelNumber,
     this.multipleSaleQty,
     this.name,
@@ -83,6 +85,7 @@ class ProductDetailEntity extends Equatable {
     bool? hasMsds,
     bool? isSpecialOrder,
     bool? isGiftCard,
+    bool? isSubscription,
     bool? allowAnyGiftCardAmount,
     String? taxCode1,
     String? taxCode2,
@@ -112,6 +115,7 @@ class ProductDetailEntity extends Equatable {
       hasMsds: hasMsds ?? this.hasMsds,
       isSpecialOrder: isSpecialOrder ?? this.isSpecialOrder,
       isGiftCard: isGiftCard ?? this.isGiftCard,
+      isSubscription: isSubscription ?? this.isSubscription,
       allowAnyGiftCardAmount:
           allowAnyGiftCardAmount ?? this.allowAnyGiftCardAmount,
       taxCode1: taxCode1 ?? this.taxCode1,

@@ -1,70 +1,48 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/brand_mapper.dart';
 import 'package:equatable/equatable.dart';
-
-import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandEntity extends Equatable {
   final String? id;
   final String? name;
-  final String? manufacturer;
-  final String? externalUrl;
+  final String? urlSegment;
   final String? detailPagePath;
-  final String? productListPagePage;
   final String? logoSmallImagePath;
   final String? logoLargeImagePath;
   final String? logoAltText;
-  final String? featuredImagePath;
-  final String? featuredImageAltText;
-  final String? htmlContent;
-  final List<ProductEntity>? topSellerProducts;
+  final String? logoImageAltText;
 
   const BrandEntity({
     this.id,
     this.name,
-    this.manufacturer,
-    this.externalUrl,
+    this.urlSegment,
     this.detailPagePath,
-    this.productListPagePage,
     this.logoSmallImagePath,
     this.logoLargeImagePath,
     this.logoAltText,
-    this.featuredImagePath,
-    this.featuredImageAltText,
-    this.htmlContent,
-    this.topSellerProducts,
+    this.logoImageAltText,
   });
 
   BrandEntity copyWith({
     String? id,
     String? name,
-    String? manufacturer,
-    String? externalUrl,
+    String? urlSegment,
     String? detailPagePath,
-    String? productListPagePage,
     String? logoSmallImagePath,
     String? logoLargeImagePath,
     String? logoAltText,
-    String? featuredImagePath,
-    String? featuredImageAltText,
-    String? htmlContent,
-    List<ProductEntity>? topSellerProducts,
+    String? logoImageAltText,
   }) {
     return BrandEntity(
       id: id ?? this.id,
       name: name ?? this.name,
-      manufacturer: manufacturer ?? this.manufacturer,
-      externalUrl: externalUrl ?? this.externalUrl,
+      urlSegment: urlSegment ?? this.urlSegment,
       detailPagePath: detailPagePath ?? this.detailPagePath,
-      productListPagePage: productListPagePage ?? this.productListPagePage,
       logoSmallImagePath: logoSmallImagePath ?? this.logoSmallImagePath,
       logoLargeImagePath: logoLargeImagePath ?? this.logoLargeImagePath,
       logoAltText: logoAltText ?? this.logoAltText,
-      featuredImagePath: featuredImagePath ?? this.featuredImagePath,
-      featuredImageAltText: featuredImageAltText ?? this.featuredImageAltText,
-      htmlContent: htmlContent ?? this.htmlContent,
-      topSellerProducts: topSellerProducts ?? this.topSellerProducts,
+      logoImageAltText: logoImageAltText ?? this.logoImageAltText,
     );
   }
 
@@ -72,17 +50,12 @@ class BrandEntity extends Equatable {
   List<Object?> get props => [
         id,
         name,
-        manufacturer,
-        externalUrl,
+        urlSegment,
         detailPagePath,
-        productListPagePage,
         logoSmallImagePath,
         logoLargeImagePath,
         logoAltText,
-        featuredImagePath,
-        featuredImageAltText,
-        htmlContent,
-        topSellerProducts,
+        logoImageAltText,
       ];
 
   factory BrandEntity.fromJson(Map<String, dynamic> json) =>

@@ -1,8 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
-import 'package:commerce_flutter_sdk/src/features/domain/entity/availability_entity.dart';
-
 class ProductUnitOfMeasureEntity extends Equatable {
   final String? productUnitOfMeasureId;
   final String? unitOfMeasure;
@@ -11,7 +9,6 @@ class ProductUnitOfMeasureEntity extends Equatable {
   final double? qtyPerBaseUnitOfMeasure;
   final String? roundingRule;
   final bool? isDefault;
-  final AvailabilityEntity? availability;
   final String? unitOfMeasureTextDisplayWithQuantity;
 
   const ProductUnitOfMeasureEntity({
@@ -22,7 +19,6 @@ class ProductUnitOfMeasureEntity extends Equatable {
     this.qtyPerBaseUnitOfMeasure,
     this.roundingRule,
     this.isDefault,
-    this.availability,
     this.unitOfMeasureTextDisplayWithQuantity,
   });
 
@@ -34,7 +30,6 @@ class ProductUnitOfMeasureEntity extends Equatable {
     double? qtyPerBaseUnitOfMeasure,
     String? roundingRule,
     bool? isDefault,
-    AvailabilityEntity? availability,
     String? unitOfMeasureTextDisplayWithQuantity,
   }) {
     return ProductUnitOfMeasureEntity(
@@ -47,7 +42,6 @@ class ProductUnitOfMeasureEntity extends Equatable {
           qtyPerBaseUnitOfMeasure ?? this.qtyPerBaseUnitOfMeasure,
       roundingRule: roundingRule ?? this.roundingRule,
       isDefault: isDefault ?? this.isDefault,
-      availability: availability ?? this.availability,
       unitOfMeasureTextDisplayWithQuantity:
           unitOfMeasureTextDisplayWithQuantity ??
               this.unitOfMeasureTextDisplayWithQuantity,
@@ -63,7 +57,6 @@ class ProductUnitOfMeasureEntity extends Equatable {
         qtyPerBaseUnitOfMeasure,
         roundingRule,
         isDefault,
-        availability,
         unitOfMeasureTextDisplayWithQuantity,
       ];
 }

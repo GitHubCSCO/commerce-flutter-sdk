@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:commerce_flutter_sdk/src/features/domain/entity/attribute_type_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/badge_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/child_trait_value_entity.dart';
@@ -144,6 +145,9 @@ class ProductEntity extends Equatable {
   final List<StyleTraitEntity>? variantTraits;
   final List<ChildTraitValueEntity>? childTraitValues;
   final bool? allowZeroPricing;
+  final List<BadgeEntity>? badges;
+  final String? displayUrl;
+  final String? defaultChildProductId;
 
   final Properties? properties;
 
@@ -270,6 +274,9 @@ class ProductEntity extends Equatable {
     this.childTraitValues,
     this.properties,
     this.allowZeroPricing,
+    this.badges,
+    this.displayUrl,
+    this.defaultChildProductId,
   });
 
   ProductEntity copyWith({
@@ -395,6 +402,9 @@ class ProductEntity extends Equatable {
     List<ChildTraitValueEntity>? childTraitValues,
     Properties? properties,
     bool? allowZeroPricing,
+    List<BadgeEntity>? badges,
+    String? displayUrl,
+    String? defaultChildProductId,
   }) {
     return ProductEntity(
       id: id ?? this.id,
@@ -531,6 +541,10 @@ class ProductEntity extends Equatable {
       childTraitValues: childTraitValues ?? this.childTraitValues,
       properties: properties ?? this.properties,
       allowZeroPricing: allowZeroPricing ?? this.allowZeroPricing,
+      badges: badges ?? this.badges,
+      displayUrl: displayUrl ?? this.displayUrl,
+      defaultChildProductId:
+          defaultChildProductId ?? this.defaultChildProductId,
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/attribute_type_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/badge_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/child_trait_value_mapper.dart';
@@ -182,6 +183,11 @@ class ProductEntityMapper {
             ? ProductSubscriptionEntityMapper.toEntity(
                 model.detail!.subscription)
             : null,
+        badges: model.badges
+            ?.map((e) => BadgeEntityMapper.toEntity(e))
+            .toList(),
+        displayUrl: model.displayUrl,
+        defaultChildProductId: model.defaultChildProductId,
         properties: model.properties,
       );
 
@@ -191,6 +197,7 @@ class ProductEntityMapper {
         customerProductNumber: entity.customerProductNumber,
         productTitle: entity.productTitle ?? entity.name,
         urlSegment: entity.urlSegment,
+        displayUrl: entity.displayUrl,
         canonicalUrl: entity.canonicalUrl ?? entity.productDetailUrl,
         smallImagePath: entity.smallImagePath,
         mediumImagePath: entity.mediumImagePath,
@@ -214,6 +221,7 @@ class ProductEntityMapper {
         canShowPrice: entity.canShowPrice,
         canShowUnitOfMeasure: entity.canShowUnitOfMeasure,
         isVariantParent: entity.isVariantParent ?? entity.isStyleProductParent,
+        defaultChildProductId: entity.defaultChildProductId,
         variantTypeId: entity.variantTypeId,
         salePriceLabel: entity.salePriceLabel,
         cantBuy: entity.cantBuy,
@@ -257,6 +265,9 @@ class ProductEntityMapper {
             .toList(),
         warehouses: entity.warehouses
             ?.map((e) => InventoryWarehouseEntityMapper().toModel(e))
+            .toList(),
+        badges: entity.badges
+            ?.map((e) => BadgeEntityMapper.toModel(e))
             .toList(),
       )..properties = entity.properties;
 }

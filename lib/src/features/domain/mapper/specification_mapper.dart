@@ -10,9 +10,6 @@ class SpecificationEntityMapper {
         description: model.description,
         sortOrder: model.sortOrder,
         htmlContent: model.htmlContent,
-        isActive: null,
-        parentSpecification: null,
-        specifications: null,
       );
 
   Specification toModel(SpecificationEntity entity) => Specification(
