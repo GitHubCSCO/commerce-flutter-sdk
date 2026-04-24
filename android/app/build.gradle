@@ -53,11 +53,7 @@ android {
         applicationId "com.consolidatedsupply.commerce"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-<<<<<<< HEAD
         minSdkVersion 24
-=======
-        minSdkVersion flutter.minSdkVersion
->>>>>>> 3513f73c (update cocoapods)
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
