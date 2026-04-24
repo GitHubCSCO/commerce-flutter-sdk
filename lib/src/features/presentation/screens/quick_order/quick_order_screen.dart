@@ -151,6 +151,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: OptiAppColors.backgroundWhite,
         appBar: AppBar(
           title: Text(_getTitle(widget.scanningMode)),
