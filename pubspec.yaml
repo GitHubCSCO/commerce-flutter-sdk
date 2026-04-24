@@ -1,7 +1,11 @@
 name: commerce_flutter_sdk
 description: A new Flutter project.
 publish_to: "none"
+<<<<<<< HEAD
 version: 4.10.0+1
+=======
+version: 4.5.2+140000092
+>>>>>>> 3513f73c (update cocoapods)
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
