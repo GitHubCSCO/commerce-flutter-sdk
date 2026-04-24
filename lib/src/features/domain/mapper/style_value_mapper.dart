@@ -3,9 +3,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class StyleValueEntityMapper {
   static StyleValueEntity toEntity(StyleValue model) => StyleValueEntity(
-        styleTraitName: model.styleTraitName,
-        styleTraitId: model.styleTraitId,
-        styleTraitValueId: model.styleTraitValueId,
+        styleTraitValueId: model.id,
         value: model.value,
         valueDisplay: model.valueDisplay,
         sortOrder: model.sortOrder,
@@ -14,19 +12,18 @@ class StyleValueEntityMapper {
         swatchColorValue: model.swatchColorValue,
         swatchImageValue: model.swatchImageValue,
         swatchType: model.swatchType,
+        styleTraitName: null,
+        styleTraitId: null,
       );
 
   static StyleValue toModel(StyleValueEntity entity) => StyleValue(
-        styleTraitName: entity.styleTraitName,
-        styleTraitId: entity.styleTraitId,
-        styleTraitValueId: entity.styleTraitValueId,
+        id: entity.id ?? entity.styleTraitValueId,
         value: entity.value,
         valueDisplay: entity.valueDisplay,
         sortOrder: entity.sortOrder,
         isDefault: entity.isDefault,
-        id: entity.id,
-        // swatchColorValue: entity.swatchColorValue,
-        // swatchImageValue: entity.swatchImageValue,
-        // swatchType: entity.swatchType,
+        swatchColorValue: entity.swatchColorValue,
+        swatchImageValue: entity.swatchImageValue,
+        swatchType: entity.swatchType,
       );
 }

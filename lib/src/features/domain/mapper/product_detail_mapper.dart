@@ -31,8 +31,10 @@ class ProductDetailEntityMapper {
         shippingWidth: model?.shippingWidth,
         shippingHeight: model?.shippingHeight,
         shippingWeight: model?.shippingWeight,
-        configuration: LegacyConfigurationEntityMapper()
-            .toEntity(model?.configuration ?? LegacyConfiguration()),
+        configuration: model?.configuration != null
+            ? LegacyConfigurationEntityMapper()
+                .toEntity(model!.configuration)
+            : null,
       );
 
   static ProductDetail? toModel(ProductDetailEntity entity) => ProductDetail(

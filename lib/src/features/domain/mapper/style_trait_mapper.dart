@@ -4,7 +4,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class StyleTraitEntityMapper {
   static StyleTraitEntity toEntity(StyleTrait model) => StyleTraitEntity(
-        styleTraitId: model.styleTraitId,
+        styleTraitId: model.id,
         name: model.name,
         nameDisplay: model.nameDisplay,
         unselectedValue: model.unselectedValue,
@@ -12,8 +12,8 @@ class StyleTraitEntityMapper {
         displayType: model.displayType,
         numberOfSwatchesVisible: model.numberOfSwatchesVisible,
         displayTextWithSwatch: model.displayTextWithSwatch,
-        styleValues: model.styleValues
-            ?.map((styleValue) => StyleValueEntityMapper.toEntity(styleValue))
+        styleValues: model.traitValues
+            ?.map((traitValue) => StyleValueEntityMapper.toEntity(traitValue))
             .toList(),
         id: model.id,
         traitValues: model.traitValues
@@ -22,17 +22,12 @@ class StyleTraitEntityMapper {
       );
 
   static StyleTrait toModel(StyleTraitEntity entity) => StyleTrait(
-        styleTraitId: entity.styleTraitId,
+        id: entity.id ?? entity.styleTraitId,
         name: entity.name,
         nameDisplay: entity.nameDisplay,
         unselectedValue: entity.unselectedValue,
         sortOrder: entity.sortOrder,
-        styleValues: entity.styleValues
-            ?.map((styleValueEntity) =>
-                StyleValueEntityMapper.toModel(styleValueEntity))
-            .toList(),
-        id: entity.id,
-        traitValues: entity.traitValues
+        traitValues: (entity.traitValues ?? entity.styleValues)
             ?.map((traitValueEntity) =>
                 StyleValueEntityMapper.toModel(traitValueEntity))
             .toList(),

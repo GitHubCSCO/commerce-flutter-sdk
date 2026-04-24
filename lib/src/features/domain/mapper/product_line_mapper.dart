@@ -5,14 +5,12 @@ class ProductLineEntityMapper {
   static ProductLineEntity toEntity(ProductLine? model) => ProductLineEntity(
         id: model?.id,
         name: model?.name,
-        count: model?.count,
-        selected: model?.selected,
+        count: null,
+        selected: null,
       );
 
   static ProductLine? toModel(ProductLineEntity entity) => ProductLine(
         id: entity.id,
         name: entity.name,
-        count: entity.count,
-        selected: entity.selected,
       );
 }

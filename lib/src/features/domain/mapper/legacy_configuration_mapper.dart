@@ -4,7 +4,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class LegacyConfigurationEntityMapper {
   LegacyConfigurationEntity toEntity(LegacyConfiguration? model) =>
       LegacyConfigurationEntity(
-        sections: model?.sections
+        sections: model?.configSections
             ?.map((section) => ConfigSectionEntityMapper().toEntity(section))
             .toList(),
         hasDefaults: model?.hasDefaults,
@@ -15,7 +15,7 @@ class LegacyConfigurationEntityMapper {
       entity == null
           ? null
           : LegacyConfiguration(
-              sections: entity.sections
+              configSections: entity.sections
                   ?.map((sectionEntity) =>
                       ConfigSectionEntityMapper().toModel(sectionEntity))
                   .toList(),
@@ -27,7 +27,7 @@ class LegacyConfigurationEntityMapper {
 class ConfigSectionEntityMapper {
   ConfigSectionEntity toEntity(ConfigSection model) => ConfigSectionEntity(
         sectionName: model.sectionName,
-        options: model.options
+        options: model.sectionOptions
             ?.map(
                 (option) => ConfigSectionOptionEntityMapper().toEntity(option))
             .toList(),
@@ -36,7 +36,7 @@ class ConfigSectionEntityMapper {
       );
   ConfigSection toModel(ConfigSectionEntity entity) => ConfigSection(
         sectionName: entity.sectionName,
-        options: entity.options
+        sectionOptions: entity.options
             ?.map((optionEntity) =>
                 ConfigSectionOptionEntityMapper().toModel(optionEntity))
             .toList(),
@@ -48,32 +48,28 @@ class ConfigSectionEntityMapper {
 class ConfigSectionOptionEntityMapper {
   ConfigSectionOptionEntity toEntity(ConfigSectionOption model) =>
       ConfigSectionOptionEntity(
-        sectionOptionId: model.sectionOptionId,
-        sectionName: model.sectionName,
-        productName: model.productName,
+        sectionOptionId: model.id,
         productId: model.productId,
         description: model.description,
         price: model.price,
-        userProductPrice: model.userProductPrice,
         selected: model.selected,
         sortOrder: model.sortOrder,
         id: model.id,
         name: model.name,
         quantity: model.quantity,
+        sectionName: null,
+        productName: null,
+        userProductPrice: null,
       );
 
   ConfigSectionOption toModel(ConfigSectionOptionEntity entity) =>
       ConfigSectionOption(
-        sectionOptionId: entity.sectionOptionId,
-        sectionName: entity.sectionName,
-        productName: entity.productName,
+        id: entity.id,
         productId: entity.productId,
         description: entity.description,
         price: entity.price,
-        userProductPrice: entity.userProductPrice,
         selected: entity.selected,
         sortOrder: entity.sortOrder,
-        id: entity.id,
         name: entity.name,
         quantity: entity.quantity,
       );
