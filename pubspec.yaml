@@ -2,7 +2,6 @@ name: commerce_flutter_sdk
 description: A new Flutter project.
 publish_to: "none"
 version: 4.10.0+1
-version: 4.5.2+140000092
 
 environment:
   sdk: ">=3.5.0 <4.0.0"

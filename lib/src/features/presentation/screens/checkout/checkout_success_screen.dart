@@ -215,38 +215,37 @@ class CheckoutSuccessPage extends StatelessWidget {
               style: OptiTextStyles.subtitle,
             ),
           ),
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final orderLine = checkoutSuccessEntity.cart.cartLines?[index];
+              // XNG-Change: Convert API model to domain entity for consistent business logic
+              final cartLineEntity = orderLine != null
+                  ? CartLineEntityMapper.toEntity(orderLine)
+                  : null;
 
-        ),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            final orderLine = checkoutSuccessEntity.cart.cartLines?[index];
-            // XNG-Change: Convert API model to domain entity for consistent business logic
-            final cartLineEntity = orderLine != null
-                ? CartLineEntityMapper.toEntity(orderLine)
-                : null;
-
-            return LineItemWidget(
-              productId: cartLineEntity?.productId,
-              imagePath: cartLineEntity?.smallImagePath,
-              shortDescription: cartLineEntity?.shortDescription,
-              manufacturerItem: cartLineEntity?.manufacturerItem,
-              productNumber: cartLineEntity?.erpNumber,
-              discountMessage: cartLineEntity?.getDiscountMessage() ?? '',
-              priceValueText: cartLineEntity?.getPriceValueText() ?? '',
-              unitOfMeasureValueText: cartLineEntity?.getUnitOfMeasureText(),
-              qtyOrdered: cartLineEntity?.qtyOrdered?.round().toString(),
-              subtotalPriceText: cartLineEntity?.getSubtotalPriceText() ?? '',
-              canEditQty: false,
-              showViewAvailabilityByWarehouse: false,
-              showViewQuantityPricing: false,
-            );
-          },
-          separatorBuilder: (context, index) => const Divider(height: 1),
-          itemCount: checkoutSuccessEntity.cart.cartLines?.length ?? 0,
-        ),
-      ],
+              return LineItemWidget(
+                productId: cartLineEntity?.productId,
+                imagePath: cartLineEntity?.smallImagePath,
+                shortDescription: cartLineEntity?.shortDescription,
+                manufacturerItem: cartLineEntity?.manufacturerItem,
+                productNumber: cartLineEntity?.erpNumber,
+                discountMessage: cartLineEntity?.getDiscountMessage() ?? '',
+                priceValueText: cartLineEntity?.getPriceValueText() ?? '',
+                unitOfMeasureValueText: cartLineEntity?.getUnitOfMeasureText(),
+                qtyOrdered: cartLineEntity?.qtyOrdered?.round().toString(),
+                subtotalPriceText: cartLineEntity?.getSubtotalPriceText() ?? '',
+                canEditQty: false,
+                showViewAvailabilityByWarehouse: false,
+                showViewQuantityPricing: false,
+              );
+            },
+            separatorBuilder: (context, index) => const Divider(height: 1),
+            itemCount: checkoutSuccessEntity.cart.cartLines?.length ?? 0,
+          ),
+        ],
+      )
     );
   }
 
