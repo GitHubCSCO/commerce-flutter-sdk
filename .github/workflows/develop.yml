@@ -144,7 +144,6 @@ jobs:
           echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
           echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
       - name: Cloning build scripts
-        if: github.event.inputs.build_debug != 'true'
         uses: actions/checkout@master
         with:
           repository: InsiteSoftware/commerce-mobile-build-scripts
@@ -152,7 +151,6 @@ jobs:
           token: ${{ secrets.my_pat }}
           path: build-scripts
       - name: Movie build-scripts to root folder
-        if: github.event.inputs.build_debug != 'true'
         run: |
           mv build-scripts/* ./
       - name: Extract branch name
@@ -313,7 +311,6 @@ jobs:
           echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
 
       - name: Cloning build scripts
-        if: github.event.inputs.build_debug != 'true'
         uses: actions/checkout@master
         with:
           repository: InsiteSoftware/commerce-mobile-build-scripts
@@ -321,17 +318,14 @@ jobs:
           token: ${{ secrets.my_pat }}
           path: build-scripts
       - name: Movie build-scripts to root folder
-        if: github.event.inputs.build_debug != 'true'
         run: |
           mv build-scripts/* ./
       - name: Extract branch name
-        if: github.event.inputs.build_debug != 'true'
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >>
           $GITHUB_OUTPUT
         id: extract_branch
 
       - name: Fastlane
-        if: github.event.inputs.build_debug != 'true'
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
             echo "Running in PR. Using default value."
