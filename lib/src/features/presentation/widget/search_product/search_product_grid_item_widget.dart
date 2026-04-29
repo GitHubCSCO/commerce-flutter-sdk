@@ -49,7 +49,7 @@ class SearchProductGridItemWidget extends StatelessWidget
 
     return InkWell(
       onTap: () {
-        var productId = product.styleParentId ?? product.id;
+        var productId = product.id;
         //TODO what if productid is null,
         AppRoute.productDetails.navigateBackStack(context,
             pathParameters: {"productId": productId.toString()},
@@ -183,7 +183,7 @@ class SearchProductGridItemWidget extends StatelessWidget
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        product.shortDescription ?? "",
+                        product.shortDescription ?? product.productTitle ?? "",
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: OptiTextStyles.bodySmall,

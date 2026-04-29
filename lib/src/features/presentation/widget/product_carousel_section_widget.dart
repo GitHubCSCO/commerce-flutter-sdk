@@ -50,9 +50,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                           const SizedBox(width: 12),
                       itemBuilder: (context, index) {
                         final productCarousel = productCarouselList[index];
-                        var productId =
-                            productCarousel.product!.styleParentId ??
-                                productCarousel.product!.id;
+                        var productId = productCarousel.product!.id;
                         return InkWell(
                           onTap: () {
                             AppRoute.productDetails.navigateBackStack(

@@ -5,6 +5,14 @@ import 'package:dio/dio.dart';
 
 part 'service_base.g.dart';
 
+String? _errorFromJson(dynamic value) {
+  if (value is String) return value;
+  if (value is Map<String, dynamic>) {
+    return value['message'] as String? ?? value.toString();
+  }
+  return null;
+}
+
 @JsonSerializable(explicitToJson: true)
 class ErrorResponse {
   ErrorResponse(
@@ -15,6 +23,7 @@ class ErrorResponse {
 
   String? message;
 
+  @JsonKey(fromJson: _errorFromJson)
   String? error;
 
   @JsonKey(name: 'error_description')

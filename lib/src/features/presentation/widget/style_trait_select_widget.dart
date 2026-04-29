@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/style_trait/style_trait_state.dart';
@@ -12,18 +11,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 void showStyleTraitFilter(
   ProductEntity product,
   BuildContext context, {
-  required void Function(StyledProductEntity? styledProductEntity) onGetProduct,
+  required void Function(ProductEntity? selectedVariantChild) onGetProduct,
+  List<ProductEntity>? variantChildren,
 }) {
   final isApplyEnabledNotifier = ValueNotifier(false);
 
-  context.read<StyleTraitCubit>().initSelectedAvailableTraitValues(product);
+  context.read<StyleTraitCubit>().initSelectedAvailableTraitValues(product,
+      variantChildren: variantChildren);
   context.read<StyleTraitCubit>().fetchStyleTraitValues(product);
   showFilterModalSheet(
     context,
     onApply: () {
-      var styledProduct = context.read<StyleTraitCubit>().styledProductEntity;
-      if (styledProduct != null) {
-        onGetProduct(styledProduct);
+      var selectedVariantChild =
+          context.read<StyleTraitCubit>().selectedVariantChild;
+      if (selectedVariantChild != null) {
+        onGetProduct(selectedVariantChild);
       }
     },
     onReset: null,
@@ -71,7 +73,7 @@ void showStyleTraitFilter(
 
                         context
                             .read<StyleTraitCubit>()
-                            .updateStyledProductBasedOnSelection(selectedValue);
+                            .updateVariantChildBasedOnSelection(selectedValue);
                       },
                     ),
                   ],

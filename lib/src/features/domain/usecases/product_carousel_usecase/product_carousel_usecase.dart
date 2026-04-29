@@ -99,7 +99,7 @@ class ProductCarouselUseCase extends BaseUseCase {
     return ProductsQueryParameters(
       categoryId: productCarouselWidgetEntity.selectedCategoryIds?.first,
       pageSize: productCarouselWidgetEntity.numberOfProductsToDisplay,
-      expand: ["pricing"],
+      expand: ["images"],
     );
   }
 
@@ -121,6 +121,6 @@ class ProductCarouselUseCase extends BaseUseCase {
 
   ProductsQueryParameters _recentlyViewedParameters() {
     return ProductsQueryParameters(
-        expand: ["pricing", "recentlyviewed", "brand"]);
+        expand: ["recentlyviewed", "brand"]);
   }
 }

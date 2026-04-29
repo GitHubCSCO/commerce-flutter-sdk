@@ -29,7 +29,9 @@ class AddToCartCubit extends Cubit<AddToCartState> {
       return;
     }
 
-    var productId = product.styleParentId ?? product.id;
+    var productId = (product.isVariantParent == true)
+        ? (product.defaultChildProductId ?? product.id)
+        : product.id;
 
     var addCartLine = AddCartLine(
       productId: productId,
@@ -90,13 +92,13 @@ class AddToCartCubit extends Cubit<AddToCartState> {
       product = product.copyWith(qtyOnHand: qtyOnHand);
     }
 
-    if (product.canAddToCart! &&
-        !product.canBackOrder! &&
-        product.trackInventory! &&
-        product.qtyOnHand! <= 0) {
+    if ((product.canAddToCart ?? false) &&
+        !(product.canBackOrder ?? false) &&
+        (product.trackInventory ?? false) &&
+        (product.qtyOnHand ?? 0) <= 0) {
       product = product.copyWith(canAddToCart: false);
     }
 
-    emit(AddToCartEnable(canAddToCart: product.canAddToCart!));
+    emit(AddToCartEnable(canAddToCart: product.canAddToCart ?? false));
   }
 }

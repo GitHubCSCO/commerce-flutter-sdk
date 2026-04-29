@@ -7,7 +7,7 @@ part of 'product_image.dart';
 // **************************************************************************
 
 ProductImage _$ProductImageFromJson(Map<String, dynamic> json) => ProductImage(
-      altText: json['altText'] as String?,
+      altText: json['imageAltText'] as String?,
       id: json['id'] as String?,
       imageType: json['imageType'] as String?,
       largeImagePath: json['largeImagePath'] as String?,
@@ -25,6 +25,6 @@ Map<String, dynamic> _$ProductImageToJson(ProductImage instance) =>
       if (instance.smallImagePath case final value?) 'smallImagePath': value,
       if (instance.mediumImagePath case final value?) 'mediumImagePath': value,
       if (instance.largeImagePath case final value?) 'largeImagePath': value,
-      if (instance.altText case final value?) 'altText': value,
+      if (instance.altText case final value?) 'imageAltText': value,
       if (instance.imageType case final value?) 'imageType': value,
     };

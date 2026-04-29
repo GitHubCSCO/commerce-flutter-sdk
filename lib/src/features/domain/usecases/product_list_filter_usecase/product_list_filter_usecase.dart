@@ -259,7 +259,7 @@ class ProductListFilterUsecase extends BaseUseCase {
                   (productLine) => FilterValueViewModel(
                     id: productLine.id ?? '',
                     title: productLine.name ?? '',
-                    isSelected: productLine.selected ?? false,
+                    isSelected: false,
                     facetType: FacetType.productLineFacet,
                   ),
                 )

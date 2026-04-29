@@ -68,12 +68,12 @@ class QuickOrderItemEntity {
         extendedPriceValueText = pricing.extendedUnitNetPriceDisplay;
         selectedUnitOfMeasureValueText = uomText;
       } else {
-        priceValueText = (productEntity.quoteRequired!)
+        priceValueText = (productEntity.quoteRequired ?? false)
             ? LocalizationConstants.requiresQuote.localized()
             : pricing.getPriceValue(
                 allowZeroPricing: productEntity.allowZeroPricing,
               ); // Assuming getPriceValue() returns a string
-        extendedPriceValueText = (productEntity.quoteRequired!)
+        extendedPriceValueText = (productEntity.quoteRequired ?? false)
             ? LocalizationConstants.requiresQuote.localized()
             : pricing.getSubtotalValue(
                 allowZeroPricing: productEntity.allowZeroPricing,

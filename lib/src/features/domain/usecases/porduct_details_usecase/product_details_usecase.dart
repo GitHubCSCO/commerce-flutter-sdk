@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/attribute_type_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/attribute_value_entity.dart';
@@ -20,7 +21,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.d
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/specification_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
@@ -112,11 +112,9 @@ class ProductDetailsUseCase extends BaseUseCase {
 
     var parameters = ProductQueryParameters(
       addToRecentlyViewed: true,
-      applyPersonalization: true,
-      includeAttributes: "IncludeOnProduct",
-      productId: productId,
+      includeAttributes: "includeOnProduct,notFromCategory",
       expand:
-          "documents,specifications,htmlcontent,attributes,brand",
+          "detail,content,images,specifications,documents,attributes,variantTraits,badges",
     );
 
     var resultResponse = await commerceAPIServiceProvider
@@ -128,17 +126,68 @@ class ProductDetailsUseCase extends BaseUseCase {
         final productEntity =
             ProductEntityMapper.toEntity(data?.product ?? Product());
 
+        debugPrint('=== ProductDetailsUseCase: Entity Data ===');
+        debugPrint('id: ${productEntity.id}');
+        debugPrint('productNumber: ${productEntity.productNumber}');
+        debugPrint('productTitle: ${productEntity.productTitle}');
+        debugPrint('shortDescription: ${productEntity.shortDescription}');
+        debugPrint('erpNumber: ${productEntity.erpNumber}');
+        debugPrint('unitListPrice: ${productEntity.unitListPrice}');
+        debugPrint('unitListPriceDisplay: ${productEntity.unitListPriceDisplay}');
+        debugPrint('unitOfMeasure: ${productEntity.unitOfMeasure}');
+        debugPrint('unitOfMeasureDisplay: ${productEntity.unitOfMeasureDisplay}');
+        debugPrint('unitOfMeasureDescription: ${productEntity.unitOfMeasureDescription}');
+        debugPrint('htmlContent length: ${productEntity.htmlContent?.length}');
+        debugPrint('images count: ${productEntity.images?.length}');
+        debugPrint('productImages count: ${productEntity.productImages?.length}');
+        debugPrint('specifications count: ${productEntity.specifications?.length}');
+        debugPrint('documents count: ${productEntity.documents?.length}');
+        debugPrint('attributeTypes count: ${productEntity.attributeTypes?.length}');
+        debugPrint('variantTraits count: ${productEntity.variantTraits?.length}');
+        debugPrint('badges count: ${productEntity.badges?.length}');
+        debugPrint('unitOfMeasures count: ${productEntity.unitOfMeasures?.length}');
+        debugPrint('productUnitOfMeasures count: ${productEntity.productUnitOfMeasures?.length}');
+        debugPrint('canAddToCart: ${productEntity.canAddToCart}');
+        debugPrint('canShowPrice: ${productEntity.canShowPrice}');
+        debugPrint('isVariantParent: ${productEntity.isVariantParent}');
+        debugPrint('brand: ${productEntity.brand?.name}');
+        debugPrint('detail: ${productEntity.detail != null}');
+        debugPrint('content: ${productEntity.content != null}');
+        debugPrint('=== End Entity Data ===');
+
         return Success(productEntity);
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
   }
 
+  Future<List<ProductEntity>> getVariantChildren(String productId) async {
+    var parameters = VariantChildrenQueryParameters(
+      expand: "images,attributes,detail",
+    );
+
+    var result = await commerceAPIServiceProvider
+        .getProductService()
+        .getVariantChildren(productId, parameters: parameters);
+
+    switch (result) {
+      case Success(value: final data):
+        if (data?.products != null) {
+          return data!.products!
+              .map((product) => ProductEntityMapper.toEntity(product))
+              .toList();
+        }
+        return [];
+      case Failure():
+        return [];
+    }
+  }
+
   List<ProductImageEntity> makeProductImages(
-      ProductEntity product, StyledProductEntity? styledProduct) {
+      ProductEntity product, ProductEntity? selectedVariantChild) {
     List<ProductImageEntity> result;
     var correctProductImages =
-        styledProduct?.productImages ?? product.productImages;
+        selectedVariantChild?.productImages ?? product.productImages;
 
     if (correctProductImages != null && correctProductImages.isNotEmpty) {
       correctProductImages
@@ -151,14 +200,14 @@ class ProductDetailsUseCase extends BaseUseCase {
       }).toList();
     } else {
       var imageNotFoundImage = ProductImageEntity(
-        smallImagePath: (styledProduct != null
-            ? styledProduct.smallImagePath
+        smallImagePath: (selectedVariantChild != null
+            ? selectedVariantChild.smallImagePath
             : product.smallImagePath),
-        mediumImagePath: (styledProduct != null
-            ? styledProduct.mediumImagePath
+        mediumImagePath: (selectedVariantChild != null
+            ? selectedVariantChild.mediumImagePath
             : product.mediumImagePath),
-        largeImagePath: (styledProduct != null
-            ? styledProduct.largeImagePath
+        largeImagePath: (selectedVariantChild != null
+            ? selectedVariantChild.largeImagePath
             : product.largeImagePath),
       );
       imageNotFoundImage.smallImagePath.makeImageUrl();
@@ -171,7 +220,7 @@ class ProductDetailsUseCase extends BaseUseCase {
   }
 
   ProductDetailsGeneralInfoEntity makeGeneralInfoEntity(
-      ProductEntity product, StyledProductEntity? styledProduct) {
+      ProductEntity product, ProductEntity? selectedVariantChild) {
     var genralInfoEntity = ProductDetailsGeneralInfoEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsGeneralInfo,
         productNumber: product.getProductNumber(),
@@ -183,24 +232,39 @@ class ProductDetailsUseCase extends BaseUseCase {
             : product.brand?.logoSmallImagePath.makeImageUrl());
 
     genralInfoEntity =
-        updateGeneralInfoViewModel(product, styledProduct, genralInfoEntity);
+        updateGeneralInfoViewModel(product, selectedVariantChild, genralInfoEntity);
     return genralInfoEntity;
   }
 
   ProductDetailsGeneralInfoEntity updateGeneralInfoViewModel(
       ProductEntity product,
-      StyledProductEntity? styledProduct,
+      ProductEntity? selectedVariantChild,
       ProductDetailsGeneralInfoEntity genralInfoEntity) {
     genralInfoEntity = genralInfoEntity.copyWith(
-        productName: styledProduct == null
+        productName: selectedVariantChild == null
             ? product.shortDescription
-            : styledProduct.shortDescription);
+            : selectedVariantChild.shortDescription);
     genralInfoEntity = genralInfoEntity.copyWith(
-        originalPartNumberValue: styledProduct == null
+        originalPartNumberValue: selectedVariantChild == null
             ? product.getProductNumber()
-            : styledProduct.getProductNumber());
+            : selectedVariantChild.getProductNumber());
     genralInfoEntity = genralInfoEntity.copyWith(
-        thumbnails: makeProductImages(product, styledProduct));
+        mFGNumberValue: selectedVariantChild?.manufacturerItem ??
+            product.manufacturerItem);
+    genralInfoEntity = genralInfoEntity.copyWith(
+        myPartNumberValue:
+            selectedVariantChild?.customerName ?? product.customerName);
+    genralInfoEntity = genralInfoEntity.copyWith(
+        packDescriptionValue:
+            selectedVariantChild?.packDescription ?? product.packDescription);
+    if (selectedVariantChild?.brand != null) {
+      genralInfoEntity = genralInfoEntity.copyWith(
+          brandName: selectedVariantChild!.brand?.logoSmallImagePath == null
+              ? selectedVariantChild.brand?.name
+              : selectedVariantChild.brand?.logoSmallImagePath.makeImageUrl());
+    }
+    genralInfoEntity = genralInfoEntity.copyWith(
+        thumbnails: makeProductImages(product, selectedVariantChild));
     genralInfoEntity = genralInfoEntity.copyWith(
         hasMultipleImages: (product.productImages?.length ?? 0) > 1);
     genralInfoEntity =
@@ -219,19 +283,20 @@ class ProductDetailsUseCase extends BaseUseCase {
 
   Future<List<ProductDetailsBaseEntity>> makeAllDetailsItems(
     ProductEntity product,
-    StyledProductEntity? styledProduct,
+    ProductEntity? selectedVariantChild,
     bool productPricingEnabled,
     Map<String, List<StyleValueEntity>?> availableStyleValues,
     Map<String, StyleValueEntity?>? selectedStyleValues,
     bool isProductConfigurable,
     bool isProductConfigurationCompleted,
     bool hasCheckout,
-    bool addToCartEnabled,
-  ) async {
+    bool addToCartEnabled, {
+    List<ProductEntity>? relatedProducts,
+  }) async {
     List<ProductDetailsBaseEntity> items = [];
 
     var quantity = getQuantity(product);
-    items.add(makeGeneralInfoEntity(product, styledProduct));
+    items.add(makeGeneralInfoEntity(product, selectedVariantChild));
 
     if (productPricingEnabled) {
       items.add(makeProductDetailsPriceEntity());
@@ -241,7 +306,7 @@ class ProductDetailsUseCase extends BaseUseCase {
       items.add(addConfigSection(product));
     }
 
-    if (product.styleTraits != null && product.styleTraits!.isNotEmpty) {
+    if (product.variantTraits != null && product.variantTraits!.isNotEmpty) {
       items.add(makeProductDetailsStyleTraitsEntity(
           product, availableStyleValues, selectedStyleValues));
     }
@@ -251,17 +316,15 @@ class ProductDetailsUseCase extends BaseUseCase {
         hasCheckout,
         addToCartEnabled,
         product,
-        styledProduct,
+        selectedVariantChild,
         selectedStyleValues,
         isProductConfigurable,
         isProductConfigurationCompleted);
     items.add(addToCartEntity);
 
-    // Use styled product's htmlContent when available,
-    // falling back to the parent product's data.
-    final effectiveHtmlContent = (styledProduct?.htmlContent != null &&
-            styledProduct!.htmlContent!.isNotEmpty)
-        ? styledProduct.htmlContent
+    final effectiveHtmlContent = (selectedVariantChild?.htmlContent != null &&
+            selectedVariantChild!.htmlContent!.isNotEmpty)
+        ? selectedVariantChild.htmlContent
         : product.htmlContent;
 
     if (effectiveHtmlContent != null && effectiveHtmlContent.isNotEmpty) {
@@ -269,11 +332,9 @@ class ProductDetailsUseCase extends BaseUseCase {
           makeProductDetailsDescriptionEntityFromHtml(effectiveHtmlContent));
     }
 
-    // Use styled product's attributeTypes when available,
-    // falling back to the parent product's data.
     final effectiveAttributeTypes =
-        (styledProduct?.attributeTypes?.isNotEmpty == true)
-            ? styledProduct!.attributeTypes
+        (selectedVariantChild?.attributeTypes?.isNotEmpty == true)
+            ? selectedVariantChild!.attributeTypes
             : product.attributeTypes;
 
     var attributesEntity =
@@ -283,18 +344,13 @@ class ProductDetailsUseCase extends BaseUseCase {
       items.add(attributesEntity);
     }
 
-    // Use styled product's specifications/documents/crossSells when available,
-    // falling back to the parent product's data.
     final effectiveSpecifications =
-        (styledProduct?.specifications?.isNotEmpty == true)
-            ? styledProduct!.specifications
+        (selectedVariantChild?.specifications?.isNotEmpty == true)
+            ? selectedVariantChild!.specifications
             : product.specifications;
-    final effectiveDocuments = (styledProduct?.documents?.isNotEmpty == true)
-        ? styledProduct!.documents
+    final effectiveDocuments = (selectedVariantChild?.documents?.isNotEmpty == true)
+        ? selectedVariantChild!.documents
         : product.documents;
-    final effectiveCrossSells = (styledProduct?.crossSells?.isNotEmpty == true)
-        ? styledProduct!.crossSells
-        : product.crossSells;
 
     if (effectiveSpecifications != null) {
       items.addAll(addSpecificationsFromList(effectiveSpecifications));
@@ -304,15 +360,15 @@ class ProductDetailsUseCase extends BaseUseCase {
       items.add(makeProductDetailsDocumentsEntityFromList(effectiveDocuments));
     }
 
-    if (effectiveCrossSells != null && effectiveCrossSells.isNotEmpty) {
+    if (relatedProducts != null && relatedProducts.isNotEmpty) {
       var porductCarouselWidget = ProductCarouselWidgetEntity(
           carouselType: ProductCarouselType.webCrossSells,
           title: LocalizationConstants.recommendedProducts.localized());
 
       final List<ProductCarouselEntity> productCarouselList = [];
-      for (var crosSell in effectiveCrossSells) {
+      for (var relatedProduct in relatedProducts) {
         productCarouselList.add(ProductCarouselEntity(
-            product: crosSell, productPricingEnabled: productPricingEnabled));
+            product: relatedProduct, productPricingEnabled: productPricingEnabled));
       }
 
       porductCarouselWidget = porductCarouselWidget.copyWith(
@@ -326,7 +382,7 @@ class ProductDetailsUseCase extends BaseUseCase {
   }
 
   int getQuantity(ProductEntity product) {
-    return (product.minimumOrderQty! > 0) ? product.minimumOrderQty! : 1;
+    return ((product.minimumOrderQty ?? 0) > 0) ? product.minimumOrderQty! : 1;
   }
 
   ProductDetailsPriceEntity makeProductDetailsPriceEntity() {
@@ -342,11 +398,11 @@ class ProductDetailsUseCase extends BaseUseCase {
   }
 
   bool shouldAddConfigSection(ProductEntity product) {
-    return !(product.styleTraits != null && product.styleTraits!.isNotEmpty) &&
+    return !(product.variantTraits != null && product.variantTraits!.isNotEmpty) &&
         product.configurationDto != null &&
         product.configurationDto!.sections != null &&
         product.configurationDto!.sections!.isNotEmpty &&
-        !product.isFixedConfiguration!;
+        !(product.isFixedConfiguration ?? false);
   }
 
   Future<ProductDetailsAddtoCartEntity> makeProductDetailsAddToCartEntity(
@@ -354,7 +410,7 @@ class ProductDetailsUseCase extends BaseUseCase {
       bool hasCheckout,
       bool addToCartEnabled,
       ProductEntity productEntity,
-      StyledProductEntity? styledProduct,
+      ProductEntity? selectedVariantChild,
       Map<String, StyleValueEntity?>? selectedStyleValues,
       bool isProductConfigurable,
       bool isProductConfigurationCompleted) async {
@@ -363,7 +419,7 @@ class ProductDetailsUseCase extends BaseUseCase {
         hasCheckout,
         addToCartEnabled,
         productEntity,
-        styledProduct,
+        selectedVariantChild,
         selectedStyleValues,
         isProductConfigurable,
         isProductConfigurationCompleted);
@@ -373,7 +429,7 @@ class ProductDetailsUseCase extends BaseUseCase {
         hasCheckout,
         addToCartEnabled,
         productEntity,
-        styledProduct,
+        selectedVariantChild,
         selectedStyleValues,
         isProductConfigurable,
         isProductConfigurationCompleted);
@@ -447,7 +503,7 @@ class ProductDetailsUseCase extends BaseUseCase {
   }
 
   List<ProductDetailItemEntity> addSpecifications(ProductEntity product) {
-    List<SpecificationEntity> specifications = product.specifications!;
+    List<SpecificationEntity> specifications = product.specifications ?? [];
     specifications
         .sort((a, b) => (a.sortOrder ?? 0).compareTo(b.sortOrder ?? 0));
 
@@ -463,8 +519,6 @@ class ProductDetailsUseCase extends BaseUseCase {
         .toList();
   }
 
-  /// Creates specification detail items from a list of specifications.
-  /// Used to support styled product specifications.
   List<ProductDetailItemEntity> addSpecificationsFromList(
       List<SpecificationEntity> specifications) {
     final sorted = List<SpecificationEntity>.from(specifications)
@@ -482,8 +536,6 @@ class ProductDetailsUseCase extends BaseUseCase {
         .toList();
   }
 
-  /// Creates documents entity from a list of documents.
-  /// Used to support styled product documents.
   ProductDetailsDocumentsEntity makeProductDetailsDocumentsEntityFromList(
       List<DocumentEntity> documents) {
     return ProductDetailsDocumentsEntity(
@@ -499,7 +551,7 @@ class ProductDetailsUseCase extends BaseUseCase {
       Map<String, StyleValueEntity?>? selectedStyleValues) {
     final List<ProductDetailStyleTrait> styleTraitsEntity = [];
 
-    for (var styleTrait in product.styleTraits!) {
+    for (var styleTrait in product.variantTraits!) {
       var styleTraitNullValue = _productDetailsStyleTraitsUseCase
           .createStyleTraitNullValue(styleTrait);
       List<ProductDetailStyleValue> styleValues = [styleTraitNullValue];
@@ -550,8 +602,6 @@ class ProductDetailsUseCase extends BaseUseCase {
         productAttributes: attributes);
   }
 
-  /// Creates description entity from an HTML string.
-  /// Used to support styled product htmlContent.
   ProductDetailsDescriptionEntity makeProductDetailsDescriptionEntityFromHtml(
       String htmlContent) {
     return ProductDetailsDescriptionEntity(

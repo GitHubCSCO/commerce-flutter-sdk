@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
@@ -6,7 +7,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/legacy_configura
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_data_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
@@ -44,7 +44,7 @@ class ProductDetailsBloc
 
   List<AddCartLine> getAddCartLineForWistlist() {
     var cartLineOfProduct = AddCartLine(
-      productId: productDetailDataEntity.styledProduct?.productId ??
+      productId: productDetailDataEntity.selectedVariantChild?.id ??
           productDetailDataEntity.product?.id,
       qtyOrdered: productDetailDataEntity.product?.qtyOrdered,
       unitOfMeasure: productDetailDataEntity.product?.unitOfMeasure,
@@ -128,8 +128,31 @@ class ProductDetailsBloc
         if (event.trackScreen == true) {
           _trackViewScreen(data);
         }
-        _extractValuesFromData(data!);
-        await _makeAllDetailsItems(data, emit);
+
+        if (data!.isVariantParent == true && data.id != null) {
+          try {
+            final variantChildren =
+                await _productDetailsUseCase.getVariantChildren(data.id!);
+            debugPrint('=== variantChildren count: ${variantChildren.length} ===');
+            productDetailDataEntity = productDetailDataEntity.copyWith(
+                variantChildren: variantChildren);
+          } catch (e, stackTrace) {
+            debugPrint('=== Error fetching variant children: $e ===');
+            debugPrint('$stackTrace');
+          }
+        }
+
+        try {
+          debugPrint('=== Before _extractValuesFromData ===');
+          _extractValuesFromData(data);
+          debugPrint('=== After _extractValuesFromData, before _makeAllDetailsItems ===');
+          await _makeAllDetailsItems(data, emit);
+          debugPrint('=== After _makeAllDetailsItems - state emitted ===');
+        } catch (e, stackTrace) {
+          debugPrint('=== Error in product details flow: $e ===');
+          debugPrint('$stackTrace');
+          emit(ProductDetailsErrorState(e.toString()));
+        }
       case Failure(errorResponse: final errorResponse):
         emit(ProductDetailsErrorState(
             LocalizationConstants.errorLoadingProductDetails.localized()));
@@ -164,23 +187,27 @@ class ProductDetailsBloc
 
   void _extractValuesFromData(ProductEntity productEntity) {
     var product = productEntity;
-    StyledProductEntity? styledProduct;
-    if (product.styledProducts != null && product.styleParentId != null) {
-      styledProduct = product.styledProducts
-          ?.firstWhereOrNull((o) => o.productId == product.id);
+    ProductEntity? selectedVariantChild;
+    final variantChildren = productDetailDataEntity.variantChildren;
+    if (product.isVariantParent == true &&
+        variantChildren != null &&
+        variantChildren.isNotEmpty &&
+        product.defaultChildProductId != null) {
+      selectedVariantChild = variantChildren
+          .firstWhereOrNull((o) => o.id == product.defaultChildProductId);
     }
-    chosenUnitOfMeasure = styledProduct != null &&
-            styledProduct.productUnitOfMeasures != null &&
-            styledProduct.productUnitOfMeasures!.isNotEmpty
-        ? styledProduct.productUnitOfMeasures?.first
+    chosenUnitOfMeasure = selectedVariantChild != null &&
+            selectedVariantChild.productUnitOfMeasures != null &&
+            selectedVariantChild.productUnitOfMeasures!.isNotEmpty
+        ? selectedVariantChild.productUnitOfMeasures?.first
         : product.productUnitOfMeasures
             ?.firstWhereOrNull((p) => p.unitOfMeasure == product.unitOfMeasure);
     Map<String, ConfigSectionOptionEntity?> selectedConfigurations = {};
-    if (!(product.styleTraits != null && product.styleTraits!.isNotEmpty) &&
+    if (!(product.variantTraits != null && product.variantTraits!.isNotEmpty) &&
         product.configurationDto != null &&
         product.configurationDto!.sections != null &&
         product.configurationDto!.sections!.isNotEmpty &&
-        !product.isFixedConfiguration!) {
+        !(product.isFixedConfiguration ?? false)) {
       for (var s in product.configurationDto!.sections!) {
         if (selectedConfigurations.containsKey(s.sectionName)) {
           selectedConfigurations[s.sectionName!] = null;
@@ -191,7 +218,7 @@ class ProductDetailsBloc
     }
 
     var selectedStyleValues = _productDetailsStyleTraitsUseCase
-        .getSelectedStyleValues(product, styledProduct, null);
+        .getSelectedStyleValues(product, selectedVariantChild, null);
     var availableStyleValues =
         _productDetailsStyleTraitsUseCase.getAvailableStyleValues(product);
 
@@ -201,7 +228,7 @@ class ProductDetailsBloc
 
     productDetailDataEntity = productDetailDataEntity.copyWith(
         product: productEntity,
-        styledProduct: styledProduct,
+        selectedVariantChild: selectedVariantChild,
         chosenUnitOfMeasure: chosenUnitOfMeasure,
         selectedConfigurations: selectedConfigurations,
         selectedStyleValues: selectedStyleValues,
@@ -215,7 +242,7 @@ class ProductDetailsBloc
     final productDetailsEntotities =
         await _productDetailsUseCase.makeAllDetailsItems(
       productData,
-      productDetailDataEntity.styledProduct,
+      productDetailDataEntity.selectedVariantChild,
       productDetailDataEntity.productPricingEnabled ?? false,
       productDetailDataEntity.availableStyleValues ?? {},
       productDetailDataEntity.selectedStyleValues ?? {},
@@ -223,6 +250,7 @@ class ProductDetailsBloc
       productDetailDataEntity.isProductConfigurationCompleted ?? false,
       productDetailDataEntity.hasCheckout ?? false,
       productDetailDataEntity.addToCartEnabled ?? false,
+      relatedProducts: productDetailDataEntity.relatedProducts,
     );
 
     emit(
@@ -230,12 +258,14 @@ class ProductDetailsBloc
   }
 
   void onSelectedConfiguration(ConfigSectionOptionEntity option) {
+    final name = option.sectionName;
+    if (name == null) {
+      return;
+    }
     if (option.sectionOptionId == null || option.sectionOptionId!.isEmpty) {
-      productDetailDataEntity.selectedConfigurations?[option.sectionName!] =
-          null;
+      productDetailDataEntity.selectedConfigurations?[name] = null;
     } else {
-      productDetailDataEntity.selectedConfigurations?[option.sectionName!] =
-          option;
+      productDetailDataEntity.selectedConfigurations?[name] = option;
     }
   }
 
@@ -262,7 +292,7 @@ class ProductDetailsBloc
         (productDetailDataEntity.selectedStyleValues != null &&
             productDetailDataEntity.selectedStyleValues!.values
                 .every((value) => value == null))) {
-      productDetailDataEntity.styledProduct = null;
+      productDetailDataEntity.selectedVariantChild = null;
       productDetailDataEntity.availableStyleValues =
           _productDetailsStyleTraitsUseCase.getAvailableStyleValues(product);
       productDetailDataEntity.selectedStyleValues =
@@ -273,21 +303,23 @@ class ProductDetailsBloc
       return;
     }
 
-    var styledProduct =
-        _productDetailsStyleTraitsUseCase.getStyledProductBasedOnSelection(
+    var selectedVariantChild =
+        _productDetailsStyleTraitsUseCase.getVariantChildBasedOnSelection(
             selectedStyletraitId,
             selectedStyleValue,
             productDetailDataEntity.product!,
+            productDetailDataEntity.variantChildren ?? [],
             productDetailDataEntity.availableStyleValues!,
             productDetailDataEntity.selectedStyleValues);
 
-    if (styledProduct != null) {
+    if (selectedVariantChild != null) {
       if (chosenUnitOfMeasure?.unitOfMeasure != null) {
-        chosenUnitOfMeasure = styledProduct.productUnitOfMeasures
+        chosenUnitOfMeasure = selectedVariantChild.productUnitOfMeasures
             ?.firstWhereOrNull(
                 (p) => p.unitOfMeasure == chosenUnitOfMeasure?.unitOfMeasure);
       } else {
-        chosenUnitOfMeasure = styledProduct.productUnitOfMeasures?.firstOrNull;
+        chosenUnitOfMeasure =
+            selectedVariantChild.productUnitOfMeasures?.firstOrNull;
       }
     } else {
       if (product.productUnitOfMeasures!.isNotEmpty) {
@@ -297,7 +329,7 @@ class ProductDetailsBloc
     }
     productDetailDataEntity = productDetailDataEntity.copyWith(
         chosenUnitOfMeasure: chosenUnitOfMeasure);
-    productDetailDataEntity.styledProduct = styledProduct;
+    productDetailDataEntity.selectedVariantChild = selectedVariantChild;
 
     await _makeAllDetailsItems(product, emit);
   }

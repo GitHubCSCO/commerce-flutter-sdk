@@ -3,7 +3,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_trait_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsStyleTraitsUseCase {
@@ -26,8 +25,8 @@ class ProductDetailsStyleTraitsUseCase {
   Map<String, List<StyleValueEntity>?> getAvailableStyleValues(
       ProductEntity product) {
     Map<String, List<StyleValueEntity>?> availableStyleValues = {};
-    if (product.styleParentId.isNullOrEmpty && product.styleTraits != null) {
-      for (var s in product.styleTraits!) {
+    if (product.isVariantParent == true && product.variantTraits != null) {
+      for (var s in product.variantTraits!) {
         availableStyleValues[s.styleTraitId!] = s.styleValues;
       }
     }
@@ -36,21 +35,28 @@ class ProductDetailsStyleTraitsUseCase {
 
   Map<String, StyleValueEntity?>? getSelectedStyleValues(
       ProductEntity product,
-      StyledProductEntity? styledProduct,
+      ProductEntity? selectedVariantChild,
       Map<String, StyleValueEntity?>? selectedStyleValuesPersisted) {
     Map<String, StyleValueEntity?>? selectedStyleValues = {};
     if (selectedStyleValuesPersisted != null) {
       selectedStyleValues = selectedStyleValuesPersisted;
     }
 
-    if (product.styleParentId != null) {
-      selectedStyleValues = styledProduct?.styleValues
-          ?.asMap()
-          .map((_, item) => MapEntry(item.styleTraitId!, item));
+    if (selectedVariantChild != null &&
+        selectedVariantChild.childTraitValues != null) {
+      selectedStyleValues = {};
+      for (var ctv in selectedVariantChild.childTraitValues!) {
+        selectedStyleValues[ctv.styleTraitId!] = StyleValueEntity(
+          styleTraitId: ctv.styleTraitId,
+          styleTraitValueId: ctv.id,
+          value: ctv.value,
+          valueDisplay: ctv.valueDisplay,
+        );
+      }
     }
 
     if (selectedStyleValues == null || selectedStyleValues.isEmpty) {
-      product.styleTraits?.forEach((s) {
+      product.variantTraits?.forEach((s) {
         selectedStyleValues?[s.styleTraitId!] = null;
       });
     }
@@ -58,13 +64,14 @@ class ProductDetailsStyleTraitsUseCase {
     return selectedStyleValues;
   }
 
-  StyledProductEntity? getStyledProductBasedOnSelection(
+  ProductEntity? getVariantChildBasedOnSelection(
       String? selectedStyletraitId,
       StyleValueEntity selectedStyleValue,
       ProductEntity product,
+      List<ProductEntity> variantChildren,
       Map<String, List<StyleValueEntity>?> availableStyleValues,
       Map<String, StyleValueEntity?>? selectedStyleValues) {
-    StyledProductEntity? styledProduct;
+    ProductEntity? selectedVariantChild;
     if (selectedStyleValue.styleTraitValueId != null &&
         selectedStyleValue.styleTraitValueId!.isEmpty) {
       selectedStyleValues?[selectedStyleValue.styleTraitId!] = null;
@@ -79,55 +86,38 @@ class ProductDetailsStyleTraitsUseCase {
         isProductStyleSelectionCompleted(selectedStyleValues);
 
     if (isStyleSelectionComplete!) {
-      List<StyledProductEntity>? filteredStyledProducts = [];
-      if (product.styledProducts != null) {
-        for (var o in product.styledProducts!) {
-          if (o.styleValues != null) {
-            bool allValuesMatch = true;
-            for (var v in o.styleValues!) {
-              if (selectedStyleValues != null) {
-                bool anyMatch = false;
-                for (var s in selectedStyleValues.values) {
-                  if (s != null && s.styleTraitValueId == v.styleTraitValueId) {
-                    anyMatch = true;
-                    break;
-                  }
-                }
-                if (!anyMatch) {
-                  allValuesMatch = false;
-                  break;
-                }
-              } else {
-                allValuesMatch = false;
-                break;
-              }
+      for (var child in variantChildren) {
+        if (child.childTraitValues != null) {
+          bool allMatch = true;
+          for (var selectedValue in selectedStyleValues!.values) {
+            if (selectedValue == null) {
+              allMatch = false;
+              break;
             }
-            if (allValuesMatch) {
-              filteredStyledProducts.add(o);
+            final hasMatch = child.childTraitValues!.any(
+              (ctv) =>
+                  ctv.styleTraitId == selectedValue.styleTraitId &&
+                  ctv.id == selectedValue.styleTraitValueId,
+            );
+            if (!hasMatch) {
+              allMatch = false;
+              break;
             }
           }
-        }
-      }
-
-      for (var styleProd in product.styledProducts!) {
-        for (var styleVal in styleProd.styleValues!) {
-          if (styleVal.styleTraitValueId ==
-              selectedStyleValue.styleTraitValueId) {
-            styledProduct = styleProd;
+          if (allMatch) {
+            selectedVariantChild = child;
             break;
           }
         }
       }
-      styledProduct = filteredStyledProducts.firstWhere((element) => true);
     } else {
-      // not all traits has value => the product variant cannot be identified
-      styledProduct = null;
+      selectedVariantChild = null;
     }
 
     resetAvailabilityStyleTraitsValues(
-        availableStyleValues, selectedStyleValues, product);
+        availableStyleValues, selectedStyleValues, product, variantChildren);
 
-    return styledProduct;
+    return selectedVariantChild;
   }
 
   ProductDetailStyleValue createStyleTraitNullValue(
@@ -200,9 +190,9 @@ class ProductDetailsStyleTraitsUseCase {
   void resetAvailabilityStyleTraitsValues(
       Map<String, List<StyleValueEntity>?> availableStyleValues,
       Map<String, StyleValueEntity?>? selectedStyleValues,
-      ProductEntity product) {
-    // Reset available style traits values
-    for (var s in product.styleTraits!) {
+      ProductEntity product,
+      List<ProductEntity> variantChildren) {
+    for (var s in product.variantTraits!) {
       availableStyleValues[s.styleTraitId!] =
           List<StyleValueEntity>.from(s.styleValues!);
     }
@@ -211,30 +201,29 @@ class ProductDetailsStyleTraitsUseCase {
       for (var styleTraitId1 in selectedStyleValues.keys) {
         var styleTraitSelectedStyleValue = selectedStyleValues[styleTraitId1];
 
-        // Given trait has style value => filter
         if (styleTraitSelectedStyleValue != null) {
           for (var styleTraitId2 in selectedStyleValues.keys) {
-            // Include all available values for the current trait
             if (styleTraitId2 != styleTraitSelectedStyleValue.styleTraitId) {
               var styleValues = List<StyleValueEntity>.from(
                   availableStyleValues[styleTraitId2]!);
               for (var styleValue in styleValues) {
-                // Styled products grouped by style value
-                var styleValueProducts = product.styledProducts!
-                    .where((o) => o.styleValues!.any((s) =>
-                        s.styleTraitValueId == styleValue.styleTraitValueId))
+                var styleValueChildren = variantChildren
+                    .where((child) =>
+                        child.childTraitValues != null &&
+                        child.childTraitValues!.any(
+                            (ctv) => ctv.styleTraitId == styleValue.styleTraitId &&
+                                ctv.id == styleValue.styleTraitValueId))
                     .toList();
                 var currentlySelectedStyleValues = selectedStyleValues.values
                     .where((v) => v != null && v.styleTraitId != styleTraitId2)
                     .toList();
 
-                var hasSelectedStyleValues = styleValueProducts.any((p) =>
-                    currentlySelectedStyleValues.every((s) => p.styleValues!
-                        .any((v) =>
-                            v.styleTraitValueId == s!.styleTraitValueId)));
+                var hasSelectedStyleValues = styleValueChildren.any((child) =>
+                    currentlySelectedStyleValues.every((s) =>
+                        child.childTraitValues!.any((ctv) =>
+                            ctv.styleTraitId == s!.styleTraitId &&
+                            ctv.id == s.styleTraitValueId)));
 
-                // Check if the filtered product list has ANY object with the selected style values
-                // If not, remove style value as not available
                 if (!hasSelectedStyleValues) {
                   availableStyleValues[styleTraitId2]!.removeWhere((v) =>
                       v.styleTraitValueId == styleValue.styleTraitValueId);

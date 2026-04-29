@@ -32,13 +32,6 @@ class AddToCartUsecase extends BaseUseCase {
     if (realtimeProductAvailabilityEnabled) {
       var inventoryProducts = <String>[product.id ?? ''];
 
-      if (product.styledProducts != null &&
-          product.styledProducts!.isNotEmpty) {
-        inventoryProducts.addAll(product.styledProducts!
-            .map((o) => o.productId ?? '')
-            .where((productId) => productId.isNotEmpty));
-      }
-
       var parameters =
           RealTimeInventoryParameters(productIds: inventoryProducts);
 

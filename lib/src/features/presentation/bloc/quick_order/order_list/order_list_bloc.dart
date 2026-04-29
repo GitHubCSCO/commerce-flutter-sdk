@@ -11,7 +11,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quick_order_item_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/scanning_mode.dart';
@@ -248,8 +247,9 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       final products = data?.products ?? [];
       if (products.isNotEmpty) {
         final product = products[0];
-        if (product.isStyleProductParent ?? false) {
-          var parameters = ProductQueryParameters(expand: "styledproducts");
+        if (product.isVariantParent ?? false) {
+          var parameters = ProductQueryParameters(
+              expand: "detail,content,images,specifications,documents,badges");
 
           var result = (await _searchUseCase.commerceAPIServiceProvider
                   .getProductService()
@@ -329,7 +329,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     await _getProductSetting();
 
     final result = await _quickOrderUseCase
-        .getStyleProduct(event.styledProductEntity.productId!);
+        .getStyleProduct(event.selectedVariantChild.id!);
     switch (result) {
       case Success(value: final product):
         if (product == null) {
@@ -342,8 +342,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           return;
         }
         var quantity =
-            (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
-        var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
+            ((product.minimumOrderQty ?? 0) > 0) ? product.minimumOrderQty! : 1;
+        var newItem = _convertProductToQuickOrderItemEntity(product, quantity);
         _insertItemIntoQuickOrderList(newItem);
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
       case Failure(errorResponse: final errorResponse):
@@ -359,7 +359,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     await _getProductSetting();
 
     final result = await _quickOrderUseCase
-        .getStyleProduct(event.styledProductEntity.productId!);
+        .getStyleProduct(event.selectedVariantChild.id!);
     switch (result) {
       case Success(value: final product):
         if (product == null) {
@@ -374,9 +374,9 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
         event.vmiBinEntity.productEntity = product;
         var quantity =
-            (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
+            ((product.minimumOrderQty ?? 0) > 0) ? product.minimumOrderQty! : 1;
         var newItem = _convertVmiBinProductToQuickOrderItemEntity(
-            event.vmiBinEntity, quantity!);
+            event.vmiBinEntity, quantity);
         _insertItemIntoQuickOrderList(newItem);
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
       case Failure(errorResponse: final errorResponse):
@@ -419,7 +419,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
             ? product.minimumOrderQty ?? 0
             : 1;
 
-        if (product.isStyleProductParent == true) {
+        if (product.isVariantParent == true) {
           emit(OrderListStyleProductAddState(product));
         } else if (product.canConfigure == true ||
             (product.isConfigured == true &&
@@ -479,11 +479,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
             emit(OrderListVmiProductAddState(vmiBin, previousOrder));
             return;
           } else {
-            var quantity = (vmiBin.productEntity!.minimumOrderQty! > 0)
-                ? vmiBin.productEntity!.minimumOrderQty
+            var quantity = ((vmiBin.productEntity!.minimumOrderQty ?? 0) > 0)
+                ? vmiBin.productEntity!.minimumOrderQty!
                 : 1;
 
-            if (vmiBin.productEntity?.isStyleProductParent == true) {
+            if (vmiBin.productEntity?.isVariantParent == true) {
               emit(OrderListVmiStyleProductAddState(vmiBin));
             } else if (vmiBin.productEntity?.canConfigure == true ||
                 (vmiBin.productEntity?.isConfigured == true &&
@@ -501,7 +501,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
               emit(OrderListAddFailedState(message));
             } else {
               var newItem = _convertVmiBinProductToQuickOrderItemEntity(
-                  vmiBin, quantity!);
+                  vmiBin, quantity);
               _insertItemIntoQuickOrderList(newItem);
               emit(OrderListVmiQuickOrderProductAddState());
             }

@@ -124,8 +124,8 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             onTap: () {
               viewWarehouseWidget(
                   context,
-                  state.productDetailsPriceEntity.styledProduct != null
-                      ? state.productDetailsPriceEntity.styledProduct?.productId
+                  state.productDetailsPriceEntity.selectedVariantChild != null
+                      ? state.productDetailsPriceEntity.selectedVariantChild?.id
                       : state.productDetailsPriceEntity.product?.id,
                   state.productDetailsPriceEntity.product.getProductNumber(),
                   state.productDetailsPriceEntity.chosenUnitOfMeasure

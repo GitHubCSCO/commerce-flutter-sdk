@@ -47,16 +47,16 @@ class OrderListRemoveEvent extends OrderListEvent {}
 class OrderListAddToListEvent extends OrderListEvent {}
 
 class OrderListAddStyleProductEvent extends OrderListEvent {
-  final StyledProductEntity styledProductEntity;
+  final ProductEntity selectedVariantChild;
 
-  OrderListAddStyleProductEvent(this.styledProductEntity);
+  OrderListAddStyleProductEvent(this.selectedVariantChild);
 }
 
 class OrderListAddVmiStyleProductEvent extends OrderListEvent {
   final VmiBinModelEntity vmiBinEntity;
-  final StyledProductEntity styledProductEntity;
+  final ProductEntity selectedVariantChild;
 
-  OrderListAddVmiStyleProductEvent(this.vmiBinEntity, this.styledProductEntity);
+  OrderListAddVmiStyleProductEvent(this.vmiBinEntity, this.selectedVariantChild);
 }
 
 class OrderListAddVmiBinEvent extends OrderListEvent {

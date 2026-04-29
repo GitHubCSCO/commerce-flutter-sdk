@@ -2,7 +2,6 @@ import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/extensions/html_string_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/models/screen_parameters.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
@@ -20,7 +19,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/product/p
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandDetailsEntity {
@@ -115,16 +113,6 @@ class BrandDetailsPage extends StatelessWidget {
                           brand: brand,
                           list: state.brandDetailsEntity.brandProductLines),
                     ],
-                    if ((state.brandDetailsEntity.brandEntity?.topSellerProducts
-                                ?.length ??
-                            0) >
-                        0) ...[
-                      const SizedBox(height: 8),
-                      TopSellerProductsWidget(
-                          list: state.brandDetailsEntity.brandEntity
-                              ?.topSellerProducts),
-                      const SizedBox(height: 32),
-                    ],
                   ],
                 ),
               ),
@@ -142,15 +130,6 @@ class BrandDetailsPage extends StatelessWidget {
 
   List<ToolMenu> getToolMenu(BuildContext context, Brand brand) {
     List<ToolMenu> list = [];
-    if (brand.externalUrl != null && brand.externalUrl!.isNotEmpty) {
-      list.add(
-        ToolMenu(
-            title: LocalizationConstants.viewBrandWebsite.localized(),
-            action: () {},
-            isUrl: true,
-            url: brand.externalUrl),
-      );
-    }
     return list;
   }
 }
@@ -193,13 +172,7 @@ class BrandInfoWidget extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: HtmlWidget(
-              brandEntity?.htmlContent?.styleHtmlContent() ?? '',
-              textStyle: OptiTextStyles.body,
-            ),
-          ),
+          const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: PrimaryButton(
@@ -555,8 +528,7 @@ class TopSellerProductsWidget extends StatelessWidget {
                 final topSellerProductEntityLine = list?[index];
                 return InkWell(
                   onTap: () {
-                    var productId = topSellerProductEntityLine?.styleParentId ??
-                        topSellerProductEntityLine?.id;
+                    var productId = topSellerProductEntityLine?.id;
                     //TODO what if productid is null,
                     AppRoute.productDetails.navigateBackStack(context,
                         pathParameters: {"productId": productId.toString()},

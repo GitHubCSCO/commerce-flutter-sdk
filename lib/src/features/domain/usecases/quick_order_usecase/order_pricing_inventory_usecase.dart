@@ -18,14 +18,6 @@ class OrderPricingInventoryUseCase extends BaseUseCase {
     return result is Success ? (result as Success).value : null;
   }
 
-  Future<ProductPrice?> getProductPrice(
-      String productId, ProductPriceQueryParameter parameter) async {
-    var result = await commerceAPIServiceProvider
-        .getProductService()
-        .getProductPrice(productId, parameter);
-    return result is Success ? (result as Success).value : null;
-  }
-
   Future<bool> isAuthenticated() async {
     var result = await commerceAPIServiceProvider
         .getAuthenticationService()

@@ -5,7 +5,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/legacy_configura
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 
 class ProductDetailsDataEntity extends Equatable {
@@ -20,7 +19,9 @@ class ProductDetailsDataEntity extends Equatable {
   Session? session;
   bool? hasCheckout;
   ProductEntity? product;
-  StyledProductEntity? styledProduct;
+  ProductEntity? selectedVariantChild;
+  List<ProductEntity>? variantChildren;
+  List<ProductEntity>? relatedProducts;
   ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
   Map<String, ConfigSectionOptionEntity?>? selectedConfigurations;
   Map<String, List<StyleValueEntity>?>? availableStyleValues;
@@ -38,7 +39,9 @@ class ProductDetailsDataEntity extends Equatable {
       this.session,
       this.hasCheckout,
       this.product,
-      this.styledProduct,
+      this.selectedVariantChild,
+      this.variantChildren,
+      this.relatedProducts,
       this.chosenUnitOfMeasure,
       this.selectedConfigurations,
       this.availableStyleValues,
@@ -60,7 +63,9 @@ class ProductDetailsDataEntity extends Equatable {
       session,
       hasCheckout,
       product,
-      styledProduct,
+      selectedVariantChild,
+      variantChildren,
+      relatedProducts,
       chosenUnitOfMeasure,
       selectedConfigurations,
       availableStyleValues,
@@ -82,7 +87,9 @@ class ProductDetailsDataEntity extends Equatable {
       Session? session,
       bool? hasCheckout,
       ProductEntity? product,
-      StyledProductEntity? styledProduct,
+      ProductEntity? selectedVariantChild,
+      List<ProductEntity>? variantChildren,
+      List<ProductEntity>? relatedProducts,
       ProductUnitOfMeasureEntity? chosenUnitOfMeasure,
       Map<String, ConfigSectionOptionEntity?>? selectedConfigurations,
       Map<String, List<StyleValueEntity>?>? availableStyleValues,
@@ -106,7 +113,9 @@ class ProductDetailsDataEntity extends Equatable {
         session: session ?? this.session,
         hasCheckout: hasCheckout ?? this.hasCheckout,
         product: product ?? this.product,
-        styledProduct: styledProduct ?? this.styledProduct,
+        selectedVariantChild: selectedVariantChild ?? this.selectedVariantChild,
+        variantChildren: variantChildren ?? this.variantChildren,
+        relatedProducts: relatedProducts ?? this.relatedProducts,
         chosenUnitOfMeasure: chosenUnitOfMeasure ?? this.chosenUnitOfMeasure,
         selectedConfigurations:
             selectedConfigurations ?? this.selectedConfigurations,

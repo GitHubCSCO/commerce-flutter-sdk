@@ -4,7 +4,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/base_usecase.dart';
@@ -15,13 +14,13 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
 
   Future<Result<ProductPriceEntity, ErrorResponse>> loadProductPricing(
       ProductEntity productEntity,
-      StyledProductEntity? styledProduct,
+      ProductEntity? selectedVariantChild,
       ProductUnitOfMeasureEntity? chosenUnitOfMeasure,
       bool realtimeProductPricingEnabled,
       bool productPricingEnabled,
       int quantity,
       Map<String, ConfigSectionOptionEntity?> selectedConfigurations) async {
-    if (productEntity.quoteRequired!) {
+    if (productEntity.quoteRequired ?? false) {
       return Failure(ErrorResponse(
           errorDescription: 'Product requires a quote to be purchased'));
     }
@@ -32,65 +31,41 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
           errorDescription: 'Quantity must be greater than 0 to get pricing'));
     }
 
-    var productId = styledProduct?.productId ?? productEntity.id;
+    var productId = selectedVariantChild?.id ?? productEntity.id;
 
     if (productPricingEnabled) {
-      if (realtimeProductPricingEnabled) {
-        List<String>? configurations = selectedConfigurations.values
-            .map((config) => config?.sectionOptionId ?? "")
-            .where((id) => id.isNotEmpty)
-            .toList();
+      List<String>? configurations = selectedConfigurations.values
+          .map((config) => config?.sectionOptionId ?? "")
+          .where((id) => id.isNotEmpty)
+          .toList();
 
-        var priceProducts = <ProductPriceQueryParameter>[
-          ProductPriceQueryParameter(
-            productId: productId,
-            unitOfMeasure: chosenUnitOfMeasure?.unitOfMeasure ?? "",
-            qtyOrdered: quantity,
-            configuration: configurations,
-          ),
-        ];
+      var priceProducts = <ProductPriceQueryParameter>[
+        ProductPriceQueryParameter(
+          productId: productId,
+          unitOfMeasure: chosenUnitOfMeasure?.unitOfMeasure ?? "",
+          qtyOrdered: quantity,
+          configuration: configurations,
+        ),
+      ];
 
-        var parameter = RealTimePricingParameters(
-          productPriceParameters: priceProducts,
-        );
-        var getProductRealTimePricesResponse = await commerceAPIServiceProvider
-            .getRealTimePricingService()
-            .getProductRealTimePrices(parameter);
+      var parameter = RealTimePricingParameters(
+        productPriceParameters: priceProducts,
+      );
+      var getProductRealTimePricesResponse = await commerceAPIServiceProvider
+          .getRealTimePricingService()
+          .getProductRealTimePrices(parameter);
 
-        switch (getProductRealTimePricesResponse) {
-          case Success(value: final data):
-            var realTimePrices = data;
-            var productPricingList = realTimePrices?.realTimePricingResults
-                ?.where((o) => o.productId == productId);
-            productPricing = ProductPriceEntityMapper.toEntity(
-                productPricingList?.firstOrNull);
-            return Success(productPricing);
-          case Failure(errorResponse: final errorResponse):
-            return Failure(ErrorResponse(
-                errorDescription: errorResponse.errorDescription));
-        }
-      } else {
-        List<String>? configurations = selectedConfigurations.values
-            .map((config) => config?.sectionOptionId ?? "")
-            .toList();
-
-        var parameters = ProductPriceQueryParameter(
-            qtyOrdered: quantity,
-            unitOfMeasure: chosenUnitOfMeasure?.unitOfMeasure ?? '',
-            configuration: configurations);
-
-        var productPricingResponse = await commerceAPIServiceProvider
-            .getProductService()
-            .getProductPrice(productId!, parameters);
-
-        switch (productPricingResponse) {
-          case Success(value: final data):
-            productPricing = ProductPriceEntityMapper.toEntity(data);
-            return Success(productPricing);
-          case Failure(errorResponse: final errorResponse):
-            return Failure(ErrorResponse(
-                errorDescription: errorResponse.errorDescription));
-        }
+      switch (getProductRealTimePricesResponse) {
+        case Success(value: final data):
+          var realTimePrices = data;
+          var productPricingList = realTimePrices?.realTimePricingResults
+              ?.where((o) => o.productId == productId);
+          productPricing = ProductPriceEntityMapper.toEntity(
+              productPricingList?.firstOrNull);
+          return Success(productPricing);
+        case Failure(errorResponse: final errorResponse):
+          return Failure(ErrorResponse(
+              errorDescription: errorResponse.errorDescription));
       }
     }
     return Failure(ErrorResponse(
@@ -98,13 +73,14 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
   }
 
   Future<Result<GetRealTimeInventoryResult, ErrorResponse>>
-      loadRealTimeInventory(ProductEntity productEntity) async {
+      loadRealTimeInventory(
+          ProductEntity productEntity,
+          {List<ProductEntity>? variantChildren}) async {
     var inventoryProducts = <String>[productEntity.id ?? ''];
 
-    if (productEntity.styledProducts != null &&
-        productEntity.styledProducts!.isNotEmpty) {
-      inventoryProducts.addAll(productEntity.styledProducts!
-          .map((o) => o.productId ?? '')
+    if (variantChildren != null && variantChildren.isNotEmpty) {
+      inventoryProducts.addAll(variantChildren
+          .map((o) => o.id ?? '')
           .where((productId) => productId.isNotEmpty));
     }
 
@@ -127,11 +103,11 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
   ProductDetailsPriceEntity updateProductOrStyleProductRealTimeInventory(
       GetRealTimeInventoryResult? getRealTimeInventoryResult,
       ProductEntity productEntity,
-      StyledProductEntity? styledProduct,
+      ProductEntity? selectedVariantChild,
       ProductDetailsPriceEntity productDetailsPriceEntity,
       ProductUnitOfMeasureEntity? chosenUnitOfMeasure) {
     var productId =
-        styledProduct != null ? styledProduct.productId : productEntity.id;
+        selectedVariantChild != null ? selectedVariantChild.id : productEntity.id;
     var inventoryList = getRealTimeInventoryResult?.realTimeInventoryResults
         ?.where((o) => o.productId == productId);
     var inventory = inventoryList?.firstOrNull;
@@ -154,8 +130,8 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
 
       newInventoryAvailability ??= Availability(messageType: 0);
 
-      if (styledProduct != null) {
-        styledProduct = styledProduct.copyWith(
+      if (selectedVariantChild != null) {
+        selectedVariantChild = selectedVariantChild.copyWith(
             qtyOnHand: inventory.qtyOnHand,
             availability:
                 AvailabilityEntityMapper.toEntity(newInventoryAvailability));
@@ -166,53 +142,25 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
                 AvailabilityEntityMapper.toEntity(newInventoryAvailability));
       }
 
-      var productUnitOfMeasures = styledProduct != null
-          ? styledProduct.productUnitOfMeasures
-          : productEntity.productUnitOfMeasures;
-      for (var p in productUnitOfMeasures!) {
-        var unitOfMeasureAvailabilityList = inventory.inventoryAvailabilityDtos
-            ?.where((o) => o.unitOfMeasure == p.unitOfMeasure);
-        var unitOfMeasureAvailability =
-            unitOfMeasureAvailabilityList?.firstOrNull;
-        if (unitOfMeasureAvailability != null) {
-          p = p.copyWith(
-              availability: AvailabilityEntityMapper.toEntity(
-                  unitOfMeasureAvailability.availability));
-        } else {
-          p = p.copyWith(
-              availability: AvailabilityEntityMapper.toEntity(
-                  Availability(messageType: 0)));
-        }
-      }
     } else {
       var newProductAvailability = Availability(
         messageType: 0,
         message: LocalizationConstants.unableToRetrieveInventory.localized(),
       );
-      if (styledProduct != null) {
-        styledProduct = styledProduct.copyWith(
+      if (selectedVariantChild != null) {
+        selectedVariantChild = selectedVariantChild.copyWith(
             availability:
                 AvailabilityEntityMapper.toEntity(newProductAvailability));
-        for (var p in styledProduct.productUnitOfMeasures!) {
-          p = p.copyWith(
-              availability: AvailabilityEntityMapper.toEntity(
-                  Availability(messageType: 0)));
-        }
       } else {
         productEntity = productEntity.copyWith(
             availability:
                 AvailabilityEntityMapper.toEntity(newProductAvailability));
-        for (var p in productEntity.productUnitOfMeasures!) {
-          p = p.copyWith(
-              availability: AvailabilityEntityMapper.toEntity(
-                  Availability(messageType: 0)));
-        }
       }
     }
 
     productDetailsPriceEntity = productDetailsPriceEntity.copyWith(
       product: productEntity,
-      styledProduct: styledProduct,
+      selectedVariantChild: selectedVariantChild,
     );
 
     return productDetailsPriceEntity;

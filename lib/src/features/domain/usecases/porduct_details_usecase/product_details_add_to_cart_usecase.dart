@@ -2,7 +2,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.d
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/base_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
@@ -34,16 +33,16 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
       bool hasCheckout,
       bool addToCartEnabled,
       ProductEntity productEntity,
-      StyledProductEntity? styledProduct,
+      ProductEntity? selectedVariantChild,
       Map<String, StyleValueEntity?>? selectedStyleValues,
       bool isProductConfigurable,
       bool isProductConfigurationCompleted) async {
     var isOnlineNow = await isOnline();
     var isAddToCartButtonAvailable = isOnlineNow && hasCheckout;
     isAddToCartButtonAvailable &= addToCartEnabled;
-    isAddToCartButtonAvailable &= !productEntity.cantBuy!;
+    isAddToCartButtonAvailable &= !(productEntity.cantBuy ?? false);
     isAddToCartButtonAvailable &=
-        productEntity.allowedAddToCart! && !productEntity.canConfigure!;
+        (productEntity.allowedAddToCart ?? true) && !(productEntity.canConfigure ?? false);
 
     return isAddToCartButtonAvailable;
   }
@@ -53,7 +52,7 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
       bool hasCheckout,
       bool addToCartEnabled,
       ProductEntity productEntity,
-      StyledProductEntity? styledProduct,
+      ProductEntity? selectedVariantChild,
       Map<String, StyleValueEntity?>? selectedStyleValues,
       bool isProductConfigurable,
       bool isProductConfigurationCompleted) async {
@@ -62,7 +61,7 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
         hasCheckout,
         addToCartEnabled,
         productEntity,
-        styledProduct,
+        selectedVariantChild,
         selectedStyleValues,
         isProductConfigurable,
         isProductConfigurationCompleted);
@@ -81,10 +80,10 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
 
       isAddToCartButtonEnabled &= quantity > 0;
       isAddToCartButtonEnabled = isAddToCartButtonEnabled &
-          ((styledProduct == null
+          ((selectedVariantChild == null
                   ? productEntity.availability?.messageType != 2
-                  : styledProduct.availability?.messageType != 2) ||
-              productEntity.canBackOrder!);
+                  : selectedVariantChild.availability?.messageType != 2) ||
+              (productEntity.canBackOrder ?? false));
 
       return isAddToCartButtonEnabled;
     } else {
@@ -97,18 +96,17 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
     if (productDetailsAddtoCartEntity == null) {
       return productDetailsAddtoCartEntity;
     }
-    //var alternateUnitsOfMeasureEnabled = true;
 
     var productDetailsPriceEntity =
         productDetailsAddtoCartEntity.productDetailsPriceEntity;
 
     var quantity = int.parse(productDetailsAddtoCartEntity.quantityText!);
-    var styledProduct = productDetailsPriceEntity?.styledProduct;
+    var selectedVariantChild = productDetailsPriceEntity?.selectedVariantChild;
     var product = productDetailsPriceEntity?.product;
 
-    var productUnitOfMeasures = styledProduct == null
+    var productUnitOfMeasures = selectedVariantChild == null
         ? product?.productUnitOfMeasures
-        : styledProduct.productUnitOfMeasures;
+        : selectedVariantChild.productUnitOfMeasures;
 
     if (productUnitOfMeasures != null) {
       for (int i = 0; i < productUnitOfMeasures.length; i++) {
@@ -144,11 +142,10 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
           selectedUnitOfMeasure: null);
     }
 
-    // update subtotal value
-    var isQuoteRequired = styledProduct != null
-        ? styledProduct.quoteRequired
+    var isQuoteRequired = selectedVariantChild != null
+        ? selectedVariantChild.quoteRequired
         : product?.quoteRequired;
-    var shouldHideSubtotalValue = quantity < 1 || isQuoteRequired!;
+    var shouldHideSubtotalValue = quantity < 1 || (isQuoteRequired ?? false);
 
     if (shouldHideSubtotalValue ||
         productDetailsPriceEntity?.product?.pricing == null) {

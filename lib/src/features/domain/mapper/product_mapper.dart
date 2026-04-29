@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/attribute_type_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/badge_mapper.dart';
@@ -94,7 +95,7 @@ class ProductEntityMapper {
         metaKeywords: model.content?.metaKeywords,
 
         // V1 fields with no V2 equivalent (null/defaults)
-        shortDescription: null,
+        shortDescription: model.productTitle ?? model.detail?.name,
         erpDescription: null,
         customerName: null,
         basicListPrice: null,
@@ -114,6 +115,15 @@ class ProductEntityMapper {
         styledProducts: null,
         crossSells: null,
         accessories: null,
+        unitOfMeasure: model.unitOfMeasures
+            ?.firstWhereOrNull((u) => u.isDefault == true)
+            ?.unitOfMeasure,
+        unitOfMeasureDisplay: model.unitOfMeasures
+            ?.firstWhereOrNull((u) => u.isDefault == true)
+            ?.unitOfMeasureDisplay,
+        unitOfMeasureDescription: model.unitOfMeasures
+            ?.firstWhereOrNull((u) => u.isDefault == true)
+            ?.description,
         selectedUnitOfMeasure: null,
         selectedUnitOfMeasureDisplay: null,
         productDetailUrl: model.canonicalUrl,

@@ -46,44 +46,31 @@ class OrderItemPricingInventoryCubit
         isUserSignedIn;
 
     if (productSettings.canSeePrices! && isStorefrontAccessGranted) {
-      if (productSettings.realTimePricing!) {
-        List<ProductPriceQueryParameter> priceProducts = [
-          ProductPriceQueryParameter(
-            productId: productId,
-            unitOfMeasure: product.selectedUnitOfMeasure,
-            qtyOrdered: quickOrderItemEntity.quantityOrdered,
-          ),
-        ];
-
-        RealTimePricingParameters parameter = RealTimePricingParameters(
-          productPriceParameters: priceProducts,
-        );
-        var getProductRealTimePrices =
-            await _pricingInventoryUseCase.getProductRealTimePrices(parameter);
-        var pricing = getProductRealTimePrices?.realTimePricingResults
-            ?.firstWhere((result) => result.productId == productId);
-        quickOrderItemEntity.updatePricing(
-            ProductPriceEntityMapper.toEntity(pricing),
-            productSettings.canSeePrices!);
-      } else {
-        ProductPriceQueryParameter parameters = ProductPriceQueryParameter(
-          qtyOrdered: quickOrderItemEntity.quantityOrdered,
+      List<ProductPriceQueryParameter> priceProducts = [
+        ProductPriceQueryParameter(
+          productId: productId,
           unitOfMeasure: product.selectedUnitOfMeasure,
-        );
+          qtyOrdered: quickOrderItemEntity.quantityOrdered,
+        ),
+      ];
 
-        var pricing = await _pricingInventoryUseCase.getProductPrice(
-            productId!, parameters);
-        quickOrderItemEntity.updatePricing(
-            ProductPriceEntityMapper.toEntity(pricing),
-            productSettings.canSeePrices!);
-      }
+      RealTimePricingParameters parameter = RealTimePricingParameters(
+        productPriceParameters: priceProducts,
+      );
+      var getProductRealTimePrices =
+          await _pricingInventoryUseCase.getProductRealTimePrices(parameter);
+      var pricing = getProductRealTimePrices?.realTimePricingResults
+          ?.firstWhere((result) => result.productId == productId);
+      quickOrderItemEntity.updatePricing(
+          ProductPriceEntityMapper.toEntity(pricing),
+          productSettings.canSeePrices!);
     }
     emit(OrderItemSubTotalChange());
 
     var productAvailabilityEnabled = productSettings.showInventoryAvailability!;
     var showInventoryAvailability = false;
-    if ((!product.isConfigured! || product.isFixedConfiguration!) &&
-        !product.isStyleProductParent!) {
+    if ((!(product.isConfigured ?? false) || (product.isFixedConfiguration ?? false)) &&
+        !(product.isVariantParent ?? false)) {
       showInventoryAvailability = productAvailabilityEnabled;
     }
     showInventoryAvailability = product.availability?.message != null &&

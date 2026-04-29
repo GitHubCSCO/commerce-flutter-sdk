@@ -5,12 +5,12 @@ extension ProductDetailDocumentsNameValueConverter on DocumentEntity? {
     if (this == null) {
       return '';
     }
-    if (this!.name != null) {
+    if (this!.name != null && this!.documentType != null) {
+      return "${this!.name!} (${this!.documentType!})";
+    } else if (this!.name != null) {
       return this!.name!;
-    } else if (this!.fileTypeString != null) {
-      return this!.fileTypeString!;
-    } else if (this!.name != null && this!.fileTypeString != null) {
-      return "${this!.name!} (${this!.fileTypeString!})";
+    } else if (this!.documentType != null) {
+      return this!.documentType!;
     }
     return '';
   }

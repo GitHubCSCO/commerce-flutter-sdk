@@ -2,7 +2,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/availability_ent
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_base_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 
 class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
@@ -14,7 +13,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
   final AvailabilityEntity? availability;
   final String? priceValueText;
   final ProductEntity? product;
-  final StyledProductEntity? styledProduct;
+  final ProductEntity? selectedVariantChild;
   final String? selectedUnitOfMeasureValueText;
   final int? quantity;
   final bool? viewQuantityPricingButtonShown;
@@ -34,7 +33,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       this.availability,
       this.priceValueText,
       this.product,
-      this.styledProduct,
+      this.selectedVariantChild,
       this.selectedUnitOfMeasureValueText,
       this.viewQuantityPricingButtonShown,
       this.viewInventoryByWarehouseShown,
@@ -54,7 +53,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       AvailabilityEntity? availability,
       String? priceValueText,
       ProductEntity? product,
-      StyledProductEntity? styledProduct,
+      ProductEntity? selectedVariantChild,
       String? selectedUnitOfMeasureValueText,
       int? quantity,
       bool? viewQuantityPricingButtonShown,
@@ -75,7 +74,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       availability: availability ?? this.availability,
       priceValueText: priceValueText ?? this.priceValueText,
       product: product ?? this.product,
-      styledProduct: styledProduct ?? this.styledProduct,
+      selectedVariantChild:
+          selectedVariantChild ?? this.selectedVariantChild,
       selectedUnitOfMeasureValueText:
           selectedUnitOfMeasureValueText ?? this.selectedUnitOfMeasureValueText,
       quantity: quantity ?? this.quantity,
@@ -100,7 +100,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
         availability,
         priceValueText,
         product,
-        styledProduct,
+        selectedVariantChild,
         selectedUnitOfMeasureValueText,
         quantity,
         viewQuantityPricingButtonShown,

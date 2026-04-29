@@ -63,9 +63,9 @@ class ProductDetailsAddToCartBloc
         event.productDetailsAddToCartEntity.quantityText!);
     var product =
         event.productDetailsAddToCartEntity.productDetailsPriceEntity?.product;
-    var styledProduct = event
-        .productDetailsAddToCartEntity.productDetailsPriceEntity?.styledProduct;
-    var productId = styledProduct?.productId ?? product?.id;
+    var selectedVariantChild = event
+        .productDetailsAddToCartEntity.productDetailsPriceEntity?.selectedVariantChild;
+    var productId = selectedVariantChild?.id ?? product?.id;
     var quantity = int.parse(event.productDetailsAddToCartEntity.quantityText!);
 
     if (product?.allowZeroPricing != true &&

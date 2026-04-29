@@ -13,11 +13,13 @@ class StyleTraitEntityMapper {
         numberOfSwatchesVisible: model.numberOfSwatchesVisible,
         displayTextWithSwatch: model.displayTextWithSwatch,
         styleValues: model.traitValues
-            ?.map((traitValue) => StyleValueEntityMapper.toEntity(traitValue))
+            ?.map((traitValue) => StyleValueEntityMapper.toEntity(traitValue,
+                styleTraitId: model.id))
             .toList(),
         id: model.id,
         traitValues: model.traitValues
-            ?.map((traitValue) => StyleValueEntityMapper.toEntity(traitValue))
+            ?.map((traitValue) => StyleValueEntityMapper.toEntity(traitValue,
+                styleTraitId: model.id))
             .toList(),
       );
 

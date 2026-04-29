@@ -7,7 +7,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.d
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
@@ -48,7 +47,8 @@ class ProductDetailsPricingBloc
 
     var productDetailsPricingEntity = event.productDetailsPricingEntity;
     var product = event.productDetailsDataEntity.product!;
-    final styledProduct = event.productDetailsDataEntity.styledProduct;
+    final selectedVariantChild =
+        event.productDetailsDataEntity.selectedVariantChild;
     final quantity = event.quantity;
     final productPricingEnabled =
         event.productDetailsDataEntity.productPricingEnabled;
@@ -70,7 +70,7 @@ class ProductDetailsPricingBloc
 
     final result = await _productDetailsPricingUseCase.loadProductPricing(
         product,
-        styledProduct,
+        selectedVariantChild,
         chosenUnitOfMeasure,
         realtimeProductPricingEnabled,
         productPricingEnabled!,
@@ -105,27 +105,30 @@ class ProductDetailsPricingBloc
           selectedUnitOfMeasureValueText: selectedUnitOfMeasureValueText,
           productPricingEnabled: productPricingEnabled,
           product: product,
-          styledProduct: styledProduct,
+          selectedVariantChild: selectedVariantChild,
           quantity: quantity);
     } else {
       productDetailsPricingEntity = productDetailsPricingEntity.copyWith(
           priceValueText: SiteMessageConstants.valuePricingSignInForPrice,
           productPricingEnabled: productPricingEnabled,
           product: product,
-          styledProduct: styledProduct,
+          selectedVariantChild: selectedVariantChild,
           quantity: quantity,
           selectedUnitOfMeasureValueText: null);
     }
     if (realtimeProductAvailabilityEnabled) {
       productDetailsPricingEntity = await _loadRealTimeInventory(
-          productDetailsPricingEntity, chosenUnitOfMeasure, product);
+          productDetailsPricingEntity,
+          chosenUnitOfMeasure,
+          product,
+          event.productDetailsDataEntity.variantChildren);
     }
 
     productDetailsPricingEntity =
         await _loadQuantityPricingAndShowInventoryData(
             productDetailsPricingEntity,
             productSettings,
-            productDetailsPricingEntity.styledProduct,
+            productDetailsPricingEntity.selectedVariantChild,
             productDetailsPricingEntity.product!,
             data,
             selectedConfigurations,
@@ -142,9 +145,11 @@ class ProductDetailsPricingBloc
   Future<ProductDetailsPriceEntity> _loadRealTimeInventory(
       ProductDetailsPriceEntity productDetailsPricingEntity,
       ProductUnitOfMeasureEntity? chosenUnitOfMeasure,
-      ProductEntity? product) async {
+      ProductEntity? product,
+      List<ProductEntity>? variantChildren) async {
     var realTimeInventory =
-        await _productDetailsPricingUseCase.loadRealTimeInventory(product!);
+        await _productDetailsPricingUseCase.loadRealTimeInventory(product!,
+            variantChildren: variantChildren);
 
     GetRealTimeInventoryResult? inventory = (realTimeInventory is Success)
         ? (realTimeInventory as Success).value
@@ -154,7 +159,7 @@ class ProductDetailsPricingBloc
         .updateProductOrStyleProductRealTimeInventory(
             inventory,
             productDetailsPricingEntity.product!,
-            productDetailsPricingEntity.styledProduct,
+            productDetailsPricingEntity.selectedVariantChild,
             productDetailsPricingEntity,
             chosenUnitOfMeasure);
 
@@ -164,7 +169,7 @@ class ProductDetailsPricingBloc
   Future<ProductDetailsPriceEntity> _loadQuantityPricingAndShowInventoryData(
       ProductDetailsPriceEntity productDetailsPricingEntity,
       ProductSettings productSettings,
-      StyledProductEntity? styledProduct,
+      ProductEntity? selectedVariantChild,
       ProductEntity product,
       ProductPriceEntity? productPricing,
       Map<String, ConfigSectionOptionEntity?> selectedConfigurations,
@@ -173,9 +178,9 @@ class ProductDetailsPricingBloc
       bool addToCartEnabled,
       int quantity,
       ProductUnitOfMeasureEntity? choosenUnitOfMeasure) async {
-    var availability = styledProduct == null
+    var availability = selectedVariantChild == null
         ? product.availability
-        : styledProduct.availability;
+        : selectedVariantChild.availability;
 
     var isProductConfigurable = _isProductConfigurable(selectedConfigurations);
     var isProductConfigurationCompleted =
@@ -185,7 +190,7 @@ class ProductDetailsPricingBloc
         hasCheckout,
         addToCartEnabled,
         product,
-        styledProduct,
+        selectedVariantChild,
         selectedStyleValues,
         isProductConfigurable,
         isProductConfigurationCompleted);
@@ -195,7 +200,7 @@ class ProductDetailsPricingBloc
         hasCheckout,
         addToCartEnabled,
         product,
-        styledProduct,
+        selectedVariantChild,
         selectedStyleValues,
         isProductConfigurable,
         isProductConfigurationCompleted);
@@ -222,9 +227,9 @@ class ProductDetailsPricingBloc
         showAvailabilityPerWarehouseLink = configurationCompleted;
       }
 
-      showAvailabilityPerWarehouseLink &= styledProduct != null
-          ? styledProduct.trackInventory!
-          : product.trackInventory!;
+      showAvailabilityPerWarehouseLink &= selectedVariantChild != null
+          ? (selectedVariantChild.trackInventory ?? false)
+          : (product.trackInventory ?? false);
 
       if (availability != null && availability.message.isNullOrEmpty) {
         showAvailabilityMessage = false;

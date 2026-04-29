@@ -43,11 +43,11 @@ class SearchUseCase extends BaseUseCase {
               result.add(
                 AutocompleteProduct(
                   id: item.product?.id,
-                  title: item.product?.shortDescription,
-                  subtitle: item.product?.pageTitle,
+                  title: item.product?.productTitle,
+                  subtitle: item.product?.content?.pageTitle,
                   image: item.product?.mediumImagePath,
-                  name: item.product?.name,
-                  erpNumber: item.product?.erpNumber,
+                  name: item.product?.productTitle,
+                  erpNumber: item.product?.productNumber,
                   brandName: item.product?.brand?.name,
                   brandDetailPagePath: item.product?.brand?.logoSmallImagePath,
                   binNumber: item.binNumber,
@@ -90,7 +90,7 @@ class SearchUseCase extends BaseUseCase {
       categoryId: selectedCategoryId,
       previouslyPurchasedProducts: previouslyPurchased,
       stockedItemsOnly: selectedStockedItems,
-      expand: ["pricing", "facets", "brand", "varianttraits", "styledproducts"],
+      expand: ["facets", "brand", "varianttraits"],
       sort: selectedSortOrder?.value,
     );
     var result = await commerceAPIServiceProvider

@@ -13,7 +13,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quick_order_item_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/scanning_mode.dart';
@@ -922,19 +921,18 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   void handleStyleProductAdd(ProductEntity productEntity) {
     showStyleTraitFilter(productEntity, context,
-        onGetProduct: (StyledProductEntity? styleProduct) {
+        onGetProduct: (ProductEntity? selectedVariantChild) {
       context
           .read<OrderListBloc>()
-          .add(OrderListAddStyleProductEvent(styleProduct!));
+          .add(OrderListAddStyleProductEvent(selectedVariantChild!));
     });
   }
 
   void handleVmiStyleProductAdd(VmiBinModelEntity vmiBinEntity) {
     showStyleTraitFilter(vmiBinEntity.productEntity!, context,
-        onGetProduct: (StyledProductEntity? styleProduct) {
-      context
-          .read<OrderListBloc>()
-          .add(OrderListAddVmiStyleProductEvent(vmiBinEntity, styleProduct!));
+        onGetProduct: (ProductEntity? selectedVariantChild) {
+      context.read<OrderListBloc>().add(OrderListAddVmiStyleProductEvent(
+          vmiBinEntity, selectedVariantChild!));
     });
   }
 

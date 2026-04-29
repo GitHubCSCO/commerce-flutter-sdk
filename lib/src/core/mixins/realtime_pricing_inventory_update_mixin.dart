@@ -2,7 +2,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/availability_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_price_mapper.dart';
@@ -101,42 +100,20 @@ mixin RealtimePricingInventoryUpdateMixin {
                       Availability(messageType: 0));
                 }
 
-                product.productUnitOfMeasures
-                    ?.forEach((productUnitOfMeasureEntity) {
+                if ((product.isVariantParent ?? false) &&
+                    product.productUnitOfMeasures != null &&
+                    product.selectedUnitOfMeasure != null) {
                   var unitOfMeasureAvailability =
                       realTimeInventory.inventoryAvailabilityDtos?.singleWhere(
                     (i) =>
-                        i.unitOfMeasure ==
-                        productUnitOfMeasureEntity.unitOfMeasure,
+                        i.unitOfMeasure == product.selectedUnitOfMeasure,
                     orElse: () => InventoryAvailability(),
                   );
 
-                  late Availability? availability;
                   if (unitOfMeasureAvailability != null &&
                       unitOfMeasureAvailability.availability != null) {
-                    availability = unitOfMeasureAvailability.availability;
-                  } else {
-                    availability = Availability(messageType: 0);
-                  }
-
-                  productUnitOfMeasureEntity.copyWith(
-                    availability:
-                        AvailabilityEntityMapper.toEntity(availability),
-                  );
-                });
-
-                if ((product.isStyleProductParent ?? false) &&
-                    product.productUnitOfMeasures != null &&
-                    product.selectedUnitOfMeasure != null) {
-                  var productUnitOfMeasure =
-                      product.productUnitOfMeasures?.singleWhere(
-                    (uom) => uom.unitOfMeasure == product.selectedUnitOfMeasure,
-                    orElse: () => const ProductUnitOfMeasureEntity(),
-                  );
-
-                  if (productUnitOfMeasure != null &&
-                      productUnitOfMeasure.availability != null) {
-                    productAvailability = productUnitOfMeasure.availability;
+                    productAvailability = AvailabilityEntityMapper.toEntity(
+                        unitOfMeasureAvailability.availability);
                   }
                 }
 

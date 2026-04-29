@@ -27,6 +27,7 @@ class ProductImage {
 
   String? largeImagePath;
 
+  @JsonKey(name: 'imageAltText')
   String? altText;
 
   String? imageType;

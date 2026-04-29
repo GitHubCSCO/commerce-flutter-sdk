@@ -127,9 +127,7 @@ class BrandUseCase extends BaseUseCase {
       Brand brand) async {
     final detailsEntity = BrandDetailsEntity();
 
-    final brandQueryParameters = BrandQueryParameters(
-      expand: ['htmlcontent', 'topsellerproducts'],
-    );
+    final brandQueryParameters = BrandQueryParameters();
 
     final brandInfosResponse = await commerceAPIServiceProvider
         .getBrandService()
