@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:commerce_flutter_sdk/src/core/extensions/firebase_options_extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:appcenter_analytics/appcenter_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -13,9 +12,9 @@ import 'package:commerce_flutter_sdk/src/core/config/analytics_config.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AnalyticsInitializer {
-  Future<void> init() async {
-    final cfg = GetIt.I<AnalyticsConfig>();
-
+  // Static so injection_container.dart can call AnalyticsInitializer.init(cfg: cfg)
+  // without needing to instantiate the class first.
+  static Future<void> init({required AnalyticsConfig cfg}) async {
     if (cfg.appCenterSecret?.isNullOrEmpty == false) {
       await AppCenter.start(secret: cfg.appCenterSecret!);
     }
