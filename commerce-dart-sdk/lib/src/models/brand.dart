@@ -28,7 +28,11 @@ class Brand extends BaseModel {
 
   String? detailPagePath;
 
-  factory Brand.fromJson(Map<String, dynamic> json) => _$BrandFromJson(json);
+  factory Brand.fromJson(Map<String, dynamic> json) {
+    final brand = _$BrandFromJson(json);
+    brand.logoImageAltText ??= json['logoAltText'] as String?;
+    return brand;
+  }
   Map<String, dynamic> toJson() => _$BrandToJson(this);
 }
 

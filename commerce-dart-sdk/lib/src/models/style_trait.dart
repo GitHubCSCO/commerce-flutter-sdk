@@ -34,7 +34,14 @@ class StyleTrait {
 
   List<StyleValue>? traitValues;
 
-  factory StyleTrait.fromJson(Map<String, dynamic> json) =>
-      _$StyleTraitFromJson(json);
+  factory StyleTrait.fromJson(Map<String, dynamic> json) {
+    final trait = _$StyleTraitFromJson(json);
+    trait.id ??= json['styleTraitId'] as String?;
+    trait.traitValues ??= (json['styleValues'] as List<dynamic>?)
+        ?.map((e) => StyleValue.fromJson(e as Map<String, dynamic>))
+        .toList();
+    return trait;
+  }
+
   Map<String, dynamic> toJson() => _$StyleTraitToJson(this);
 }

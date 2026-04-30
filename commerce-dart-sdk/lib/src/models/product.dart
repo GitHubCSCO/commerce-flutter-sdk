@@ -154,7 +154,24 @@ class Product extends BaseModel {
 
   List<ChildTraitValue>? childTraitValues;
 
-  factory Product.fromJson(Map<String, dynamic> json) =>
-      _$ProductFromJson(json);
+  factory Product.fromJson(Map<String, dynamic> json) {
+    final product = _$ProductFromJson(json);
+    // V1 backward compatibility: some endpoints still return V1 field names
+    product.productTitle ??= json['shortDescription'] as String?;
+    product.productNumber ??= json['erpNumber'] as String?;
+    product.imageAltText ??= json['altText'] as String?;
+    product.isVariantParent ??= json['isStyleProductParent'] as bool?;
+    product.images ??= (json['productImages'] as List<dynamic>?)
+        ?.map((e) => ProductImage.fromJson(e as Map<String, dynamic>))
+        .toList();
+    product.unitOfMeasures ??= (json['productUnitOfMeasures'] as List<dynamic>?)
+        ?.map((e) => ProductUnitOfMeasure.fromJson(e as Map<String, dynamic>))
+        .toList();
+    product.variantTraits ??= (json['styleTraits'] as List<dynamic>?)
+        ?.map((e) => StyleTrait.fromJson(e as Map<String, dynamic>))
+        .toList();
+    return product;
+  }
+
   Map<String, dynamic> toJson() => _$ProductToJson(this);
 }

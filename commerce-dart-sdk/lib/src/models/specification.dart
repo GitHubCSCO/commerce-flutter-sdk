@@ -28,7 +28,11 @@ class Specification {
 
   double? sortOrder;
 
-  factory Specification.fromJson(Map<String, dynamic> json) =>
-      _$SpecificationFromJson(json);
+  factory Specification.fromJson(Map<String, dynamic> json) {
+    final spec = _$SpecificationFromJson(json);
+    spec.id ??= json['specificationId'] as String?;
+    return spec;
+  }
+
   Map<String, dynamic> toJson() => _$SpecificationToJson(this);
 }

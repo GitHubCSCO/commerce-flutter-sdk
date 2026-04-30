@@ -31,7 +31,11 @@ class StyleValue {
 
   String? swatchColorValue;
 
-  factory StyleValue.fromJson(Map<String, dynamic> json) =>
-      _$StyleValueFromJson(json);
+  factory StyleValue.fromJson(Map<String, dynamic> json) {
+    final value = _$StyleValueFromJson(json);
+    value.id ??= json['styleTraitValueId'] as String?;
+    return value;
+  }
+
   Map<String, dynamic> toJson() => _$StyleValueToJson(this);
 }

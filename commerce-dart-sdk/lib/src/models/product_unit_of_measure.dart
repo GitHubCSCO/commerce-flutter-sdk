@@ -28,7 +28,11 @@ class ProductUnitOfMeasure extends BaseModel {
 
   bool? isDefault;
 
-  factory ProductUnitOfMeasure.fromJson(Map<String, dynamic> json) =>
-      _$ProductUnitOfMeasureFromJson(json);
+  factory ProductUnitOfMeasure.fromJson(Map<String, dynamic> json) {
+    final uom = _$ProductUnitOfMeasureFromJson(json);
+    uom.id ??= json['productUnitOfMeasureId'] as String?;
+    return uom;
+  }
+
   Map<String, dynamic> toJson() => _$ProductUnitOfMeasureToJson(this);
 }
