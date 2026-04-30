@@ -60,25 +60,37 @@ class DomainRedirectCubit extends Cubit<DomainRedirectState> {
       ),
     );
 
-    final result = await _domainUsecase.getDomain();
+    try {
+      final result = await _domainUsecase.getDomain();
 
-    if (result != null) {
-      await _languageUsecase.loadCurrentLanguage();
-      await _languageUsecase.loadDefaultSiteMessage();
-      await _domainUsecase.loadRemoteSettings();
+      if (result != null) {
+        await _languageUsecase.loadCurrentLanguage();
+        await _languageUsecase.loadDefaultSiteMessage();
+        await _domainUsecase.loadRemoteSettings();
 
-      final domainIfChangePossible =
-          await _domainUsecase.getDomainInSettingsScreen();
-      final isSignInRequired = await _domainUsecase.checkSignInRequired();
+        final domainIfChangePossible =
+            await _domainUsecase.getDomainInSettingsScreen();
+        final isSignInRequired = await _domainUsecase.checkSignInRequired();
 
-      emit(
-        state.copyWith(
-          status: DomainRedirectStatus.redirect,
-          domain: domainIfChangePossible,
-          isSignInRequired: isSignInRequired,
-        ),
-      );
-    } else {
+        emit(
+          state.copyWith(
+            status: DomainRedirectStatus.redirect,
+            domain: domainIfChangePossible,
+            isSignInRequired: isSignInRequired,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            status: DomainRedirectStatus.doNotRedirect,
+          ),
+        );
+      }
+    } catch (_) {
+      // A network failure, timeout, or unexpected exception during domain
+      // resolution must still emit a terminal state. Without this, the cubit
+      // stays in DomainRedirectStatus.unknown forever and the app shows a
+      // permanent blank loading screen.
       emit(
         state.copyWith(
           status: DomainRedirectStatus.doNotRedirect,
