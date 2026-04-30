@@ -5,6 +5,7 @@ import 'package:commerce_flutter_sdk/src/core/mixins/realtime_pricing_inventory_
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/pagination_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/state_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/pagination_entity_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
@@ -117,6 +118,23 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
                 name: AnalyticsConstants.eventPropertyDomain,
                 strValue: eventPropertyDomain);
     _searchUseCase.trackEvent(viewScreenEvent);
+
+    final viewTelemetryEvent = TelemetryEvent(
+      screenName: screenName,
+    )
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceId,
+            strValue: eventPropertyReferenceId)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceName,
+            strValue: eventPropertyReferenceName)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceType,
+            strValue: eventPropertyReferenceType)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyDomain,
+            strValue: eventPropertyDomain);
+    _searchUseCase.trackTelemetryEvent(viewTelemetryEvent);
   }
 
   void _setProductFilter(ProductPageEntity entity) {
@@ -273,6 +291,25 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
             name: AnalyticsConstants.eventPropertySortOption,
             strValue: sortOrder.title);
     _searchUseCase.trackEvent(analyticsEvent);
+
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventSort,
+    )
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceId,
+            strValue: eventPropertyReferenceId)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceName,
+            strValue: eventPropertyReferenceName)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceType,
+            strValue: eventPropertyReferenceType)
+        .withProperty(
+          name: AnalyticsConstants.eventPropertySortOption,
+          strValue: sortOrder.title,
+        );
+
+    _searchUseCase.trackTelemetryEvent(telemetryEvent);
   }
 
   void sortOrderCancel() {
@@ -288,6 +325,21 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
             name: AnalyticsConstants.eventPropertyReferenceType,
             strValue: eventPropertyReferenceType);
     _searchUseCase.trackEvent(analyticsEvent);
+
+    var telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventCancelSort,
+    )
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceId,
+            strValue: eventPropertyReferenceId)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceName,
+            strValue: eventPropertyReferenceName)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceType,
+            strValue: eventPropertyReferenceType);
+
+    _searchUseCase.trackTelemetryEvent(telemetryEvent);
   }
 
   Future<void> _loadSearchProducts() async {
@@ -385,6 +437,24 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
               name: AnalyticsConstants.eventPropertyFilterCount,
               strValue: selectedFiltersCount.toString());
       _searchUseCase.trackEvent(analyticsEvent);
+
+      var telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventFilter,
+      )
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyReferenceId,
+              strValue: eventPropertyReferenceId)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyReferenceName,
+              strValue: eventPropertyReferenceName)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyReferenceType,
+              strValue: eventPropertyReferenceType)
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyFilterCount,
+            strValue: selectedFiltersCount.toString(),
+          );
+      _searchUseCase.trackTelemetryEvent(telemetryEvent);
     }
   }
 
@@ -401,6 +471,21 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
             name: AnalyticsConstants.eventPropertyReferenceType,
             strValue: eventPropertyReferenceType);
     _searchUseCase.trackEvent(analyticsEvent);
+
+    var telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventResetFilter,
+    )
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceId,
+            strValue: eventPropertyReferenceId)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceName,
+            strValue: eventPropertyReferenceName)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceType,
+            strValue: eventPropertyReferenceType);
+
+    _searchUseCase.trackTelemetryEvent(telemetryEvent);
   }
 
   int get selectedFiltersCount {

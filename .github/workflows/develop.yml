@@ -32,6 +32,11 @@ on:
         options:
           - flutter
           - qa_analytics
+      build_debug:
+        description: "Build Debug artifacts (iOS & Android)"
+        required: false
+        default: false
+        type: boolean
       release_tag1:
         description: "Tag1: add all tickets from Tag1-Tag2 or Tag1-Head with release notes (optional)"
         required: false
@@ -105,7 +110,7 @@ jobs:
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.3"
+          xcode-version: "16.4"
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
@@ -118,9 +123,10 @@ jobs:
 
       - run: flutter doctor -v
 
-      - name: Install Mono
+      - name: Brew update with mono and openssl
         run: |
-          brew update
+          brew update && brew upgrade openssl
+          brew reinstall ca-certificates
           brew install mono
 
       - uses: shimataro/ssh-key-action@v2
@@ -136,6 +142,7 @@ jobs:
           echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
 
       - name: Trigger iOS Debug Build
+        if: github.event.inputs.build_debug == 'true'
         run: |
           flutter clean
           flutter pub get
@@ -145,7 +152,7 @@ jobs:
           cd ..
           flutter build ios --simulator
       - name: Upload iOS Debug Build as artifact
-        if: always()
+        if: github.event.inputs.build_debug == 'true'
         id: upload
         uses: actions/upload-artifact@v4
         with:
@@ -153,6 +160,7 @@ jobs:
           path: build/ios/iphonesimulator/Runner.app
           if-no-files-found: warn
       - name: Cloning build scripts
+        if: github.event.inputs.build_debug != 'true'
         uses: actions/checkout@master
         with:
           repository: InsiteSoftware/commerce-mobile-build-scripts
@@ -160,15 +168,16 @@ jobs:
           token: ${{ secrets.my_pat }}
           path: build-scripts
       - name: Movie build-scripts to root folder
+        if: github.event.inputs.build_debug != 'true'
         run: |
           mv build-scripts/* ./
-          ls -l
-          ls -l fastlane
       - name: Extract branch name
+        if: github.event.inputs.build_debug != 'true'
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
 
       - name: Fastlane
+        if: github.event.inputs.build_debug != 'true'
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
             echo "Running in PR. Using default value."
@@ -179,8 +188,13 @@ jobs:
           fi
 
           echo "Using RELEASE_GROUP: $RELEASE_GROUP"
+          gem install bundler
+          bundle add abbrev
+          bundle add mutex_m
+          bundle add logger
+          bundle install
 
-          fastlane ios qa release:$RELEASE_GROUP
+          bundle exec fastlane ios qa release:$RELEASE_GROUP
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
@@ -274,9 +288,10 @@ jobs:
 
       - run: flutter doctor -v
 
-      - name: Install Mono
+      - name: Brew update with mono and openssl
         run: |
-          brew update
+          brew update && brew upgrade openssl
+          brew reinstall ca-certificates
           brew install mono
 
       - uses: shimataro/ssh-key-action@v2
@@ -284,13 +299,14 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
-
       - name: Determine config
         id: config
         run: |
           echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
           echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
+
       - name: Cloning build scripts
+        if: github.event.inputs.build_debug != 'true'
         uses: actions/checkout@master
         with:
           repository: InsiteSoftware/commerce-mobile-build-scripts
@@ -298,15 +314,16 @@ jobs:
           token: ${{ secrets.my_pat }}
           path: build-scripts
       - name: Movie build-scripts to root folder
+        if: github.event.inputs.build_debug != 'true'
         run: |
           mv build-scripts/* ./
-          ls -l
-          ls -l fastlane
       - name: Extract branch name
+        if: github.event.inputs.build_debug != 'true'
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
 
       - name: Fastlane
+        if: github.event.inputs.build_debug != 'true'
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
             echo "Running in PR. Using default value."
@@ -317,8 +334,13 @@ jobs:
           fi
 
           echo "Using RELEASE_GROUP: $RELEASE_GROUP"
+          gem install bundler
+          bundle add abbrev
+          bundle add mutex_m
+          bundle add logger
+          bundle install
 
-          fastlane android qa release:$RELEASE_GROUP
+          bundle exec fastlane android qa release:$RELEASE_GROUP
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
@@ -335,12 +357,13 @@ jobs:
           RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
           RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
       - name: Trigger Android Debug Build
+        if: github.event.inputs.build_debug == 'true'
         run: |
           flutter clean
           flutter pub get
           flutter build apk --debug
       - name: Upload Android Debug Build as artifact
-        if: always()
+        if: github.event.inputs.build_debug == 'true'
         id: upload
         uses: actions/upload-artifact@v4
         with:

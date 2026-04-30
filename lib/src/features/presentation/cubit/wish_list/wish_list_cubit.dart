@@ -1,9 +1,11 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/settings/wish_list_settings_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_collection_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +23,13 @@ class WishListCubit extends Cubit<WishListState> {
             wishLists: WishListCollectionEntity(),
             searchQuery: '',
             settings: WishListSettingsEntity(),
+            fromCreatedDate: null,
+            toCreatedDate: null,
+            fromUpdatedOn: null,
+            toUpdatedOn: null,
+            product: null,
+            brand: null,
+            sharedByUser: null,
           ),
         );
 
@@ -53,7 +62,29 @@ class WishListCubit extends Cubit<WishListState> {
 
     wishListUsecase.trackEvent(analyticsEvent);
 
-    await loadWishLists();
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventSort,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceType,
+          strValue: AnalyticsConstants.screenNameLists,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertySortOption,
+          strValue: sortOrder.value,
+        );
+
+    wishListUsecase.trackTelemetryEvent(telemetryEvent);
+
+    await loadWishLists(
+      brand: state.brand,
+      product: state.product,
+      sharedByUser: state.sharedByUser,
+      fromCreatedDate: state.fromCreatedDate,
+      toCreatedDate: state.toCreatedDate,
+      fromUpdatedOn: state.fromUpdatedOn,
+      toUpdatedOn: state.toUpdatedOn,
+    );
   }
 
   void cancelSort() {
@@ -66,10 +97,26 @@ class WishListCubit extends Cubit<WishListState> {
     );
 
     wishListUsecase.trackEvent(analyticsEvent);
+
+    final telemetryEvent = TelemetryEvent(
+      eventName: AnalyticsConstants.eventCancelSort,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyReferenceType,
+      strValue: AnalyticsConstants.screenNameLists,
+    );
+
+    wishListUsecase.trackTelemetryEvent(telemetryEvent);
   }
 
   Future<void> loadWishLists({
     bool skipRecentlyPurchased = false,
+    DateTime? fromCreatedDate,
+    DateTime? toCreatedDate,
+    DateTime? fromUpdatedOn,
+    DateTime? toUpdatedOn,
+    WishListFilterItemEntity? product,
+    WishListFilterItemEntity? brand,
+    WishListFilterItemEntity? sharedByUser,
   }) async {
     emit(state.copyWith(status: WishListStatus.loading));
 
@@ -79,6 +126,13 @@ class WishListCubit extends Cubit<WishListState> {
       sortOrder: state.sortOrder,
       page: 1,
       searchText: state.searchQuery,
+      fromCreatedDate: fromCreatedDate,
+      toCreatedDate: toCreatedDate,
+      fromUpdatedOn: fromUpdatedOn,
+      toUpdatedOn: toUpdatedOn,
+      erpNumber: product?.actualValue,
+      brandId: brand?.actualValue,
+      sharedBy: sharedByUser?.actualValue,
     );
 
     if (skipRecentlyPurchased) {
@@ -95,6 +149,13 @@ class WishListCubit extends Cubit<WishListState> {
               sortOrder: state.sortOrder,
               searchQuery: state.searchQuery,
               settings: settings,
+              fromCreatedDate: fromCreatedDate,
+              toCreatedDate: toCreatedDate,
+              fromUpdatedOn: fromUpdatedOn,
+              toUpdatedOn: toUpdatedOn,
+              product: product,
+              brand: brand,
+              sharedByUser: sharedByUser,
             ),
           )
         : emit(state.copyWith(status: WishListStatus.failure));
@@ -120,7 +181,7 @@ class WishListCubit extends Cubit<WishListState> {
       wishListUsecase.trackEvent(analyticsEvent);
 
       var viewScreenTelemetry = TelemetryEvent(
-        screenName: AnalyticsConstants.screenNameLists,
+        eventName: AnalyticsConstants.eventViewSearchResults,
       )
           .withProperty(
             name: AnalyticsConstants.eventPropertySearchTerm,
@@ -156,6 +217,13 @@ class WishListCubit extends Cubit<WishListState> {
       page: state.wishLists.pagination!.page! + 1,
       sortOrder: state.sortOrder,
       searchText: state.searchQuery,
+      fromCreatedDate: state.fromCreatedDate,
+      toCreatedDate: state.toCreatedDate,
+      fromUpdatedOn: state.fromUpdatedOn,
+      toUpdatedOn: state.toUpdatedOn,
+      erpNumber: state.product?.actualValue,
+      brandId: state.brand?.actualValue,
+      sharedBy: state.sharedByUser?.actualValue,
     );
 
     if (result == null) {
@@ -199,6 +267,15 @@ class WishListCubit extends Cubit<WishListState> {
       );
 
       wishListUsecase.trackEvent(analyticsEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventDeleteList,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: wishListId,
+      );
+
+      wishListUsecase.trackTelemetryEvent(telemetryEvent);
     }
 
     emit(state.copyWith(status: result));
@@ -227,6 +304,17 @@ class WishListCubit extends Cubit<WishListState> {
       );
 
       wishListUsecase.trackEvent(analyticsEvent);
+
+      final telemetryEvent = TelemetryEvent(
+        eventName: wishList.isFavorite == true
+            ? AnalyticsConstants.eventRemoveFavoriteList
+            : AnalyticsConstants.eventFavoriteList,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: wishList.id,
+      );
+
+      wishListUsecase.trackTelemetryEvent(telemetryEvent);
 
       final newCollection = state.wishLists.wishListCollection?.map(
         (item) {
@@ -260,4 +348,25 @@ class WishListCubit extends Cubit<WishListState> {
       wishList: wishList,
     );
   }
+
+  int get totalWishListCount => state.wishLists.pagination?.totalItemCount ?? 0;
+
+  /// Returns the count of active filters applied to the wish list.
+  /// Counts date filters (created/updated), product, brand, and shared by user filters.
+  /// String filters are considered active only if they are non-empty.
+  int get filterCount => [
+        state.fromCreatedDate,
+        state.toCreatedDate,
+        state.fromUpdatedOn,
+        state.toUpdatedOn,
+        state.product?.actualValue,
+        state.brand?.actualValue,
+        state.sharedByUser?.actualValue
+      ]
+          .where((filter) =>
+              filter != null && (filter is! String || filter.isNotEmpty))
+          .length;
+
+  String get listCountText =>
+      '${totalWishListCount.toString()}  ${totalWishListCount != 1 ? LocalizationConstants.lists.localized() : LocalizationConstants.list.localized()}';
 }

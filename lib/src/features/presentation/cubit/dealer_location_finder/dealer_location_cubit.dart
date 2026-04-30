@@ -8,7 +8,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class DealerLocationCubit extends Cubit<DealerLocationState> {
   GooglePlace? seachPlace;
   final DealerLocationUsecase _dealerLocationUsecase;
-  double radius = 100.0;
+  double radius = 200.0;
   int currentPage = 1;
   bool isLoadingMore = false;
   bool hasMoreDealers = true;
@@ -65,7 +65,14 @@ class DealerLocationCubit extends Cubit<DealerLocationState> {
             ),
           );
         } else {
-          hasMoreDealers = false; // No more dealers
+          hasMoreDealers = false;
+          if (state is DealerLocationLoadedState) {
+            emit(
+              DealerLocationLoadedState(
+                dealers: (state as DealerLocationLoadedState).dealers,
+              ),
+            );
+          }
         }
       case Failure(errorResponse: final error):
         _dealerLocationUsecase.trackError(error);
@@ -76,7 +83,6 @@ class DealerLocationCubit extends Cubit<DealerLocationState> {
 
   Future<void> updateSeachPlaceForDealer(GooglePlace? seachPlace) async {
     this.seachPlace = seachPlace;
-    await loadDealersLocation();
   }
 
   Future<void> updateVisibleMapRadius(double radius) async {
@@ -87,5 +93,13 @@ class DealerLocationCubit extends Cubit<DealerLocationState> {
     if (!isLoadingMore && hasMoreDealers) {
       await loadDealersLocation(isPagination: true);
     }
+  }
+
+  void resetToInitial() {
+    seachPlace = null;
+    currentPage = 1;
+    isLoadingMore = false;
+    hasMoreDealers = true;
+    emit(DealerLocationInitialState());
   }
 }

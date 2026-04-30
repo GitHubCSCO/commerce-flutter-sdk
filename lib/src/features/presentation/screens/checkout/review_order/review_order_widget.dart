@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/payment_summary_mixin.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart/payment_summary_entity.dart';
@@ -49,15 +50,16 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
     }
     list.add(_buildBillingAddress());
 
-    if (reviewOrderEntity.shippingMethod == ShippingOption.ship) {
+    if (reviewOrderEntity.shippingMethod == ShippingOption.Ship) {
       final carrier = reviewOrderEntity.selectedCarrier;
       final service = reviewOrderEntity.selectedService;
 
       list.add(_buildShippingAddress());
       list.add(_buildShippingMethod(context, carrier, service));
+      list.add(_buildRequestDateSection(isPickup: false));
     } else {
       list.add(_buildPickUpAddress());
-      list.add(_buildRequestDeliveryDate(context));
+      list.add(_buildRequestDateSection(isPickup: true));
     }
 
     if (!isOrderApproval) {
@@ -136,7 +138,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
 
   Widget _buildShippingAddress() {
     return Visibility(
-      visible: reviewOrderEntity.shippingMethod == ShippingOption.ship,
+      visible: reviewOrderEntity.shippingMethod == ShippingOption.Ship,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -173,7 +175,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
 
   Widget _buildPickUpAddress() {
     return Visibility(
-      visible: reviewOrderEntity.shippingMethod == ShippingOption.pickUp,
+      visible: reviewOrderEntity.shippingMethod == ShippingOption.PickUp,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,9 +279,15 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
           ],
         ),
         Visibility(
-          visible: _isRequestDateAvailable(context),
+          visible: reviewOrderEntity.requestDeliveryDate != null &&
+              reviewOrderEntity.requestDeliveryDate != DateTime(0),
           child: Text(
-            _getRequestDateTime(context),
+            reviewOrderEntity.requestDeliveryDate != null
+                ? LocalizationConstants.arrivesBetween.localized().format([
+                    DateFormat('E, MM/dd')
+                        .format(reviewOrderEntity.requestDeliveryDate!)
+                  ])
+                : '',
             textAlign: TextAlign.center,
             style: OptiTextStyles.bodySmall,
           ),
@@ -289,9 +297,14 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
     );
   }
 
-  Widget _buildRequestDeliveryDate(BuildContext context) {
+  Widget _buildRequestDateSection({required bool isPickup}) {
+    final dateTime = isPickup
+        ? reviewOrderEntity.requestPickupDate
+        : reviewOrderEntity.requestDeliveryDate;
+    final isVisible = dateTime != null && dateTime != DateTime(0);
+
     return Visibility(
-      visible: _isRequestDateAvailable(context),
+      visible: isVisible,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -299,13 +312,23 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
         children: [
           const SizedBox(height: 12),
           Text(
-            LocalizationConstants.requestDeliveryDate.localized(),
+            isPickup
+                ? LocalizationConstants.requestPickUpDate.localized()
+                : LocalizationConstants.requestDeliveryDate.localized(),
             textAlign: TextAlign.center,
             style: OptiTextStyles.subtitle,
           ),
           const SizedBox(height: 8),
           Text(
-            _getRequestDateTime(context),
+            isVisible
+                ? (isPickup
+                    ? LocalizationConstants.pickUpOn
+                        .localized()
+                        .format([DateFormat('E, MM/dd').format(dateTime)])
+                    : LocalizationConstants.arrivesBetween
+                        .localized()
+                        .format([DateFormat('E, MM/dd').format(dateTime)]))
+                : '',
             textAlign: TextAlign.center,
             style: OptiTextStyles.body,
           ),
@@ -374,23 +397,6 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
       }
     } else {
       return '';
-    }
-  }
-
-  String _getRequestDateTime(BuildContext context) {
-    if (_isRequestDateAvailable(context)) {
-      final dateTime = reviewOrderEntity.requestDeliveryDate;
-      return 'Arrives between ${DateFormat('E, MM/dd').format(dateTime!)}';
-    }
-    return '';
-  }
-
-  bool _isRequestDateAvailable(BuildContext context) {
-    final dateTime = reviewOrderEntity.requestDeliveryDate;
-    if (dateTime != null && dateTime != DateTime(0)) {
-      return true;
-    } else {
-      return false;
     }
   }
 }

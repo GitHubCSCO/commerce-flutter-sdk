@@ -448,9 +448,16 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
 
   void handleAutoCompleteCallback(
       BuildContext context, AutocompleteProduct product) {
-    AppRoute.productDetails.navigateBackStack(context,
-        pathParameters: {"productId": product.id.toString()},
-        extra: ProductEntity());
+    if (product.styleParentId != null) {
+      AppRoute.productDetails.navigateBackStack(context,
+          pathParameters: {"productId": product.styleParentId.toString()},
+          extra: ProductEntity(
+              id: product.id, styleParentId: product.styleParentId));
+    } else {
+      AppRoute.productDetails.navigateBackStack(context,
+          pathParameters: {"productId": product.id.toString()},
+          extra: ProductEntity());
+    }
   }
 
   void _reloadSearchPage(BuildContext context) {

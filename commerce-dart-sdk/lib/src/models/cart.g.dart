@@ -109,10 +109,10 @@ Cart _$CartFromJson(Map<String, dynamic> json) => Cart(
       requestedDeliveryDateDisplay: json['requestedDeliveryDateDisplay'] == null
           ? null
           : DateTime.parse(json['requestedDeliveryDateDisplay'] as String),
-      requestedPickUpDate: json['requestedPickUpDate'] as String?,
-      requestedPickUpDateDisplay: json['requestedPickUpDateDisplay'] == null
+      requestedPickUpDate: json['requestedPickupDate'] as String?,
+      requestedPickUpDateDisplay: json['requestedPickupDateDisplay'] == null
           ? null
-          : DateTime.parse(json['requestedPickUpDateDisplay'] as String),
+          : DateTime.parse(json['requestedPickupDateDisplay'] as String),
       cartNotPriced: json['cartNotPriced'] as bool?,
       messages: (json['messages'] as List<dynamic>?)
           ?.map((e) => e as String?)
@@ -251,10 +251,10 @@ Map<String, dynamic> _$CartToJson(Cart instance) => <String, dynamic>{
           case final value?)
         'requestedDeliveryDateDisplay': value,
       if (instance.requestedPickUpDate case final value?)
-        'requestedPickUpDate': value,
+        'requestedPickupDate': value,
       if (instance.requestedPickUpDateDisplay?.toIso8601String()
           case final value?)
-        'requestedPickUpDateDisplay': value,
+        'requestedPickupDateDisplay': value,
       if (instance.cartNotPriced case final value?) 'cartNotPriced': value,
       if (instance.messages case final value?) 'messages': value,
       if (instance.creditCardBillingAddress?.toJson() case final value?)

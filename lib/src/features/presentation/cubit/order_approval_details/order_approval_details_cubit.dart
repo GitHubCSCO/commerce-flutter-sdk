@@ -199,9 +199,10 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
       '${LocalizationConstants.subtotal.localized()} (${state.cart.totalQtyOrdered})';
 
   // body section
-  bool get isFulfillmentMethodShip => state.cart.fulfillmentMethod == 'Ship';
+  bool get isFulfillmentMethodShip =>
+      state.cart.fulfillmentMethod.equalsIgnoreCase('Ship');
   bool get isFulfillmentMethodPickUp =>
-      state.cart.fulfillmentMethod == 'PickUp';
+      state.cart.fulfillmentMethod.equalsIgnoreCase('PickUp');
 
   String get shippingAddressTitle => isFulfillmentMethodShip
       ? LocalizationConstants.shippingAddress.localized()

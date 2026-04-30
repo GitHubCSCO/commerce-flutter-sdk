@@ -17,6 +17,7 @@ class CheckoutDataLoaded extends CheckoutState {
   final CarrierDto? selectedCarrier;
   final ShipViaDto? selectedService;
   final DateTime? requestDeliveryDate;
+  final DateTime? requestPickupDate;
   final bool? allowCreateNewShipToAddress;
   final String? requestDateWarningMessage;
   final String cartWarningMsg;
@@ -34,6 +35,7 @@ class CheckoutDataLoaded extends CheckoutState {
       required this.selectedCarrier,
       required this.selectedService,
       required this.requestDeliveryDate,
+      required this.requestPickupDate,
       required this.allowCreateNewShipToAddress,
       required this.requestDateWarningMessage,
       required this.cartWarningMsg,

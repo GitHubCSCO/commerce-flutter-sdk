@@ -159,10 +159,10 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
         null) {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
           subtotalValueText: SiteMessageConstants.valueRealTimePricingLoadFail);
-    } else if (productDetailsPriceEntity
-                ?.product?.pricing?.extendedUnitNetPrice ==
-            0 &&
-        productDetailsPriceEntity?.product?.allowZeroPricing != true) {
+    } else
+    // XNG-Change: XSD-21774 always show zero price message
+    if (productDetailsPriceEntity?.product?.pricing?.extendedUnitNetPrice ==
+        0) {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
           subtotalValueText: SiteMessageConstants.valuePricingZeroPriceMessage);
     } else {

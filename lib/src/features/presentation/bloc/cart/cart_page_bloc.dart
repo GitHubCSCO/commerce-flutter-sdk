@@ -6,6 +6,7 @@ import 'package:commerce_flutter_sdk/src/core/mixins/cart_checkout_helper_mixin.
 import 'package:commerce_flutter_sdk/src/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/cart_usecase/cart_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
@@ -45,6 +46,13 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
             name: AnalyticsConstants.eventPropertyOrderNumber,
             strValue: cart?.orderNumber ?? '');
     _cartUseCase.trackEvent(viewScreenEvent);
+
+    var telemetryEvent = TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameCart,
+    ).withProperty(
+        name: AnalyticsConstants.eventPropertyOrderNumber,
+        strValue: cart?.orderNumber ?? '');
+    _cartUseCase.trackTelemetryEvent(telemetryEvent);
   }
 
   Future<void> _onCurrentCartLoadEvent(
@@ -187,6 +195,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
   }
 
   bool get approvalButtonVisible => cart?.requiresApproval ?? false;
+
+  bool get hasApprover => cart?.hasApprover == true;
 
   bool get isCartEmpty =>
       // ignore: prefer_is_empty
