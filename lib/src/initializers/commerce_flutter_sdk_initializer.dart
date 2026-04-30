@@ -57,9 +57,6 @@ class CommerceFlutterSDK {
 
     // 3️⃣ Error & Bloc observer
     final logger = GetIt.I<OptiLoggerService>();
-    if (!logger.isErrorLogEnabled) {
-      FlutterError.presentError = (_) {};
-    }
     if (logger.isDebugLogEnabled) {
       Bloc.observer = const AppBlocObserver();
     }
