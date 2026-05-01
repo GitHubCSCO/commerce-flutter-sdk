@@ -50,7 +50,8 @@ class CommerceFlutterSDK {
 
     // 1️⃣ Core setup — these MUST succeed for the app to function.
     await _runStep('HiveInitializer', () => HiveInitializer().init());
-    await _runStep('initInjectionContainer', () => initInjectionContainer());
+    await _runStep('initInjectionContainer', () => initInjectionContainer(),
+        timeout: const Duration(seconds: 45));
 
     if (config.overrideServices != null) {
       await _runStep(
