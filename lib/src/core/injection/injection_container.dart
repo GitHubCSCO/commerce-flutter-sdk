@@ -893,11 +893,22 @@ Future<void> initInjectionContainer() async {
     await sl.allReady(timeout: const Duration(seconds: 20));
     debugPrint('[DI] sl.allReady() completed successfully');
   } on WaitingTimeOutException catch (e) {
-    debugPrint('[DI] sl.allReady() TIMED OUT.');
-    debugPrint('[DI]   notReadyYet: ${e.notReadyYet}');
-    debugPrint('[DI]   areReady:    ${e.areReady}');
-    debugPrint('[DI]   areWaitedBy: ${e.areWaitedBy}');
-    rethrow;
+    final diagnostic = StringBuffer()
+      ..writeln('GetIt service initialization timed out after 20s.')
+      ..writeln()
+      ..writeln('Services NOT ready (these are hanging):')
+      ..writeln('  ${e.notReadyYet}')
+      ..writeln()
+      ..writeln('Services ready (these completed fine):')
+      ..writeln('  ${e.areReady}')
+      ..writeln()
+      ..writeln('Dependency wait map (who is blocking what):')
+      ..writeln('  ${e.areWaitedBy}');
+    debugPrint('[DI] $diagnostic');
+    // Throw a StateError whose toString() includes the diagnostic data so the
+    // _FatalErrorApp UI in main.dart shows it on screen — without this, the
+    // user only sees "Instance of 'WaitingTimeOutException'" with no detail.
+    throw StateError(diagnostic.toString());
   } catch (e, st) {
     debugPrint('[DI] sl.allReady() failed: $e\n$st');
     rethrow;
