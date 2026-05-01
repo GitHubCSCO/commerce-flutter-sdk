@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/app.dart';
 import 'package:commerce_flutter_sdk/commerce_config.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
@@ -7,11 +9,11 @@ import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/core
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/show_hide/inventory/show_hide_inventory_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/initializers/analytics_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/commerce_sdk_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/essentials_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/hive_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/notification_handler.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -35,35 +37,87 @@ import 'package:url_launcher/url_launcher_string.dart';
 class CommerceFlutterSDK {
   static Future<void> initialize({required CommerceConfig config}) async {
     WidgetsFlutterBinding.ensureInitialized();
-    await initializeDateFormatting();
+    debugPrint('[CommerceFlutterSDK] starting init…');
 
-    await AssetPathResolver.setRunningAsPackage(
-        config.isRunningAsPackage ?? false);
+    await _runStep('initializeDateFormatting',
+        () => initializeDateFormatting());
 
-    // 1️⃣ Core setup
-    await HiveInitializer().init();
-    await initInjectionContainer();
+    await _runStep(
+      'AssetPathResolver.setRunningAsPackage',
+      () => AssetPathResolver.setRunningAsPackage(
+          config.isRunningAsPackage ?? false),
+    );
+
+    // 1️⃣ Core setup — these MUST succeed for the app to function.
+    await _runStep('HiveInitializer', () => HiveInitializer().init());
+    await _runStep('initInjectionContainer', () => initInjectionContainer());
+
     if (config.overrideServices != null) {
-      await config.overrideServices!(GetIt.I);
+      await _runStep(
+        'config.overrideServices',
+        () => config.overrideServices!(GetIt.I),
+      );
     }
-    CommerceSdkInitializer().init();
+    await _runStep(
+      'CommerceSdkInitializer',
+      () async => CommerceSdkInitializer().init(),
+    );
 
     // 2️⃣ Theme / essentials
-    await EssentialsInitializer().init();
+    await _runStep('EssentialsInitializer', () => EssentialsInitializer().init());
 
-    // Initialize notification handler with core service provider
-    final coreServiceProvider = sl<ICoreServiceProvider>();
-    await NotificationHandler.getInstance(coreServiceProvider).initialize();
+    // 3️⃣ Notifications — FIRE AND FORGET.
+    // Previously this was awaited, which meant a hung permission request or
+    // failed APNs registration in TestFlight could prevent runApp() from ever
+    // being called, leaving the iOS launch storyboard visible (the "blank
+    // white screen" symptom). Notifications are not critical to first paint,
+    // so we kick them off asynchronously and let the app render immediately.
+    unawaited(_initializeNotificationsSafely());
 
-    // 3️⃣ Error & Bloc observer
+    // 4️⃣ Bloc observer
     final logger = GetIt.I<OptiLoggerService>();
     if (logger.isDebugLogEnabled) {
       Bloc.observer = const AppBlocObserver();
     }
 
-    // 4️⃣ Finally: run the SDK’s own root app,
-    // wrapped in all the BlocProviders/Listeners
+    // 5️⃣ Finally: run the SDK's own root app, wrapped in all the
+    // BlocProviders/Listeners.
+    debugPrint('[CommerceFlutterSDK] init complete, calling runApp()');
     runApp(_withBlocsAndListeners(const CommerceApp()));
+  }
+
+  /// Wraps a single init step with a timeout and structured logging so a
+  /// hang or thrown exception is visible in TestFlight Console logs rather
+  /// than producing a silent blank screen. Throws on failure so the caller
+  /// in main.dart can show the fatal-error UI.
+  static Future<void> _runStep(String label, Future<void> Function() step,
+      {Duration timeout = const Duration(seconds: 30)}) async {
+    final sw = Stopwatch()..start();
+    try {
+      await step().timeout(timeout);
+      debugPrint('[CommerceFlutterSDK] ✓ $label (${sw.elapsedMilliseconds}ms)');
+    } catch (e, st) {
+      debugPrint('[CommerceFlutterSDK] ✗ $label FAILED after '
+          '${sw.elapsedMilliseconds}ms: $e');
+      debugPrint('$st');
+      rethrow;
+    }
+  }
+
+  /// Notification initialization runs in the background and must never throw
+  /// out of its scope. Any failure here is logged but does not affect app
+  /// startup.
+  static Future<void> _initializeNotificationsSafely() async {
+    try {
+      final coreServiceProvider = sl<ICoreServiceProvider>();
+      await NotificationHandler.getInstance(coreServiceProvider)
+          .initialize()
+          .timeout(const Duration(seconds: 15));
+      debugPrint('[CommerceFlutterSDK] ✓ NotificationHandler initialized');
+    } catch (e, st) {
+      debugPrint('[CommerceFlutterSDK] ✗ NotificationHandler failed: $e');
+      debugPrint('$st');
+    }
   }
 
   static Widget _withBlocsAndListeners(Widget child) {
