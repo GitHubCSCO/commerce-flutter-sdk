@@ -663,10 +663,18 @@ Future<void> initInjectionContainer() async {
         loggerService: sl(),
         authStreamService: sl()))
     ..registerSingletonAsync<ICacheService>(() async {
-      var pref = await SharedPreferences.getInstance();
-      return CacheService(
-        sharedPreferences: pref,
-      );
+      debugPrint('[DI] ICacheService factory START');
+      final sw = Stopwatch()..start();
+      try {
+        var pref = await SharedPreferences.getInstance()
+            .timeout(const Duration(seconds: 10));
+        debugPrint('[DI] ICacheService factory END (${sw.elapsedMilliseconds}ms)');
+        return CacheService(sharedPreferences: pref);
+      } catch (e, st) {
+        debugPrint('[DI] ICacheService factory FAILED after '
+            '${sw.elapsedMilliseconds}ms: $e\n$st');
+        rethrow;
+      }
     })
     ..registerLazySingleton<INetworkService>(() => NetworkService())
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
@@ -758,8 +766,21 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
         ))
     ..registerSingletonAsync<IDeviceService>(() async {
+      debugPrint('[DI] IDeviceService factory START');
+      final sw = Stopwatch()..start();
       final service = DeviceService();
-      await service.init();
+      try {
+        // PackageInfo.fromPlatform() has been observed to hang on iOS TestFlight
+        // builds in some configurations. We give it a 10-second timeout and,
+        // if it fails, return a DeviceService anyway so the app can still boot.
+        // packageInfo will be null but the rest of DeviceService still works.
+        await service.init().timeout(const Duration(seconds: 10));
+        debugPrint('[DI] IDeviceService factory END (${sw.elapsedMilliseconds}ms)');
+      } catch (e, st) {
+        debugPrint('[DI] IDeviceService.init() FAILED after '
+            '${sw.elapsedMilliseconds}ms (continuing without packageInfo): '
+            '$e\n$st');
+      }
       return service;
     })
     ..registerLazySingleton<IQuoteService>(() => QuoteService(
@@ -792,27 +813,44 @@ Future<void> initInjectionContainer() async {
         ))
     ..registerLazySingleton<IAuthStreamService>(() => AuthStreamService())
     ..registerSingletonAsync<IAppConfigurationService>(() async {
+      debugPrint('[DI] IAppConfigurationService factory START');
+      final sw = Stopwatch()..start();
       final service = AppConfigurationService(
         commerceAPIServiceProvider: sl(),
         clientService: sl(),
         cacheService: sl(),
         networkService: sl(),
       );
-      await service.init();
+      try {
+        await service.init().timeout(const Duration(seconds: 10));
+        debugPrint('[DI] IAppConfigurationService factory END '
+            '(${sw.elapsedMilliseconds}ms)');
+      } catch (e, st) {
+        debugPrint('[DI] IAppConfigurationService.init() FAILED after '
+            '${sw.elapsedMilliseconds}ms: $e\n$st');
+        rethrow;
+      }
       return service;
     }, dependsOn: [ICacheService])
 
     //analytics config - must be registered before firebase messaging and tracking services
     ..registerSingletonAsync<AnalyticsConfig>(
       () async {
+        debugPrint('[DI] AnalyticsConfig factory START');
+        final sw = Stopwatch()..start();
         final cfg = AnalyticsConfig(
           appConfigurationService: sl(),
         );
 
         try {
-          await AnalyticsInitializer.init(cfg: cfg);
-        } catch (e) {
-          debugPrint('Analytics initialization failed: $e');
+          await AnalyticsInitializer.init(cfg: cfg)
+              .timeout(const Duration(seconds: 10));
+          debugPrint('[DI] AnalyticsConfig factory END '
+              '(${sw.elapsedMilliseconds}ms)');
+        } catch (e, st) {
+          debugPrint('[DI] AnalyticsInitializer.init() FAILED after '
+              '${sw.elapsedMilliseconds}ms (continuing without analytics): '
+              '$e\n$st');
         }
         return cfg;
       },
@@ -843,5 +881,21 @@ Future<void> initInjectionContainer() async {
       dependsOn: [AnalyticsConfig],
     );
 
-  await sl.allReady();
+  // Wait for all async singletons to be ready, but with a global timeout and
+  // diagnostic reporting. If any registerSingletonAsync hangs past this
+  // window, GetIt's WaitingTimeOutException tells us exactly which types are
+  // still pending — invaluable for diagnosing TestFlight-only hangs.
+  try {
+    await sl.allReady(timeout: const Duration(seconds: 20));
+    debugPrint('[DI] sl.allReady() completed successfully');
+  } on WaitingTimeOutException catch (e) {
+    debugPrint('[DI] sl.allReady() TIMED OUT.');
+    debugPrint('[DI]   notReadyYet: ${e.notReadyYet}');
+    debugPrint('[DI]   areReady:    ${e.areReady}');
+    debugPrint('[DI]   areWaitedBy: ${e.areWaitedBy}');
+    rethrow;
+  } catch (e, st) {
+    debugPrint('[DI] sl.allReady() failed: $e\n$st');
+    rethrow;
+  }
 }
