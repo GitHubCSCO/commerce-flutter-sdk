@@ -878,12 +878,13 @@ Future<void> initInjectionContainer() async {
         dependsOn: [AnalyticsConfig])
 
     // firebase messaging
-    // depends on analytics config for proper firebase initialization order
-    // AnalyticsConfig already initializes firebase app once
-    ..registerSingletonWithDependencies<IDeviceTokenService>(
-      () => DeviceTokenService(),
-      dependsOn: [AnalyticsConfig],
-    );
+    // DeviceTokenService is registered as a lazy singleton because its
+    // constructor is synchronous — all real async work happens later inside
+    // getDeviceToken(). Using registerSingletonWithDependencies here was a bug:
+    // that API requires the singleton to call signalReady() before sl.allReady()
+    // can complete, but DeviceTokenService never does, so initialization hung
+    // forever waiting on it.
+    ..registerLazySingleton<IDeviceTokenService>(() => DeviceTokenService());
 
   // Wait for all async singletons to be ready, but with a global timeout and
   // diagnostic reporting. If any registerSingletonAsync hangs past this
