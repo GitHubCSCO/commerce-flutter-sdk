@@ -24,7 +24,7 @@ void main() {
         lastOrderDate: DateTime(2025, 1, 10),
         product: Product(
           id: "product123",
-          name: "Test Product",
+          productTitle: "Test Product",
           productNumber: "P123",
         ),
       );
@@ -48,7 +48,6 @@ void main() {
       expect(result.lastOrderDate, model.lastOrderDate);
       expect(result.productEntity, isNotNull);
       expect(result.productEntity?.id, model.product?.id);
-      expect(result.productEntity?.name, model.product?.name);
       expect(result.productEntity?.productNumber, model.product?.productNumber);
     });
 
@@ -94,7 +93,6 @@ void main() {
       expect(result.lastOrderDate, entity.lastOrderDate);
       expect(result.product, isNotNull);
       expect(result.product?.id, entity.productEntity?.id);
-      expect(result.product?.name, entity.productEntity?.name);
       expect(
           result.product?.productNumber, entity.productEntity?.productNumber);
     });
@@ -223,7 +221,6 @@ void main() {
       final model = VmiBinModel(
         id: "bin007",
         vmiLocationId: "location007",
-        // binNumber defaults to empty string in model
       );
 
       // Act
@@ -232,7 +229,7 @@ void main() {
       // Assert
       expect(result.id, model.id);
       expect(result.vmiLocationId, model.vmiLocationId);
-      expect(result.binNumber, ""); // Default value
+      expect(result.binNumber, "");
     });
 
     test('should maintain data integrity in roundtrip conversion', () {
@@ -253,7 +250,7 @@ void main() {
         lastOrderDate: DateTime(2025, 2, 20),
         product: Product(
           id: "product999",
-          name: "Roundtrip Product",
+          productTitle: "Roundtrip Product",
           productNumber: "P999",
         ),
       );
@@ -278,48 +275,42 @@ void main() {
           originalModel.previousCountUserName);
       expect(resultModel.lastOrderDate, originalModel.lastOrderDate);
       expect(resultModel.product?.id, originalModel.product?.id);
-      expect(resultModel.product?.name, originalModel.product?.name);
       expect(resultModel.product?.productNumber,
           originalModel.product?.productNumber);
     });
 
-    test('should handle complex Product mapping correctly', () {
+    test('should handle Product mapping correctly', () {
       // Arrange
-      final productWithComplexData = Product(
+      final productWithData = Product(
         id: "complex123",
-        name: "Complex Product",
+        productTitle: "Complex Product",
         productNumber: "CP123",
-        sku: "SKU123",
-        shortDescription: "A complex product for testing",
-        unitOfMeasure: "EA",
       );
 
       final model = VmiBinModel(
         id: "bin_complex",
         vmiLocationId: "location_complex",
         binNumber: "COMPLEX-001",
-        product: productWithComplexData,
+        product: productWithData,
       );
 
-      // Act - Test toEntity
+      // Act
       final entity = VmiBinModelEntityMapper.toEntity(model);
 
-      // Assert - Entity mapping
+      // Assert
       expect(entity.productEntity, isNotNull);
-      expect(entity.productEntity?.id, productWithComplexData.id);
-      expect(entity.productEntity?.name, productWithComplexData.name);
+      expect(entity.productEntity?.id, productWithData.id);
       expect(entity.productEntity?.productNumber,
-          productWithComplexData.productNumber);
+          productWithData.productNumber);
 
-      // Act - Test toModel
+      // Act - roundtrip
       final resultModel = VmiBinModelEntityMapper.toModel(entity);
 
-      // Assert - Model mapping
+      // Assert
       expect(resultModel.product, isNotNull);
-      expect(resultModel.product?.id, productWithComplexData.id);
-      expect(resultModel.product?.name, productWithComplexData.name);
+      expect(resultModel.product?.id, productWithData.id);
       expect(resultModel.product?.productNumber,
-          productWithComplexData.productNumber);
+          productWithData.productNumber);
     });
   });
 }

@@ -36,6 +36,8 @@ class MockProduct extends Mock implements Product {}
 
 class MockBrand extends Mock implements Brand {}
 
+class MockProductContent extends Mock implements ProductContent {}
+
 class MockCategory extends Mock implements Category {}
 
 class MockGetProductCollectionResult extends Mock
@@ -287,14 +289,14 @@ void main() {
             .thenReturn(mockVmiLocationModel);
 
         // Mock product properties
+        final mockContent = MockProductContent();
+        when(() => mockContent.pageTitle).thenReturn('Page Title');
         when(() => mockProduct.id).thenReturn('product123');
-        when(() => mockProduct.shortDescription)
-            .thenReturn('Short Description');
-        when(() => mockProduct.pageTitle).thenReturn('Page Title');
+        when(() => mockProduct.productTitle).thenReturn('Short Description');
         when(() => mockProduct.mediumImagePath).thenReturn('/image/path.jpg');
-        when(() => mockProduct.name).thenReturn('Product Name');
-        when(() => mockProduct.erpNumber).thenReturn('ERP123');
+        when(() => mockProduct.productNumber).thenReturn('ERP123');
         when(() => mockProduct.brand).thenReturn(mockBrand);
+        when(() => mockProduct.content).thenReturn(mockContent);
         when(() => mockProduct.properties).thenReturn({'key': 'value'});
         when(() => mockBrand.name).thenReturn('Brand Name');
         when(() => mockBrand.logoSmallImagePath).thenReturn('/brand/logo.jpg');
@@ -326,7 +328,7 @@ void main() {
             expect(product?.title, equals('Short Description'));
             expect(product?.subtitle, equals('Page Title'));
             expect(product?.image, equals('/image/path.jpg'));
-            expect(product?.name, equals('Product Name'));
+            expect(product?.name, equals('Short Description'));
             expect(product?.erpNumber, equals('ERP123'));
             expect(product?.brandName, equals('Brand Name'));
             expect(product?.brandDetailPagePath, equals('/brand/logo.jpg'));
@@ -515,13 +517,11 @@ void main() {
             )).captured;
 
         final capturedParams = captured.first as ProductsQueryParameters;
-        expect(capturedParams.query, equals(searchQuery));
+        expect(capturedParams.search, equals(searchQuery));
         expect(capturedParams.page, equals(currentPage));
-        expect(capturedParams.expand, contains('pricing'));
         expect(capturedParams.expand, contains('facets'));
         expect(capturedParams.expand, contains('brand'));
         expect(capturedParams.expand, contains('varianttraits'));
-        expect(capturedParams.expand, contains('styledproducts'));
       });
 
       test('should pass all optional parameters correctly', () async {
@@ -572,7 +572,7 @@ void main() {
             )).captured;
 
         final capturedParams = captured.first as ProductsQueryParameters;
-        expect(capturedParams.query, equals(searchQuery));
+        expect(capturedParams.search, equals(searchQuery));
         expect(capturedParams.page, equals(currentPage));
         expect(capturedParams.sort, equals(selectedSortOrder.value));
         expect(capturedParams.attributeValueIds,

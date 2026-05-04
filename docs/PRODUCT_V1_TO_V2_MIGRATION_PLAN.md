@@ -1,8 +1,8 @@
 # Product API V1 → V2 Migration Plan
 
 > **Decision:** Direct V2 migration. No V1 support.
-> **Status:** Planning
-> **Last Updated:** 2026-04-23
+> **Status:** In Progress — Phases A & B complete; tests updated. Phases C & D remain.
+> **Last Updated:** 2026-04-29
 
 ---
 

@@ -227,16 +227,16 @@ void main() {
         {
           'product': {
             'id': 'prod-1',
-            'name': 'Product 1',
-            'productCode': 'item1'
+            'productTitle': 'Product 1',
+            'detail': {'productCode': 'item1'}
           },
           'quantityOrdered': 1
         },
         {
           'product': {
             'id': 'prod-2',
-            'name': 'Product 2',
-            'productCode': 'item2'
+            'productTitle': 'Product 2',
+            'detail': {'productCode': 'item2'}
           },
           'quantityOrdered': 2
         }
@@ -252,9 +252,9 @@ void main() {
           .loadPersistedData<List<QuickOrderItem>>('test-key');
 
       expect(result.length, 2);
-      expect(result[0].product.productCode, 'item1');
+      expect(result[0].product.detail?.productCode, 'item1');
       expect(result[0].quantityOrdered, 1);
-      expect(result[1].product.productCode, 'item2');
+      expect(result[1].product.detail?.productCode, 'item2');
       expect(result[1].quantityOrdered, 2);
     });
 

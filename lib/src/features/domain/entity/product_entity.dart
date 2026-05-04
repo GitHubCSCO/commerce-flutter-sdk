@@ -17,7 +17,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_
 import 'package:commerce_flutter_sdk/src/features/domain/entity/score_explanation_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/specification_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_trait_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -108,8 +107,6 @@ class ProductEntity extends Equatable {
   final num? numberInCart;
   final num? qtyOrdered;
   AvailabilityEntity? availability;
-  final List<StyleTraitEntity>? styleTraits;
-  final List<StyledProductEntity>? styledProducts;
   final List<AttributeTypeEntity>? attributeTypes;
   final List<DocumentEntity>? documents;
   final List<SpecificationEntity>? specifications;
@@ -236,8 +233,6 @@ class ProductEntity extends Equatable {
     this.numberInCart,
     this.qtyOrdered,
     this.availability,
-    this.styleTraits,
-    this.styledProducts,
     this.attributeTypes,
     this.documents,
     this.specifications,
@@ -364,8 +359,6 @@ class ProductEntity extends Equatable {
     num? numberInCart,
     num? qtyOrdered,
     AvailabilityEntity? availability,
-    List<StyleTraitEntity>? styleTraits,
-    List<StyledProductEntity>? styledProducts,
     List<AttributeTypeEntity>? attributeTypes,
     List<DocumentEntity>? documents,
     List<SpecificationEntity>? specifications,
@@ -501,8 +494,6 @@ class ProductEntity extends Equatable {
       numberInCart: numberInCart ?? this.numberInCart,
       qtyOrdered: qtyOrdered ?? this.qtyOrdered,
       availability: availability ?? this.availability,
-      styleTraits: styleTraits ?? this.styleTraits,
-      styledProducts: styledProducts ?? this.styledProducts,
       attributeTypes: attributeTypes ?? this.attributeTypes,
       documents: documents ?? this.documents,
       specifications: specifications ?? this.specifications,

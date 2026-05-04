@@ -75,7 +75,7 @@ class SearchProductFilterWidget extends StatelessWidget {
                     productsParameters: ProductsQueryParameters(
                       page: 1,
                       pageSize: 16,
-                      expand: ["pricing", "facets", "brand"],
+                      expand: ["facets", "brand"],
                       attributeValueIds: selectedAttributeValueIds,
                       brandIds: selectedBrandIds,
                       productLineIds: selectedProductLineIds,
@@ -162,7 +162,7 @@ class SearchProductFilterWidget extends StatelessWidget {
     return ProductsQueryParameters(
       page: 1,
       pageSize: 16,
-      expand: ["pricing", "facets", "brand"],
+      expand: ["facets", "brand"],
       attributeValueIds: const [],
       brandIds: selectedBrandIds,
       productLineIds: selectedProductLineIds,
@@ -194,7 +194,7 @@ void _showProductFilterWidget(
   //         page: 1,
   //         pageSize: 16,
   //         makeBrandUrls: false,
-  //         expand: ["pricing", "facets", "brand"],
+  //         expand: ["facets", "brand"],
   //         includeSuggestions: "True",
   // applyPersonalization: true,
   // query: 'vmi',

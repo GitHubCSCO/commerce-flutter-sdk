@@ -111,8 +111,6 @@ class ProductEntityMapper {
         isBeingCompared: false,
         isStyleProductParent: model.isVariantParent,
         styleParentId: null,
-        styleTraits: null,
-        styledProducts: null,
         crossSells: null,
         accessories: null,
         unitOfMeasure: model.unitOfMeasures

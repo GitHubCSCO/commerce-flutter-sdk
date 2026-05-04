@@ -13,17 +13,11 @@ void main() {
       final model = Brand(
         id: "1",
         name: "Nike",
-        manufacturer: "Nike Inc.",
-        externalUrl: "https://www.nike.com",
         detailPagePath: "/brands/nike",
-        productListPagePage: "/products/nike",
         logoSmallImagePath: "/images/nike_small.png",
         logoLargeImagePath: "/images/nike_large.png",
-        logoAltText: "Nike Logo",
-        featuredImagePath: "/images/nike_featured.png",
-        featuredImageAltText: "Nike Featured",
-        htmlContent: "<p>Nike Brand</p>",
-        topSellerProducts: [],
+        logoImageAltText: "Nike Logo",
+        urlSegment: "nike",
       );
 
       // Act
@@ -32,35 +26,23 @@ void main() {
       // Assert
       expect(result.id, model.id);
       expect(result.name, model.name);
-      expect(result.manufacturer, model.manufacturer);
-      expect(result.externalUrl, model.externalUrl);
       expect(result.detailPagePath, model.detailPagePath);
-      expect(result.productListPagePage, model.productListPagePage);
       expect(result.logoSmallImagePath, model.logoSmallImagePath);
       expect(result.logoLargeImagePath, model.logoLargeImagePath);
-      expect(result.logoAltText, model.logoAltText);
-      expect(result.featuredImagePath, model.featuredImagePath);
-      expect(result.featuredImageAltText, model.featuredImageAltText);
-      expect(result.htmlContent, model.htmlContent);
-      expect(result.topSellerProducts, isEmpty);
+      expect(result.logoImageAltText, model.logoImageAltText);
+      expect(result.urlSegment, model.urlSegment);
     });
 
     test('should correctly map BrandEntity to Brand', () {
       // Arrange
-      final entity = BrandEntity(
+      const entity = BrandEntity(
         id: "2",
         name: "Adidas",
-        manufacturer: "Adidas AG",
-        externalUrl: "https://www.adidas.com",
         detailPagePath: "/brands/adidas",
-        productListPagePage: "/products/adidas",
         logoSmallImagePath: "/images/adidas_small.png",
         logoLargeImagePath: "/images/adidas_large.png",
-        logoAltText: "Adidas Logo",
-        featuredImagePath: "/images/adidas_featured.png",
-        featuredImageAltText: "Adidas Featured",
-        htmlContent: "<p>Adidas Brand</p>",
-        topSellerProducts: [],
+        logoImageAltText: "Adidas Logo",
+        urlSegment: "adidas",
       );
 
       // Act
@@ -69,17 +51,11 @@ void main() {
       // Assert
       expect(result.id, entity.id);
       expect(result.name, entity.name);
-      expect(result.manufacturer, entity.manufacturer);
-      expect(result.externalUrl, entity.externalUrl);
       expect(result.detailPagePath, entity.detailPagePath);
-      expect(result.productListPagePage, entity.productListPagePage);
       expect(result.logoSmallImagePath, entity.logoSmallImagePath);
       expect(result.logoLargeImagePath, entity.logoLargeImagePath);
-      expect(result.logoAltText, entity.logoAltText);
-      expect(result.featuredImagePath, entity.featuredImagePath);
-      expect(result.featuredImageAltText, entity.featuredImageAltText);
-      expect(result.htmlContent, entity.htmlContent);
-      expect(result.topSellerProducts, isEmpty);
+      expect(result.logoImageAltText, entity.logoImageAltText);
+      expect(result.urlSegment, entity.urlSegment);
     });
 
     test('should handle null Brand model correctly', () {
@@ -89,17 +65,11 @@ void main() {
       // Assert
       expect(result.id, isNull);
       expect(result.name, isNull);
-      expect(result.manufacturer, isNull);
-      expect(result.externalUrl, isNull);
       expect(result.detailPagePath, isNull);
-      expect(result.productListPagePage, isNull);
       expect(result.logoSmallImagePath, isNull);
       expect(result.logoLargeImagePath, isNull);
-      expect(result.logoAltText, isNull);
-      expect(result.featuredImagePath, isNull);
-      expect(result.featuredImageAltText, isNull);
-      expect(result.htmlContent, isNull);
-      expect(result.topSellerProducts, isNull);
+      expect(result.logoImageAltText, isNull);
+      expect(result.urlSegment, isNull);
     });
   });
 

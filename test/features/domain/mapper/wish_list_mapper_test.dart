@@ -356,12 +356,11 @@ void main() {
         selectedUnitOfMeasure: 'EA',
         productUnitOfMeasures: [
           ProductUnitOfMeasure(
-            productUnitOfMeasureId: 'product123',
+            id: 'product123',
             unitOfMeasure: 'EA',
             unitOfMeasureDisplay: 'Each',
             qtyPerBaseUnitOfMeasure: 1,
             roundingRule: 'None',
-            availability: Availability(message: 'Available', messageType: 1),
           ),
         ],
         packDescription: 'Single unit pack',
@@ -548,8 +547,6 @@ void main() {
             unitOfMeasureDisplay: 'Each',
             qtyPerBaseUnitOfMeasure: 1,
             roundingRule: 'None',
-            availability:
-                AvailabilityEntity(message: 'Available', messageType: 1),
           ),
         ],
         packDescription: 'Single unit pack',
@@ -604,7 +601,7 @@ void main() {
           equals(entity.qtyPerBaseUnitOfMeasure));
       expect(model.selectedUnitOfMeasure, equals(entity.selectedUnitOfMeasure));
       expect(model.productUnitOfMeasures?.length, equals(1));
-      expect(model.productUnitOfMeasures?[0].productUnitOfMeasureId,
+      expect(model.productUnitOfMeasures?[0].id,
           equals('product123'));
       expect(model.packDescription, equals(entity.packDescription));
       expect(model.notes, equals(entity.notes));

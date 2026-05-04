@@ -9,8 +9,7 @@ void main() {
     test('toEntity should convert model to entity with all properties', () {
       // Arrange
       final styleValue = StyleValue(
-        styleTraitId: 'color-id',
-        styleTraitValueId: 'red-id',
+        id: 'red-id',
         value: 'red',
         valueDisplay: 'Red',
         sortOrder: 1,
@@ -20,7 +19,7 @@ void main() {
       );
 
       final model = StyleTrait(
-        styleTraitId: 'color-trait',
+        id: 'trait-123',
         name: 'Color',
         nameDisplay: 'Product Color',
         unselectedValue: 'Select a color',
@@ -28,8 +27,6 @@ void main() {
         displayType: 'Swatch',
         numberOfSwatchesVisible: 5,
         displayTextWithSwatch: true,
-        id: 'trait-123',
-        styleValues: [styleValue],
         traitValues: [styleValue],
       );
 
@@ -37,7 +34,7 @@ void main() {
       final entity = StyleTraitEntityMapper.toEntity(model);
 
       // Assert
-      expect(entity.styleTraitId, equals(model.styleTraitId));
+      expect(entity.id, equals(model.id));
       expect(entity.name, equals(model.name));
       expect(entity.nameDisplay, equals(model.nameDisplay));
       expect(entity.unselectedValue, equals(model.unselectedValue));
@@ -46,21 +43,16 @@ void main() {
       expect(entity.numberOfSwatchesVisible,
           equals(model.numberOfSwatchesVisible));
       expect(entity.displayTextWithSwatch, equals(model.displayTextWithSwatch));
-      expect(entity.id, equals(model.id));
-      expect(entity.styleValues?.length, equals(1));
-      expect(entity.styleValues?[0].styleTraitId, equals('color-id'));
-      expect(entity.styleValues?[0].value, equals('red'));
       expect(entity.traitValues?.length, equals(1));
-      expect(entity.traitValues?[0].styleTraitId, equals('color-id'));
+      expect(entity.traitValues?[0].value, equals('red'));
     });
 
     test('toEntity should handle model with null collections', () {
       // Arrange
       final model = StyleTrait(
-        styleTraitId: 'color-trait',
+        id: 'color-trait',
         name: 'Color',
         nameDisplay: 'Product Color',
-        styleValues: null,
         traitValues: null,
       );
 
@@ -68,20 +60,18 @@ void main() {
       final entity = StyleTraitEntityMapper.toEntity(model);
 
       // Assert
-      expect(entity.styleTraitId, equals(model.styleTraitId));
+      expect(entity.id, equals(model.id));
       expect(entity.name, equals(model.name));
       expect(entity.nameDisplay, equals(model.nameDisplay));
-      expect(entity.styleValues, isNull);
       expect(entity.traitValues, isNull);
     });
 
     test('toEntity should handle model with empty collections', () {
       // Arrange
       final model = StyleTrait(
-        styleTraitId: 'color-trait',
+        id: 'color-trait',
         name: 'Color',
         nameDisplay: 'Product Color',
-        styleValues: [],
         traitValues: [],
       );
 
@@ -89,18 +79,16 @@ void main() {
       final entity = StyleTraitEntityMapper.toEntity(model);
 
       // Assert
-      expect(entity.styleTraitId, equals(model.styleTraitId));
+      expect(entity.id, equals(model.id));
       expect(entity.name, equals(model.name));
       expect(entity.nameDisplay, equals(model.nameDisplay));
-      expect(entity.styleValues, isEmpty);
       expect(entity.traitValues, isEmpty);
     });
 
     test('toModel should convert entity to model with all properties', () {
       // Arrange
       const styleValueEntity = StyleValueEntity(
-        styleTraitId: 'color-id',
-        styleTraitValueId: 'red-id',
+        id: 'red-id',
         value: 'red',
         valueDisplay: 'Red',
         sortOrder: 1,
@@ -110,7 +98,7 @@ void main() {
       );
 
       const entity = StyleTraitEntity(
-        styleTraitId: 'color-trait',
+        id: 'trait-123',
         name: 'Color',
         nameDisplay: 'Product Color',
         unselectedValue: 'Select a color',
@@ -118,8 +106,6 @@ void main() {
         displayType: 'Swatch',
         numberOfSwatchesVisible: 5,
         displayTextWithSwatch: true,
-        id: 'trait-123',
-        styleValues: [styleValueEntity],
         traitValues: [styleValueEntity],
       );
 
@@ -127,26 +113,21 @@ void main() {
       final model = StyleTraitEntityMapper.toModel(entity);
 
       // Assert
-      expect(model.styleTraitId, equals(entity.styleTraitId));
+      expect(model.id, equals(entity.id));
       expect(model.name, equals(entity.name));
       expect(model.nameDisplay, equals(entity.nameDisplay));
       expect(model.unselectedValue, equals(entity.unselectedValue));
       expect(model.sortOrder, equals(entity.sortOrder));
-      expect(model.id, equals(entity.id));
-      expect(model.styleValues?.length, equals(1));
-      expect(model.styleValues?[0].styleTraitId, equals('color-id'));
-      expect(model.styleValues?[0].value, equals('red'));
       expect(model.traitValues?.length, equals(1));
-      expect(model.traitValues?[0].styleTraitId, equals('color-id'));
+      expect(model.traitValues?[0].value, equals('red'));
     });
 
     test('toModel should handle entity with null collections', () {
       // Arrange
       const entity = StyleTraitEntity(
-        styleTraitId: 'color-trait',
+        id: 'color-trait',
         name: 'Color',
         nameDisplay: 'Product Color',
-        styleValues: null,
         traitValues: null,
       );
 
@@ -154,20 +135,18 @@ void main() {
       final model = StyleTraitEntityMapper.toModel(entity);
 
       // Assert
-      expect(model.styleTraitId, equals(entity.styleTraitId));
+      expect(model.id, equals(entity.id));
       expect(model.name, equals(entity.name));
       expect(model.nameDisplay, equals(entity.nameDisplay));
-      expect(model.styleValues, isNull);
       expect(model.traitValues, isNull);
     });
 
     test('toModel should handle entity with empty collections', () {
       // Arrange
       const entity = StyleTraitEntity(
-        styleTraitId: 'color-trait',
+        id: 'color-trait',
         name: 'Color',
         nameDisplay: 'Product Color',
-        styleValues: [],
         traitValues: [],
       );
 
@@ -175,18 +154,16 @@ void main() {
       final model = StyleTraitEntityMapper.toModel(entity);
 
       // Assert
-      expect(model.styleTraitId, equals(entity.styleTraitId));
+      expect(model.id, equals(entity.id));
       expect(model.name, equals(entity.name));
       expect(model.nameDisplay, equals(entity.nameDisplay));
-      expect(model.styleValues, isEmpty);
       expect(model.traitValues, isEmpty);
     });
 
     test('roundtrip conversion preserves all data', () {
       // Arrange
       final styleValue = StyleValue(
-        styleTraitId: 'color-id',
-        styleTraitValueId: 'red-id',
+        id: 'red-id',
         value: 'red',
         valueDisplay: 'Red',
         sortOrder: 1,
@@ -196,7 +173,7 @@ void main() {
       );
 
       final originalModel = StyleTrait(
-        styleTraitId: 'color-trait',
+        id: 'trait-123',
         name: 'Color',
         nameDisplay: 'Product Color',
         unselectedValue: 'Select a color',
@@ -204,8 +181,6 @@ void main() {
         displayType: 'Swatch',
         numberOfSwatchesVisible: 5,
         displayTextWithSwatch: true,
-        id: 'trait-123',
-        styleValues: [styleValue],
         traitValues: [styleValue],
       );
 
@@ -214,23 +189,16 @@ void main() {
       final resultModel = StyleTraitEntityMapper.toModel(entity);
 
       // Assert
-      expect(resultModel.styleTraitId, equals(originalModel.styleTraitId));
+      expect(resultModel.id, equals(originalModel.id));
       expect(resultModel.name, equals(originalModel.name));
       expect(resultModel.nameDisplay, equals(originalModel.nameDisplay));
       expect(
           resultModel.unselectedValue, equals(originalModel.unselectedValue));
       expect(resultModel.sortOrder, equals(originalModel.sortOrder));
-      expect(resultModel.id, equals(originalModel.id));
-      expect(resultModel.styleValues?.length,
-          equals(originalModel.styleValues?.length));
-      expect(resultModel.styleValues?[0].styleTraitId,
-          equals(originalModel.styleValues?[0].styleTraitId));
-      expect(resultModel.styleValues?[0].value,
-          equals(originalModel.styleValues?[0].value));
       expect(resultModel.traitValues?.length,
           equals(originalModel.traitValues?.length));
-      expect(resultModel.traitValues?[0].styleTraitId,
-          equals(originalModel.traitValues?[0].styleTraitId));
+      expect(resultModel.traitValues?[0].value,
+          equals(originalModel.traitValues?[0].value));
     });
   });
 }

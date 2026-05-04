@@ -82,8 +82,7 @@ void main() {
       expect(entity.sku, isNull);
       expect(entity.upcCode, isNull);
       expect(entity.unspsc, isNull);
-      expect(entity.configuration,
-          isNotNull); // Default LegacyConfiguration is created
+      expect(entity.configuration, isNull);
     });
 
     test('toEntity should handle ProductDetail with null properties', () {
@@ -120,8 +119,7 @@ void main() {
       expect(entity.shippingWidth, isNull);
       expect(entity.shippingHeight, isNull);
       expect(entity.shippingWeight, isNull);
-      expect(entity.configuration,
-          isNotNull); // Default LegacyConfiguration is created
+      expect(entity.configuration, isNull);
     });
 
     test('toModel should map ProductDetailEntity to ProductDetail', () {
