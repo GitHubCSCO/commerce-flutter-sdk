@@ -74,8 +74,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       availability: availability ?? this.availability,
       priceValueText: priceValueText ?? this.priceValueText,
       product: product ?? this.product,
-      selectedVariantChild:
-          selectedVariantChild ?? this.selectedVariantChild,
+      selectedVariantChild: selectedVariantChild ?? this.selectedVariantChild,
       selectedUnitOfMeasureValueText:
           selectedUnitOfMeasureValueText ?? this.selectedUnitOfMeasureValueText,
       quantity: quantity ?? this.quantity,

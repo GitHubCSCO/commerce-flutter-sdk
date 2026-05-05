@@ -105,8 +105,7 @@ mixin RealtimePricingInventoryUpdateMixin {
                     product.selectedUnitOfMeasure != null) {
                   var unitOfMeasureAvailability =
                       realTimeInventory.inventoryAvailabilityDtos?.singleWhere(
-                    (i) =>
-                        i.unitOfMeasure == product.selectedUnitOfMeasure,
+                    (i) => i.unitOfMeasure == product.selectedUnitOfMeasure,
                     orElse: () => InventoryAvailability(),
                   );
 

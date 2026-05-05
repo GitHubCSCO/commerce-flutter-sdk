@@ -64,8 +64,8 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
               productPricingList?.firstOrNull);
           return Success(productPricing);
         case Failure(errorResponse: final errorResponse):
-          return Failure(ErrorResponse(
-              errorDescription: errorResponse.errorDescription));
+          return Failure(
+              ErrorResponse(errorDescription: errorResponse.errorDescription));
       }
     }
     return Failure(ErrorResponse(
@@ -73,8 +73,7 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
   }
 
   Future<Result<GetRealTimeInventoryResult, ErrorResponse>>
-      loadRealTimeInventory(
-          ProductEntity productEntity,
+      loadRealTimeInventory(ProductEntity productEntity,
           {List<ProductEntity>? variantChildren}) async {
     var inventoryProducts = <String>[productEntity.id ?? ''];
 
@@ -106,8 +105,9 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
       ProductEntity? selectedVariantChild,
       ProductDetailsPriceEntity productDetailsPriceEntity,
       ProductUnitOfMeasureEntity? chosenUnitOfMeasure) {
-    var productId =
-        selectedVariantChild != null ? selectedVariantChild.id : productEntity.id;
+    var productId = selectedVariantChild != null
+        ? selectedVariantChild.id
+        : productEntity.id;
     var inventoryList = getRealTimeInventoryResult?.realTimeInventoryResults
         ?.where((o) => o.productId == productId);
     var inventory = inventoryList?.firstOrNull;

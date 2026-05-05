@@ -33,8 +33,7 @@ class ProductDetailEntityMapper {
         shippingHeight: model?.shippingHeight,
         shippingWeight: model?.shippingWeight,
         configuration: model?.configuration != null
-            ? LegacyConfigurationEntityMapper()
-                .toEntity(model!.configuration)
+            ? LegacyConfigurationEntityMapper().toEntity(model!.configuration)
             : null,
       );
 

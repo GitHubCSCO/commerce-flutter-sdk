@@ -48,7 +48,9 @@ void viewPricingQuantityWidget(
                               children: [
                                 Expanded(
                                     child: Text(breakPrice.breakQty! % 1 == 0
-                                        ? breakPrice.breakQty!.toInt().toString()
+                                        ? breakPrice.breakQty!
+                                            .toInt()
+                                            .toString()
                                         : breakPrice.breakQty!.toString())),
                                 Expanded(
                                     child: Text(breakPrice.breakPriceDisplay

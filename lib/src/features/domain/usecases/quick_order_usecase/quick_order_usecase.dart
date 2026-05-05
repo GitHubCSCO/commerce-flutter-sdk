@@ -191,8 +191,7 @@ class QuickOrderUseCase extends BaseUseCase {
   Future<Result<ProductEntity, ErrorResponse>> getProduct(
       String productId, AutocompleteProduct product) async {
     var parameters = ProductQueryParameters(
-      expand:
-          "detail,content,images,specifications,documents,badges",
+      expand: "detail,content,images,specifications,documents,badges",
     );
 
     var resultResponse = await commerceAPIServiceProvider
@@ -272,7 +271,8 @@ class QuickOrderUseCase extends BaseUseCase {
           final product = products[0];
           if (product.isVariantParent ?? false) {
             var parameters = ProductQueryParameters(
-                expand: "detail,content,images,specifications,documents,badges");
+                expand:
+                    "detail,content,images,specifications,documents,badges");
 
             var result = (await commerceAPIServiceProvider
                     .getProductService()

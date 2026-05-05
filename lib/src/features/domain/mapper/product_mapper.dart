@@ -192,9 +192,8 @@ class ProductEntityMapper {
             ? ProductSubscriptionEntityMapper.toEntity(
                 model.detail!.subscription)
             : null,
-        badges: model.badges
-            ?.map((e) => BadgeEntityMapper.toEntity(e))
-            .toList(),
+        badges:
+            model.badges?.map((e) => BadgeEntityMapper.toEntity(e)).toList(),
         displayUrl: model.displayUrl,
         defaultChildProductId: model.defaultChildProductId,
         properties: model.properties,
@@ -275,8 +274,7 @@ class ProductEntityMapper {
         warehouses: entity.warehouses
             ?.map((e) => InventoryWarehouseEntityMapper().toModel(e))
             .toList(),
-        badges: entity.badges
-            ?.map((e) => BadgeEntityMapper.toModel(e))
-            .toList(),
+        badges:
+            entity.badges?.map((e) => BadgeEntityMapper.toModel(e)).toList(),
       )..properties = entity.properties;
 }

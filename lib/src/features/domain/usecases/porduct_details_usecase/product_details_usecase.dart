@@ -224,8 +224,8 @@ class ProductDetailsUseCase extends BaseUseCase {
             ? product.brand?.name
             : product.brand?.logoSmallImagePath.makeImageUrl());
 
-    genralInfoEntity =
-        updateGeneralInfoViewModel(product, selectedVariantChild, genralInfoEntity);
+    genralInfoEntity = updateGeneralInfoViewModel(
+        product, selectedVariantChild, genralInfoEntity);
     return genralInfoEntity;
   }
 
@@ -242,8 +242,8 @@ class ProductDetailsUseCase extends BaseUseCase {
             ? product.getProductNumber()
             : selectedVariantChild.getProductNumber());
     genralInfoEntity = genralInfoEntity.copyWith(
-        mFGNumberValue: selectedVariantChild?.manufacturerItem ??
-            product.manufacturerItem);
+        mFGNumberValue:
+            selectedVariantChild?.manufacturerItem ?? product.manufacturerItem);
     genralInfoEntity = genralInfoEntity.copyWith(
         myPartNumberValue:
             selectedVariantChild?.customerName ?? product.customerName);
@@ -341,9 +341,10 @@ class ProductDetailsUseCase extends BaseUseCase {
         (selectedVariantChild?.specifications?.isNotEmpty == true)
             ? selectedVariantChild!.specifications
             : product.specifications;
-    final effectiveDocuments = (selectedVariantChild?.documents?.isNotEmpty == true)
-        ? selectedVariantChild!.documents
-        : product.documents;
+    final effectiveDocuments =
+        (selectedVariantChild?.documents?.isNotEmpty == true)
+            ? selectedVariantChild!.documents
+            : product.documents;
 
     if (effectiveSpecifications != null) {
       items.addAll(addSpecificationsFromList(effectiveSpecifications));
@@ -361,7 +362,8 @@ class ProductDetailsUseCase extends BaseUseCase {
       final List<ProductCarouselEntity> productCarouselList = [];
       for (var relatedProduct in relatedProducts) {
         productCarouselList.add(ProductCarouselEntity(
-            product: relatedProduct, productPricingEnabled: productPricingEnabled));
+            product: relatedProduct,
+            productPricingEnabled: productPricingEnabled));
       }
 
       porductCarouselWidget = porductCarouselWidget.copyWith(
@@ -391,7 +393,8 @@ class ProductDetailsUseCase extends BaseUseCase {
   }
 
   bool shouldAddConfigSection(ProductEntity product) {
-    return !(product.variantTraits != null && product.variantTraits!.isNotEmpty) &&
+    return !(product.variantTraits != null &&
+            product.variantTraits!.isNotEmpty) &&
         product.configurationDto != null &&
         product.configurationDto!.sections != null &&
         product.configurationDto!.sections!.isNotEmpty &&

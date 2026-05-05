@@ -300,8 +300,8 @@ void main() {
       // Assert
       expect(entity.productEntity, isNotNull);
       expect(entity.productEntity?.id, productWithData.id);
-      expect(entity.productEntity?.productNumber,
-          productWithData.productNumber);
+      expect(
+          entity.productEntity?.productNumber, productWithData.productNumber);
 
       // Act - roundtrip
       final resultModel = VmiBinModelEntityMapper.toModel(entity);
@@ -309,8 +309,7 @@ void main() {
       // Assert
       expect(resultModel.product, isNotNull);
       expect(resultModel.product?.id, productWithData.id);
-      expect(resultModel.product?.productNumber,
-          productWithData.productNumber);
+      expect(resultModel.product?.productNumber, productWithData.productNumber);
     });
   });
 }

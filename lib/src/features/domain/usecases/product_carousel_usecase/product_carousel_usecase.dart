@@ -121,7 +121,6 @@ class ProductCarouselUseCase extends BaseUseCase {
 
   ProductsQueryParameters _recentlyViewedParameters() {
     return ProductsQueryParameters(
-        filter: "recentlyViewed",
-        expand: ["badges"]);
+        filter: "recentlyViewed", expand: ["badges"]);
   }
 }

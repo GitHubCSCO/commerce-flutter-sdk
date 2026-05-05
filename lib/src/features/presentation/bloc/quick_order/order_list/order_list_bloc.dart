@@ -500,8 +500,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
                       .defaultValueQuickOrderCannotOrderUnavailable);
               emit(OrderListAddFailedState(message));
             } else {
-              var newItem = _convertVmiBinProductToQuickOrderItemEntity(
-                  vmiBin, quantity);
+              var newItem =
+                  _convertVmiBinProductToQuickOrderItemEntity(vmiBin, quantity);
               _insertItemIntoQuickOrderList(newItem);
               emit(OrderListVmiQuickOrderProductAddState());
             }

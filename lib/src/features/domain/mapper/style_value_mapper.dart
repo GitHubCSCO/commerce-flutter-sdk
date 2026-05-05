@@ -2,8 +2,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_enti
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class StyleValueEntityMapper {
-  static StyleValueEntity toEntity(StyleValue model,
-          {String? styleTraitId}) =>
+  static StyleValueEntity toEntity(StyleValue model, {String? styleTraitId}) =>
       StyleValueEntity(
         styleTraitValueId: model.id,
         value: model.value,

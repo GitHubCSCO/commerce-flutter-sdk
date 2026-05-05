@@ -147,9 +147,8 @@ class ProductDetailsPricingBloc
       ProductUnitOfMeasureEntity? chosenUnitOfMeasure,
       ProductEntity? product,
       List<ProductEntity>? variantChildren) async {
-    var realTimeInventory =
-        await _productDetailsPricingUseCase.loadRealTimeInventory(product!,
-            variantChildren: variantChildren);
+    var realTimeInventory = await _productDetailsPricingUseCase
+        .loadRealTimeInventory(product!, variantChildren: variantChildren);
 
     GetRealTimeInventoryResult? inventory = (realTimeInventory is Success)
         ? (realTimeInventory as Success).value

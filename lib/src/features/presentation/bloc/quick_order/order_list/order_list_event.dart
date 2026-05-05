@@ -56,7 +56,8 @@ class OrderListAddVmiStyleProductEvent extends OrderListEvent {
   final VmiBinModelEntity vmiBinEntity;
   final ProductEntity selectedVariantChild;
 
-  OrderListAddVmiStyleProductEvent(this.vmiBinEntity, this.selectedVariantChild);
+  OrderListAddVmiStyleProductEvent(
+      this.vmiBinEntity, this.selectedVariantChild);
 }
 
 class OrderListAddVmiBinEvent extends OrderListEvent {

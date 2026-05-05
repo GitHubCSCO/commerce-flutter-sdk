@@ -137,8 +137,8 @@ void main() {
       expect(result.configSections![0].sortOrder, equals(1));
       expect(result.configSections![0].sectionOptions, hasLength(1));
 
-      expect(
-          result.configSections![0].sectionOptions![0].id, equals('option_test'));
+      expect(result.configSections![0].sectionOptions![0].id,
+          equals('option_test'));
       expect(result.configSections![0].sectionOptions![0].price, equals(99.99));
       expect(result.configSections![0].sectionOptions![0].quantity, equals(3));
     });
@@ -299,10 +299,14 @@ void main() {
       expect(convertedBack.isKit, equals(originalConfiguration.isKit));
       expect(convertedBack.configSections![0].id,
           equals(originalConfiguration.configSections![0].id));
-      expect(convertedBack.configSections![0].sectionOptions![0].price,
-          equals(originalConfiguration.configSections![0].sectionOptions![0].price));
-      expect(convertedBack.configSections![0].sectionOptions![0].quantity,
-          equals(originalConfiguration.configSections![0].sectionOptions![0].quantity));
+      expect(
+          convertedBack.configSections![0].sectionOptions![0].price,
+          equals(originalConfiguration
+              .configSections![0].sectionOptions![0].price));
+      expect(
+          convertedBack.configSections![0].sectionOptions![0].quantity,
+          equals(originalConfiguration
+              .configSections![0].sectionOptions![0].quantity));
     });
   });
 

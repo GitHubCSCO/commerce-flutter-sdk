@@ -63,8 +63,8 @@ class ProductDetailsAddToCartBloc
         event.productDetailsAddToCartEntity.quantityText!);
     var product =
         event.productDetailsAddToCartEntity.productDetailsPriceEntity?.product;
-    var selectedVariantChild = event
-        .productDetailsAddToCartEntity.productDetailsPriceEntity?.selectedVariantChild;
+    var selectedVariantChild = event.productDetailsAddToCartEntity
+        .productDetailsPriceEntity?.selectedVariantChild;
     var productId = selectedVariantChild?.id ?? product?.id;
     var quantity = int.parse(event.productDetailsAddToCartEntity.quantityText!);
 

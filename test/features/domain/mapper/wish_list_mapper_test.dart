@@ -601,8 +601,7 @@ void main() {
           equals(entity.qtyPerBaseUnitOfMeasure));
       expect(model.selectedUnitOfMeasure, equals(entity.selectedUnitOfMeasure));
       expect(model.productUnitOfMeasures?.length, equals(1));
-      expect(model.productUnitOfMeasures?[0].id,
-          equals('product123'));
+      expect(model.productUnitOfMeasures?[0].id, equals('product123'));
       expect(model.packDescription, equals(entity.packDescription));
       expect(model.notes, equals(entity.notes));
       expect(model.createdByDisplayName, equals(entity.createdByDisplayName));

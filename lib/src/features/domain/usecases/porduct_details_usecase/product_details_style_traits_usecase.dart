@@ -210,9 +210,9 @@ class ProductDetailsStyleTraitsUseCase {
                 var styleValueChildren = variantChildren
                     .where((child) =>
                         child.childTraitValues != null &&
-                        child.childTraitValues!.any(
-                            (ctv) => ctv.styleTraitId == styleValue.styleTraitId &&
-                                ctv.id == styleValue.styleTraitValueId))
+                        child.childTraitValues!.any((ctv) =>
+                            ctv.styleTraitId == styleValue.styleTraitId &&
+                            ctv.id == styleValue.styleTraitValueId))
                     .toList();
                 var currentlySelectedStyleValues = selectedStyleValues.values
                     .where((v) => v != null && v.styleTraitId != styleTraitId2)

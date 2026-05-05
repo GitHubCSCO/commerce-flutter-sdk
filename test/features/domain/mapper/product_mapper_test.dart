@@ -757,8 +757,7 @@ void main() {
           Document(id: 'rt_doc1', name: 'Manual', documentType: 'PDF'),
         ],
         specifications: [
-          Specification(
-              id: 'rt_spec1', name: 'Weight', value: '1.5kg'),
+          Specification(id: 'rt_spec1', name: 'Weight', value: '1.5kg'),
         ],
         warehouses: [
           InventoryWarehouse(name: 'RT Warehouse', qty: 25),

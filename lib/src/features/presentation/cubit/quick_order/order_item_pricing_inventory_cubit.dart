@@ -69,7 +69,8 @@ class OrderItemPricingInventoryCubit
 
     var productAvailabilityEnabled = productSettings.showInventoryAvailability!;
     var showInventoryAvailability = false;
-    if ((!(product.isConfigured ?? false) || (product.isFixedConfiguration ?? false)) &&
+    if ((!(product.isConfigured ?? false) ||
+            (product.isFixedConfiguration ?? false)) &&
         !(product.isVariantParent ?? false)) {
       showInventoryAvailability = productAvailabilityEnabled;
     }

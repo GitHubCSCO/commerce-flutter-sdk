@@ -69,8 +69,7 @@ class StyleTraitCubit extends Cubit<StyleTraitState> {
     emit(StyleTraitStateLoaded(styleTraitsEntity: styleTraitsEntity));
   }
 
-  void updateVariantChildBasedOnSelection(
-      StyleValueEntity selectedStyleValue) {
+  void updateVariantChildBasedOnSelection(StyleValueEntity selectedStyleValue) {
     var variantChild = _styleTraitsUseCase.getVariantChildBasedOnSelection(
         null,
         selectedStyleValue,
