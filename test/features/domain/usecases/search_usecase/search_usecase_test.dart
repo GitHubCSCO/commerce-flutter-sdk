@@ -520,8 +520,9 @@ void main() {
         expect(capturedParams.search, equals(searchQuery));
         expect(capturedParams.page, equals(currentPage));
         expect(capturedParams.expand, contains('facets'));
-        expect(capturedParams.expand, contains('brand'));
-        expect(capturedParams.expand, contains('varianttraits'));
+        expect(capturedParams.expand, contains('variantTraits'));
+        expect(capturedParams.expand, contains('badges'));
+        expect(capturedParams.expand, contains('attributes'));
       });
 
       test('should pass all optional parameters correctly', () async {
