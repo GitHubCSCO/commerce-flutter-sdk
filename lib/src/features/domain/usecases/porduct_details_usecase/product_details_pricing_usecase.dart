@@ -142,6 +142,28 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
                 AvailabilityEntityMapper.toEntity(newInventoryAvailability));
       }
 
+      var productUnitOfMeasures = selectedVariantChild != null
+          ? selectedVariantChild.productUnitOfMeasures
+          : productEntity.productUnitOfMeasures;
+      if (productUnitOfMeasures != null) {
+        for (var i = 0; i < productUnitOfMeasures.length; i++) {
+          var p = productUnitOfMeasures[i];
+          var unitOfMeasureAvailabilityList = inventory
+              .inventoryAvailabilityDtos
+              ?.where((o) => o.unitOfMeasure == p.unitOfMeasure);
+          var unitOfMeasureAvailability =
+              unitOfMeasureAvailabilityList?.firstOrNull;
+          if (unitOfMeasureAvailability != null) {
+            productUnitOfMeasures[i] = p.copyWith(
+                availability: AvailabilityEntityMapper.toEntity(
+                    unitOfMeasureAvailability.availability));
+          } else {
+            productUnitOfMeasures[i] = p.copyWith(
+                availability: AvailabilityEntityMapper.toEntity(
+                    Availability(messageType: 0)));
+          }
+        }
+      }
     } else {
       var newProductAvailability = Availability(
         messageType: 0,

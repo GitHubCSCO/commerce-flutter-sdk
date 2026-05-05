@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
@@ -133,24 +132,28 @@ class ProductDetailsBloc
           try {
             final variantChildren =
                 await _productDetailsUseCase.getVariantChildren(data.id!);
-            debugPrint('=== variantChildren count: ${variantChildren.length} ===');
             productDetailDataEntity = productDetailDataEntity.copyWith(
                 variantChildren: variantChildren);
-          } catch (e, stackTrace) {
-            debugPrint('=== Error fetching variant children: $e ===');
-            debugPrint('$stackTrace');
+          } catch (e) {
+            // variant children fetch failed, continue without them
+          }
+        }
+
+        if (data.id != null) {
+          try {
+            final relatedProducts =
+                await _productDetailsUseCase.getRelatedProducts(data.id!);
+            productDetailDataEntity = productDetailDataEntity.copyWith(
+                relatedProducts: relatedProducts);
+          } catch (e) {
+            // related products fetch failed, continue without them
           }
         }
 
         try {
-          debugPrint('=== Before _extractValuesFromData ===');
           _extractValuesFromData(data);
-          debugPrint('=== After _extractValuesFromData, before _makeAllDetailsItems ===');
           await _makeAllDetailsItems(data, emit);
-          debugPrint('=== After _makeAllDetailsItems - state emitted ===');
-        } catch (e, stackTrace) {
-          debugPrint('=== Error in product details flow: $e ===');
-          debugPrint('$stackTrace');
+        } catch (e) {
           emit(ProductDetailsErrorState(e.toString()));
         }
       case Failure(errorResponse: final errorResponse):

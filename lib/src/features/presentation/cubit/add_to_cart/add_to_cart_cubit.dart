@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
@@ -83,13 +84,16 @@ class AddToCartCubit extends Cubit<AddToCartState> {
     var realTimeInventory = await _addToCartUsecase
         .loadRealTimeInventory(ProductEntityMapper.toModel(product));
 
-    num qtyOnHand;
+    if (isClosed) {
+      return;
+    }
 
     if (realTimeInventory != null) {
       var inventory = realTimeInventory.realTimeInventoryResults
-          ?.firstWhere((o) => o.productId == product.id);
-      qtyOnHand = inventory!.qtyOnHand!;
-      product = product.copyWith(qtyOnHand: qtyOnHand);
+          ?.firstWhereOrNull((o) => o.productId == product.id);
+      if (inventory?.qtyOnHand != null) {
+        product = product.copyWith(qtyOnHand: inventory!.qtyOnHand);
+      }
     }
 
     if ((product.canAddToCart ?? false) &&

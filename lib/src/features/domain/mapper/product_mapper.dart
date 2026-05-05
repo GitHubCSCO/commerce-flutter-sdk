@@ -105,8 +105,9 @@ class ProductEntityMapper {
         pricing: null,
         availability: null,
         qtyOnHand: null,
-        isConfigured: null,
-        isFixedConfiguration: null,
+        isConfigured: model.configurationType != null &&
+            model.configurationType!.toLowerCase() != 'none',
+        isFixedConfiguration: model.configurationType?.toLowerCase() == 'fixed',
         isActive: null,
         isBeingCompared: false,
         isStyleProductParent: model.isVariantParent,

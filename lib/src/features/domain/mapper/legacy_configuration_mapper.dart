@@ -28,8 +28,8 @@ class ConfigSectionEntityMapper {
   ConfigSectionEntity toEntity(ConfigSection model) => ConfigSectionEntity(
         sectionName: model.sectionName,
         options: model.sectionOptions
-            ?.map(
-                (option) => ConfigSectionOptionEntityMapper().toEntity(option))
+            ?.map((option) => ConfigSectionOptionEntityMapper()
+                .toEntity(option, sectionName: model.sectionName))
             .toList(),
         id: model.id,
         sortOrder: model.sortOrder,
@@ -46,7 +46,8 @@ class ConfigSectionEntityMapper {
 }
 
 class ConfigSectionOptionEntityMapper {
-  ConfigSectionOptionEntity toEntity(ConfigSectionOption model) =>
+  ConfigSectionOptionEntity toEntity(ConfigSectionOption model,
+          {String? sectionName}) =>
       ConfigSectionOptionEntity(
         sectionOptionId: model.id,
         productId: model.productId,
@@ -57,7 +58,7 @@ class ConfigSectionOptionEntityMapper {
         id: model.id,
         name: model.name,
         quantity: model.quantity,
-        sectionName: null,
+        sectionName: sectionName,
         productName: null,
         userProductPrice: null,
       );

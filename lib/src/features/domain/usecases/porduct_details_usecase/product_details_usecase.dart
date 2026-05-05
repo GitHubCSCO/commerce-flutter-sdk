@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/attribute_type_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/attribute_value_entity.dart';
@@ -112,6 +111,7 @@ class ProductDetailsUseCase extends BaseUseCase {
 
     var parameters = ProductQueryParameters(
       addToRecentlyViewed: true,
+      applyPersonalization: true,
       includeAttributes: "includeOnProduct,notFromCategory",
       expand:
           "detail,content,images,specifications,documents,attributes,variantTraits,badges",
@@ -125,35 +125,6 @@ class ProductDetailsUseCase extends BaseUseCase {
       case Success(value: final data):
         final productEntity =
             ProductEntityMapper.toEntity(data?.product ?? Product());
-
-        debugPrint('=== ProductDetailsUseCase: Entity Data ===');
-        debugPrint('id: ${productEntity.id}');
-        debugPrint('productNumber: ${productEntity.productNumber}');
-        debugPrint('productTitle: ${productEntity.productTitle}');
-        debugPrint('shortDescription: ${productEntity.shortDescription}');
-        debugPrint('erpNumber: ${productEntity.erpNumber}');
-        debugPrint('unitListPrice: ${productEntity.unitListPrice}');
-        debugPrint('unitListPriceDisplay: ${productEntity.unitListPriceDisplay}');
-        debugPrint('unitOfMeasure: ${productEntity.unitOfMeasure}');
-        debugPrint('unitOfMeasureDisplay: ${productEntity.unitOfMeasureDisplay}');
-        debugPrint('unitOfMeasureDescription: ${productEntity.unitOfMeasureDescription}');
-        debugPrint('htmlContent length: ${productEntity.htmlContent?.length}');
-        debugPrint('images count: ${productEntity.images?.length}');
-        debugPrint('productImages count: ${productEntity.productImages?.length}');
-        debugPrint('specifications count: ${productEntity.specifications?.length}');
-        debugPrint('documents count: ${productEntity.documents?.length}');
-        debugPrint('attributeTypes count: ${productEntity.attributeTypes?.length}');
-        debugPrint('variantTraits count: ${productEntity.variantTraits?.length}');
-        debugPrint('badges count: ${productEntity.badges?.length}');
-        debugPrint('unitOfMeasures count: ${productEntity.unitOfMeasures?.length}');
-        debugPrint('productUnitOfMeasures count: ${productEntity.productUnitOfMeasures?.length}');
-        debugPrint('canAddToCart: ${productEntity.canAddToCart}');
-        debugPrint('canShowPrice: ${productEntity.canShowPrice}');
-        debugPrint('isVariantParent: ${productEntity.isVariantParent}');
-        debugPrint('brand: ${productEntity.brand?.name}');
-        debugPrint('detail: ${productEntity.detail != null}');
-        debugPrint('content: ${productEntity.content != null}');
-        debugPrint('=== End Entity Data ===');
 
         return Success(productEntity);
       case Failure(errorResponse: final errorResponse):
@@ -169,6 +140,28 @@ class ProductDetailsUseCase extends BaseUseCase {
     var result = await commerceAPIServiceProvider
         .getProductService()
         .getVariantChildren(productId, parameters: parameters);
+
+    switch (result) {
+      case Success(value: final data):
+        if (data?.products != null) {
+          return data!.products!
+              .map((product) => ProductEntityMapper.toEntity(product))
+              .toList();
+        }
+        return [];
+      case Failure():
+        return [];
+    }
+  }
+
+  Future<List<ProductEntity>> getRelatedProducts(String productId) async {
+    var parameters = RelatedProductsQueryParameters(
+      relationship: 'CrossSell',
+    );
+
+    var result = await commerceAPIServiceProvider
+        .getProductService()
+        .getRelatedProducts(productId, parameters: parameters);
 
     switch (result) {
       case Success(value: final data):
@@ -490,11 +483,17 @@ class ProductDetailsUseCase extends BaseUseCase {
         index < product.configurationDto!.sections!.length;
         index++) {
       var configSection = product.configurationDto!.sections![index];
-      var option = ConfigSectionOptionEntity(
-          sectionName: configSection.sectionName,
-          description:
-              "${LocalizationConstants.selectSomething.localized()} ${configSection.sectionName!}");
-      product.configurationDto!.sections![index].options!.insert(0, option);
+      var hasPlaceholder = configSection.options != null &&
+          configSection.options!.isNotEmpty &&
+          configSection.options!.first.sectionOptionId == null &&
+          configSection.options!.first.productId == null;
+      if (!hasPlaceholder) {
+        var option = ConfigSectionOptionEntity(
+            sectionName: configSection.sectionName,
+            description:
+                "${LocalizationConstants.selectSomething.localized()} ${configSection.sectionName!}");
+        product.configurationDto!.sections![index].options!.insert(0, option);
+      }
     }
     return ProductDetailsStandardConfigurationEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets
