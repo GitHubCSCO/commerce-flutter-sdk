@@ -75,7 +75,7 @@ class SearchUseCase extends BaseUseCase {
     bool? selectedStockedItems,
   }) async {
     var parameters = ProductsQueryParameters(
-      search: searchQuery,
+      search: searchQuery.isEmpty ? null : searchQuery,
       page: currentPage,
       // Sort = this.sortViewModel?.CurrentlySelectedSortOption?.SortType,
       // AttributeValueIds = this.SelectedAttributeValueIds,
@@ -90,7 +90,11 @@ class SearchUseCase extends BaseUseCase {
       categoryId: selectedCategoryId,
       previouslyPurchasedProducts: previouslyPurchased,
       stockedItemsOnly: selectedStockedItems,
-      expand: ["facets", "brand", "varianttraits"],
+      expand: ["attributes", "facets", "variantTraits", "badges"],
+      applyPersonalization: true,
+      includeAttributes: "includeOnProduct",
+      includeSuggestions: "true",
+      relevancy: "true",
       sort: selectedSortOrder?.value,
     );
     var result = await commerceAPIServiceProvider

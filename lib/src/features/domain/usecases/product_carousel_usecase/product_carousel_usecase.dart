@@ -116,11 +116,12 @@ class ProductCarouselUseCase extends BaseUseCase {
     return ProductsQueryParameters(
         filter: "topsellers",
         topSellersCategoryIds: topSellersCategoryIds,
-        expand: ["brand"]);
+        expand: ["badges"]);
   }
 
   ProductsQueryParameters _recentlyViewedParameters() {
     return ProductsQueryParameters(
-        expand: ["recentlyviewed", "brand"]);
+        filter: "recentlyViewed",
+        expand: ["badges"]);
   }
 }

@@ -40,9 +40,10 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
     var isOnlineNow = await isOnline();
     var isAddToCartButtonAvailable = isOnlineNow && hasCheckout;
     isAddToCartButtonAvailable &= addToCartEnabled;
-    isAddToCartButtonAvailable &= !(productEntity.cantBuy ?? false);
+    var effectiveProduct = selectedVariantChild ?? productEntity;
+    isAddToCartButtonAvailable &= !(effectiveProduct.cantBuy ?? false);
     isAddToCartButtonAvailable &=
-        (productEntity.allowedAddToCart ?? true) && !(productEntity.canConfigure ?? false);
+        (effectiveProduct.allowedAddToCart ?? true) && !(effectiveProduct.canConfigure ?? false);
 
     return isAddToCartButtonAvailable;
   }

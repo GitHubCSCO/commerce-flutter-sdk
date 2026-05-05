@@ -75,7 +75,7 @@ class SearchProductFilterWidget extends StatelessWidget {
                     productsParameters: ProductsQueryParameters(
                       page: 1,
                       pageSize: 16,
-                      expand: ["facets", "brand"],
+                      expand: ["facets"],
                       attributeValueIds: selectedAttributeValueIds,
                       brandIds: selectedBrandIds,
                       productLineIds: selectedProductLineIds,
@@ -162,7 +162,7 @@ class SearchProductFilterWidget extends StatelessWidget {
     return ProductsQueryParameters(
       page: 1,
       pageSize: 16,
-      expand: ["facets", "brand"],
+      expand: ["facets"],
       attributeValueIds: const [],
       brandIds: selectedBrandIds,
       productLineIds: selectedProductLineIds,
