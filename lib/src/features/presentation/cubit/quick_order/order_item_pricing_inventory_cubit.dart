@@ -41,11 +41,16 @@ class OrderItemPricingInventoryCubit
     var productId = product.id;
 
     var isUserSignedIn = await _pricingInventoryUseCase.isAuthenticated();
+    if (isClosed) {
+      return;
+    }
     var isStorefrontAccessGranted = productSettings.storefrontAccess !=
             StorefrontAccessConstants.signInRequiredToAddToCartOrSeePrices ||
         isUserSignedIn;
 
-    if (productSettings.canSeePrices! && isStorefrontAccessGranted) {
+    if (productSettings.realTimePricing! &&
+        productSettings.canSeePrices! &&
+        isStorefrontAccessGranted) {
       List<ProductPriceQueryParameter> priceProducts = [
         ProductPriceQueryParameter(
           productId: productId,
@@ -59,6 +64,9 @@ class OrderItemPricingInventoryCubit
       );
       var getProductRealTimePrices =
           await _pricingInventoryUseCase.getProductRealTimePrices(parameter);
+      if (isClosed) {
+        return;
+      }
       var pricing = getProductRealTimePrices?.realTimePricingResults
           ?.firstWhere((result) => result.productId == productId);
       quickOrderItemEntity.updatePricing(
@@ -88,6 +96,9 @@ class OrderItemPricingInventoryCubit
 
         var result = await _pricingInventoryUseCase
             .getProductRealTimeInventory(parameters);
+        if (isClosed) {
+          return;
+        }
         var inventory = result?.realTimeInventoryResults
             ?.firstWhere((result) => result.productId == product.id);
 

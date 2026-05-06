@@ -69,8 +69,9 @@ class OrderListAddToListSuccessState extends OrderListState {
 
 class OrderListStyleProductAddState extends OrderListState {
   final ProductEntity productEntity;
+  final List<ProductEntity> variantChildren;
 
-  OrderListStyleProductAddState(this.productEntity);
+  OrderListStyleProductAddState(this.productEntity, this.variantChildren);
 
   @override
   List<Object?> get props => [];
@@ -83,8 +84,9 @@ class OrderListQuickOrderProductAddState extends OrderListState {
 
 class OrderListVmiStyleProductAddState extends OrderListState {
   final VmiBinModelEntity vmiBinEntity;
+  final List<ProductEntity> variantChildren;
 
-  OrderListVmiStyleProductAddState(this.vmiBinEntity);
+  OrderListVmiStyleProductAddState(this.vmiBinEntity, this.variantChildren);
 
   @override
   List<Object?> get props => [];

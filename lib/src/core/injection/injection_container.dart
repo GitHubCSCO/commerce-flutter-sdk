@@ -673,9 +673,9 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
     ..registerLazySingleton<OptiLoggerService>(
       () => OptiLogger(
-        enableApiLog: true,
-        enableDebugLog: true,
-        enableErrorLog: true,
+        enableApiLog: false,
+        enableDebugLog: false,
+        enableErrorLog: false,
       ),
     )
     ..registerLazySingleton<IPushNotificationService>(() =>

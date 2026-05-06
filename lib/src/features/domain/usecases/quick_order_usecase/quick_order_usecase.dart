@@ -191,7 +191,8 @@ class QuickOrderUseCase extends BaseUseCase {
   Future<Result<ProductEntity, ErrorResponse>> getProduct(
       String productId, AutocompleteProduct product) async {
     var parameters = ProductQueryParameters(
-      expand: "detail,content,images,specifications,documents,badges",
+      expand:
+          "detail,content,images,specifications,documents,badges,variantTraits",
     );
 
     var resultResponse = await commerceAPIServiceProvider
@@ -205,6 +206,28 @@ class QuickOrderUseCase extends BaseUseCase {
         return Success(productEntity);
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
+    }
+  }
+
+  Future<List<ProductEntity>> getVariantChildren(String productId) async {
+    var parameters = VariantChildrenQueryParameters(
+      expand: "images,attributes,detail",
+    );
+
+    var result = await commerceAPIServiceProvider
+        .getProductService()
+        .getVariantChildren(productId, parameters: parameters);
+
+    switch (result) {
+      case Success(value: final data):
+        if (data?.products != null) {
+          return data!.products!
+              .map((product) => ProductEntityMapper.toEntity(product))
+              .toList();
+        }
+        return [];
+      case Failure():
+        return [];
     }
   }
 
@@ -272,7 +295,7 @@ class QuickOrderUseCase extends BaseUseCase {
           if (product.isVariantParent ?? false) {
             var parameters = ProductQueryParameters(
                 expand:
-                    "detail,content,images,specifications,documents,badges");
+                    "detail,content,images,specifications,documents,badges,variantTraits");
 
             var result = (await commerceAPIServiceProvider
                     .getProductService()

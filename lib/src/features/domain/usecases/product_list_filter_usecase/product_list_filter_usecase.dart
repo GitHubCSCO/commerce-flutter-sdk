@@ -51,6 +51,7 @@ class ProductListFilterUsecase extends BaseUseCase {
           productSettings: productSettings,
           isFilteringByPreviouslyPurchased: previouslyPurchased ?? false,
           isFilteringByStockedItems: selectedStockedItems ?? false,
+          selectedProductLineIds: selectedProductLineIds,
         );
 
         return availableFiltersCollection;
@@ -66,6 +67,7 @@ class ProductListFilterUsecase extends BaseUseCase {
     required ProductSettings productSettings,
     bool isFilteringByPreviouslyPurchased = false,
     bool isFilteringByStockedItems = false,
+    List<String>? selectedProductLineIds,
   }) async {
     final isAuthenticated = await commerceAPIServiceProvider
         .getAuthenticationService()
@@ -100,6 +102,7 @@ class ProductListFilterUsecase extends BaseUseCase {
     final productLines = getProductLinesFilter(
       requestResult: requestResult,
       listType: productListType,
+      selectedProductLineIds: selectedProductLineIds,
     );
 
     final attributeValues = getAttributeValueFilters(
@@ -245,6 +248,7 @@ class ProductListFilterUsecase extends BaseUseCase {
   List<FilterValueViewModelCollection>? getProductLinesFilter({
     GetProductCollectionResult? requestResult,
     required ProductListType listType,
+    List<String>? selectedProductLineIds,
   }) {
     if (requestResult == null ||
         (requestResult.productLineFacets?.length ?? 0) == 0 ||
@@ -259,7 +263,9 @@ class ProductListFilterUsecase extends BaseUseCase {
                   (productLine) => FilterValueViewModel(
                     id: productLine.id ?? '',
                     title: productLine.name ?? '',
-                    isSelected: false,
+                    isSelected:
+                        selectedProductLineIds?.contains(productLine.id) ??
+                            false,
                     facetType: FacetType.productLineFacet,
                   ),
                 )

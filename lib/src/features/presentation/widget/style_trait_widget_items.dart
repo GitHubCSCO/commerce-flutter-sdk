@@ -66,7 +66,8 @@ Widget buildStyleTraitSelectorWidget(
               selectedValue: selectedStyleValues?[
                   styleTrait.selectedStyleValue?.styleValue?.styleTraitValueId],
               onSelectionChanged: (StyleValueEntity? selection) {
-                onSelectItemCallback(context, selection!);
+                onSelectItemCallback(
+                    context, selection ?? styleTrait.styleValues!.first);
               }),
         ],
       );
@@ -82,7 +83,8 @@ Widget buildStyleTraitSelectorWidget(
               selectedValue: selectedStyleValues?[
                   styleTrait.selectedStyleValue?.styleValue?.styleTraitValueId],
               onSelectionChanged: (StyleValueEntity? selection) {
-                onSelectItemCallback(context, selection!);
+                onSelectItemCallback(
+                    context, selection ?? styleTrait.styleValues!.first);
               }),
         ],
       );
@@ -99,7 +101,8 @@ Widget buildStyleTraitSelectorWidget(
               selectedValue: selectedStyleValues?[
                   styleTrait.selectedStyleValue?.styleValue?.styleTraitValueId],
               onSelectionChanged: (StyleValueEntity? selection) {
-                onSelectItemCallback(context, selection!);
+                onSelectItemCallback(
+                    context, selection ?? styleTrait.styleValues!.first);
               }),
         ],
       );

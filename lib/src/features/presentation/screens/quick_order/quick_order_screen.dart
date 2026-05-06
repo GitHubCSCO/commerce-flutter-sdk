@@ -132,6 +132,14 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   final textEditingController = TextEditingController();
 
   @override
+  void dispose() {
+    autoFocusNode?.dispose();
+    autoFocusNode = null;
+    textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
@@ -180,6 +188,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                 setState(() {
                   isSearching = false;
                 });
+                autoFocusNode?.dispose();
+                autoFocusNode = null;
               } else {
                 setState(() {
                   isSearching = true;
@@ -297,14 +307,15 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                     context
                                         .read<BarcodeScanBloc>()
                                         .add(ScannerProductFoundEvent());
-                                    handleStyleProductAdd(state.productEntity);
+                                    handleStyleProductAdd(state.productEntity,
+                                        state.variantChildren);
                                   } else if (state
                                       is OrderListVmiStyleProductAddState) {
                                     context
                                         .read<BarcodeScanBloc>()
                                         .add(ScannerProductFoundEvent());
-                                    handleVmiStyleProductAdd(
-                                        state.vmiBinEntity);
+                                    handleVmiStyleProductAdd(state.vmiBinEntity,
+                                        state.variantChildren);
                                   } else if (state
                                       is OrderListVmiProductAddState) {
                                     context
@@ -759,7 +770,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         actions: [
           DialogPlainButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
               onDismissAlert?.call();
             },
             child: Text(LocalizationConstants.oK.localized()),
@@ -843,8 +856,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   void _handleAutoCompleteCallback(
       BuildContext context, AutocompleteProduct product) {
-    context.closeKeyboard();
     textEditingController.clear();
+    context.closeKeyboard();
+    context.read<QuickOrderAutoCompleteBloc>().add(QuickOrderTypingEvent(''));
     context.read<QuickOrderAutoCompleteBloc>().add(QuickOrderEndSearchEvent());
     context.read<OrderListBloc>().add(OrderListItemAddEvent(product));
   }
@@ -919,8 +933,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     }
   }
 
-  void handleStyleProductAdd(ProductEntity productEntity) {
+  void handleStyleProductAdd(
+      ProductEntity productEntity, List<ProductEntity> variantChildren) {
     showStyleTraitFilter(productEntity, context,
+        variantChildren: variantChildren,
         onGetProduct: (ProductEntity? selectedVariantChild) {
       context
           .read<OrderListBloc>()
@@ -928,8 +944,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     });
   }
 
-  void handleVmiStyleProductAdd(VmiBinModelEntity vmiBinEntity) {
+  void handleVmiStyleProductAdd(
+      VmiBinModelEntity vmiBinEntity, List<ProductEntity> variantChildren) {
     showStyleTraitFilter(vmiBinEntity.productEntity!, context,
+        variantChildren: variantChildren,
         onGetProduct: (ProductEntity? selectedVariantChild) {
       context.read<OrderListBloc>().add(OrderListAddVmiStyleProductEvent(
           vmiBinEntity, selectedVariantChild!));

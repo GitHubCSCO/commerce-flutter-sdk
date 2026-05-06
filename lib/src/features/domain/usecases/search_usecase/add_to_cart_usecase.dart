@@ -30,7 +30,10 @@ class AddToCartUsecase extends BaseUseCase {
         realtimeSupport == RealTimeSupport.RealTimePricingWithInventoryIncluded;
 
     if (realtimeProductAvailabilityEnabled) {
-      var inventoryProducts = <String>[product.id ?? ''];
+      var effectiveId = (product.isVariantParent == true)
+          ? (product.defaultChildProductId ?? product.id ?? '')
+          : (product.id ?? '');
+      var inventoryProducts = <String>[effectiveId];
 
       var parameters =
           RealTimeInventoryParameters(productIds: inventoryProducts);

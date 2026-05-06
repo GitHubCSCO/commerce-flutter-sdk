@@ -81,6 +81,11 @@ class AddToCartCubit extends Cubit<AddToCartState> {
 
   Future<void> updateAddToCartButton(ProductEntity product) async {
     emit(AddToCartButtonLoading());
+
+    var effectiveProductId = (product.isVariantParent == true)
+        ? (product.defaultChildProductId ?? product.id)
+        : product.id;
+
     var realTimeInventory = await _addToCartUsecase
         .loadRealTimeInventory(ProductEntityMapper.toModel(product));
 
@@ -90,7 +95,7 @@ class AddToCartCubit extends Cubit<AddToCartState> {
 
     if (realTimeInventory != null) {
       var inventory = realTimeInventory.realTimeInventoryResults
-          ?.firstWhereOrNull((o) => o.productId == product.id);
+          ?.firstWhereOrNull((o) => o.productId == effectiveProductId);
       if (inventory?.qtyOnHand != null) {
         product = product.copyWith(qtyOnHand: inventory!.qtyOnHand);
       }

@@ -53,8 +53,10 @@ class Input extends StatefulWidget {
 
 class _InputState extends State<Input> {
   late FocusNode _focusNode;
+  bool _ownsFocusNode = false;
   late ScrollController _scrollController;
-  String? _errorText; // State to hold the error text
+  String? _errorText;
+  VoidCallback? _focusListenerCallback;
 
   void _setState() {
     setState(() {});
@@ -73,16 +75,23 @@ class _InputState extends State<Input> {
 
   @override
   void initState() {
-    _focusNode = widget.autoFocusNode ?? FocusNode();
+    if (widget.autoFocusNode != null) {
+      _focusNode = widget.autoFocusNode!;
+      _ownsFocusNode = false;
+    } else {
+      _focusNode = FocusNode();
+      _ownsFocusNode = true;
+    }
     _focusNode.addListener(_setState);
 
     _scrollController = ScrollController();
     _focusNode.addListener(_resetScroll);
 
     if (widget.focusListener != null) {
-      _focusNode.addListener(() {
+      _focusListenerCallback = () {
         widget.focusListener!(_focusNode.hasFocus);
-      });
+      };
+      _focusNode.addListener(_focusListenerCallback!);
     }
 
     super.initState();
@@ -92,7 +101,12 @@ class _InputState extends State<Input> {
   void dispose() {
     _focusNode.removeListener(_setState);
     _focusNode.removeListener(_resetScroll);
-    _focusNode.dispose();
+    if (_focusListenerCallback != null) {
+      _focusNode.removeListener(_focusListenerCallback!);
+    }
+    if (_ownsFocusNode) {
+      _focusNode.dispose();
+    }
     _scrollController.dispose();
 
     super.dispose();

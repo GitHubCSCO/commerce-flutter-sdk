@@ -79,7 +79,10 @@ class ProductDetailsStyleTraitsUseCase {
       selectedStyleValues?[selectedStyleValue.styleTraitId!] =
           selectedStyleValue;
     } else {
-      selectedStyleValues?[selectedStyletraitId!] = null;
+      var traitId = selectedStyletraitId ?? selectedStyleValue.styleTraitId;
+      if (traitId != null) {
+        selectedStyleValues?[traitId] = null;
+      }
     }
 
     var isStyleSelectionComplete =

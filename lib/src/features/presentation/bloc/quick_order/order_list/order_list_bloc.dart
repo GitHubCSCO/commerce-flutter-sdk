@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
@@ -415,12 +416,22 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           return;
         }
 
+        log('Quick Order _addOrderItem: id=${product.id}, name=${product.name}, '
+            'canAddToCart=${product.canAddToCart}, canConfigure=${product.canConfigure}, '
+            'isConfigured=${product.isConfigured}, isFixedConfiguration=${product.isFixedConfiguration}, '
+            'isVariantParent=${product.isVariantParent}');
+
         var quantity = ((product.minimumOrderQty ?? 0) > 0)
             ? product.minimumOrderQty ?? 0
             : 1;
 
         if (product.isVariantParent == true) {
-          emit(OrderListStyleProductAddState(product));
+          var variantChildren = <ProductEntity>[];
+          if (product.id != null) {
+            variantChildren =
+                await _quickOrderUseCase.getVariantChildren(product.id!);
+          }
+          emit(OrderListStyleProductAddState(product, variantChildren));
         } else if (product.canConfigure == true ||
             (product.isConfigured == true &&
                 product.isFixedConfiguration == false)) {
@@ -484,7 +495,12 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
                 : 1;
 
             if (vmiBin.productEntity?.isVariantParent == true) {
-              emit(OrderListVmiStyleProductAddState(vmiBin));
+              var variantChildren = <ProductEntity>[];
+              if (vmiBin.productEntity?.id != null) {
+                variantChildren = await _quickOrderUseCase
+                    .getVariantChildren(vmiBin.productEntity!.id!);
+              }
+              emit(OrderListVmiStyleProductAddState(vmiBin, variantChildren));
             } else if (vmiBin.productEntity?.canConfigure == true ||
                 (vmiBin.productEntity?.isConfigured == true &&
                     vmiBin.productEntity?.isFixedConfiguration == false)) {
