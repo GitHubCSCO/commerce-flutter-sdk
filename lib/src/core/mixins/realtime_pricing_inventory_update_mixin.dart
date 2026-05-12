@@ -61,7 +61,8 @@ mixin RealtimePricingInventoryUpdateMixin {
       }
     }
 
-    if (!(hideInventory ?? false) & productAvailabilityEnabled &&
+    if (!(hideInventory ?? false) &&
+        productAvailabilityEnabled &&
         realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.NoRealTimePricingAndInventory ||
           realTimeResult == RealTimeSupport.RealTimePricingAndInventory ||

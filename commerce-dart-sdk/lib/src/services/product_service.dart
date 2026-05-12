@@ -108,7 +108,7 @@ class ProductService extends ServiceBase implements IProductService {
       String productId,
       {VariantChildrenQueryParameters? parameters}) async {
     var url = Uri.parse(
-        '${CommerceAPIConstants.productsUrl}/$productId/variantchildren');
+        '${CommerceAPIConstants.productsUrl}/$productId/variantChildren');
     if (parameters != null) {
       url = url.replace(queryParameters: parameters.toJson());
     }
@@ -136,7 +136,7 @@ class ProductService extends ServiceBase implements IProductService {
       String productId,
       {RelatedProductsQueryParameters? parameters}) async {
     var url = Uri.parse(
-        '${CommerceAPIConstants.productsUrl}/$productId/relatedproducts');
+        '${CommerceAPIConstants.productsUrl}/$productId/relatedProducts');
     if (parameters != null) {
       url = url.replace(queryParameters: parameters.toJson());
     }
@@ -164,7 +164,7 @@ class ProductService extends ServiceBase implements IProductService {
       String productId,
       {AlsoPurchasedQueryParameters? parameters}) async {
     var url = Uri.parse(
-        '${CommerceAPIConstants.productsUrl}/$productId/alsopurchased');
+        '${CommerceAPIConstants.productsUrl}/$productId/alsoPurchased');
     if (parameters != null) {
       url = url.replace(queryParameters: parameters.toJson());
     }

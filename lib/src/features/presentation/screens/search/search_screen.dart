@@ -451,8 +451,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
     if (product.styleParentId != null) {
       AppRoute.productDetails.navigateBackStack(context,
           pathParameters: {"productId": product.styleParentId.toString()},
-          extra: ProductEntity(
-              id: product.id, styleParentId: product.styleParentId));
+          extra: ProductEntity(id: product.id));
     } else {
       AppRoute.productDetails.navigateBackStack(context,
           pathParameters: {"productId": product.id.toString()},

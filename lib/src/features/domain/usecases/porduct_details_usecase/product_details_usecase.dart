@@ -558,7 +558,7 @@ class ProductDetailsUseCase extends BaseUseCase {
           .createStyleTraitNullValue(styleTrait);
       List<ProductDetailStyleValue> styleValues = [styleTraitNullValue];
 
-      for (var styleValue in styleTrait.styleValues!) {
+      for (var styleValue in styleTrait.traitValues!) {
         styleValue = _productDetailsStyleTraitsUseCase
             .updateStyleValueAvailability(styleValue, availableStyleValues);
         var styleValueEntity = _productDetailsStyleTraitsUseCase

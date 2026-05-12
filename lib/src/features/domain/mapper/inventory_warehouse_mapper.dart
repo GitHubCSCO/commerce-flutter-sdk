@@ -7,9 +7,10 @@ class InventoryWarehouseEntityMapper {
         messageType: model.messageType,
         message: model.message,
         requiresRealTimeInventory: model.requiresRealTimeInventory,
+        id: model.id,
         name: model.name,
         description: model.description,
-        qty: model.qty,
+        qtyAvailable: model.qtyAvailable,
       );
 
   InventoryWarehouse toModel(InventoryWarehouseEntity entity) =>
@@ -17,8 +18,9 @@ class InventoryWarehouseEntityMapper {
         // messageType: entity.messageType,
         // message: entity.message,
         // requiresRealTimeInventory: entity.requiresRealTimeInventory,
+        id: entity.id,
         name: entity.name,
         description: entity.description,
-        qty: entity.qty,
+        qtyAvailable: entity.qtyAvailable,
       );
 }

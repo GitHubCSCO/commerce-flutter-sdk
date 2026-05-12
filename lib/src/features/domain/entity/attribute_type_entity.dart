@@ -11,6 +11,8 @@ class AttributeTypeEntity extends Equatable {
   final String? label;
   final bool? isFilter;
   final bool? isComparable;
+  final bool? includeOnProduct;
+  final bool? isSearchable;
   final bool? isActive;
   final int? sortOrder;
   final List<AttributeValueEntity>? attributeValues;
@@ -20,9 +22,11 @@ class AttributeTypeEntity extends Equatable {
     this.attributeValueFacets,
     this.attributeValues,
     this.id,
+    this.includeOnProduct,
     this.isActive,
     this.isComparable,
     this.isFilter,
+    this.isSearchable,
     this.label,
     this.name,
     this.nameDisplay,
@@ -40,6 +44,8 @@ class AttributeTypeEntity extends Equatable {
     String? label,
     bool? isFilter,
     bool? isComparable,
+    bool? includeOnProduct,
+    bool? isSearchable,
     bool? isActive,
     int? sortOrder,
     List<AttributeValueEntity>? attributeValues,
@@ -54,6 +60,8 @@ class AttributeTypeEntity extends Equatable {
       label: label ?? this.label,
       isFilter: isFilter ?? this.isFilter,
       isComparable: isComparable ?? this.isComparable,
+      includeOnProduct: includeOnProduct ?? this.includeOnProduct,
+      isSearchable: isSearchable ?? this.isSearchable,
       isActive: isActive ?? this.isActive,
       sortOrder: sortOrder ?? this.sortOrder,
       attributeValues: attributeValues ?? this.attributeValues,

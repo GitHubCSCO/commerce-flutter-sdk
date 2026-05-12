@@ -16,9 +16,11 @@ AttributeType _$AttributeTypeFromJson(Map<String, dynamic> json) =>
           ?.map((e) => AttributeValue.fromJson(e as Map<String, dynamic>))
           .toList(),
       id: json['id'] as String?,
+      includeOnProduct: json['includeOnProduct'] as bool?,
       isActive: json['isActive'] as bool?,
       isComparable: json['isComparable'] as bool?,
       isFilter: json['isFilter'] as bool?,
+      isSearchable: json['isSearchable'] as bool?,
       label: json['label'] as String?,
       name: json['name'] as String?,
       nameDisplay: json['nameDisplay'] as String?,
@@ -39,6 +41,8 @@ Map<String, dynamic> _$AttributeTypeToJson(AttributeType instance) =>
       if (instance.label case final value?) 'label': value,
       if (instance.isFilter case final value?) 'isFilter': value,
       if (instance.isComparable case final value?) 'isComparable': value,
+      if (instance.includeOnProduct case final value?) 'includeOnProduct': value,
+      if (instance.isSearchable case final value?) 'isSearchable': value,
       if (instance.isActive case final value?) 'isActive': value,
       if (instance.sortOrder case final value?) 'sortOrder': value,
       if (instance.attributeValues?.map((e) => e.toJson()).toList()

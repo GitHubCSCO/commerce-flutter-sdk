@@ -206,7 +206,6 @@ void main() {
       expect(entity.pageTitle, equals('Product Page Title'));
 
       // Assert - V1 fields set to null by mapper
-      expect(entity.styleParentId, isNull);
       expect(entity.vendorNumber, isNull);
       expect(entity.currencySymbol, isNull);
       expect(entity.selectedUnitOfMeasure, isNull);
@@ -395,7 +394,7 @@ void main() {
           InventoryWarehouse(
             name: 'Main Warehouse',
             description: 'Primary storage',
-            qty: 100,
+            qtyAvailable: 100,
           ),
         ],
         unitOfMeasures: [
@@ -483,7 +482,7 @@ void main() {
         ],
         specifications: null,
         warehouses: [
-          InventoryWarehouse(name: 'Warehouse1', qty: 10),
+          InventoryWarehouse(name: 'Warehouse1', qtyAvailable: 10),
         ],
         unitOfMeasures: null,
         images: [],
@@ -760,7 +759,7 @@ void main() {
           Specification(id: 'rt_spec1', name: 'Weight', value: '1.5kg'),
         ],
         warehouses: [
-          InventoryWarehouse(name: 'RT Warehouse', qty: 25),
+          InventoryWarehouse(name: 'RT Warehouse', qtyAvailable: 25),
         ],
         unitOfMeasures: [
           ProductUnitOfMeasure(unitOfMeasure: 'PCS', isDefault: true),

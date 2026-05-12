@@ -1,17 +1,19 @@
 import 'package:commerce_flutter_sdk/src/features/domain/entity/availability_entity.dart';
 
 class InventoryWarehouseEntity extends AvailabilityEntity {
+  final String? id;
   final String? name;
   final String? description;
-  final num? qty;
+  final num? qtyAvailable;
 
   const InventoryWarehouseEntity({
     final int? messageType,
     final String? message,
     final bool? requiresRealTimeInventory,
+    this.id,
     this.description,
     this.name,
-    this.qty,
+    this.qtyAvailable,
   }) : super(
             message: message,
             messageType: messageType,
@@ -22,18 +24,20 @@ class InventoryWarehouseEntity extends AvailabilityEntity {
     int? messageType,
     String? message,
     bool? requiresRealTimeInventory,
+    String? id,
     String? name,
     String? description,
-    num? qty,
+    num? qtyAvailable,
   }) {
     return InventoryWarehouseEntity(
       messageType: messageType ?? this.messageType,
       message: message ?? this.message,
       requiresRealTimeInventory:
           requiresRealTimeInventory ?? this.requiresRealTimeInventory,
+      id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      qty: qty ?? this.qty,
+      qtyAvailable: qtyAvailable ?? this.qtyAvailable,
     );
   }
 }

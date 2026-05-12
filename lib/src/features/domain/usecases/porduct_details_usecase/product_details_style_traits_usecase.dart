@@ -27,7 +27,7 @@ class ProductDetailsStyleTraitsUseCase {
     Map<String, List<StyleValueEntity>?> availableStyleValues = {};
     if (product.isVariantParent == true && product.variantTraits != null) {
       for (var s in product.variantTraits!) {
-        availableStyleValues[s.styleTraitId!] = s.styleValues;
+        availableStyleValues[s.id!] = s.traitValues;
       }
     }
     return availableStyleValues;
@@ -57,7 +57,7 @@ class ProductDetailsStyleTraitsUseCase {
 
     if (selectedStyleValues == null || selectedStyleValues.isEmpty) {
       product.variantTraits?.forEach((s) {
-        selectedStyleValues?[s.styleTraitId!] = null;
+        selectedStyleValues?[s.id!] = null;
       });
     }
 
@@ -160,10 +160,10 @@ class ProductDetailsStyleTraitsUseCase {
       StyleTraitEntity styleTrait,
       Map<String, StyleValueEntity?>? selectedStyleValues,
       ProductDetailStyleValue styleTraitNullValue) {
-    return selectedStyleValues?[styleTrait.styleTraitId] == null
+    return selectedStyleValues?[styleTrait.id] == null
         ? getDefaultStyleTrait(styleValues, styleTraitNullValue)
         : styleValues.firstWhere((x) =>
-            selectedStyleValues?[styleTrait.styleTraitId]?.styleTraitValueId ==
+            selectedStyleValues?[styleTrait.id]?.styleTraitValueId ==
             x.styleValue?.styleTraitValueId);
   }
 
@@ -181,7 +181,7 @@ class ProductDetailsStyleTraitsUseCase {
       List<ProductDetailStyleValue> styleValues,
       ProductDetailStyleValue selectedStyle) {
     return ProductDetailStyleTrait(
-        styleTraitId: styleTrait.styleTraitId,
+        styleTraitId: styleTrait.id,
         styleTraitName: styleTrait.nameDisplay,
         styleValues: styleValues,
         selectedStyleValue: selectedStyle,
@@ -196,8 +196,8 @@ class ProductDetailsStyleTraitsUseCase {
       ProductEntity product,
       List<ProductEntity> variantChildren) {
     for (var s in product.variantTraits!) {
-      availableStyleValues[s.styleTraitId!] =
-          List<StyleValueEntity>.from(s.styleValues!);
+      availableStyleValues[s.id!] =
+          List<StyleValueEntity>.from(s.traitValues!);
     }
 
     if (selectedStyleValues != null) {

@@ -431,7 +431,12 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
             variantChildren =
                 await _quickOrderUseCase.getVariantChildren(product.id!);
           }
-          emit(OrderListStyleProductAddState(product, variantChildren));
+          if (variantChildren.isEmpty) {
+            emit(OrderListAddFailedState(
+                LocalizationConstants.canNotAddToCart.localized()));
+          } else {
+            emit(OrderListStyleProductAddState(product, variantChildren));
+          }
         } else if (product.canConfigure == true ||
             (product.isConfigured == true &&
                 product.isFixedConfiguration == false)) {

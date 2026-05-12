@@ -101,11 +101,8 @@ class ProductEntity extends Equatable {
   final bool? canShowUnitOfMeasure;
   final bool? canEnterQuantity;
   final bool? canConfigure;
-  final bool? isStyleProductParent;
-  final String? styleParentId;
   final bool? requiresRealTimeInventory;
   final num? numberInCart;
-  final num? qtyOrdered;
   AvailabilityEntity? availability;
   final List<AttributeTypeEntity>? attributeTypes;
   final List<DocumentEntity>? documents;
@@ -227,11 +224,8 @@ class ProductEntity extends Equatable {
     this.canShowUnitOfMeasure,
     this.canEnterQuantity,
     this.canConfigure,
-    this.isStyleProductParent,
-    this.styleParentId,
     this.requiresRealTimeInventory,
     this.numberInCart,
-    this.qtyOrdered,
     this.availability,
     this.attributeTypes,
     this.documents,
@@ -353,11 +347,8 @@ class ProductEntity extends Equatable {
     bool? canShowUnitOfMeasure,
     bool? canEnterQuantity,
     bool? canConfigure,
-    bool? isStyleProductParent,
-    String? styleParentId,
     bool? requiresRealTimeInventory,
     num? numberInCart,
-    num? qtyOrdered,
     AvailabilityEntity? availability,
     List<AttributeTypeEntity>? attributeTypes,
     List<DocumentEntity>? documents,
@@ -487,12 +478,9 @@ class ProductEntity extends Equatable {
       canShowUnitOfMeasure: canShowUnitOfMeasure ?? this.canShowUnitOfMeasure,
       canEnterQuantity: canEnterQuantity ?? this.canEnterQuantity,
       canConfigure: canConfigure ?? this.canConfigure,
-      isStyleProductParent: isStyleProductParent ?? this.isStyleProductParent,
-      styleParentId: styleParentId ?? this.styleParentId,
       requiresRealTimeInventory:
           requiresRealTimeInventory ?? this.requiresRealTimeInventory,
       numberInCart: numberInCart ?? this.numberInCart,
-      qtyOrdered: qtyOrdered ?? this.qtyOrdered,
       availability: availability ?? this.availability,
       attributeTypes: attributeTypes ?? this.attributeTypes,
       documents: documents ?? this.documents,

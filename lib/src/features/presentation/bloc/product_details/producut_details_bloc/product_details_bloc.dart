@@ -45,7 +45,7 @@ class ProductDetailsBloc
     var cartLineOfProduct = AddCartLine(
       productId: productDetailDataEntity.selectedVariantChild?.id ??
           productDetailDataEntity.product?.id,
-      qtyOrdered: productDetailDataEntity.product?.qtyOrdered,
+      qtyOrdered: null,
       unitOfMeasure: productDetailDataEntity.product?.unitOfMeasure,
     );
     return [cartLineOfProduct];

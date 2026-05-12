@@ -52,6 +52,8 @@ class ProductListFilterUsecase extends BaseUseCase {
           isFilteringByPreviouslyPurchased: previouslyPurchased ?? false,
           isFilteringByStockedItems: selectedStockedItems ?? false,
           selectedProductLineIds: selectedProductLineIds,
+          selectedBrandIds: selectedBrandIds,
+          selectedCategoryId: selectedCategoryId,
         );
 
         return availableFiltersCollection;
@@ -68,6 +70,8 @@ class ProductListFilterUsecase extends BaseUseCase {
     bool isFilteringByPreviouslyPurchased = false,
     bool isFilteringByStockedItems = false,
     List<String>? selectedProductLineIds,
+    List<String>? selectedBrandIds,
+    String? selectedCategoryId,
   }) async {
     final isAuthenticated = await commerceAPIServiceProvider
         .getAuthenticationService()
@@ -92,11 +96,13 @@ class ProductListFilterUsecase extends BaseUseCase {
     final categories = getCategoriesFilters(
       requestResult: requestResult,
       listType: productListType,
+      selectedCategoryId: selectedCategoryId,
     );
 
     final brands = getBrandsFilter(
       requestResult: requestResult,
       listType: productListType,
+      selectedBrandIds: selectedBrandIds,
     );
 
     final productLines = getProductLinesFilter(
@@ -177,6 +183,7 @@ class ProductListFilterUsecase extends BaseUseCase {
   List<FilterValueViewModelCollection>? getCategoriesFilters({
     GetProductCollectionResult? requestResult,
     required ProductListType listType,
+    String? selectedCategoryId,
   }) {
     if (requestResult == null ||
         (requestResult.categoryFacets?.length ?? 0) == 0) {
@@ -198,7 +205,7 @@ class ProductListFilterUsecase extends BaseUseCase {
                   (category) => FilterValueViewModel(
                     id: category.categoryId ?? '',
                     title: category.shortDescription ?? '',
-                    isSelected: category.selected ?? false,
+                    isSelected: selectedCategoryId == category.categoryId,
                     facetType: FacetType.categoryFacet,
                   ),
                 )
@@ -212,6 +219,7 @@ class ProductListFilterUsecase extends BaseUseCase {
   List<FilterValueViewModelCollection>? getBrandsFilter({
     GetProductCollectionResult? requestResult,
     required ProductListType listType,
+    List<String>? selectedBrandIds,
   }) {
     if (requestResult == null ||
         (requestResult.brandFacets?.length ?? 0) == 0) {
@@ -234,7 +242,7 @@ class ProductListFilterUsecase extends BaseUseCase {
                   (brand) => FilterValueViewModel(
                     id: brand.id ?? '',
                     title: brand.name ?? '',
-                    isSelected: brand.selected ?? false,
+                    isSelected: selectedBrandIds?.contains(brand.id) ?? false,
                     facetType: FacetType.brandFacet,
                   ),
                 )

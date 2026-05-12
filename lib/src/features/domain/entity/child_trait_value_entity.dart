@@ -15,8 +15,7 @@ class ChildTraitValueEntity extends Equatable {
   });
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [id, styleTraitId, value, valueDisplay];
 
   ChildTraitValueEntity copyWith({
     String? id,

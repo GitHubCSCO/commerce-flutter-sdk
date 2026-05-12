@@ -17,7 +17,7 @@ void main() {
       final inventoryWarehouse = InventoryWarehouse(
         name: 'Main Warehouse',
         description: 'Primary distribution center',
-        qty: 150,
+        qtyAvailable: 150,
       )
         ..messageType = 1
         ..message = 'In Stock'
@@ -32,7 +32,7 @@ void main() {
       expect(result.requiresRealTimeInventory, equals(true));
       expect(result.name, equals('Main Warehouse'));
       expect(result.description, equals('Primary distribution center'));
-      expect(result.qty, equals(150));
+      expect(result.qtyAvailable, equals(150));
     });
 
     test('should correctly map InventoryWarehouseEntity to InventoryWarehouse',
@@ -44,7 +44,7 @@ void main() {
         requiresRealTimeInventory: false,
         name: 'Secondary Warehouse',
         description: 'Backup storage facility',
-        qty: 25,
+        qtyAvailable: 25,
       );
 
       // Act
@@ -60,7 +60,7 @@ void main() {
           isNull); // Bug: should be false but is not mapped
       expect(result.name, equals('Secondary Warehouse'));
       expect(result.description, equals('Backup storage facility'));
-      expect(result.qty, equals(25));
+      expect(result.qtyAvailable, equals(25));
     });
 
     test('should handle null values in InventoryWarehouse correctly', () {
@@ -68,7 +68,7 @@ void main() {
       final inventoryWarehouse = InventoryWarehouse(
         name: null,
         description: null,
-        qty: null,
+        qtyAvailable: null,
       )
         ..messageType = null
         ..message = null
@@ -83,7 +83,7 @@ void main() {
       expect(result.requiresRealTimeInventory, isNull);
       expect(result.name, isNull);
       expect(result.description, isNull);
-      expect(result.qty, isNull);
+      expect(result.qtyAvailable, isNull);
     });
 
     test('should handle null values in InventoryWarehouseEntity correctly', () {
@@ -94,7 +94,7 @@ void main() {
         requiresRealTimeInventory: null,
         name: null,
         description: null,
-        qty: null,
+        qtyAvailable: null,
       );
 
       // Act
@@ -106,7 +106,7 @@ void main() {
       expect(result.requiresRealTimeInventory, isNull);
       expect(result.name, isNull);
       expect(result.description, isNull);
-      expect(result.qty, isNull);
+      expect(result.qtyAvailable, isNull);
     });
 
     test('should handle different quantity types correctly', () {
@@ -114,7 +114,7 @@ void main() {
       final inventoryWarehouse = InventoryWarehouse(
         name: 'Warehouse A',
         description: 'Test warehouse',
-        qty: 42.5, // decimal quantity
+        qtyAvailable: 42.5, // decimal quantity
       )
         ..messageType = 1
         ..message = 'Available'
@@ -124,7 +124,7 @@ void main() {
       final result = mapper.toEntity(inventoryWarehouse);
 
       // Assert
-      expect(result.qty, equals(42.5));
+      expect(result.qtyAvailable, equals(42.5));
       expect(result.name, equals('Warehouse A'));
       expect(result.description, equals('Test warehouse'));
       expect(result.messageType, equals(1));
@@ -137,7 +137,7 @@ void main() {
       final inventoryWarehouse = InventoryWarehouse(
         name: 'Empty Warehouse',
         description: 'Currently empty',
-        qty: 0,
+        qtyAvailable: 0,
       )
         ..messageType = 2
         ..message = 'Out of Stock'
@@ -147,7 +147,7 @@ void main() {
       final result = mapper.toEntity(inventoryWarehouse);
 
       // Assert
-      expect(result.qty, equals(0));
+      expect(result.qtyAvailable, equals(0));
       expect(result.name, equals('Empty Warehouse'));
       expect(result.description, equals('Currently empty'));
       expect(result.messageType, equals(2));
@@ -160,7 +160,7 @@ void main() {
       final inventoryWarehouse = InventoryWarehouse(
         name: 'Backordered Warehouse',
         description: 'Items on backorder',
-        qty: -10,
+        qtyAvailable: -10,
       )
         ..messageType = 3
         ..message = 'Backordered'
@@ -170,7 +170,7 @@ void main() {
       final result = mapper.toEntity(inventoryWarehouse);
 
       // Assert
-      expect(result.qty, equals(-10));
+      expect(result.qtyAvailable, equals(-10));
       expect(result.name, equals('Backordered Warehouse'));
       expect(result.description, equals('Items on backorder'));
       expect(result.messageType, equals(3));
@@ -183,7 +183,7 @@ void main() {
       final inventoryWarehouse = InventoryWarehouse(
         name: '',
         description: '',
-        qty: 100,
+        qtyAvailable: 100,
       )
         ..messageType = 1
         ..message = ''
@@ -196,7 +196,7 @@ void main() {
       expect(result.name, equals(''));
       expect(result.description, equals(''));
       expect(result.message, equals(''));
-      expect(result.qty, equals(100));
+      expect(result.qtyAvailable, equals(100));
       expect(result.messageType, equals(1));
       expect(result.requiresRealTimeInventory, equals(true));
     });
@@ -206,7 +206,7 @@ void main() {
       final inventoryWarehouse = InventoryWarehouse(
         name: 'Large Warehouse',
         description: 'High capacity storage',
-        qty: 999999.99,
+        qtyAvailable: 999999.99,
       )
         ..messageType = 1
         ..message = 'High Stock'
@@ -216,7 +216,7 @@ void main() {
       final result = mapper.toEntity(inventoryWarehouse);
 
       // Assert
-      expect(result.qty, equals(999999.99));
+      expect(result.qtyAvailable, equals(999999.99));
       expect(result.name, equals('Large Warehouse'));
       expect(result.description, equals('High capacity storage'));
       expect(result.messageType, equals(1));
@@ -232,7 +232,7 @@ void main() {
         requiresRealTimeInventory: true,
         name: 'Test Warehouse',
         description: 'Test Description',
-        qty: 50,
+        qtyAvailable: 50,
       );
 
       // Act & Assert
@@ -242,7 +242,7 @@ void main() {
       expect(inventoryWarehouseEntity.requiresRealTimeInventory, equals(true));
       expect(inventoryWarehouseEntity.name, equals('Test Warehouse'));
       expect(inventoryWarehouseEntity.description, equals('Test Description'));
-      expect(inventoryWarehouseEntity.qty, equals(50));
+      expect(inventoryWarehouseEntity.qtyAvailable, equals(50));
     });
 
     test('should handle copyWith functionality correctly', () {
@@ -253,14 +253,14 @@ void main() {
         requiresRealTimeInventory: true,
         name: 'Original Name',
         description: 'Original Description',
-        qty: 100,
+        qtyAvailable: 100,
       );
 
       // Act
       final copiedEntity = originalEntity.copyWith(
         messageType: 2,
         message: 'Updated Message',
-        qty: 200,
+        qtyAvailable: 200,
       );
 
       // Assert
@@ -270,7 +270,7 @@ void main() {
       expect(copiedEntity.name, equals('Original Name')); // unchanged
       expect(copiedEntity.description,
           equals('Original Description')); // unchanged
-      expect(copiedEntity.qty, equals(200));
+      expect(copiedEntity.qtyAvailable, equals(200));
     });
 
     test(
@@ -280,7 +280,7 @@ void main() {
       final originalWarehouse = InventoryWarehouse(
         name: 'Test Warehouse',
         description: 'Test Description',
-        qty: 75,
+        qtyAvailable: 75,
       )
         ..messageType = 1
         ..message = 'In Stock'
@@ -294,7 +294,7 @@ void main() {
       // These fields are preserved
       expect(convertedBack.name, equals(originalWarehouse.name));
       expect(convertedBack.description, equals(originalWarehouse.description));
-      expect(convertedBack.qty, equals(originalWarehouse.qty));
+      expect(convertedBack.qtyAvailable, equals(originalWarehouse.qtyAvailable));
 
       // These fields are lost due to the bug in toModel method (commented out)
       expect(convertedBack.messageType, isNull); // Bug: should be 1

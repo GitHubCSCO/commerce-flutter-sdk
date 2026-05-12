@@ -46,7 +46,7 @@ class BaseProductsQueryParameters extends BaseQueryParameters {
   List<String>? topSellersCategoryIds;
   List<String>? attributeValueIds;
 
-  List<String>? priceFilters;
+  List<int>? priceFilters;
   List<String>? names;
   List<String>? extendedNames;
 

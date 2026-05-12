@@ -62,7 +62,7 @@ mixin ProductListItemMixIn {
 
     if (!(product.isConfigured ?? false) ||
         (product.isFixedConfiguration ?? false) &&
-            !(product.isStyleProductParent ?? false)) {
+            !(product.isVariantParent ?? false)) {
       if (product.availability != null &&
           !(product.availability?.requiresRealTimeInventory ?? false) &&
           (product.availability?.messageType ?? 0) != 0) {

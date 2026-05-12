@@ -9,9 +9,11 @@ class AttributeType {
     this.attributeValueFacets,
     this.attributeValues,
     this.id,
+    this.includeOnProduct,
     this.isActive,
     this.isComparable,
     this.isFilter,
+    this.isSearchable,
     this.label,
     this.name,
     this.nameDisplay,
@@ -37,6 +39,10 @@ class AttributeType {
   bool? isFilter;
 
   bool? isComparable;
+
+  bool? includeOnProduct;
+
+  bool? isSearchable;
 
   bool? isActive;
 

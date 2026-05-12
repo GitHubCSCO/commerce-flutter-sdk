@@ -8,9 +8,10 @@ part of 'inventory_warehouse.dart';
 
 InventoryWarehouse _$InventoryWarehouseFromJson(Map<String, dynamic> json) =>
     InventoryWarehouse(
+      id: json['id'] as String?,
       description: json['description'] as String?,
       name: json['name'] as String?,
-      qty: json['qty'] as num?,
+      qtyAvailable: json['qtyAvailable'] as num?,
     )
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
@@ -28,7 +29,8 @@ Map<String, dynamic> _$InventoryWarehouseToJson(InventoryWarehouse instance) =>
       if (instance.message case final value?) 'message': value,
       if (instance.requiresRealTimeInventory case final value?)
         'requiresRealTimeInventory': value,
+      if (instance.id case final value?) 'id': value,
       if (instance.name case final value?) 'name': value,
       if (instance.description case final value?) 'description': value,
-      if (instance.qty case final value?) 'qty': value,
+      if (instance.qtyAvailable case final value?) 'qtyAvailable': value,
     };

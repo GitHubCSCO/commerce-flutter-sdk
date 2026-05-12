@@ -82,9 +82,6 @@ class OrderItemPricingInventoryCubit
         !(product.isVariantParent ?? false)) {
       showInventoryAvailability = productAvailabilityEnabled;
     }
-    showInventoryAvailability = product.availability?.message != null &&
-        product.availability!.message!.isNotEmpty &&
-        product.availability!.messageType != 0;
 
     quickOrderItemEntity.showInventoryAvailability = showInventoryAvailability;
 

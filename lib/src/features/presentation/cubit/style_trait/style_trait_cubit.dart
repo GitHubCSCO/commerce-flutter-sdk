@@ -50,7 +50,7 @@ class StyleTraitCubit extends Cubit<StyleTraitState> {
           _styleTraitsUseCase.createStyleTraitNullValue(styleTrait);
       List<ProductDetailStyleValue> styleValues = [styleTraitNullValue];
 
-      for (var styleValue in styleTrait.styleValues!) {
+      for (var styleValue in styleTrait.traitValues!) {
         styleValue = _styleTraitsUseCase.updateStyleValueAvailability(
             styleValue, availableStyleValues);
         var styleValueEntity = _styleTraitsUseCase.createStyleValueEntity(

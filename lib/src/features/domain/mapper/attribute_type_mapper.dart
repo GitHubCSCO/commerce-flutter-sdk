@@ -15,6 +15,8 @@ class AttributeTypeEntityMapper {
         label: model.label,
         isFilter: model.isFilter,
         isComparable: model.isComparable,
+        includeOnProduct: model.includeOnProduct,
+        isSearchable: model.isSearchable,
         isActive: model.isActive,
         sortOrder: model.sortOrder,
         attributeValues: model.attributeValues
@@ -33,6 +35,8 @@ class AttributeTypeEntityMapper {
         label: entity.label,
         isFilter: entity.isFilter,
         isComparable: entity.isComparable,
+        includeOnProduct: entity.includeOnProduct,
+        isSearchable: entity.isSearchable,
         isActive: entity.isActive,
         sortOrder: entity.sortOrder,
         attributeValues: entity.attributeValues

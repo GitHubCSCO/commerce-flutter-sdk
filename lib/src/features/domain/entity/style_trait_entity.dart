@@ -3,12 +3,10 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_enti
 import 'package:equatable/equatable.dart';
 
 class StyleTraitEntity extends Equatable {
-  final String? styleTraitId;
   final String? name;
   final String? nameDisplay;
   final String? unselectedValue;
   final int? sortOrder;
-  final List<StyleValueEntity>? styleValues;
   final String? id;
   final List<StyleValueEntity>? traitValues;
   final String? displayType;
@@ -16,12 +14,10 @@ class StyleTraitEntity extends Equatable {
   final bool? displayTextWithSwatch;
 
   const StyleTraitEntity({
-    this.styleTraitId,
     this.name,
     this.nameDisplay,
     this.unselectedValue,
     this.sortOrder,
-    this.styleValues,
     this.id,
     this.traitValues,
     this.displayType,
@@ -30,12 +26,10 @@ class StyleTraitEntity extends Equatable {
   });
 
   StyleTraitEntity copyWith({
-    String? styleTraitId,
     String? name,
     String? nameDisplay,
     String? unselectedValue,
     int? sortOrder,
-    List<StyleValueEntity>? styleValues,
     String? id,
     List<StyleValueEntity>? traitValues,
     String? displayType,
@@ -43,12 +37,10 @@ class StyleTraitEntity extends Equatable {
     bool? displayTextWithSwatch,
   }) {
     return StyleTraitEntity(
-      styleTraitId: styleTraitId ?? this.styleTraitId,
       name: name ?? this.name,
       nameDisplay: nameDisplay ?? this.nameDisplay,
       unselectedValue: unselectedValue ?? this.unselectedValue,
       sortOrder: sortOrder ?? this.sortOrder,
-      styleValues: styleValues ?? this.styleValues,
       id: id ?? this.id,
       traitValues: traitValues ?? this.traitValues,
       displayType: displayType ?? this.displayType,
@@ -60,6 +52,15 @@ class StyleTraitEntity extends Equatable {
   }
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [
+        name,
+        nameDisplay,
+        unselectedValue,
+        sortOrder,
+        id,
+        traitValues,
+        displayType,
+        numberOfSwatchesVisible,
+        displayTextWithSwatch,
+      ];
 }
