@@ -442,7 +442,7 @@ when(() => mockLoginUsecase.login(any(), any()))
 #### Client Configuration
 
 ```dart
-void initCommerceSDK() {
+void init() {
   ClientConfig.hostUrl = null;
   ClientConfig.clientId = ProdConfigConstants.clientId;
   ClientConfig.clientSecret = ProdConfigConstants.clientSecret;

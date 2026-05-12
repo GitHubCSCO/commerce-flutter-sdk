@@ -304,11 +304,15 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       List<AddCartLine> products = [];
 
       for (var quickOrderItemEntity in quickOrderItemList) {
+        final selectedUom =
+            quickOrderItemEntity.selectedUnitOfMeasure?.unitOfMeasure ??
+                quickOrderItemEntity.productEntity.selectedUnitOfMeasure ??
+                quickOrderItemEntity.productEntity.unitOfMeasure;
+
         products.add(AddCartLine(
           productId: quickOrderItemEntity.productEntity.id,
           qtyOrdered: quickOrderItemEntity.quantityOrdered,
-          unitOfMeasure:
-              quickOrderItemEntity.productEntity.selectedUnitOfMeasureDisplay,
+          unitOfMeasure: selectedUom,
         ));
       }
 

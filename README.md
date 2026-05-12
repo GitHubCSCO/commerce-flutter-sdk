@@ -38,10 +38,10 @@ The app verifies that the `domain` string is set in the `base_config.json`(locat
 
 ## Change client id
 
-- To change or update clientId and clientSecret checkout `main.dart` initCommerceSDK.
+- To change or update clientId and clientSecret checkout `commerce_sdk_initializer.dart` init.
 
 ```dart
-void initCommerceSDK() {
+void init() {
   ClientConfig.hostUrl = null;
   ClientConfig.clientId = ProdConfigConstants.clientId;
   ClientConfig.clientSecret = ProdConfigConstants.clientSecret;

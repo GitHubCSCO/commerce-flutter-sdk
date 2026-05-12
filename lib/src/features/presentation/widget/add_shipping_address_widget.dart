@@ -138,7 +138,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
     list.add(_createInputField(LocalizationConstants.companyName.localized(),
         LocalizationConstants.companyName.localized(), companyNameController));
 
-    list.add(_addCountryWidget(context));
+    list.add(_addCountryWidget(context, siteMessages));
 
     list.add(_createInputField(
         LocalizationConstants.addressOne.localized(),
@@ -177,7 +177,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
       return null;
     }));
 
-    list.add(_addStateWidget(context));
+    list.add(_addStateWidget(context, siteMessages));
 
     list.add(_createInputField(LocalizationConstants.email.localized(),
         LocalizationConstants.email.localized(), emailController,
@@ -336,98 +336,181 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
     return -1;
   }
 
-  Widget _addCountryWidget(BuildContext context) {
+  Widget _addCountryWidget(
+      BuildContext context, Map<String, String> siteMessages) {
     return BlocBuilder<AddShippingAddressCubit, AddShippingAddressState>(
-        buildWhen: (previous, current) {
-      if (current is AddShippingAddressLoadedState ||
-          current is AddShippingAddressInitialState) {
-        return true;
-      }
+      buildWhen: (previous, current) {
+        if (current is AddShippingAddressLoadedState ||
+            current is AddShippingAddressInitialState) {
+          return true;
+        }
 
-      return false;
-    }, builder: (_, state) {
-      if (state is AddShippingAddressLoadedState) {
-        return Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              flex: 1,
-              child: Text(
-                LocalizationConstants.selectCountry.localized(),
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Row(
+        return false;
+      },
+      builder: (_, state) {
+        if (state is AddShippingAddressLoadedState) {
+          return FormField<Country>(
+            validator: (_) {
+              final selected =
+                  context.read<AddShippingAddressCubit>().selectedCountry;
+
+              if (selected == null) {
+                return siteMessages[
+                    SiteMessageConstants.nameAddressInfoCountryRequired];
+              }
+              return null;
+            },
+            builder: (FormFieldState<Country> fieldState) {
+              return Column(
                 children: [
-                  Expanded(
-                      child: ListPickerWidget(
-                          items: state.countries,
-                          selectedIndex: _getIndexOfCountry(
-                              state.countries,
-                              context
-                                  .read<AddShippingAddressCubit>()
-                                  .selectedCountry),
-                          descriptionText:
-                              LocalizationConstants.country.localized(),
-                          callback: _onCountrySelect)),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          LocalizationConstants.selectCountry.localized(),
+                          textAlign: TextAlign.start,
+                          style: OptiTextStyles.body,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ListPickerWidget(
+                                items: state.countries,
+                                selectedIndex: _getIndexOfCountry(
+                                    state.countries,
+                                    context
+                                        .read<AddShippingAddressCubit>()
+                                        .selectedCountry),
+                                descriptionText:
+                                    LocalizationConstants.country.localized(),
+                                callback: (context, item) {
+                                  final selectedCountry = item as Country;
+                                  fieldState.didChange(selectedCountry);
+                                  _onCountrySelect(context, selectedCountry);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (fieldState.hasError)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          fieldState.errorText!,
+                          style:
+                              const TextStyle(color: Colors.red, fontSize: 14),
+                        ),
+                      ),
+                    ),
                 ],
-              ),
-            ),
-          ],
-        );
-      } else
-        return Container();
-    });
+              );
+            },
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
   }
 
-  Widget _addStateWidget(BuildContext context) {
+  Widget _addStateWidget(
+      BuildContext context, Map<String, String> siteMessages) {
     return BlocBuilder<AddShippingAddressCubit, AddShippingAddressState>(
-        buildWhen: (previous, current) {
-      if (current is AddShippingAddressLoadedState ||
-          current is AddShippingAddressInitialState) {
-        return true;
-      }
+      buildWhen: (previous, current) {
+        if (current is AddShippingAddressLoadedState ||
+            current is AddShippingAddressInitialState) {
+          return true;
+        }
 
-      return false;
-    }, builder: (_, state) {
-      if (state is AddShippingAddressLoadedState) {
-        return Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              flex: 1,
-              child: Text(
-                LocalizationConstants.selectState.localized(),
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Row(
+        return false;
+      },
+      builder: (_, state) {
+        if (state is AddShippingAddressLoadedState) {
+          return FormField<StateModel>(
+            validator: (_) {
+              final cubit = context.read<AddShippingAddressCubit>();
+              final hasStates = state.states?.isNotEmpty ?? false;
+              final selected = cubit.selectedState;
+              if (hasStates && selected == null) {
+                return siteMessages[
+                    SiteMessageConstants.nameAddressInfoStateRequired];
+              }
+              return null;
+            },
+            builder: (FormFieldState<StateModel> fieldState) {
+              return Column(
                 children: [
-                  Expanded(
-                      child: ListPickerWidget(
-                          items: state.states ?? [],
-                          selectedIndex: _getIndexOfState(
-                              state.states,
-                              context
-                                  .read<AddShippingAddressCubit>()
-                                  .selectedState),
-                          descriptionText:
-                              LocalizationConstants.state.localized(),
-                          callback: _onStateSelect)),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          LocalizationConstants.selectState.localized(),
+                          textAlign: TextAlign.start,
+                          style: OptiTextStyles.body,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ListPickerWidget(
+                                items: state.states ?? [],
+                                selectedIndex: _getIndexOfState(
+                                    state.states,
+                                    context
+                                        .read<AddShippingAddressCubit>()
+                                        .selectedState),
+                                descriptionText:
+                                    LocalizationConstants.state.localized(),
+                                callback: (context, item) {
+                                  final selectedState = item as StateModel;
+                                  fieldState.didChange(selectedState);
+                                  _onStateSelect(context, selectedState);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (fieldState.hasError && fieldState.errorText != null)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Text(
+                            fieldState.errorText!,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
-              ),
-            ),
-          ],
-        );
-      } else {
-        return Container();
-      }
-    });
+              );
+            },
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
   }
 }
