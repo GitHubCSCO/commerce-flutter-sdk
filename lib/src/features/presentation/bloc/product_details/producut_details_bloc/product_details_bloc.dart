@@ -43,11 +43,17 @@ class ProductDetailsBloc
   }
 
   List<AddCartLine> getAddCartLineForWistlist() {
-    var cartLineOfProduct = AddCartLine(
+    final selectedUom =
+        productDetailDataEntity.chosenUnitOfMeasure?.unitOfMeasure ??
+            productDetailDataEntity.styledProduct?.productUnitOfMeasures
+                ?.firstOrNull?.unitOfMeasure ??
+            productDetailDataEntity.product?.unitOfMeasure;
+
+    final cartLineOfProduct = AddCartLine(
       productId: productDetailDataEntity.styledProduct?.productId ??
           productDetailDataEntity.product?.id,
       qtyOrdered: productDetailDataEntity.product?.qtyOrdered,
-      unitOfMeasure: productDetailDataEntity.product?.unitOfMeasure,
+      unitOfMeasure: selectedUom,
     );
     return [cartLineOfProduct];
   }
