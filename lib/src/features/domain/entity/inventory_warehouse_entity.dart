@@ -20,6 +20,15 @@ class InventoryWarehouseEntity extends AvailabilityEntity {
             requiresRealTimeInventory: requiresRealTimeInventory);
 
   @override
+  List<Object?> get props => [
+        ...super.props,
+        id,
+        name,
+        description,
+        qtyAvailable,
+      ];
+
+  @override
   InventoryWarehouseEntity copyWith({
     int? messageType,
     String? message,

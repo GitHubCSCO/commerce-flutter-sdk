@@ -17,7 +17,7 @@ class ProductCarouselUseCase extends BaseUseCase {
       case ProductCarouselType.topSellers:
         result = await _getTopSellersProducts(productCarouselWidgetEntity);
       case ProductCarouselType.recentlyViewed:
-        result = await _getRecentlyViewedProducts();
+        result = await _getRecentlyViewedProducts(productCarouselWidgetEntity);
       case ProductCarouselType.webCrossSells:
         result = await _getWebsiteCrossSellsProducts();
       default:
@@ -65,10 +65,11 @@ class ProductCarouselUseCase extends BaseUseCase {
   }
 
   Future<Result<List<ProductEntity>, ErrorResponse>>
-      _getRecentlyViewedProducts() async {
+      _getRecentlyViewedProducts(
+          ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
     var result = await commerceAPIServiceProvider
         .getProductService()
-        .getProducts(_recentlyViewedParameters());
+        .getProducts(_recentlyViewedParameters(productCarouselWidgetEntity));
     switch (result) {
       case Success(value: final data):
         return Success(data?.products
@@ -116,11 +117,15 @@ class ProductCarouselUseCase extends BaseUseCase {
     return ProductsQueryParameters(
         filter: "topsellers",
         topSellersCategoryIds: topSellersCategoryIds,
+        pageSize: productCarouselWidgetEntity.numberOfProductsToDisplay,
         expand: ["badges"]);
   }
 
-  ProductsQueryParameters _recentlyViewedParameters() {
+  ProductsQueryParameters _recentlyViewedParameters(
+      ProductCarouselWidgetEntity productCarouselWidgetEntity) {
     return ProductsQueryParameters(
-        filter: "recentlyViewed", expand: ["badges"]);
+        filter: "recentlyViewed",
+        pageSize: productCarouselWidgetEntity.numberOfProductsToDisplay,
+        expand: ["badges"]);
   }
 }

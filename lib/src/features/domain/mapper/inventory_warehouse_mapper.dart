@@ -15,12 +15,12 @@ class InventoryWarehouseEntityMapper {
 
   InventoryWarehouse toModel(InventoryWarehouseEntity entity) =>
       InventoryWarehouse(
-        // messageType: entity.messageType,
-        // message: entity.message,
-        // requiresRealTimeInventory: entity.requiresRealTimeInventory,
         id: entity.id,
         name: entity.name,
         description: entity.description,
         qtyAvailable: entity.qtyAvailable,
-      );
+      )
+        ..messageType = entity.messageType
+        ..message = entity.message
+        ..requiresRealTimeInventory = entity.requiresRealTimeInventory;
 }

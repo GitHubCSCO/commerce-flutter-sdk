@@ -51,13 +51,9 @@ void main() {
       final result = mapper.toModel(inventoryWarehouseEntity);
 
       // Assert
-      // Note: The current implementation has commented out availability fields
-      // This test documents the current behavior - messageType, message, and requiresRealTimeInventory are NOT mapped back
-      expect(result.messageType, isNull); // Bug: should be 2 but is not mapped
-      expect(result.message,
-          isNull); // Bug: should be 'Low Stock' but is not mapped
-      expect(result.requiresRealTimeInventory,
-          isNull); // Bug: should be false but is not mapped
+      expect(result.messageType, equals(2));
+      expect(result.message, equals('Low Stock'));
+      expect(result.requiresRealTimeInventory, equals(false));
       expect(result.name, equals('Secondary Warehouse'));
       expect(result.description, equals('Backup storage facility'));
       expect(result.qtyAvailable, equals(25));
@@ -273,9 +269,7 @@ void main() {
       expect(copiedEntity.qtyAvailable, equals(200));
     });
 
-    test(
-        'should demonstrate data loss in roundtrip conversion due to mapper bug',
-        () {
+    test('should preserve all fields in roundtrip conversion', () {
       // Arrange
       final originalWarehouse = InventoryWarehouse(
         name: 'Test Warehouse',
@@ -290,17 +284,14 @@ void main() {
       final entity = mapper.toEntity(originalWarehouse);
       final convertedBack = mapper.toModel(entity);
 
-      // Assert
-      // These fields are preserved
+      // Assert — all fields survive the roundtrip
       expect(convertedBack.name, equals(originalWarehouse.name));
       expect(convertedBack.description, equals(originalWarehouse.description));
       expect(convertedBack.qtyAvailable, equals(originalWarehouse.qtyAvailable));
-
-      // These fields are lost due to the bug in toModel method (commented out)
-      expect(convertedBack.messageType, isNull); // Bug: should be 1
-      expect(convertedBack.message, isNull); // Bug: should be 'In Stock'
+      expect(convertedBack.messageType, equals(originalWarehouse.messageType));
+      expect(convertedBack.message, equals(originalWarehouse.message));
       expect(convertedBack.requiresRealTimeInventory,
-          isNull); // Bug: should be true
+          equals(originalWarehouse.requiresRealTimeInventory));
     });
   });
 }
