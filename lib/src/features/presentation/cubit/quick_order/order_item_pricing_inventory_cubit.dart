@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
@@ -72,6 +73,24 @@ class OrderItemPricingInventoryCubit
       quickOrderItemEntity.updatePricing(
           ProductPriceEntityMapper.toEntity(pricing),
           productSettings.canSeePrices!);
+    } else if ((productSettings.canSeePrices ?? false) &&
+        isStorefrontAccessGranted) {
+      // V2 has no non-realtime pricing endpoint. Fall back to the static
+      // unitListPrice from the product root so quick order rows aren't blank
+      // when realTimePricing is disabled.
+      final qty = quickOrderItemEntity.quantityOrdered;
+      final listPrice = product.unitListPrice;
+      final fallbackPricing = ProductPriceEntity(
+        productId: productId,
+        isOnSale: false,
+        unitListPrice: listPrice,
+        unitListPriceDisplay: product.unitListPriceDisplay,
+        unitNetPrice: listPrice,
+        unitNetPriceDisplay: product.unitListPriceDisplay,
+        extendedUnitNetPrice: listPrice != null ? listPrice * qty : null,
+      );
+      quickOrderItemEntity.updatePricing(
+          fallbackPricing, productSettings.canSeePrices!);
     }
     emit(OrderItemSubTotalChange());
 
