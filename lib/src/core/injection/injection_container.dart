@@ -859,11 +859,6 @@ Future<void> initInjectionContainer() async {
     ..registerSingletonWithDependencies<ITrackingService>(
         () => CompositeTrackingService(
               trackers: [
-                FirebaseTrackingService(
-                  sessionService: sl(),
-                  accountService: sl(),
-                  analyticsConfig: sl(),
-                ),
                 AppCenterTrackingService(
                   sessionService: sl(),
                   accountService: sl(),

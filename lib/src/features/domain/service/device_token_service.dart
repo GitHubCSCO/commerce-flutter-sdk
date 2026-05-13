@@ -1,9 +1,7 @@
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_interface.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
 class DeviceTokenService implements IDeviceTokenService {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   // We cache both successful tokens AND the failure case (empty string) so
   // that a hung or failing FirebaseMessaging call doesn't get retried on
@@ -31,20 +29,6 @@ class DeviceTokenService implements IDeviceTokenService {
     }
 
     String token = '';
-    try {
-      await _firebaseMessaging
-          .requestPermission()
-          .timeout(_firebaseTimeout);
-
-      final fcmToken = await _firebaseMessaging
-          .getToken()
-          .timeout(_firebaseTimeout);
-
-      token = fcmToken ?? '';
-    } catch (e) {
-      debugPrint('[DeviceTokenService] getDeviceToken failed: $e');
-      token = '';
-    }
 
     // Cache both the success and the empty-string failure so we don't keep
     // retrying a hanging Firebase call on every login/logout.
