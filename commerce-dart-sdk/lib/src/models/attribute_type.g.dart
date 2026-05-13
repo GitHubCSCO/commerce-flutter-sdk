@@ -41,7 +41,8 @@ Map<String, dynamic> _$AttributeTypeToJson(AttributeType instance) =>
       if (instance.label case final value?) 'label': value,
       if (instance.isFilter case final value?) 'isFilter': value,
       if (instance.isComparable case final value?) 'isComparable': value,
-      if (instance.includeOnProduct case final value?) 'includeOnProduct': value,
+      if (instance.includeOnProduct case final value?)
+        'includeOnProduct': value,
       if (instance.isSearchable case final value?) 'isSearchable': value,
       if (instance.isActive case final value?) 'isActive': value,
       if (instance.sortOrder case final value?) 'sortOrder': value,
