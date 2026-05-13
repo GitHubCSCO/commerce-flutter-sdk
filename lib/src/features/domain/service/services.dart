@@ -6,6 +6,7 @@ export 'commerce_api_service_provider.dart';
 export 'composite_tracking_service.dart';
 export 'content_configuration_service.dart';
 export 'core_service_provider.dart';
+export 'csco_inventory_service.dart';
 export 'device_service.dart';
 export 'firebase_tracking_service.dart';
 export 'geo_location_service.dart';
