@@ -196,8 +196,7 @@ class ProductDetailsStyleTraitsUseCase {
       ProductEntity product,
       List<ProductEntity> variantChildren) {
     for (var s in product.variantTraits!) {
-      availableStyleValues[s.id!] =
-          List<StyleValueEntity>.from(s.traitValues!);
+      availableStyleValues[s.id!] = List<StyleValueEntity>.from(s.traitValues!);
     }
 
     if (selectedStyleValues != null) {

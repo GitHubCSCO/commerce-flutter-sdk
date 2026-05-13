@@ -64,9 +64,8 @@ class ProductCarouselUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<List<ProductEntity>, ErrorResponse>>
-      _getRecentlyViewedProducts(
-          ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
+  Future<Result<List<ProductEntity>, ErrorResponse>> _getRecentlyViewedProducts(
+      ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
     var result = await commerceAPIServiceProvider
         .getProductService()
         .getProducts(_recentlyViewedParameters(productCarouselWidgetEntity));

@@ -287,7 +287,8 @@ void main() {
       // Assert — all fields survive the roundtrip
       expect(convertedBack.name, equals(originalWarehouse.name));
       expect(convertedBack.description, equals(originalWarehouse.description));
-      expect(convertedBack.qtyAvailable, equals(originalWarehouse.qtyAvailable));
+      expect(
+          convertedBack.qtyAvailable, equals(originalWarehouse.qtyAvailable));
       expect(convertedBack.messageType, equals(originalWarehouse.messageType));
       expect(convertedBack.message, equals(originalWarehouse.message));
       expect(convertedBack.requiresRealTimeInventory,
