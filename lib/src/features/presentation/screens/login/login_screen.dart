@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
@@ -21,7 +19,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bl
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/login_cubit.dart';
@@ -34,6 +32,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class LoginScreen extends BaseStatelessWidget {
   const LoginScreen({super.key});
@@ -141,10 +140,10 @@ class _LoginPageState extends State<LoginPage> {
               child: Scaffold(
                 resizeToAvoidBottomInset: true,
                 appBar: AppBar(
-                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  backgroundColor: context.scheme.surface,
                   title: Text(
                     LocalizationConstants.signIn.localized(),
-                    style: OptiTextStyles.titleLarge,
+                    style: context.text.titleLarge,
                   ),
                   centerTitle: false,
                   actions: [
@@ -462,8 +461,8 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () => AppRoute.forgotPassword
                                 .navigateBackStack(context,
                                     extra: AccountType.standard),
-                            style: OptiTextStyles.subtitle.copyWith(
-                              color: OptiAppColors.primaryColor,
+                            style: context.text.subtitle.copyWith(
+                              color: context.scheme.primary,
                             ),
                             text: LocalizationConstants.forgotPassword
                                 .localized(),
@@ -483,7 +482,7 @@ class _LoginPageState extends State<LoginPage> {
                   builder: (context, state) {
                     if (state is LoginInfoLoadingState) {
                       return LoadingAnimationWidget.progressiveDots(
-                        color: OptiAppColors.iconPrimary,
+                        color: context.colors.iconPrimary,
                         size: 30,
                       );
                     }
@@ -501,8 +500,8 @@ class _LoginPageState extends State<LoginPage> {
                               return TextSpan(
                                 text:
                                     '${LocalizationConstants.privacyPolicy.localized()} ',
-                                style: OptiTextStyles.body.copyWith(
-                                  color: OptiAppColors.primaryColor,
+                                style: context.text.body.copyWith(
+                                  color: context.scheme.primary,
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () async {
@@ -529,8 +528,8 @@ class _LoginPageState extends State<LoginPage> {
                               return TextSpan(
                                 text:
                                     '${LocalizationConstants.termsOfUse.localized()} ',
-                                style: OptiTextStyles.body.copyWith(
-                                  color: OptiAppColors.primaryColor,
+                                style: context.text.body.copyWith(
+                                  color: context.scheme.primary,
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () async {
@@ -556,7 +555,7 @@ class _LoginPageState extends State<LoginPage> {
                             } else {
                               return TextSpan(
                                 text: '$word ',
-                                style: OptiTextStyles.body,
+                                style: context.text.body,
                               );
                             }
                           },

@@ -147,7 +147,8 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                   if (state.cartWarningMsg.isNotEmpty)
                                     BuildCartErrorWidget(
                                         cartErrorMsg: state.cartWarningMsg),
-                                  buildSummary(state.cart, state.promotions),
+                                  buildSummary(
+                                      context, state.cart, state.promotions),
                                   BillingShippingWidget(
                                     billingShippingEntity:
                                         billingShippingEntity,

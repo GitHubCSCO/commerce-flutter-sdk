@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/selection/user_selection/user_selection_cubit.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class UserSelectionScreen extends StatelessWidget {
   final CatalogTypeSelectingParameter parameter;
@@ -34,9 +34,9 @@ class UserSelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         title: Text(LocalizationConstants.selectUser.localized()),
         centerTitle: false,
       ),
@@ -61,7 +61,7 @@ class UserSelectionPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final user = state.userList![index];
                 return Container(
-                  color: OptiAppColors.backgroundWhite,
+                  color: context.colors.backgroundWhite,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: SelectionItemWidget(
                     item: user,

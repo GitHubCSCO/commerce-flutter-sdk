@@ -1,16 +1,15 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/quote_all_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/quote_all_state.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuoteAllScreen extends StatelessWidget {
   final QuoteDto quoteDto;
@@ -40,7 +39,7 @@ class QuoteAllPage extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Text(
                 LocalizationConstants.apply.localized(),
-                style: OptiTextStyles.linkMedium,
+                style: context.text.linkMedium,
               ),
             ),
           ),
@@ -105,7 +104,7 @@ class QuoteAllPage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 25),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: OptiAppColors.backgroundInput,
+                        color: context.colors.backgroundInput,
                         borderRadius:
                             BorderRadius.circular(AppStyle.borderRadius),
                       ),
@@ -155,7 +154,7 @@ class QuoteAllPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 25.0),
                   child: Text(
                     "%",
-                    style: OptiTextStyles.header2,
+                    style: context.text.header2,
                   ),
                 )
               ],
@@ -175,7 +174,7 @@ class QuoteAllPage extends StatelessWidget {
                     state.isValid == false) {
                   return Text(
                     state.message ?? "",
-                    style: OptiTextStyles.errorText,
+                    style: context.text.errorText,
                   );
                 } else {
                   return Container();

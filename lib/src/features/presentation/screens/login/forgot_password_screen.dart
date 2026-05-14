@@ -1,10 +1,8 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/account_type.dart';
@@ -12,12 +10,13 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ForgotPasswordScreen extends BaseStatelessWidget {
   final AccountType accountType;
@@ -74,10 +73,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         context.watch<ForgotPasswordCubit>().useEmailAsUserName;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: context.scheme.surface,
         title: Text(
           LocalizationConstants.forgotPassword.localized(),
-          style: OptiTextStyles.titleLarge,
+          style: context.text.titleLarge,
         ),
         centerTitle: false,
         actions: [
@@ -85,8 +84,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             onPressed: () {
               context.pop();
             },
-            style: OptiTextStyles.subtitle.copyWith(
-              color: OptiAppColors.primaryColor,
+            style: context.text.subtitle.copyWith(
+              color: context.scheme.primary,
             ),
             text: LocalizationConstants.cancel.localized(),
           ),
@@ -166,7 +165,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           : LocalizationConstants
                               .instructionsUsernameStringTemplate
                               .localized(),
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),

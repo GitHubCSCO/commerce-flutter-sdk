@@ -1,7 +1,5 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/avalability_color_converter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
@@ -9,6 +7,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/warehouse_i
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
     String unitOfMeasure) {
@@ -24,7 +23,7 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         title: Text(LocalizationConstants.warehouseInventory.localized(),
-            style: OptiTextStyles.titleLarge),
+            style: context.text.titleLarge),
         content: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BlocProvider(
@@ -45,14 +44,14 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
                       Container(
                         alignment: Alignment.bottomLeft,
                         child: LoadingAnimationWidget.progressiveDots(
-                          color: OptiAppColors.iconPrimary,
+                          color: context.colors.iconPrimary,
                           size: 30,
                         ),
                       ),
                       Container(
                         alignment: Alignment.bottomLeft,
                         child: LoadingAnimationWidget.progressiveDots(
-                          color: OptiAppColors.iconPrimary,
+                          color: context.colors.iconPrimary,
                           size: 30,
                         ),
                       )
@@ -111,8 +110,8 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
                                             ],
                                           ),
                                         ),
-                                        const Divider(
-                                          color: OptiAppColors.border,
+                                        Divider(
+                                          color: context.colors.border,
                                           thickness: 1.0,
                                         )
                                       ],

@@ -1,8 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/tokenex_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/credit_card_info_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/add_credit_card/add_credit_card_event.dart';
@@ -26,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class AddCreditCardEntity {
   final AccountPaymentProfile? accountPaymentProfile;
@@ -79,7 +78,7 @@ class AddCreditCardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: OptiAppColors.backgroundWhite,
+          backgroundColor: context.colors.backgroundWhite,
           title: Text(getTitle()),
           centerTitle: false,
         ),
@@ -286,8 +285,8 @@ class AddCreditCardPage extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(
           addCreditCardEntity.accountPaymentProfile?.maskedCardNumber ?? "",
-          style: const TextStyle(
-            color: OptiAppColors.textDisabledColor,
+          style: TextStyle(
+            color: context.colors.textDisabledColor,
             fontSize: 16.0,
           ),
         ),
@@ -327,7 +326,7 @@ class AddCreditCardPage extends StatelessWidget {
               ),
               Text(
                 LocalizationConstants.useAsDefaultCard.localized(),
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ],
           ),
@@ -358,7 +357,7 @@ class AddCreditCardPage extends StatelessWidget {
           ),
           Text(
             LocalizationConstants.useBillingAddress.localized(),
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         ],
       ),
@@ -664,7 +663,7 @@ class AddCreditCardPage extends StatelessWidget {
               Text(
                 LocalizationConstants.billingAddress.localized(),
                 textAlign: TextAlign.center,
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               const SizedBox(height: 20),
               _createInputField(
@@ -689,7 +688,7 @@ class AddCreditCardPage extends StatelessWidget {
                     child: Text(
                       LocalizationConstants.selectCountry.localized(),
                       textAlign: TextAlign.start,
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                     ),
                   ),
                   Expanded(
@@ -755,7 +754,7 @@ class AddCreditCardPage extends StatelessWidget {
                     child: Text(
                       LocalizationConstants.selectState.localized(),
                       textAlign: TextAlign.start,
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                     ),
                   ),
                   Expanded(
@@ -861,7 +860,7 @@ class AddCreditCardPage extends StatelessWidget {
             Text(
               LocalizationConstants.cardExpirationDate.localized(),
               textAlign: TextAlign.center,
-              style: OptiTextStyles.subtitle,
+              style: context.text.subtitle,
             ),
             const SizedBox(height: 10),
             Row(
@@ -874,7 +873,7 @@ class AddCreditCardPage extends StatelessWidget {
                       Text(
                         LocalizationConstants.month.localized(),
                         textAlign: TextAlign.start,
-                        style: OptiTextStyles.body,
+                        style: context.text.body,
                       ),
                       const SizedBox(height: 4),
                       const Text(
@@ -935,7 +934,7 @@ class AddCreditCardPage extends StatelessWidget {
                       Text(
                         LocalizationConstants.year.localized(),
                         textAlign: TextAlign.start,
-                        style: OptiTextStyles.body,
+                        style: context.text.body,
                       ),
                       const SizedBox(height: 4),
                       const Text(

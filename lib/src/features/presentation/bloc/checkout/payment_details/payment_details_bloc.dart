@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/tokenex_entity.dart';

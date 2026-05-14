@@ -1,13 +1,12 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/cart_line_extentions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ProductListWithBasicInfo extends StatelessWidget {
   final String? totalItemsTitle;
@@ -25,14 +24,14 @@ class ProductListWithBasicInfo extends StatelessWidget {
           visible: totalItemsTitle != null,
           child: Container(
             width: double.maxFinite,
-            color: OptiAppColors.backgroundWhite,
+            color: context.colors.backgroundWhite,
             margin: const EdgeInsets.only(top: 8.0),
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: Text(
               totalItemsTitle!.format([list.length]),
               textAlign: TextAlign.start,
-              style: OptiTextStyles.subtitle,
+              style: context.text.subtitle,
             ),
           ),
         ),
@@ -106,7 +105,7 @@ class ProductListItemWithBasicInfo extends StatelessWidget {
                       StackTrace? stackTrace) {
                     // This function is called when the image fails to load
                     return Container(
-                      color: OptiAppColors.backgroundGray, // Placeholder color
+                      color: context.colors.backgroundGray,
                       alignment: Alignment.center,
                       child: const Icon(
                         Icons.image, // Icon to display
@@ -129,15 +128,15 @@ class ProductListItemWithBasicInfo extends StatelessWidget {
                   title ?? "",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
-                  style: OptiTextStyles.bodySmall,
+                  style: context.text.bodySmall,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   LocalizationConstants.itemNumber
                       .localized()
                       .format([productNumber ?? '']),
-                  style: OptiTextStyles.bodySmall.copyWith(
-                    color: OptiAppColors.textDisabledColor,
+                  style: context.text.bodySmall.copyWith(
+                    color: context.colors.textDisabledColor,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -145,7 +144,7 @@ class ProductListItemWithBasicInfo extends StatelessWidget {
                   visible: price != null,
                   child: Text(
                     price ?? '',
-                    style: OptiTextStyles.bodySmallHighlight,
+                    style: context.text.bodySmallHighlight,
                   ),
                 ),
               ],

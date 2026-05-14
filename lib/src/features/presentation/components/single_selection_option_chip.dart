@@ -1,7 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SingleSelectionOptionChip<T> extends StatefulWidget {
   const SingleSelectionOptionChip({
@@ -42,7 +41,7 @@ class _SingleSelectionOptionChipState<T>
         children: [
           Text(
             widget.chipTitle!,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
           Wrap(
             spacing: 8,
@@ -53,11 +52,11 @@ class _SingleSelectionOptionChipState<T>
                     label: Text(
                       _getValueTitle(value),
                       style: selectedValue == value
-                          ? OptiTextStyles.bodySmallHighlight
-                              .copyWith(color: OptiAppColors.backgroundWhite)
-                          : OptiTextStyles.bodySmallHighlight,
+                          ? context.text.bodySmallHighlight
+                              .copyWith(color: context.colors.backgroundWhite)
+                          : context.text.bodySmallHighlight,
                     ),
-                    selectedColor: OptiAppColors.textPrimary,
+                    selectedColor: context.colors.textPrimary,
                     showCheckmark: false,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,
@@ -75,13 +74,13 @@ class _SingleSelectionOptionChipState<T>
                     },
                     backgroundColor: (!_getValueAvailibility(value))
                         ? Colors.grey // Gray if not available
-                        : OptiAppColors.backgroundWhite,
+                        : context.colors.backgroundWhite,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                       side: BorderSide(
                         color: (!_getValueAvailibility(value))
                             ? Colors.grey // Gray if not available
-                            : OptiAppColors.textPrimary,
+                            : context.colors.textPrimary,
                         width: 1,
                       ),
                     ),

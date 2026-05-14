@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
@@ -10,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 void trackClearCartSelectedEvent(BuildContext context, String orderNumber) {
   context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
@@ -89,11 +89,11 @@ class CartContentHeaderWidget extends StatelessWidget {
               children: [
                 TextSpan(
                   text: "${LocalizationConstants.cart.localized()} ",
-                  style: OptiTextStyles.titleLarge,
+                  style: context.text.titleLarge,
                 ),
                 TextSpan(
                   text: '($cartCount ${cartCount == 1 ? 'Item' : 'Items'})',
-                  style: OptiTextStyles.subtitle,
+                  style: context.text.subtitle,
                 )
               ],
             ),
@@ -123,7 +123,7 @@ class CartContentHeaderWidget extends StatelessWidget {
                   Text(
                     LocalizationConstants.clearCart.localized(),
                     textAlign: TextAlign.center,
-                    style: OptiTextStyles.body,
+                    style: context.text.body,
                   ),
                 ],
               ),

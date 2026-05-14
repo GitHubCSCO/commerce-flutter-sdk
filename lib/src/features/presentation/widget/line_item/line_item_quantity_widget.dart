@@ -1,10 +1,9 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/number_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class LineItemQuantityGroupWidget extends StatelessWidget {
   final String? qtyOrdered;
@@ -55,11 +54,11 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                     children: [
                       Text(
                         LocalizationConstants.qTY.localized(),
-                        style: OptiTextStyles.bodySmall,
+                        style: context.text.bodySmall,
                       ),
                       Text(
                         qtyOrdered ?? '',
-                        style: OptiTextStyles.titleLarge,
+                        style: context.text.titleLarge,
                       ),
                     ],
                   ),
@@ -103,19 +102,19 @@ class LineItemSubtotalColumnWidget extends StatelessWidget {
         children: [
           Text(
             title,
-            style: OptiTextStyles.bodySmall,
+            style: context.text.bodySmall,
           ),
           realTimeLoading
               ? Container(
                   alignment: Alignment.center,
                   child: LoadingAnimationWidget.progressiveDots(
-                    color: OptiAppColors.iconPrimary,
+                    color: context.colors.iconPrimary,
                     size: 30,
                   ),
                 )
               : Text(
                   value,
-                  style: OptiTextStyles.titleLargeHighLight,
+                  style: context.text.titleLargeHighLight,
                 )
         ],
       ),

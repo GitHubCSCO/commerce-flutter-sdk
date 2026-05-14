@@ -2,7 +2,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/state_status.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/add_to_cart/add_to_cart_state.dart';
@@ -15,6 +14,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/search_pro
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SearchProductsWidget extends StatefulWidget {
   final Function(int) onPageChanged; // Callback to handle page changes
@@ -128,7 +128,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                           state.originalQuery
                                         ],
                                       ),
-                                style: OptiTextStyles.header3,
+                                style: context.text.header3,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),

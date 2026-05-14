@@ -1,7 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class Input extends StatefulWidget {
   final String? hintText;
@@ -130,7 +129,7 @@ class _InputState extends State<Input> {
                   children: [
                     Text(
                       widget.label!,
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                     ),
                     const SizedBox(width: 4.0), // Space between text and star
                     Visibility(
@@ -153,8 +152,7 @@ class _InputState extends State<Input> {
                 boxShadow: (_focusNode.hasFocus && widget.maxLength == null)
                     ? [
                         BoxShadow(
-                          color:
-                              OptiAppColors.primaryColor.withValues(alpha: 0.3),
+                          color: context.scheme.primary.withValues(alpha: 0.3),
                           spreadRadius: AppStyle.inputDropShadowSpreadRadius,
                         ),
                       ]
@@ -174,7 +172,7 @@ class _InputState extends State<Input> {
                 onEditingComplete: widget.onEditingComplete,
                 onTap: widget.onTap,
                 onTapOutside: widget.onTapOutside,
-                style: OptiTextStyles.body,
+                style: context.text.body,
                 textAlign: widget.textAlign,
                 textDirection: widget.textDirection,
                 textInputAction: widget.textInputAction,
@@ -182,7 +180,7 @@ class _InputState extends State<Input> {
                 cursorColor: AppStyle.neutral990,
                 decoration: InputDecoration(
                   hintText: widget.hintText,
-                  hintStyle: OptiTextStyles.body.copyWith(
+                  hintStyle: context.text.body.copyWith(
                     color: AppStyle.neutral500,
                   ),
                   contentPadding: const EdgeInsets.symmetric(
@@ -200,7 +198,7 @@ class _InputState extends State<Input> {
                       AppStyle.borderRadius,
                     ),
                     borderSide: BorderSide(
-                      color: OptiAppColors.primaryColor,
+                      color: context.scheme.primary,
                     ),
                   ),
                   filled: true,

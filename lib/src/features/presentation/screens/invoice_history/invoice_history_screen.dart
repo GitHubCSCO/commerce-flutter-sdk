@@ -1,10 +1,8 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
@@ -18,6 +16,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/invoice_hi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class InvoiceHistoryScreen extends BaseStatelessWidget {
   const InvoiceHistoryScreen({super.key});
@@ -48,9 +47,9 @@ class InvoiceHistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         title: Text(LocalizationConstants.invoiceHistory.localized()),
         centerTitle: false,
         actions: [
@@ -88,7 +87,7 @@ class InvoiceHistoryPage extends StatelessWidget {
                                   null
                               ? '${state.invoiceCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.invoices.localized()}'
                               : '',
-                          style: OptiTextStyles.header3,
+                          style: context.text.header3,
                         ),
                         Row(
                           mainAxisSize: MainAxisSize.min,
@@ -273,7 +272,7 @@ class _InvoiceItem extends StatelessWidget {
           horizontal: 16,
           vertical: 10,
         ),
-        color: OptiAppColors.backgroundWhite,
+        color: context.colors.backgroundWhite,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -283,11 +282,11 @@ class _InvoiceItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(invoiceDate, style: OptiTextStyles.bodySmall),
-                  Text(invoiceNumber, style: OptiTextStyles.titleSmall),
-                  Text(stCompany, style: OptiTextStyles.body),
-                  Text(poNumber, style: OptiTextStyles.body),
-                  Text(invoiceTotal, style: OptiTextStyles.body),
+                  Text(invoiceDate, style: context.text.bodySmall),
+                  Text(invoiceNumber, style: context.text.titleSmall),
+                  Text(stCompany, style: context.text.body),
+                  Text(poNumber, style: context.text.body),
+                  Text(invoiceTotal, style: context.text.body),
                 ],
               ),
             ),
@@ -296,9 +295,9 @@ class _InvoiceItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(balanceTitle, style: OptiTextStyles.bodySmall),
-                Text(balance, style: OptiTextStyles.titleLarge),
-                Text(dueDate, style: OptiTextStyles.bodySmall),
+                Text(balanceTitle, style: context.text.bodySmall),
+                Text(balance, style: context.text.titleLarge),
+                Text(dueDate, style: context.text.bodySmall),
               ],
             ),
           ],

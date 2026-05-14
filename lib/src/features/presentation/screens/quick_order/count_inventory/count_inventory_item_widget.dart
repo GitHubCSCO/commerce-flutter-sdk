@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/menu/tool_menu.dart';
@@ -7,6 +6,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/quick_ord
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quick_order/quick_order_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CountInventoryItemWidget extends StatelessWidget {
   final Function(BuildContext context, QuickOrderItemEntity,
@@ -28,7 +28,7 @@ class CountInventoryItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProductImage(),
-            _buildVmiBinDetails(),
+            _buildVmiBinDetails(context),
           ],
         ),
       ),
@@ -40,44 +40,44 @@ class CountInventoryItemWidget extends StatelessWidget {
         imagePath: quickOrderItemEntity.productEntity.smallImagePath ?? "");
   }
 
-  Widget _buildVmiBinDetails() {
+  Widget _buildVmiBinDetails(BuildContext context) {
     List<Widget> list = [];
 
     final part = _buildRow(
         LocalizationConstants.partNumberSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         quickOrderItemEntity.productEntity.getProductNumber(),
-        OptiTextStyles.body);
+        context.text.body);
     final myPart = _buildRow(
         LocalizationConstants.myPartNumberSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         quickOrderItemEntity.productEntity.customerName ?? '',
-        OptiTextStyles.body);
+        context.text.body);
     final mfg = _buildRow(
         LocalizationConstants.mFGNumberSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         quickOrderItemEntity.productEntity.manufacturerItem ?? '',
-        OptiTextStyles.body);
+        context.text.body);
     final bin = _buildRow(
         LocalizationConstants.binSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         quickOrderItemEntity.vmiBinEntity?.binNumber ?? '',
-        OptiTextStyles.body);
+        context.text.body);
     final count = _buildRow(
         LocalizationConstants.count.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         quickOrderItemEntity.quantityOrdered.toInt().toString(),
-        OptiTextStyles.body);
+        context.text.body);
     final maxCount = _buildRow(
         LocalizationConstants.maxSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         quickOrderItemEntity.vmiBinEntity?.maximumQty?.toInt().toString() ?? '',
-        OptiTextStyles.body);
+        context.text.body);
     final minCount = _buildRow(
         LocalizationConstants.minSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         quickOrderItemEntity.vmiBinEntity?.minimumQty?.toInt().toString() ?? '',
-        OptiTextStyles.body);
+        context.text.body);
 
     if (part != null) {
       list.add(part);
@@ -176,7 +176,7 @@ class OrderVmiProductTitleWidget extends StatelessWidget {
                           false,
                   child: Text(
                     orderItemEntity.productEntity.brand?.name ?? '',
-                    style: OptiTextStyles.bodySmall,
+                    style: context.text.bodySmall,
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -186,7 +186,7 @@ class OrderVmiProductTitleWidget extends StatelessWidget {
                       false,
                   child: Text(
                     orderItemEntity.productEntity.shortDescription ?? '',
-                    style: OptiTextStyles.body,
+                    style: context.text.body,
                     textAlign: TextAlign.left,
                   ),
                 ),

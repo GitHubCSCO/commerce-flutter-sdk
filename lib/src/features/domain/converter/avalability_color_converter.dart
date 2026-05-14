@@ -1,6 +1,6 @@
+import 'package:commerce_flutter_sdk/src/core/theme/colors/app_colors.dart';
 import 'dart:ui';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/stock_availability.dart';
 
 class AvailabilityColorConverter {

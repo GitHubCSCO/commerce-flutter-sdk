@@ -1,9 +1,8 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/picker_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_style_traits_entity.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class DropdownPickerWidget extends StatelessWidget with PickerMixin {
   final void Function(BuildContext context, Object item)? callback;
@@ -94,7 +93,7 @@ class _DropdownPickerState extends State<DropdownPicker> with PickerMixin {
         boxShadow: _isDropdownOpen
             ? [
                 BoxShadow(
-                  color: OptiAppColors.primaryColor.withValues(alpha: 0.3),
+                  color: context.scheme.primary.withValues(alpha: 0.3),
                   spreadRadius: AppStyle.inputDropShadowSpreadRadius,
                 ),
               ]
@@ -108,7 +107,7 @@ class _DropdownPickerState extends State<DropdownPicker> with PickerMixin {
               borderRadius: BorderRadius.circular(AppStyle.borderRadius),
               color: _isDropdownOpen ? Colors.white : AppStyle.neutral100,
               border: _isDropdownOpen
-                  ? Border.all(color: OptiAppColors.primaryColor)
+                  ? Border.all(color: context.scheme.primary)
                   : null,
             ),
             child: DropdownButton<int>(
@@ -125,7 +124,7 @@ class _DropdownPickerState extends State<DropdownPicker> with PickerMixin {
                 ),
               ),
               elevation: 8,
-              style: OptiTextStyles.body,
+              style: context.text.body,
               dropdownColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               onTap: () {
@@ -151,12 +150,13 @@ class _DropdownPickerState extends State<DropdownPicker> with PickerMixin {
                   child: (index > 0 &&
                           widget.items.isNotEmpty &&
                           widget.items[index] is ProductDetailStyleValue)
-                      ? getItemDescriptionWithAvatar(widget.items[index])
+                      ? getItemDescriptionWithAvatar(
+                          context, widget.items[index])
                       : Text(
                           getItemDescriptions(widget.items[index]),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: OptiTextStyles.body,
+                          style: context.text.body,
                         ),
                 );
               }),

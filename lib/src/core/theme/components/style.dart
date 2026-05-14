@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 class AppStyle {
   static const Color primary500 = Color.fromRGBO(0, 55, 255, 1);
-  static const Color secondary800 = Color.fromRGBO(34, 34, 34, 1);
-  static const Color brand200 = Color.fromRGBO(179, 195, 255, 1);
 
   static const Color neutral00 = Color.fromRGBO(255, 255, 255, 1);
   static const Color neutral75 = Color.fromRGBO(245, 245, 245, 1);
@@ -14,7 +12,7 @@ class AppStyle {
   static const Color neutral990 = Color.fromRGBO(34, 34, 34, 1);
 
   static const double borderRadius = 32;
-  static const double textFieldborderRadius = 25;
+  static const double textFieldBorderRadius = 25;
   static const double textFieldDefaultHorizontalPadding = 8;
 
   static const double disabledButtonOpacity = 0.4;

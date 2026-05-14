@@ -1,8 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/menu/display_option.dart';
@@ -11,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 List<DisplayOption> _getDisplayOptions(
   List<SortOrderAttribute> availableSortOrders,
@@ -113,12 +112,12 @@ class SortToolMenu extends StatelessWidget {
       builder: (context) {
         return CupertinoActionSheet(
           title: Text(LocalizationConstants.sortBy.localized(),
-              style: OptiTextStyles.bodySmall),
+              style: context.text.bodySmall),
           actions: _getToolMenuWidgets(context, displayOptionsList),
           cancelButton: CupertinoActionSheetAction(
             child: Text(
               LocalizationConstants.cancel.localized(),
-              style: TextStyle(color: OptiAppColors.primaryColor),
+              style: TextStyle(color: context.scheme.primary),
             ),
             onPressed: () => Navigator.pop(context, isMenuCloseManually),
           ),
@@ -159,9 +158,9 @@ class SortToolMenu extends StatelessWidget {
           style: TextStyle(
             color: () {
               if (value.sortOrder == selectedSortOrder) {
-                return OptiAppColors.primaryColor;
+                return context.scheme.primary;
               } else if (value.oppositeSortOrder == selectedSortOrder) {
-                return OptiAppColors.primaryColor;
+                return context.scheme.primary;
               } else {
                 return Colors.black;
               }

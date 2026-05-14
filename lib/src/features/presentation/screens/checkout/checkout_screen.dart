@@ -194,7 +194,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                buildSummary(state.cart, state.promotions),
+                                buildSummary(
+                                    context, state.cart, state.promotions),
                                 BlocBuilder<ExpansionPanelCubit,
                                     ExpansionPanelState>(
                                   builder: (_, panelState) {

@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -21,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CheckoutSuccessEntity {
   final Cart cart;
@@ -101,7 +100,7 @@ class CheckoutSuccessPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: OptiAppColors.backgroundGray,
+      color: context.colors.backgroundGray,
       child: Column(
         children: [
           Expanded(
@@ -115,7 +114,7 @@ class CheckoutSuccessPage extends StatelessWidget {
                       isOrderApproval: checkoutSuccessEntity.isOrderApproval,
                     ),
                   ),
-                  _buildOrderItemSummaryWidget(),
+                  _buildOrderItemSummaryWidget(context),
                   if (checkoutSuccessEntity.reviewOrderEntity != null)
                     ReviewOrderWidget(
                       reviewOrderEntity:
@@ -195,7 +194,7 @@ class CheckoutSuccessPage extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderItemSummaryWidget() {
+  Widget _buildOrderItemSummaryWidget(BuildContext context) {
     var itemCount = checkoutSuccessEntity.cart.cartLines?.length ?? 0;
     var itemText = itemCount == 1 ? 'Item' : 'Items';
 
@@ -210,7 +209,7 @@ class CheckoutSuccessPage extends StatelessWidget {
             child: Text(
               "${LocalizationConstants.orderSummary.localized()} ($itemCount $itemText)",
               textAlign: TextAlign.start,
-              style: OptiTextStyles.subtitle,
+              style: context.text.subtitle,
             ),
           ),
           ListView.separated(
@@ -266,9 +265,9 @@ class CheckoutSuccessPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: OptiAppColors.successBackgroundColor,
+                color: context.colors.successBackgroundColor,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -276,14 +275,14 @@ class CheckoutSuccessPage extends StatelessWidget {
                   assetName: AssetConstants.iconMark,
                   semanticsLabel: 'success icon',
                   fit: BoxFit.fitWidth,
-                  color: OptiAppColors.successColor,
+                  color: context.colors.successColor,
                 ),
               ),
             ),
             const SizedBox(height: 16.0),
             Text(
               checkoutSuccessEntity.message ?? '',
-              style: OptiTextStyles.subtitle,
+              style: context.text.subtitle,
             ),
             const SizedBox(height: 16.0),
             Row(
@@ -293,7 +292,7 @@ class CheckoutSuccessPage extends StatelessWidget {
                 Flexible(
                   child: Text(
                     checkoutSuccessEntity.orderNumber,
-                    style: OptiTextStyles.titleLarge,
+                    style: context.text.titleLarge,
                     overflow: TextOverflow.visible,
                   ),
                 ),
@@ -301,9 +300,9 @@ class CheckoutSuccessPage extends StatelessWidget {
                 Material(
                   color: Colors.transparent,
                   child: Ink(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: OptiAppColors.backgroundInput,
+                      color: context.colors.backgroundInput,
                     ),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(100),
@@ -347,7 +346,7 @@ class CheckoutSuccessPage extends StatelessWidget {
               const SizedBox(height: 16.0),
               Text(
                 "We have sent you an email confirmation to ${checkoutSuccessEntity.cart.shipTo?.email}",
-                style: OptiTextStyles.bodySmall,
+                style: context.text.bodySmall,
                 textAlign: TextAlign.center,
               ),
             },

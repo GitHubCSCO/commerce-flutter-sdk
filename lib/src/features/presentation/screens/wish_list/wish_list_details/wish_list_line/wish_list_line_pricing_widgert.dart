@@ -1,5 +1,3 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
@@ -8,6 +6,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/view_wareh
 
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class WishListContentPricingWidget extends StatelessWidget {
   final WishListLineEntity wishListLineEntity;
@@ -35,7 +34,7 @@ class WishListContentPricingWidget extends StatelessWidget {
                   ? Container(
                       alignment: Alignment.bottomLeft,
                       child: LoadingAnimationWidget.progressiveDots(
-                        color: OptiAppColors.iconPrimary,
+                        color: context.colors.iconPrimary,
                         size: 30,
                       ),
                     )
@@ -58,7 +57,7 @@ class WishListContentPricingWidget extends StatelessWidget {
                   },
                   child: Text(
                     "View Availability by Warehouse",
-                    style: OptiTextStyles.link,
+                    style: context.text.link,
                   ),
                 ),
               ),
@@ -78,11 +77,11 @@ Widget _buildDiscountMessageSection(
       discountMessage != "null") {
     return Text(
       discountMessage,
-      style: const TextStyle(
+      style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.normal,
           fontStyle: FontStyle.italic,
-          color: OptiAppColors.textSecondary),
+          color: context.colors.textSecondary),
     );
   }
   return Container();
@@ -93,10 +92,10 @@ Widget _buildPricingSection(
   return Row(
     children: [
       Text(wishListLineEntity.updatePriceValueText,
-          style: OptiTextStyles.bodySmallHighlight),
+          style: context.text.bodySmallHighlight),
       Text(
         wishListLineEntity.updateUnitOfMeasureValueText,
-        style: OptiTextStyles.bodySmall,
+        style: context.text.bodySmall,
       ),
     ],
   );
@@ -106,6 +105,6 @@ Widget _buildInventorySection(
     BuildContext context, WishListLineEntity wishListLineEntity) {
   return Text(
     wishListLineEntity.availability?.message ?? '',
-    style: OptiTextStyles.body,
+    style: context.text.body,
   );
 }

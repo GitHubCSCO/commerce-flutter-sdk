@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
@@ -9,7 +8,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_line_entity.dart';
@@ -32,6 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class WishListDetailsScreen extends BaseStatelessWidget {
   final String wishListId;
@@ -115,9 +114,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         centerTitle: false,
         title: Text(
           context.watch<WishListDetailsCubit>().state.wishList.name ?? '',
@@ -448,7 +447,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                             children: [
                               Text(
                                 '${state.wishListLines.pagination?.totalItemCount ?? ' '} Products',
-                                style: OptiTextStyles.header3,
+                                style: context.text.header3,
                               ),
                               Row(
                                 mainAxisSize: MainAxisSize.min,

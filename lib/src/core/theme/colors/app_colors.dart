@@ -6,6 +6,8 @@ class OptiAppColors {
   static const Color backgroundWhite = Color(0xFFFFFFFF);
   static const Color textPrimary = Color(0xFF222222);
   static const Color textSecondary = Color(0xFF707070);
+  static const Color textBodyColor = Color(0xFF000000);
+  static const Color textFadeColor = Color(0xFF9E9E9E);
   static const Color textLink = Color(0xFF0037FF);
   static const Color backgroundGray = Color(0xFFF5F5F5);
   static const Color border = Color(0xFFD6D6D6);
@@ -14,7 +16,6 @@ class OptiAppColors {
   static const Color iconSecondary = Color(0xFF9E9E9E);
   static const Color backgroundInput = Color(0xFFEDEDED);
   static const Color inputFocusShadow = Color(0xFFB3C3FF);
-
   static const optiTextPrimaryColor = Color(0xFF080736);
   static const defaultPrimaryColor = Color(0xFF0037FF);
   static var primaryColor = defaultPrimaryColor;
@@ -61,20 +62,40 @@ class OptiAppColors {
   static const buttonLeaveColor = Color(0xFFD0BF00);
   static const buttonRefreshColor = Color(0xFFCFCFCF);
   static const buttonEditColor = Color(0xFF039F38);
-  static const buttonDarkRedBackgroudColor = Color(0xFFAD3029);
+  static const buttonDarkRedBackgroundColor = Color(0xFFAD3029);
 
   static const navIconUncheckedColor = Color(0xFF999999);
-
   static const gradientFirstColor = Color(0xFFFFFFFF);
   static const gradientSecondColor = Color(0xFFEAEAEA);
-
   static const messageBackgroundColor = Color(0xFFE6E5EB);
-
   static const spacerBackgroundColor = Color(0xFFF5F5F5);
-
   static const textDisabledColor = Color(0xFF707070);
-
   static const grayBackgroundColor = Color(0xFFF5F5F5);
+
+  /// scheme colors
+  static const Color onPrimary = Color(0xFFFFFFFF);
+  static const Color primaryContainer =
+      Color(0x330037FF); // primary @ 20% alpha
+  static const Color onPrimaryContainer = Color(0xFFFFFFFF);
+
+  static const Color secondary = Color(0xFFFFC107); // Colors.amber
+  static const Color onSecondary = Color(0xFF000000);
+  static const Color secondaryContainer =
+      Color(0x33FFC107); // amber @ 20% alpha
+  static const Color onSecondaryContainer = Color(0xFF000000);
+
+  static const Color error = Color(0xFFF44336); // Colors.red
+  static const Color onError = Color(0xFFFFFFFF);
+
+  static const Color background = Color(0xFFF5F5F5);
+  static const Color onBackground = Color(0xFF000000);
+
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color onSurface = Color(0xFF000000);
+
+  static const Color outline = Color(0xFFD6D6D6);
+
+  static const Color disabledColor = Color(0xFF9E9E9E); // Colors.grey
 
   static String colorToHex(Color color) {
     return '#${color.value.toRadixString(16).substring(2)}';

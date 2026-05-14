@@ -1,23 +1,22 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/validator_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_email/invoice_email_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class InvoiceEmailScreen extends BaseStatelessWidget {
   final String invoiceNumber;
@@ -128,9 +127,9 @@ class _InvoiceEmailPageState extends State<InvoiceEmailPage>
         }
       },
       child: Scaffold(
-        backgroundColor: OptiAppColors.backgroundGray,
+        backgroundColor: context.colors.backgroundGray,
         appBar: AppBar(
-          backgroundColor: OptiAppColors.backgroundWhite,
+          backgroundColor: context.colors.backgroundWhite,
           centerTitle: false,
           title: Text(
             LocalizationConstants.emailInvoice.localized(),
@@ -144,7 +143,7 @@ class _InvoiceEmailPageState extends State<InvoiceEmailPage>
           ),
         ),
         body: Container(
-          color: OptiAppColors.backgroundWhite,
+          color: context.colors.backgroundWhite,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -166,7 +165,7 @@ class _InvoiceEmailPageState extends State<InvoiceEmailPage>
                             children: [
                               Text(
                                 LocalizationConstants.attachment.localized(),
-                                style: OptiTextStyles.body,
+                                style: context.text.body,
                               ),
                               const SizedBox(
                                 height: 8,
@@ -185,7 +184,7 @@ class _InvoiceEmailPageState extends State<InvoiceEmailPage>
                                   ),
                                   Text(
                                     'invoice_${widget.invoiceNumber}.pdf',
-                                    style: OptiTextStyles.body,
+                                    style: context.text.body,
                                   ),
                                 ],
                               ),

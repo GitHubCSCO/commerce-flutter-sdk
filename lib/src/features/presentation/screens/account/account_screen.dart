@@ -1,8 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/platform_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
@@ -16,7 +14,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bl
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/domain/domain_cubit.dart';
@@ -28,6 +26,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 Future<void> _reloadAccountPageWithAuthStatus(BuildContext context) async {
   final currentState = context.read<AuthCubit>().state;
@@ -159,16 +158,15 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
                 return const Center(child: CircularProgressIndicator());
               case CmsLoadedState():
                 return Scaffold(
-                  backgroundColor: OptiAppColors.backgroundGray,
+                  backgroundColor: context.colors.backgroundGray,
                   appBar: context.watch<AuthCubit>().state.status ==
                           AuthStatus.authenticated
                       ? null
                       : AppBar(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.surface,
+                          backgroundColor: context.colors.surface,
                           title: Text(
                             LocalizationConstants.account.localized(),
-                            style: OptiTextStyles.titleLarge,
+                            style: context.text.titleLarge,
                           ),
                           centerTitle: false,
                           automaticallyImplyLeading: false,
@@ -203,7 +201,7 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
                             },
                             child: Text(
                               LocalizationConstants.privacyPolicy.localized(),
-                              style: OptiTextStyles.subtitleHighlight,
+                              style: context.text.subtitleHighlight,
                             ),
                           ),
                         ),
@@ -231,7 +229,7 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
                             },
                             child: Text(
                               LocalizationConstants.termsOfUse.localized(),
-                              style: OptiTextStyles.subtitleHighlight,
+                              style: context.text.subtitleHighlight,
                             ),
                           ),
                         ),
@@ -242,7 +240,7 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
                             context
                                 .read<AccountPageBloc>()
                                 .getAppVersionAndBuildNumber(),
-                            style: OptiTextStyles.subtitleFade),
+                            style: context.text.subtitleFade),
                       ),
                     ],
                   ),
@@ -334,7 +332,7 @@ class _AccountLoggedInHeader extends StatelessWidget {
 
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: OptiAppColors.primaryColor,
+                    backgroundColor: context.scheme.primary,
                     child: Text(
                       nameLabel.isEmpty ? '' : nameLabel[0],
                       style: const TextStyle(color: Colors.white),
@@ -342,11 +340,11 @@ class _AccountLoggedInHeader extends StatelessWidget {
                   ),
                   title: Text(
                     nameLabel,
-                    style: OptiTextStyles.header2,
+                    style: context.text.header2,
                   ),
                   subtitle: Text(
                     state is AccountHeaderLoaded ? state.email : '',
-                    style: OptiTextStyles.body,
+                    style: context.text.body,
                   ),
                 );
               },
@@ -367,7 +365,7 @@ class _AccountLoggedOutHeader extends StatelessWidget {
       children: [
         Text(
           context.watch<AccountPageBloc>().loggedOutBannerSiteMessage,
-          style: OptiTextStyles.body,
+          style: context.text.body,
         ),
         const SizedBox(height: AppStyle.defaultVerticalPadding),
         PrimaryButton(

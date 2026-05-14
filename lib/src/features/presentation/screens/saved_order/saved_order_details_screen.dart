@@ -1,9 +1,7 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -22,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SavedOrderDetailsScreen extends StatelessWidget {
   final String cartId;
@@ -47,9 +46,9 @@ class OrderDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         centerTitle: false,
         actions: const [
           _OptionsMenu(),
@@ -270,7 +269,7 @@ class _SavedOrderInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -280,7 +279,7 @@ class _SavedOrderInfoWidget extends StatelessWidget {
             TwoTextsRow(
               label: LocalizationConstants.orderDate.localized(),
               value: orderDateText!,
-              textStyle: OptiTextStyles.subtitle,
+              textStyle: context.text.subtitle,
             ),
             const SizedBox(height: 20),
           ],
@@ -289,7 +288,7 @@ class _SavedOrderInfoWidget extends StatelessWidget {
               label:
                   '${LocalizationConstants.subtotal.localized()} (${subTotalCount ?? 0})',
               value: subtotalText!,
-              textStyle: OptiTextStyles.subtitle,
+              textStyle: context.text.subtitle,
             ),
             const SizedBox(height: 20)
           ],

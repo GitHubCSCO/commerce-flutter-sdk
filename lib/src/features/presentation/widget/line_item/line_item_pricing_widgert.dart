@@ -1,9 +1,8 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/avalability_color_converter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/view_warehouse_availability_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class LineItemPricingWidget extends StatelessWidget {
   final String? discountMessage;
@@ -72,7 +71,7 @@ class LineItemPricingWidget extends StatelessWidget {
                   },
                   child: Text(
                     LocalizationConstants.viewAvailabilityWarehouse.localized(),
-                    style: OptiTextStyles.link,
+                    style: context.text.link,
                   ),
                 ),
             }
@@ -92,11 +91,11 @@ Widget _buildDiscountMessageSection(
       discountMessage != "null") {
     return Text(
       discountMessage,
-      style: const TextStyle(
+      style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.normal,
           fontStyle: FontStyle.italic,
-          color: OptiAppColors.textSecondary),
+          color: context.colors.textSecondary),
     );
   }
   return const SizedBox.shrink();
@@ -111,8 +110,8 @@ Widget _buildPricingSection(
       (unitOfMeasureValueText != null && unitOfMeasureValueText.isNotEmpty)) {
     return Row(
       children: [
-        Text(priceValueText ?? '', style: OptiTextStyles.bodySmallHighlight),
-        Text(unitOfMeasureValueText ?? '', style: OptiTextStyles.bodySmall),
+        Text(priceValueText ?? '', style: context.text.bodySmallHighlight),
+        Text(unitOfMeasureValueText ?? '', style: context.text.bodySmall),
       ],
     );
   }
@@ -124,7 +123,7 @@ Widget _buildInventorySection(BuildContext context,
   if (availabilityText != null && availabilityText.isNotEmpty) {
     return Text(
       availabilityText ?? '',
-      style: OptiTextStyles.body.copyWith(
+      style: context.text.body.copyWith(
           color: AvailabilityColorConverter.convert(availabilityMessageType)),
     );
   }

@@ -1,8 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_parameters_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/filter.dart';
@@ -15,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class WishlistFilterWidget extends StatelessWidget {
   final WishListFilterParametersEntity wishListFilterParameters;
@@ -45,7 +44,7 @@ class WishlistFilterWidget extends StatelessWidget {
           return badges.Badge(
             badgeContent: Text(
               filterCount.toString(),
-              style: OptiTextStyles.badgesStyle,
+              style: context.text.badgesStyle,
             ),
             position: badges.BadgePosition.topEnd(top: 0, end: 0),
             badgeStyle: const badges.BadgeStyle(
@@ -189,7 +188,7 @@ class _WishListFilterDateSectionWidget extends StatelessWidget {
       children: [
         Text(
           sectionTitle,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         Row(
@@ -245,7 +244,7 @@ class _WishListFilterDatePickerWidget extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(32),
               ),
-              color: OptiAppColors.backgroundGray,
+              color: context.colors.backgroundGray,
             ),
             child: DatePickerWidget(
               key: UniqueKey(),
@@ -288,7 +287,7 @@ class _WishListFilterAutocompleteWidget extends StatelessWidget {
             WishListFilterAutocompleteType.sharedBy =>
               LocalizationConstants.sharedByNoFormat.localized(),
           },
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         GestureDetector(
@@ -321,7 +320,7 @@ class _WishListFilterAutocompleteWidget extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(32),
               ),
-              color: OptiAppColors.backgroundGray,
+              color: context.colors.backgroundGray,
             ),
             child: Text(
               selectedValue ??
@@ -334,9 +333,9 @@ class _WishListFilterAutocompleteWidget extends StatelessWidget {
                       LocalizationConstants.searchByUsername.localized(),
                   },
               style: selectedValue == null
-                  ? OptiTextStyles.body
-                      .copyWith(color: OptiAppColors.buttonTextDisabledColor)
-                  : OptiTextStyles.body,
+                  ? context.text.body
+                      .copyWith(color: context.colors.buttonTextDisabledColor)
+                  : context.text.body,
             ),
           ),
         ),

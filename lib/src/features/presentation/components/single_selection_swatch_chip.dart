@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 enum ChipOrientation { vertical, horizontal }
 
@@ -124,7 +124,7 @@ class _SingleSelectionSwatchChipState<T>
                   children: [
                     Text(
                       chipTitle!,
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                     ),
                     if (widget.values.length > maxItemsToShow)
                       TextButton(
@@ -216,13 +216,13 @@ class _SingleSelectionSwatchChipState<T>
         child: widget.orientation == ChipOrientation.vertical
             ? Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text(_getValueTitle(value),
-                    style: OptiTextStyles.bodySmall),
+                child:
+                    Text(_getValueTitle(value), style: context.text.bodySmall),
               )
             : Padding(
                 padding: const EdgeInsets.only(top: 10.0),
-                child: Text(_getValueTitle(value),
-                    style: OptiTextStyles.bodySmall),
+                child:
+                    Text(_getValueTitle(value), style: context.text.bodySmall),
               ),
       ),
     ];

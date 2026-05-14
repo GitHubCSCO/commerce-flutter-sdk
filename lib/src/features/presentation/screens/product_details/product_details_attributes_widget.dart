@@ -1,11 +1,10 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/mixins/product_list_item_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_attributes_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ProductDetailsAttributesWidget extends StatefulWidget {
   final ProductDetailsAttributesEntity productDetailsAttributesEntity;
@@ -63,7 +62,7 @@ class _ProductDetailsAttributesWidgetState
                     attribute.label ?? '',
                     maxLines: null,
                     overflow: TextOverflow.visible,
-                    style: OptiTextStyles.subtitle,
+                    style: context.text.subtitle,
                   ),
                 ),
                 const SizedBox(width: 10),

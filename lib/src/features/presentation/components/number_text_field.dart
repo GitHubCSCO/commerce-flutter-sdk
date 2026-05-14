@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class NumberTextField extends StatefulWidget {
   final TextEditingController? controller;
@@ -174,7 +174,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: OptiAppColors.backgroundGray,
+                    backgroundColor: context.colors.backgroundGray,
                     padding: EdgeInsets.zero,
                     shape: const CircleBorder(),
                   ),
@@ -208,7 +208,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(
-                    AppStyle.textFieldborderRadius,
+                    AppStyle.textFieldBorderRadius,
                   ),
                   borderSide: widget.showWarningHighlighted!
                       ? const BorderSide(color: Color.fromARGB(255, 244, 0, 0))
@@ -216,13 +216,13 @@ class _NumberTextFieldState extends State<NumberTextField> {
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(
-                    AppStyle.textFieldborderRadius,
+                    AppStyle.textFieldBorderRadius,
                   ),
                   borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(
-                    AppStyle.textFieldborderRadius,
+                    AppStyle.textFieldBorderRadius,
                   ),
                   borderSide: const BorderSide(
                     color: AppStyle.neutral500,
@@ -263,7 +263,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: OptiAppColors.backgroundGray,
+                    backgroundColor: context.colors.backgroundGray,
                     padding: EdgeInsets.zero,
                     shape: const CircleBorder(),
                   ),

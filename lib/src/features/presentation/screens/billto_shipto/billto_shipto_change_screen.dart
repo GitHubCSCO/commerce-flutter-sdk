@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/map_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/address_type.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/location_search_type.dart';
@@ -27,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class BillToShipToChangeScreen extends StatelessWidget {
   const BillToShipToChangeScreen({super.key});
@@ -57,7 +56,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
       appBar: AppBar(
         title: Text(
           LocalizationConstants.changeCustomerWillCall.localized(),
-          style: OptiTextStyles.titleLarge,
+          style: context.text.titleLarge,
         ),
         backgroundColor: Colors.white,
         actions: <Widget>[
@@ -69,7 +68,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 LocalizationConstants.cancel.localized(),
-                style: OptiTextStyles.subtitleHighlight,
+                style: context.text.subtitleHighlight,
               ),
             ),
           ),
@@ -102,7 +101,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                       .read<BillToShipToBloc>()
                       .defaultEnable(_isSwitched);
                   return Container(
-                    color: OptiAppColors.backgroundWhite,
+                    color: context.colors.backgroundWhite,
                     child: Column(
                       children: [
                         Expanded(
@@ -157,7 +156,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                                         child: Text(
                                             LocalizationConstants.setAsDefault
                                                 .localized(),
-                                            style: OptiTextStyles.body),
+                                            style: context.text.body),
                                       ),
                                       Switch(
                                           value: _isSwitched,
@@ -332,7 +331,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                   child: Text(
                     LocalizationConstants.hours.localized(),
                     textAlign: TextAlign.center,
-                    style: OptiTextStyles.link,
+                    style: context.text.link,
                   ),
                   onTap: () {
                     _onHoursClick(context, wareHouse);
@@ -343,7 +342,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                   child: Text(
                     LocalizationConstants.directions.localized(),
                     textAlign: TextAlign.center,
-                    style: OptiTextStyles.link,
+                    style: context.text.link,
                   ),
                   onTap: () {
                     unawaited(_onDirectionsClick(wareHouse));

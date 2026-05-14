@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
@@ -8,7 +7,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.d
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
@@ -24,7 +22,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/button
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
@@ -43,6 +41,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuickOrderScreen extends BaseStatelessWidget {
   final ScanningMode _scanningMode;
@@ -151,7 +150,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         appBar: AppBar(
           title: Text(_getTitle(widget.scanningMode)),
           actions: <Widget>[
@@ -202,7 +201,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                       Positioned.fill(
                         top: CoreConstants.barcodeRectangleSize,
                         child: ColoredBox(
-                          color: OptiAppColors.backgroundGray,
+                          color: context.colors.backgroundGray,
                           child: Column(
                             children: [
                               Container(
@@ -231,14 +230,14 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                         children: [
                                           Icon(
                                             Icons.search,
-                                            color: OptiAppColors.primaryColor,
+                                            color: context.scheme.primary,
                                           ),
                                           const SizedBox(width: 8),
                                           Expanded(
                                             child: Text(
                                               LocalizationConstants.search
                                                   .localized(),
-                                              style: OptiTextStyles.bodyFade,
+                                              style: context.text.bodyFade,
                                             ),
                                           ),
                                         ],
@@ -361,7 +360,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                                 textAlign:
                                                                     TextAlign
                                                                         .start,
-                                                                style: OptiTextStyles
+                                                                style: context
+                                                                    .text
                                                                     .titleSmall,
                                                               ),
                                                             ),
@@ -397,7 +397,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                                     LocalizationConstants
                                                                         .clear
                                                                         .localized(),
-                                                                    style: OptiTextStyles
+                                                                    style: context
+                                                                        .text
                                                                         .bodyFade,
                                                                   ),
                                                                 ],
@@ -463,9 +464,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                                 textAlign:
                                                                     TextAlign
                                                                         .left,
-                                                                style:
-                                                                    OptiTextStyles
-                                                                        .subtitle,
+                                                                style: context
+                                                                    .text
+                                                                    .subtitle,
                                                               ),
                                                             ),
                                                           ),
@@ -476,9 +477,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                                 textAlign:
                                                                     TextAlign
                                                                         .right,
-                                                                style:
-                                                                    OptiTextStyles
-                                                                        .subtitle,
+                                                                style: context
+                                                                    .text
+                                                                    .subtitle,
                                                               ),
                                                             )
                                                         ],
@@ -518,9 +519,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                                 canProcess));
                                                       },
                                                       backgroundColor: canProcess
-                                                          ? OptiAppColors
-                                                              .buttonDarkRedBackgroudColor
-                                                          : OptiAppColors
+                                                          ? context.colors
+                                                              .buttonDarkRedBackgroundColor
+                                                          : context.colors
                                                               .primaryColor,
                                                       text: canProcess
                                                           ? LocalizationConstants
@@ -612,7 +613,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       return Center(
         child: Text(
           LocalizationConstants.searchPrompt.localized(),
-          style: OptiTextStyles.body,
+          style: context.text.body,
         ),
       );
     } else if (state is QuickOrderAutoCompleteLoadingState) {
@@ -629,7 +630,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       return Center(
         child: Text(
           state.error,
-          style: OptiTextStyles.body,
+          style: context.text.body,
         ),
       );
     } else {
@@ -891,14 +892,14 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       padding: const EdgeInsets.all(8),
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
-        color: OptiAppColors.invalidColor,
+        color: context.colors.invalidColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(999999),
         ),
       ),
-      child: const Icon(
+      child: Icon(
         Icons.warning_amber, // Icon to display
-        color: OptiAppColors.backgroundWhite, // Icon color
+        color: context.colors.backgroundWhite, // Icon color
         size: 20, // Icon size
       ),
     );

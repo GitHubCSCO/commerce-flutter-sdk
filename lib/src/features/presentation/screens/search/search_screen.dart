@@ -4,7 +4,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
@@ -34,6 +33,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SearchScreen extends BaseStatelessWidget {
   const SearchScreen({super.key});
@@ -289,7 +289,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                         return Center(
                           child: Text(
                             LocalizationConstants.searchPrompt.localized(),
-                            style: OptiTextStyles.body,
+                            style: context.text.body,
                           ),
                         );
                       }
@@ -320,7 +320,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                         return Center(
                           child: Text(
                             LocalizationConstants.searchPrompt.localized(),
-                            style: OptiTextStyles.body,
+                            style: context.text.body,
                           ),
                         );
                       }
@@ -329,7 +329,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                         return Center(
                             child: Text(
                           LocalizationConstants.searchNoResults.localized(),
-                          style: OptiTextStyles.body,
+                          style: context.text.body,
                         ));
                       }
                     case SearchProductsLoadedState:
@@ -361,7 +361,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                             child: Text(
                                 LocalizationConstants.searchNoResults
                                     .localized(),
-                                style: OptiTextStyles.body));
+                                style: context.text.body));
                       }
                     default:
                       {
@@ -403,7 +403,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
             child: Text(
               LocalizationConstants.categories.localized(),
-              style: OptiTextStyles.titleSmall,
+              style: context.text.titleSmall,
             ),
           ),
           CategoryAutoCompleteWidget(
@@ -417,7 +417,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
             child: Text(
               LocalizationConstants.brands.localized(),
-              style: OptiTextStyles.titleSmall,
+              style: context.text.titleSmall,
             ),
           ),
           BrandAutoCompleteWidget(

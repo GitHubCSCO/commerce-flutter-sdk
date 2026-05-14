@@ -1,8 +1,7 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
@@ -35,8 +34,8 @@ class PrimaryButton extends StatelessWidget {
         elevation: const WidgetStatePropertyAll(0),
         backgroundColor: WidgetStatePropertyAll(
           isEnabled
-              ? backgroundColor ?? OptiAppColors.primaryColor
-              : (backgroundColor ?? OptiAppColors.primaryColor)
+              ? backgroundColor ?? context.scheme.primary
+              : (backgroundColor ?? context.scheme.primary)
                   .withOpacity(AppStyle.disabledButtonOpacity),
         ),
         foregroundColor: WidgetStatePropertyAll(
@@ -64,8 +63,8 @@ class PrimaryButton extends StatelessWidget {
               },
               Text(
                 text,
-                style: OptiTextStyles.subtitle.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                style: context.text.subtitle.copyWith(
+                  color: context.colors.onPrimary,
                 ),
               ),
               if (trailingIcon != null) ...{
@@ -128,8 +127,8 @@ class SecondaryButton extends StatelessWidget {
               style: style ??
                   TextStyle(
                       color: isEnabled
-                          ? OptiAppColors.primaryColor
-                          : OptiAppColors.primaryColor
+                          ? context.scheme.primary
+                          : context.scheme.primary
                               .withOpacity(AppStyle.disabledButtonOpacity))),
         ),
       ),
@@ -187,8 +186,8 @@ class TertiaryButton extends StatelessWidget {
             text,
             style: TextStyle(
                 color: isEnabled
-                    ? OptiAppColors.primaryColor
-                    : OptiAppColors.primaryColor
+                    ? context.scheme.primary
+                    : context.scheme.primary
                         .withOpacity(AppStyle.disabledButtonOpacity)),
           ),
         ),
@@ -226,7 +225,7 @@ class PlainButton extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: style ?? TextStyle(color: OptiAppColors.primaryColor),
+        style: style ?? TextStyle(color: context.scheme.primary),
       ),
     );
   }

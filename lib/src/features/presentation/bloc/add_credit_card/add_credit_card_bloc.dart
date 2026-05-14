@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/tokenex_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/credit_card_info_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/token_ex_view_mode.dart';
