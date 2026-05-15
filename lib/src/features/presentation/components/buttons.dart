@@ -36,12 +36,12 @@ class PrimaryButton extends StatelessWidget {
           isEnabled
               ? backgroundColor ?? context.scheme.primary
               : (backgroundColor ?? context.scheme.primary)
-                  .withOpacity(AppStyle.disabledButtonOpacity),
+                  .withValues(alpha: AppStyle.disabledButtonOpacity),
         ),
         foregroundColor: WidgetStatePropertyAll(
           isEnabled
               ? foregroundColor
-              : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+              : foregroundColor.withValues(alpha: AppStyle.disabledButtonOpacity),
         ),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
@@ -112,12 +112,12 @@ class SecondaryButton extends StatelessWidget {
         foregroundColor: WidgetStatePropertyAll(
           isEnabled
               ? foregroundColor
-              : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+              : foregroundColor.withValues(alpha: AppStyle.disabledButtonOpacity),
         ),
         backgroundColor: WidgetStatePropertyAll(
           isEnabled
               ? backgroundColor
-              : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+              : backgroundColor.withValues(alpha: AppStyle.disabledButtonOpacity),
         ),
       ),
       child: SizedBox(
@@ -129,7 +129,7 @@ class SecondaryButton extends StatelessWidget {
                       color: isEnabled
                           ? context.scheme.primary
                           : context.scheme.primary
-                              .withOpacity(AppStyle.disabledButtonOpacity))),
+                              .withValues(alpha: AppStyle.disabledButtonOpacity))),
         ),
       ),
     );
@@ -168,16 +168,16 @@ class TertiaryButton extends StatelessWidget {
             side: BorderSide(
               color: isEnabled
                   ? borderColor
-                  : borderColor.withOpacity(AppStyle.disabledButtonOpacity),
+                  : borderColor.withValues(alpha: AppStyle.disabledButtonOpacity),
             ),
           ),
         ),
         foregroundColor: WidgetStatePropertyAll(isEnabled
             ? foregroundColor
-            : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity)),
+            : foregroundColor.withValues(alpha: AppStyle.disabledButtonOpacity)),
         backgroundColor: WidgetStatePropertyAll(isEnabled
             ? backgroundColor
-            : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity)),
+            : backgroundColor.withValues(alpha: AppStyle.disabledButtonOpacity)),
       ),
       child: SizedBox(
         width: double.infinity,
@@ -188,7 +188,7 @@ class TertiaryButton extends StatelessWidget {
                 color: isEnabled
                     ? context.scheme.primary
                     : context.scheme.primary
-                        .withOpacity(AppStyle.disabledButtonOpacity)),
+                        .withValues(alpha: AppStyle.disabledButtonOpacity)),
           ),
         ),
       ),
@@ -220,7 +220,7 @@ class PlainButton extends StatelessWidget {
         foregroundColor: WidgetStatePropertyAll(
           isEnabled
               ? foregroundColor
-              : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+              : foregroundColor.withValues(alpha: AppStyle.disabledButtonOpacity),
         ),
       ),
       child: Text(

@@ -66,7 +66,7 @@ class CarouselSectionWidget extends StatelessWidget {
                                           Brightness.dark
                                       ? Colors.white
                                       : Colors.black)
-                                  .withOpacity(
+                                  .withValues(alpha: 
                                       state.current == entry.key ? 0.9 : 0.4)),
                         ),
                       );

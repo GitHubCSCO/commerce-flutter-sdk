@@ -85,8 +85,8 @@ class _ProductDetailsCarouselWidgetState
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _currentPageIndex == entry.key
-                          ? Colors.black.withOpacity(0.9)
-                          : Colors.black.withOpacity(0.4),
+                          ? Colors.black.withValues(alpha: 0.9)
+                          : Colors.black.withValues(alpha: 0.4),
                     ),
                   ),
                 );
