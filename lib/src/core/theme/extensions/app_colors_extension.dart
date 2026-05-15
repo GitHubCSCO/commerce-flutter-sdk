@@ -153,8 +153,6 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.disabledColor,
   });
 
-  /// V1 transitional factory — every field sourced from [OptiAppColors].
-  /// V2: replace body to read from `AppColorPalette` instead.
   factory AppColors.light() => AppColors(
         backgroundWhite: OptiAppColors.backgroundWhite,
         textPrimary: OptiAppColors.textPrimary,
@@ -285,7 +283,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? buttonLeaveColor,
     Color? buttonRefreshColor,
     Color? buttonEditColor,
-    Color? buttonDarkRedBackgroudColor,
+    Color? buttonDarkRedBackgroundColor,
     Color? navIconUncheckedColor,
     Color? gradientFirstColor,
     Color? gradientSecondColor,
@@ -370,7 +368,7 @@ class AppColors extends ThemeExtension<AppColors> {
         buttonRefreshColor: buttonRefreshColor ?? this.buttonRefreshColor,
         buttonEditColor: buttonEditColor ?? this.buttonEditColor,
         buttonDarkRedBackgroundColor:
-            buttonDarkRedBackgroudColor ?? this.buttonDarkRedBackgroundColor,
+            buttonDarkRedBackgroundColor ?? this.buttonDarkRedBackgroundColor,
         navIconUncheckedColor:
             navIconUncheckedColor ?? this.navIconUncheckedColor,
         gradientFirstColor: gradientFirstColor ?? this.gradientFirstColor,
