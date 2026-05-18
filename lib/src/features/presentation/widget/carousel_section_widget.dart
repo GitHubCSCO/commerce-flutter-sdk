@@ -61,13 +61,14 @@ class CarouselSectionWidget extends StatelessWidget {
                           margin: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 4.0),
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: (context.scheme.brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black)
-                                  .withValues(alpha: 
-                                      state.current == entry.key ? 0.9 : 0.4)),
+                            shape: BoxShape.circle,
+                            color: (context.scheme.brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black)
+                                .withValues(
+                              alpha: state.current == entry.key ? 0.9 : 0.4,
+                            ),
+                          ),
                         ),
                       );
                     }).toList() ??
