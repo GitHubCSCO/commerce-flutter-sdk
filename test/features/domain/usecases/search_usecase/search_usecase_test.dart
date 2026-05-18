@@ -222,8 +222,8 @@ void main() {
         );
 
         // Act
-        final result = await searchUseCase
-            .loadAutocompleteResults(searchQuery, relevancy: false);
+        final result = await searchUseCase.loadAutocompleteResults(searchQuery,
+            relevancy: false);
 
         // Assert
         expect(result, isA<Success<AutocompleteResult, ErrorResponse>>());

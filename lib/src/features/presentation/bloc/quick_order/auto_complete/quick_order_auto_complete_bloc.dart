@@ -112,8 +112,8 @@ class QuickOrderAutoCompleteBloc
         _scanningMode == ScanningMode.create) {
       return await _searchUseCase.loadVmiAutocompleteResults(searchQuery);
     } else {
-      return await _searchUseCase
-          .loadAutocompleteResults(searchQuery, relevancy: false);
+      return await _searchUseCase.loadAutocompleteResults(searchQuery,
+          relevancy: false);
     }
   }
 }
