@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class OptiAppColors {
+  static const defaultPrimaryColor = Color(0xFF0037FF);
+  static var primaryColor = defaultPrimaryColor;
+
   static const Color backgroundWhite = Color(0xFFFFFFFF);
   static const Color textPrimary = Color(0xFF222222);
   static const Color textSecondary = Color(0xFF707070);
@@ -17,8 +20,6 @@ class OptiAppColors {
   static const Color backgroundInput = Color(0xFFEDEDED);
   static const Color inputFocusShadow = Color(0xFFB3C3FF);
   static const optiTextPrimaryColor = Color(0xFF080736);
-  static const defaultPrimaryColor = Color(0xFF0037FF);
-  static var primaryColor = defaultPrimaryColor;
   static const headerTextColor = Color(0xFFFFFFFF);
   static const cursorColor = Color(0xFF7F7F7F);
   static const denyTextColor = Color(0xFFF76368);
@@ -84,7 +85,7 @@ class OptiAppColors {
       Color(0x33FFC107); // amber @ 20% alpha
   static const Color onSecondaryContainer = Color(0xFF000000);
 
-  static const Color error = Color(0xFFF44336); // Colors.red
+  static const Color error = Color(0xFFF44336);
   static const Color onError = Color(0xFFFFFFFF);
 
   static const Color background = Color(0xFFF5F5F5);
@@ -95,7 +96,15 @@ class OptiAppColors {
 
   static const Color outline = Color(0xFFD6D6D6);
 
-  static const Color disabledColor = Color(0xFF9E9E9E); // Colors.grey
+  static const Color disabledColor = Color(0xFF9E9E9E);
+
+  static const Color neutral00 = Color(0xFFFFFFFF);
+  static const Color neutral75 = Color(0xFFF5F5F5);
+  static const Color neutral100 = Color(0xFFEDEDED);
+  static const Color neutral200 = Color(0xFFD6D6D6);
+  static const Color neutral500 = Color(0xFF9E9E9E);
+  static const Color neutral600 = Color(0xFF707070);
+  static const Color neutral990 = Color(0xFF222222);
 
   static String colorToHex(Color color) {
     return '#${color.value.toRadixString(16).substring(2)}';

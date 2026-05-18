@@ -22,7 +22,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/button
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/extra/delayer.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/list_picker_widget.dart';
@@ -52,7 +51,7 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Container(
-        color: AppStyle.neutral00,
+        color: context.colors.neutral00,
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(20.0),

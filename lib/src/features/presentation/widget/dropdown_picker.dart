@@ -105,7 +105,7 @@ class _DropdownPickerState extends State<DropdownPicker> with PickerMixin {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-              color: _isDropdownOpen ? Colors.white : AppStyle.neutral100,
+              color: _isDropdownOpen ? Colors.white : context.colors.neutral100,
               border: _isDropdownOpen
                   ? Border.all(color: context.scheme.primary)
                   : null,

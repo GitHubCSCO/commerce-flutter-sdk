@@ -177,11 +177,11 @@ class _InputState extends State<Input> {
                 textDirection: widget.textDirection,
                 textInputAction: widget.textInputAction,
                 focusNode: _focusNode,
-                cursorColor: AppStyle.neutral990,
+                cursorColor: context.colors.neutral990,
                 decoration: InputDecoration(
                   hintText: widget.hintText,
                   hintStyle: context.text.body.copyWith(
-                    color: AppStyle.neutral500,
+                    color: context.colors.neutral500,
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: AppStyle.defaultHorizontalPadding,
@@ -203,8 +203,8 @@ class _InputState extends State<Input> {
                   ),
                   filled: true,
                   fillColor: _focusNode.hasFocus
-                      ? AppStyle.neutral00
-                      : AppStyle.neutral100,
+                      ? context.colors.neutral00
+                      : context.colors.neutral100,
                   suffixIcon: _focusNode.hasFocus ? widget.suffixIcon : null,
                 ),
               ),

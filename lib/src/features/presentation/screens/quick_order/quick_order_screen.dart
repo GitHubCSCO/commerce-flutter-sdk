@@ -213,7 +213,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
                                           AppStyle.borderRadius),
-                                      color: AppStyle.neutral100,
+                                      color: context.colors.neutral100,
                                     ),
                                     child: TextButton(
                                       onPressed: () {

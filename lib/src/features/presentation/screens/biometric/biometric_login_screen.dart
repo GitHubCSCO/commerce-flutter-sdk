@@ -8,7 +8,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
@@ -136,7 +135,7 @@ class BiometricLoginPage extends StatelessWidget {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(20),
           child: Container(
-            color: AppStyle.neutral75,
+            color: context.colors.neutral75,
             height: 20,
           ),
         ),
@@ -166,7 +165,7 @@ class BiometricLoginPage extends StatelessWidget {
           builder: (context, state) {
             return Container(
               height: double.infinity,
-              color: AppStyle.neutral00,
+              color: context.colors.neutral00,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(

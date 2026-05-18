@@ -272,7 +272,7 @@ class _AccountHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppStyle.neutral00,
+      color: context.colors.neutral00,
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.symmetric(

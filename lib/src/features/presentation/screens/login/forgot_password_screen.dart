@@ -10,7 +10,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
-import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +93,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(20),
           child: Container(
-            color: AppStyle.neutral75,
+            color: context.colors.neutral75,
             height: 20,
           ),
         ),
@@ -143,7 +142,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
           return Container(
             height: double.infinity,
-            color: AppStyle.neutral00,
+            color: context.colors.neutral00,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(

@@ -224,14 +224,14 @@ class _NumberTextFieldState extends State<NumberTextField> {
                   borderRadius: BorderRadius.circular(
                     AppStyle.textFieldBorderRadius,
                   ),
-                  borderSide: const BorderSide(
-                    color: AppStyle.neutral500,
+                  borderSide: BorderSide(
+                    color: context.colors.neutral500,
                   ),
                 ),
                 filled: true,
                 fillColor: _focusNode.hasFocus
-                    ? AppStyle.neutral00
-                    : AppStyle.neutral100,
+                    ? context.colors.neutral00
+                    : context.colors.neutral100,
               ),
               maxLines: 1,
               onTapOutside: (p0) => context.closeKeyboard(),

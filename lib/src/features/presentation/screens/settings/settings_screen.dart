@@ -14,7 +14,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/auth/auth_cu
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
-import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
@@ -69,7 +68,7 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: AppStyle.neutral00,
+        backgroundColor: context.colors.neutral00,
         title: Text(LocalizationConstants.settings.localized()),
         centerTitle: false,
       ),
@@ -100,7 +99,7 @@ class _SettingsDomainSelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppStyle.neutral00,
+      color: context.colors.neutral00,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       child: Column(
@@ -151,7 +150,7 @@ class _SettingsListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: AppStyle.neutral00,
+      color: context.colors.neutral00,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ListView.separated(
         shrinkWrap: true,

@@ -340,7 +340,7 @@ class _OrderProductQuantityGroupWidgetState
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-                  color: AppStyle.neutral100,
+                  color: context.colors.neutral100,
                 ),
                 child: TextButton(
                   onPressed: () {
@@ -433,7 +433,7 @@ class _OrderProductQuantityGroupWidgetState
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-        color: AppStyle.neutral100,
+        color: context.colors.neutral100,
       ),
       child: ListPickerWidget(
           items:

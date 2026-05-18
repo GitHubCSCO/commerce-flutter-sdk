@@ -78,6 +78,15 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color outline;
   final Color disabledColor;
 
+  // Neutral palette tokens
+  final Color neutral00;
+  final Color neutral75;
+  final Color neutral100;
+  final Color neutral200;
+  final Color neutral500;
+  final Color neutral600;
+  final Color neutral990;
+
   const AppColors({
     required this.backgroundWhite,
     required this.textPrimary,
@@ -151,6 +160,13 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.onSurface,
     required this.outline,
     required this.disabledColor,
+    required this.neutral00,
+    required this.neutral75,
+    required this.neutral100,
+    required this.neutral200,
+    required this.neutral500,
+    required this.neutral600,
+    required this.neutral990,
   });
 
   factory AppColors.light() => AppColors(
@@ -230,6 +246,13 @@ class AppColors extends ThemeExtension<AppColors> {
         onSurface: OptiAppColors.onSurface,
         outline: OptiAppColors.outline,
         disabledColor: OptiAppColors.disabledColor,
+        neutral00: OptiAppColors.neutral00,
+        neutral75: OptiAppColors.neutral75,
+        neutral100: OptiAppColors.neutral100,
+        neutral200: OptiAppColors.neutral200,
+        neutral500: OptiAppColors.neutral500,
+        neutral600: OptiAppColors.neutral600,
+        neutral990: OptiAppColors.neutral990,
       );
 
   @override
@@ -306,6 +329,13 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? onSurface,
     Color? outline,
     Color? disabledColor,
+    Color? neutral00,
+    Color? neutral75,
+    Color? neutral100,
+    Color? neutral200,
+    Color? neutral500,
+    Color? neutral600,
+    Color? neutral990,
   }) =>
       AppColors(
         backgroundWhite: backgroundWhite ?? this.backgroundWhite,
@@ -394,6 +424,13 @@ class AppColors extends ThemeExtension<AppColors> {
         onSurface: onSurface ?? this.onSurface,
         outline: outline ?? this.outline,
         disabledColor: disabledColor ?? this.disabledColor,
+        neutral00: neutral00 ?? this.neutral00,
+        neutral75: neutral75 ?? this.neutral75,
+        neutral100: neutral100 ?? this.neutral100,
+        neutral200: neutral200 ?? this.neutral200,
+        neutral500: neutral500 ?? this.neutral500,
+        neutral600: neutral600 ?? this.neutral600,
+        neutral990: neutral990 ?? this.neutral990,
       );
 
   @override
@@ -487,6 +524,13 @@ class AppColors extends ThemeExtension<AppColors> {
       onSurface: l(onSurface, other.onSurface),
       outline: l(outline, other.outline),
       disabledColor: l(disabledColor, other.disabledColor),
+      neutral00: l(neutral00, other.neutral00),
+      neutral75: l(neutral75, other.neutral75),
+      neutral100: l(neutral100, other.neutral100),
+      neutral200: l(neutral200, other.neutral200),
+      neutral500: l(neutral500, other.neutral500),
+      neutral600: l(neutral600, other.neutral600),
+      neutral990: l(neutral990, other.neutral990),
     );
   }
 }

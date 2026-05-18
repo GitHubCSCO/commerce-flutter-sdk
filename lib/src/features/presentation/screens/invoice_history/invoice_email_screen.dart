@@ -9,7 +9,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/button
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_email/invoice_email_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_details_body_widget.dart';
@@ -137,7 +136,7 @@ class _InvoiceEmailPageState extends State<InvoiceEmailPage>
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(2),
             child: Container(
-              color: AppStyle.neutral75,
+              color: context.colors.neutral75,
               height: 2,
             ),
           ),

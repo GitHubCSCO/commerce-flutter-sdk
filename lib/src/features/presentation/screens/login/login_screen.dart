@@ -19,7 +19,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bl
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
-import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/login_cubit.dart';
@@ -132,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: AppStyle.neutral00,
+      color: context.colors.neutral00,
       child: SafeArea(
         child: Column(
           children: [
@@ -158,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                   bottom: PreferredSize(
                     preferredSize: const Size.fromHeight(5),
                     child: Container(
-                      color: AppStyle.neutral75,
+                      color: context.colors.neutral75,
                       height: 5,
                     ),
                   ),
