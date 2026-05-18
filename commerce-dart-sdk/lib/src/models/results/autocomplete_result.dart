@@ -16,12 +16,15 @@ class AutocompleteResult extends BaseModel {
 
   bool? isRetailSearchCompletionResults;
 
+  String? attributionToken;
+
   AutocompleteResult({
     this.products,
     this.brands,
     this.categories,
     this.attributeResults,
     this.isRetailSearchCompletionResults,
+    this.attributionToken,
   });
 
   factory AutocompleteResult.fromJson(Map<String, dynamic> json) =>

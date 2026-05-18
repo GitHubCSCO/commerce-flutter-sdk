@@ -38,21 +38,15 @@ class AutoCompleteService extends ServiceBase implements IAutocompleteService {
       getAutocompleteProducts(
     String searchQuery,
   ) async {
-    var url = Uri.parse(CommerceAPIConstants.autocompleteUrl);
-    List<String> parameters = [
-      "query=$searchQuery",
-      "categoryEnabled=false",
-      "contentEnabled=false",
-      "productEnabled=true",
-      "brandEnabled=false",
-    ];
-
-    var urlStr = "$url?${parameters.join("&")}";
-
-    final result = await getAsyncNoCache<Autocomplete>(
-      urlStr,
-      Autocomplete.fromJson,
+    var parameters = AutocompleteQueryParameters(
+      query: searchQuery,
+      brandEnabled: false,
+      categoryEnabled: false,
+      contentEnabled: false,
+      productEnabled: true,
     );
+
+    final result = await getAutocompleteResults(parameters);
 
     switch (result) {
       case Success(value: final value):

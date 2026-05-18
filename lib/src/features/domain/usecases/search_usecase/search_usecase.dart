@@ -4,12 +4,14 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SearchUseCase extends BaseUseCase {
   Future<Result<AutocompleteResult, ErrorResponse>> loadAutocompleteResults(
-      String searchQuery) async {
+      String searchQuery,
+      {bool? relevancy = true}) async {
     var parameters = AutocompleteQueryParameters(
       query: searchQuery,
       categoryEnabled: true,
       brandEnabled: true,
       productEnabled: true,
+      relevancy: relevancy,
     );
     var result = await commerceAPIServiceProvider
         .getAutocompleteService()

@@ -207,6 +207,34 @@ void main() {
         expect(capturedParams.categoryEnabled, isTrue);
         expect(capturedParams.brandEnabled, isTrue);
         expect(capturedParams.productEnabled, isTrue);
+        expect(capturedParams.relevancy, isTrue);
+      });
+
+      test('should pass relevancy false when specified', () async {
+        // Arrange
+        const searchQuery = 'test query';
+        final mockResult = MockAutocompleteResult();
+
+        when(() => mockAutocompleteService.getAutocompleteResults(
+              any(that: isA<AutocompleteQueryParameters>()),
+            )).thenAnswer(
+          (_) async => Success<AutocompleteResult, ErrorResponse>(mockResult),
+        );
+
+        // Act
+        final result = await searchUseCase
+            .loadAutocompleteResults(searchQuery, relevancy: false);
+
+        // Assert
+        expect(result, isA<Success<AutocompleteResult, ErrorResponse>>());
+
+        final captured =
+            verify(() => mockAutocompleteService.getAutocompleteResults(
+                  captureAny(that: isA<AutocompleteQueryParameters>()),
+                )).captured;
+
+        final capturedParams = captured.first as AutocompleteQueryParameters;
+        expect(capturedParams.relevancy, isFalse);
       });
 
       test('should return Failure when autocomplete service fails', () async {

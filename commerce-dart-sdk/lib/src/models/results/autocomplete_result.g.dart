@@ -23,6 +23,7 @@ AutocompleteResult _$AutocompleteResultFromJson(Map<String, dynamic> json) =>
               json['attributeResults'] as Map<String, dynamic>),
       isRetailSearchCompletionResults:
           json['isRetailSearchCompletionResults'] as bool?,
+      attributionToken: json['attributionToken'] as String?,
     )
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
@@ -44,4 +45,6 @@ Map<String, dynamic> _$AutocompleteResultToJson(AutocompleteResult instance) =>
         'attributeResults': value,
       if (instance.isRetailSearchCompletionResults case final value?)
         'isRetailSearchCompletionResults': value,
+      if (instance.attributionToken case final value?)
+        'attributionToken': value,
     };
