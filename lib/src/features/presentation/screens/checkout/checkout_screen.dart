@@ -2,6 +2,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/cart_line_mapper.dart';
@@ -37,6 +38,13 @@ class CheckoutScreen extends BaseStatelessWidget {
 
   @override
   Widget buildContent(BuildContext context) {
+    final tokenExStyle = TokenExStyleDto(
+      baseColor: context.colors.lightGrayTextColor.toString(),
+      focusColor: context.colors.primaryColor.toString(),
+      errorColor: context.colors.invalidColor.toString(),
+      textColor: context.colors.darkGrayTextColor.toString(),
+    );
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<ExpansionPanelCubit>(
@@ -50,8 +58,13 @@ class CheckoutScreen extends BaseStatelessWidget {
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
         BlocProvider<PaymentDetailsBloc>(
-          create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(cartId: cart.id ?? '')),
+          create: (_) => sl<PaymentDetailsBloc>()
+            ..add(
+              LoadPaymentDetailsEvent(
+                cartId: cart.id ?? '',
+                tokenExStyle: tokenExStyle,
+              ),
+            ),
         ),
       ],
       child: CheckoutPage(cart: cart),

@@ -6,8 +6,10 @@ class AddCreditCardEvent {}
 
 class SetUpDataSourceEvent extends AddCreditCardEvent {
   AddCreditCardEntity? addCreditCardEntity;
+  TokenExStyleDto tokenExStyle;
   SetUpDataSourceEvent({
     this.addCreditCardEntity,
+    required this.tokenExStyle,
   });
 }
 

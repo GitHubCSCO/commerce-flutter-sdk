@@ -2,6 +2,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
@@ -52,6 +53,13 @@ class VmiCheckoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokenExStyle = TokenExStyleDto(
+      baseColor: context.colors.lightGrayTextColor.toString(),
+      focusColor: context.colors.primaryColor.toString(),
+      errorColor: context.colors.invalidColor.toString(),
+      textColor: context.colors.darkGrayTextColor.toString(),
+    );
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<CheckoutBloc>(
@@ -62,9 +70,13 @@ class VmiCheckoutScreen extends StatelessWidget {
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PaymentDetailsBloc>(
-          create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(
-                cartId: vmiCheckoutEntity.cart.id ?? '')),
+          create: (_) => sl<PaymentDetailsBloc>()
+            ..add(
+              LoadPaymentDetailsEvent(
+                cartId: vmiCheckoutEntity.cart.id ?? '',
+                tokenExStyle: tokenExStyle,
+              ),
+            ),
         ),
       ],
       child: VmiCheckoutPage(

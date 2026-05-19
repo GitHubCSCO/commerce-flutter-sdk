@@ -4,15 +4,24 @@ abstract class PaymentDetailsEvent {}
 
 class LoadPaymentDetailsEvent extends PaymentDetailsEvent {
   final String cartId;
+  final TokenExStyleDto tokenExStyle;
 
-  LoadPaymentDetailsEvent({required this.cartId});
+  LoadPaymentDetailsEvent({
+    required this.cartId,
+    required this.tokenExStyle,
+  });
 }
 
 class UpdatePaymentMethodEvent extends PaymentDetailsEvent {
   final PaymentMethodDto? paymentMethodDto;
   final bool isCVVRequired;
-  UpdatePaymentMethodEvent(
-      {required this.paymentMethodDto, required this.isCVVRequired});
+  final TokenExStyleDto tokenExStyle;
+
+  UpdatePaymentMethodEvent({
+    required this.paymentMethodDto,
+    required this.isCVVRequired,
+    required this.tokenExStyle,
+  });
 }
 
 class UpdateCreditCartInfoEvent extends PaymentDetailsEvent {

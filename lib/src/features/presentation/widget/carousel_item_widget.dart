@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_sdk/src/core/theme/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/color_utils.dart';
 import 'dart:async';
 
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
@@ -51,7 +51,7 @@ class CarouselItemWidget extends StatelessWidget {
             if (carouselSlideWidgetEntity.background ==
                 CarouselBacgroundType.color.name)
               Container(
-                color: OptiAppColors.rgbaToColor(
+                color: ColorUtils.rgbaToColor(
                   carouselSlideWidgetEntity.backgroundColor ?? '',
                 ),
               )
@@ -86,7 +86,7 @@ class CarouselItemWidget extends StatelessWidget {
                       carouselSlideWidgetEntity.primaryText ?? '',
                       style: context.text.titleLarge.copyWith(
                         fontWeight: FontWeight.w800,
-                        color: OptiAppColors.colorFromHexString(
+                        color: ColorUtils.colorFromHexString(
                           carouselSlideWidgetEntity.primaryTextColorHex ?? '',
                         ),
                       ),
@@ -97,7 +97,7 @@ class CarouselItemWidget extends StatelessWidget {
                     Text(
                       carouselSlideWidgetEntity.secondaryText ?? '',
                       style: context.text.body.copyWith(
-                        color: OptiAppColors.colorFromHexString(
+                        color: ColorUtils.colorFromHexString(
                           carouselSlideWidgetEntity.secondaryTextColorHex ?? '',
                         ),
                       ),

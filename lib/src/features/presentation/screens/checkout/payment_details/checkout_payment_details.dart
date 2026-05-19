@@ -49,6 +49,13 @@ class CheckoutPaymentDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokenExStyle = TokenExStyleDto(
+      baseColor: context.colors.lightGrayTextColor.toString(),
+      focusColor: context.colors.primaryColor.toString(),
+      errorColor: context.colors.invalidColor.toString(),
+      textColor: context.colors.darkGrayTextColor.toString(),
+    );
+
     return BlocListener<PaymentDetailsBloc, PaymentDetailsState>(
       listener: (_, state) {
         if (state is PaymentDetailsLoaded) {
@@ -63,6 +70,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
                             .read<PaymentDetailsBloc>()
                             .accountPaymentProfile!),
                     isCVVRequired: false,
+                    tokenExStyle: tokenExStyle,
                   ),
                 );
           }
@@ -245,6 +253,12 @@ class CheckoutPaymentDetails extends StatelessWidget {
           UpdatePaymentMethodEvent(
             paymentMethodDto: item,
             isCVVRequired: true,
+            tokenExStyle: TokenExStyleDto(
+              baseColor: context.colors.lightGrayTextColor.toString(),
+              focusColor: context.colors.primaryColor.toString(),
+              errorColor: context.colors.invalidColor.toString(),
+              textColor: context.colors.darkGrayTextColor.toString(),
+            ),
           ),
         );
   }
@@ -288,6 +302,12 @@ class CheckoutPaymentDetails extends StatelessWidget {
               );
           context.read<PaymentDetailsBloc>().add(LoadPaymentDetailsEvent(
                 cartId: context.read<PaymentDetailsBloc>().cart?.id ?? '',
+                tokenExStyle: TokenExStyleDto(
+                  baseColor: context.colors.lightGrayTextColor.toString(),
+                  focusColor: context.colors.primaryColor.toString(),
+                  errorColor: context.colors.invalidColor.toString(),
+                  textColor: context.colors.darkGrayTextColor.toString(),
+                ),
               ));
           onCompleteCheckoutPaymentSection();
         }

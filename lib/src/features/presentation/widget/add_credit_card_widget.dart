@@ -76,6 +76,13 @@ class AddCreditCardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokenExStyle = TokenExStyleDto(
+      baseColor: context.colors.lightGrayTextColor.toString(),
+      focusColor: context.colors.primaryColor.toString(),
+      errorColor: context.colors.invalidColor.toString(),
+      textColor: context.colors.darkGrayTextColor.toString(),
+    );
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: context.colors.backgroundWhite,
@@ -86,9 +93,14 @@ class AddCreditCardScreen extends StatelessWidget {
           child: MultiBlocProvider(
               providers: [
                 BlocProvider<AddCreditCardBloc>(
-                    create: (context) => sl<AddCreditCardBloc>()
-                      ..add(SetUpDataSourceEvent(
-                          addCreditCardEntity: addCreditCardEntity))),
+                  create: (_) => sl<AddCreditCardBloc>()
+                    ..add(
+                      SetUpDataSourceEvent(
+                        addCreditCardEntity: addCreditCardEntity,
+                        tokenExStyle: tokenExStyle,
+                      ),
+                    ),
+                ),
                 BlocProvider<BillingAddressCubit>(
                     create: (context) => sl<BillingAddressCubit>()
                       ..setUpDataBillingAddress(addCreditCardEntity)),

@@ -1,5 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/converter/avalability_color_converter.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/helper/extra/availability_color_converter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/view_warehouse_availability_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
@@ -124,7 +124,9 @@ Widget _buildInventorySection(BuildContext context,
     return Text(
       availabilityText ?? '',
       style: context.text.body.copyWith(
-          color: AvailabilityColorConverter.convert(availabilityMessageType)),
+        color: AvailabilityColorConverter.convert(
+            context, availabilityMessageType),
+      ),
     );
   }
   return const SizedBox.shrink();

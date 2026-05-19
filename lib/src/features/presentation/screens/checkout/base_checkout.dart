@@ -237,9 +237,15 @@ mixin BaseCheckout {
                 context
                     .read<CheckoutBloc>()
                     .add(UpdateCartPaymentFailedEvent(id ?? ''));
-                context
-                    .read<PaymentDetailsBloc>()
-                    .add(LoadPaymentDetailsEvent(cartId: id ?? ''));
+                context.read<PaymentDetailsBloc>().add(LoadPaymentDetailsEvent(
+                      cartId: id ?? '',
+                      tokenExStyle: TokenExStyleDto(
+                        baseColor: context.colors.lightGrayTextColor.toString(),
+                        focusColor: context.colors.primaryColor.toString(),
+                        errorColor: context.colors.invalidColor.toString(),
+                        textColor: context.colors.darkGrayTextColor.toString(),
+                      ),
+                    ));
               } else {
                 context
                     .read<CheckoutBloc>()

@@ -1,6 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/converter/avalability_color_converter.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/helper/extra/availability_color_converter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/warehouse_inventory/warehouse_inventory_state.dart';
@@ -102,10 +102,13 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
                                                     : (warehouse.qty ?? 0)
                                                         .toStringAsFixed(4),
                                                 style: TextStyle(
-                                                    color:
-                                                        AvailabilityColorConverter
-                                                            .convert(warehouse
-                                                                .messageType)),
+                                                  color:
+                                                      AvailabilityColorConverter
+                                                          .convert(
+                                                    context,
+                                                    warehouse.messageType,
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ),

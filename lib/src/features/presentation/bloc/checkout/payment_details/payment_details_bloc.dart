@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:commerce_flutter_sdk/src/core/theme/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/tokenex_entity.dart';
@@ -65,7 +64,10 @@ class PaymentDetailsBloc
     _setUpSelectedPaymentMethod(cart!);
     await _setupPaymentDataSources(
         UpdatePaymentMethodEvent(
-            isCVVRequired: true, paymentMethodDto: selectedPaymentMethod),
+          isCVVRequired: true,
+          paymentMethodDto: selectedPaymentMethod,
+          tokenExStyle: event.tokenExStyle,
+        ),
         emit);
   }
 
@@ -123,7 +125,8 @@ class PaymentDetailsBloc
                 isNewCreditCard: false,
                 cardDetails: cardDetails,
                 showPOField: showPOField,
-                tokenExEntity: _createTokenExEntity(creditCard),
+                tokenExEntity:
+                    _createTokenExEntity(creditCard, event.tokenExStyle),
                 isCVVFieldOpened: true,
               ));
               return;
@@ -139,7 +142,8 @@ class PaymentDetailsBloc
                   isNewCreditCard: false,
                   cardDetails: cardDetails,
                   showPOField: showPOField,
-                  tokenExEntity: _createTokenExEntity(creditCard),
+                  tokenExEntity:
+                      _createTokenExEntity(creditCard, event.tokenExStyle),
                   isCVVFieldOpened: true,
                 ));
                 return;
@@ -202,15 +206,13 @@ class PaymentDetailsBloc
     return _paymentDetailsUseCase.getTokenExConfiguration(cardIdentifier);
   }
 
-  TokenExEntity _createTokenExEntity(AccountPaymentProfile creditCard) {
+  TokenExEntity _createTokenExEntity(
+    AccountPaymentProfile creditCard,
+    TokenExStyleDto tokenExStyle,
+  ) {
     return TokenExEntity(
       tokenExConfiguration: tokenExConfiguration,
-      tokenexStyle: TokenExStyleDto(
-        baseColor: OptiAppColors.lightGrayTextColor.toString(),
-        focusColor: OptiAppColors.primaryColor.toString(),
-        errorColor: OptiAppColors.invalidColor.toString(),
-        textColor: OptiAppColors.darkGrayTextColor.toString(),
-      ),
+      tokenexStyle: tokenExStyle,
       tokenexMode: TokenExViewMode.cvv,
       cardType: creditCard.cardType,
       tokenExUrl: _paymentDetailsUseCase.tokenExIFrameUrl,

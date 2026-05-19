@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/converter/avalability_color_converter.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/helper/extra/availability_color_converter.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
@@ -225,8 +225,9 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             child: Text(
               productDetailsPriceEntity.availability?.message ?? '',
               style: context.text.body.copyWith(
-                  color: AvailabilityColorConverter.convert(
-                      productDetailsPriceEntity.availability?.messageType)),
+                color: AvailabilityColorConverter.convert(context,
+                    productDetailsPriceEntity.availability?.messageType),
+              ),
             ),
           );
         } else if (state is ProductDetailsPricingLoading) {
