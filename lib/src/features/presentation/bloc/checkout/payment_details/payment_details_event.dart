@@ -4,23 +4,19 @@ abstract class PaymentDetailsEvent {}
 
 class LoadPaymentDetailsEvent extends PaymentDetailsEvent {
   final String cartId;
-  final TokenExStyleDto tokenExStyle;
 
   LoadPaymentDetailsEvent({
     required this.cartId,
-    required this.tokenExStyle,
   });
 }
 
 class UpdatePaymentMethodEvent extends PaymentDetailsEvent {
   final PaymentMethodDto? paymentMethodDto;
   final bool isCVVRequired;
-  final TokenExStyleDto tokenExStyle;
 
   UpdatePaymentMethodEvent({
     required this.paymentMethodDto,
     required this.isCVVRequired,
-    required this.tokenExStyle,
   });
 }
 
@@ -28,6 +24,7 @@ class UpdateCreditCartInfoEvent extends PaymentDetailsEvent {
   final String cardNumber;
   final String cardType;
   final String securityCode;
+
   UpdateCreditCartInfoEvent(
       {required this.cardNumber,
       required this.cardType,
@@ -36,6 +33,7 @@ class UpdateCreditCartInfoEvent extends PaymentDetailsEvent {
 
 class UpdateNewAccountPaymentProfileEvent extends PaymentDetailsEvent {
   final AccountPaymentProfile accountPaymentProfile;
+
   UpdateNewAccountPaymentProfileEvent({required this.accountPaymentProfile});
 }
 

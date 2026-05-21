@@ -79,7 +79,6 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
       var tokeExUrl = _addCreditCardUsecase.tokenExIFrameUrl;
       var tokenExEntity = TokenExEntity(
           tokenExConfiguration: tokenExConfiguration,
-          tokenexStyle: event.tokenExStyle,
           tokenexMode: TokenExViewMode.full,
           cardType: "",
           tokenExUrl: tokeExUrl);

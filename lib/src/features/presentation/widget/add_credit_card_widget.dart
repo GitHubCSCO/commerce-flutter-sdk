@@ -29,6 +29,7 @@ import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 class AddCreditCardEntity {
   final AccountPaymentProfile? accountPaymentProfile;
   final bool isAddNewCreditCard;
+
   AddCreditCardEntity({
     required this.isAddNewCreditCard,
     this.accountPaymentProfile,
@@ -64,6 +65,7 @@ class AddCreditCardScreenResponse {
 
 class AddCreditCardScreen extends StatelessWidget {
   final AddCreditCardEntity addCreditCardEntity;
+
   const AddCreditCardScreen({super.key, required this.addCreditCardEntity});
 
   String getTitle() {
@@ -76,13 +78,6 @@ class AddCreditCardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tokenExStyle = TokenExStyleDto(
-      baseColor: context.colors.lightGrayTextColor.toString(),
-      focusColor: context.colors.primaryColor.toString(),
-      errorColor: context.colors.invalidColor.toString(),
-      textColor: context.colors.darkGrayTextColor.toString(),
-    );
-
     return Scaffold(
         appBar: AppBar(
           backgroundColor: context.colors.backgroundWhite,
@@ -97,7 +92,6 @@ class AddCreditCardScreen extends StatelessWidget {
                     ..add(
                       SetUpDataSourceEvent(
                         addCreditCardEntity: addCreditCardEntity,
-                        tokenExStyle: tokenExStyle,
                       ),
                     ),
                 ),

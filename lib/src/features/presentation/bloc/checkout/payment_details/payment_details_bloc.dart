@@ -66,7 +66,6 @@ class PaymentDetailsBloc
         UpdatePaymentMethodEvent(
           isCVVRequired: true,
           paymentMethodDto: selectedPaymentMethod,
-          tokenExStyle: event.tokenExStyle,
         ),
         emit);
   }
@@ -125,8 +124,7 @@ class PaymentDetailsBloc
                 isNewCreditCard: false,
                 cardDetails: cardDetails,
                 showPOField: showPOField,
-                tokenExEntity:
-                    _createTokenExEntity(creditCard, event.tokenExStyle),
+                tokenExEntity: _createTokenExEntity(creditCard),
                 isCVVFieldOpened: true,
               ));
               return;
@@ -142,8 +140,7 @@ class PaymentDetailsBloc
                   isNewCreditCard: false,
                   cardDetails: cardDetails,
                   showPOField: showPOField,
-                  tokenExEntity:
-                      _createTokenExEntity(creditCard, event.tokenExStyle),
+                  tokenExEntity: _createTokenExEntity(creditCard),
                   isCVVFieldOpened: true,
                 ));
                 return;
@@ -208,11 +205,9 @@ class PaymentDetailsBloc
 
   TokenExEntity _createTokenExEntity(
     AccountPaymentProfile creditCard,
-    TokenExStyleDto tokenExStyle,
   ) {
     return TokenExEntity(
       tokenExConfiguration: tokenExConfiguration,
-      tokenexStyle: tokenExStyle,
       tokenexMode: TokenExViewMode.cvv,
       cardType: creditCard.cardType,
       tokenExUrl: _paymentDetailsUseCase.tokenExIFrameUrl,
