@@ -312,12 +312,16 @@ class OrderProductsSectionWidget extends StatelessWidget {
   final List<OrderLineEntity> orderLines;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
 
   const OrderProductsSectionWidget({
     super.key,
     required this.orderLines,
     this.hidePricingEnable,
     this.hideInventoryEnable,
+    this.showSavingsAmount = true,
+    this.showSavingsPercent = true,
   });
 
   @override
@@ -358,7 +362,12 @@ class OrderProductsSectionWidget extends StatelessWidget {
               productNumber: orderLine.getProductNumber(),
               discountMessage: (orderLine.unitNetPrice == 0)
                   ? ''
-                  : (DiscountValueConverter().convert(orderLine) ?? '')
+                  : (DiscountValueConverter().convert(
+                            orderLine,
+                            showSavingsAmount: showSavingsAmount,
+                            showSavingsPercent: showSavingsPercent,
+                          ) ??
+                          '')
                       .toString(),
               priceValueText: orderLine.unitNetPriceDisplay,
               unitOfMeasureValueText: orderLine.unitOfMeasureDisplay != null

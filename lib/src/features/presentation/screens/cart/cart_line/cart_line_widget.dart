@@ -23,6 +23,8 @@ class CartLineWidget extends StatelessWidget {
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
   final bool? navigateWithoutNavbar;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
   const CartLineWidget({
     super.key,
     required this.cartLineEntity,
@@ -34,6 +36,8 @@ class CartLineWidget extends StatelessWidget {
     this.showRemoveButton = true,
     this.moreButtonWidget,
     this.navigateWithoutNavbar = false,
+    this.showSavingsAmount = true,
+    this.showSavingsPercent = true,
   });
 
   @override
@@ -110,7 +114,10 @@ class CartLineWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0, 10.0),
             child: LineItemPricingWidget(
-              discountMessage: cartLineEntity.pricing?.getDiscountValue(),
+              discountMessage: cartLineEntity.pricing?.getDiscountValue(
+                showSavingsAmount: showSavingsAmount,
+                showSavingsPercent: showSavingsPercent,
+              ),
               priceValueText: cartLineEntity.updatePriceValueText(),
               unitOfMeasureValueText:
                   cartLineEntity.updateUnitOfMeasureValueText(),

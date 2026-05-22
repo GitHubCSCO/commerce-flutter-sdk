@@ -96,6 +96,16 @@ class QuoteConfirmationPage extends StatelessWidget {
                   quoteLineEntity: quoteLineEntity,
                   showRemoveButton: false,
                   canEditQuantity: false,
+                  showSavingsAmount: context
+                          .read<QuoteConfirmationCubit>()
+                          .productSettings
+                          ?.showSavingsAmount ??
+                      true,
+                  showSavingsPercent: context
+                          .read<QuoteConfirmationCubit>()
+                          .productSettings
+                          ?.showSavingsPercent ??
+                      true,
                   onCartLineRemovedCallback: (cartLineEntity) {},
                   onCartQuantityChangedCallback: (quantity) {}))
               .toList(),

@@ -17,6 +17,8 @@ class CartLineWidgetList extends StatelessWidget {
   final int? cartItemsCount;
   final List<CartLineEntity> cartLineEntities;
   final void Function(BuildContext) onCartChangeCallBack;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
 
   const CartLineWidgetList({
     super.key,
@@ -27,6 +29,8 @@ class CartLineWidgetList extends StatelessWidget {
     this.showClearCart,
     this.hidePricingEnable,
     this.hideInventoryEnable,
+    this.showSavingsAmount = true,
+    this.showSavingsPercent = true,
   });
 
   @override
@@ -83,6 +87,8 @@ class CartLineWidgetList extends StatelessWidget {
                           },
                           hidePricingEnable: hidePricingEnable,
                           hideInventoryEnable: hideInventoryEnable,
+                          showSavingsAmount: showSavingsAmount,
+                          showSavingsPercent: showSavingsPercent,
                         ))
                     .toList(),
               ),

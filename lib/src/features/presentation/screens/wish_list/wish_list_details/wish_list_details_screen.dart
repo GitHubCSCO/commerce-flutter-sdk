@@ -612,6 +612,16 @@ class _WishListLinesSectionState extends State<_WishListLinesSection> {
                 isDeleteButtonVisible: canEditWishList,
                 canEditQuantity:
                     line.canEnterQuantity == true && canEditWishList,
+                showSavingsAmount: context
+                        .read<WishListDetailsCubit>()
+                        .productSettings
+                        ?.showSavingsAmount ??
+                    true,
+                showSavingsPercent: context
+                        .read<WishListDetailsCubit>()
+                        .productSettings
+                        ?.showSavingsPercent ??
+                    true,
               );
             },
             separatorBuilder: (context, index) => const Divider(),

@@ -241,6 +241,16 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                               .getCartLines(),
                           hidePricingEnable: state.hidePricingEnable,
                           hideInventoryEnable: state.hideInventoryEnable,
+                          showSavingsAmount: context
+                                  .read<OrderApprovalDetailsCubit>()
+                                  .productSettings
+                                  ?.showSavingsAmount ??
+                              true,
+                          showSavingsPercent: context
+                                  .read<OrderApprovalDetailsCubit>()
+                                  .productSettings
+                                  ?.showSavingsPercent ??
+                              true,
                           onAddToList: ({required cartLineEntity}) {
                             WishListCallbackHelper.addItemsToWishList(
                               context,

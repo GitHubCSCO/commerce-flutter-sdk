@@ -45,6 +45,12 @@ class InvoiceUseCase extends BaseUseCase {
         .getCachedCurrentSession();
   }
 
+  Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
+  }
+
   Future<bool> sendInvoiceEmail(
       {required InvoiceEmailParameter parameter}) async {
     final result =

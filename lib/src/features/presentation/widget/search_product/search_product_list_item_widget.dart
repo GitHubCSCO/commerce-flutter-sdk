@@ -113,7 +113,12 @@ class SearchProductListItemWidget extends StatelessWidget
                   getInfoWidget(product),
                   const SizedBox(height: 4),
                   LineItemPricingWidget(
-                    discountMessage: product.pricing?.getDiscountValue(),
+                    discountMessage: product.pricing?.getDiscountValue(
+                      showSavingsAmount:
+                          productSettings?.showSavingsAmount ?? true,
+                      showSavingsPercent:
+                          productSettings?.showSavingsPercent ?? true,
+                    ),
                     priceValueText: product.updatePriceValueText(pricingEnable),
                     unitOfMeasureValueText:
                         product.updateUnitOfMeasure(pricingEnable),
