@@ -244,9 +244,10 @@ class CheckoutSuccessPage extends StatelessWidget {
                             '')
                         .toString(),
                 priceValueText: orderLine?.pricing?.unitNetPriceDisplay ?? '',
-                unitOfMeasureValueText: orderLine?.unitOfMeasureDisplay != null
-                    ? ' / ${orderLine?.unitOfMeasureDisplay}'
-                    : null,
+                unitOfMeasureValueText:
+                    orderLine?.unitOfMeasureDisplay.isNullOrEmpty == false
+                        ? ' / ${orderLine?.unitOfMeasureDisplay}'
+                        : null,
                 qtyOrdered: orderLine?.qtyOrdered?.round().toString(),
                 subtotalPriceText:
                     orderLine?.pricing?.extendedUnitNetPriceDisplay,

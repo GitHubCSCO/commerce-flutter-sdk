@@ -370,9 +370,10 @@ class OrderProductsSectionWidget extends StatelessWidget {
                           '')
                       .toString(),
               priceValueText: orderLine.unitNetPriceDisplay,
-              unitOfMeasureValueText: orderLine.unitOfMeasureDisplay != null
-                  ? ' / ${orderLine.unitOfMeasureDisplay}'
-                  : null,
+              unitOfMeasureValueText:
+                  !orderLine.unitOfMeasureDisplay.isNullOrEmpty
+                      ? ' / ${orderLine.unitOfMeasureDisplay}'
+                      : null,
               qtyOrdered: orderLine.qtyOrdered?.round().toString(),
               subtotalPriceText: orderLine.extendedUnitNetPriceDisplay,
               canEditQty: false,
