@@ -3,6 +3,9 @@ import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/cart_buttons_widget_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart_cms/cart_cms_bloc.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart_cms/cart_cms_state.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
@@ -91,13 +94,26 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (!(isVmiCheckout ?? false))
-                    AddPromotionWidget(
-                      shouldShowPromotionList: false,
-                      fromCartPage: false,
-                      onApplyPromoCode: () {
-                        context.read<CheckoutBloc>().add(
-                              LoadCheckoutEvent(cartId: cart.id ?? ''),
-                            );
+                    BlocBuilder<CartCmsPageBloc, CartCmsPageState>(
+                      builder: (_, cmsState) {
+                        final isAddDiscountEnable =
+                            cmsState is CartCmsPageLoadedState
+                                ? cmsState.pageWidgets
+                                        .whereType<CartButtonsWidgetEntity>()
+                                        .firstOrNull
+                                        ?.isAddDiscountEnabled ??
+                                    true
+                                : true;
+                        return AddPromotionWidget(
+                          shouldShowPromotionList: false,
+                          fromCartPage: false,
+                          isAddDiscountEnable: isAddDiscountEnable,
+                          onApplyPromoCode: () {
+                            context.read<CheckoutBloc>().add(
+                                  LoadCheckoutEvent(cartId: cart.id ?? ''),
+                                );
+                          },
+                        );
                       },
                     ),
                   _buildPaymentMethodPicker(state, context),
