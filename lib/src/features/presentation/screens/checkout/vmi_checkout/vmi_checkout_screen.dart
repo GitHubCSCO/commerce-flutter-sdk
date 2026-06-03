@@ -94,7 +94,21 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                       orderNumber: state.orderNumber,
                       reviewOrderEntity: state.reviewOrderEntity,
                       isVmiCheckout: true,
-                      cart: context.read<CheckoutBloc>().cart!));
+                      cart: context.read<CheckoutBloc>().cart!,
+                      showSavingsAmount: context
+                              .read<CheckoutBloc>()
+                              .settings
+                              ?.settingsCollection
+                              ?.productSettings
+                              ?.showSavingsAmount ??
+                          true,
+                      showSavingsPercent: context
+                              .read<CheckoutBloc>()
+                              .settings
+                              ?.settingsCollection
+                              ?.productSettings
+                              ?.showSavingsPercent ??
+                          true));
             } else if (state is CheckoutPlaceOrderFailed) {
               showAlert(context,
                   message: LocalizationConstants.orderFailed.localized());
@@ -187,6 +201,20 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                                     vmiCheckoutEntity.cart.id ??
                                                         ''));
                                       },
+                                      showSavingsAmount: context
+                                              .read<CheckoutBloc>()
+                                              .settings
+                                              ?.settingsCollection
+                                              ?.productSettings
+                                              ?.showSavingsAmount ??
+                                          true,
+                                      showSavingsPercent: context
+                                              .read<CheckoutBloc>()
+                                              .settings
+                                              ?.settingsCollection
+                                              ?.productSettings
+                                              ?.showSavingsPercent ??
+                                          true,
                                     ),
                                   )
                                 ],

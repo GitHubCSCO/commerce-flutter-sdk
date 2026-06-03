@@ -13,6 +13,8 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
   final bool? hideInventoryEnable;
   final void Function({required CartLineEntity cartLineEntity})? onAddToList;
   final void Function({required CartLineEntity cartLineEntity})? onAddToCart;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
 
   const CartOrderProductsSectionWidget({
     super.key,
@@ -21,6 +23,8 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
     this.hideInventoryEnable,
     this.onAddToCart,
     this.onAddToList,
+    this.showSavingsAmount = true,
+    this.showSavingsPercent = true,
   });
 
   @override
@@ -59,7 +63,10 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
               shortDescription: cartLineEntity.shortDescription,
               manufacturerItem: cartLineEntity.manufacturerItem,
               productNumber: cartLineEntity.getProductNumber(),
-              discountMessage: cartLineEntity.pricing?.getDiscountValue(),
+              discountMessage: cartLineEntity.pricing?.getDiscountValue(
+                showSavingsAmount: showSavingsAmount,
+                showSavingsPercent: showSavingsPercent,
+              ),
               priceValueText: cartLineEntity.updatePriceValueText(),
               unitOfMeasureValueText:
                   cartLineEntity.updateUnitOfMeasureValueText(),

@@ -18,6 +18,7 @@ part 'wish_list_details_state.dart';
 
 class WishListDetailsCubit extends Cubit<WishListDetailsState> {
   final WishListDetailsUsecase _wishListDetailsUsecase;
+  ProductSettings? productSettings;
 
   WishListDetailsCubit({required WishListDetailsUsecase wishListDetailsUsecase})
       : _wishListDetailsUsecase = wishListDetailsUsecase,
@@ -204,6 +205,12 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       _wishListDetailsUsecase.loadWishListSettings(),
       _loadSiteMessages(),
     ]);
+
+    final productSettingsResult =
+        await _wishListDetailsUsecase.loadProductSettings();
+    productSettings = productSettingsResult is Success
+        ? (productSettingsResult as Success).value as ProductSettings
+        : null;
 
     final wishList = wishListRelatedData[0] as WishListEntity?;
     final settings = wishListRelatedData[1] as WishListSettingsEntity?;

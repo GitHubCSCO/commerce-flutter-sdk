@@ -56,7 +56,12 @@ class QuickOrderItemEntity {
     );
   }
 
-  void updatePricing(ProductPriceEntity pricing, bool canSeePricing) {
+  void updatePricing(
+    ProductPriceEntity pricing,
+    bool canSeePricing, {
+    bool showSavingsAmount = true,
+    bool showSavingsPercent = true,
+  }) {
     this.pricing = pricing;
     if (canSeePricing) {
       String? uomText = (selectedUnitOfMeasure?.description?.isEmpty ?? true)
@@ -82,8 +87,11 @@ class QuickOrderItemEntity {
             uomText ?? ''); // Assuming getUnitOfMeasure() returns a string
       }
 
-      discountValueText = pricing.getDiscountValue() ??
-          ''; // Assuming getDiscountValue() returns a string
+      discountValueText = pricing.getDiscountValue(
+            showSavingsAmount: showSavingsAmount,
+            showSavingsPercent: showSavingsPercent,
+          ) ??
+          '';
     } else {
       priceValueText = SiteMessageConstants.valuePricingSignInForPrice;
     }

@@ -229,6 +229,16 @@ class CartAllListBody extends StatelessWidget {
                         },
                         hidePricingEnable: state.hidePricingEnable,
                         hideInventoryEnable: state.hideInventoryEnable,
+                        showSavingsAmount: context
+                                .read<CartPageBloc>()
+                                .productSettings
+                                ?.showSavingsAmount ??
+                            true,
+                        showSavingsPercent: context
+                                .read<CartPageBloc>()
+                                .productSettings
+                                ?.showSavingsPercent ??
+                            true,
                       );
                     },
                   ),

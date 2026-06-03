@@ -855,6 +855,16 @@ class _CartPageState extends State<CartPage> {
                   },
                   hidePricingEnable: hidePricingEnable,
                   hideInventoryEnable: hideInventoryEnable,
+                  showSavingsAmount: context
+                          .read<CartPageBloc>()
+                          .productSettings
+                          ?.showSavingsAmount ??
+                      true,
+                  showSavingsPercent: context
+                          .read<CartPageBloc>()
+                          .productSettings
+                          ?.showSavingsPercent ??
+                      true,
                 ),
                 if (items.length > CoreConstants.maximumItemDisplayInCart) ...{
                   Container(

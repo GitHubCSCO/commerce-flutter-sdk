@@ -63,8 +63,11 @@ class OrderItemPricingInventoryCubit
         var pricing = getProductRealTimePrices?.realTimePricingResults
             ?.firstWhere((result) => result.productId == productId);
         quickOrderItemEntity.updatePricing(
-            ProductPriceEntityMapper.toEntity(pricing),
-            productSettings.canSeePrices!);
+          ProductPriceEntityMapper.toEntity(pricing),
+          productSettings.canSeePrices!,
+          showSavingsAmount: productSettings.showSavingsAmount ?? true,
+          showSavingsPercent: productSettings.showSavingsPercent ?? true,
+        );
       } else {
         ProductPriceQueryParameter parameters = ProductPriceQueryParameter(
           qtyOrdered: quickOrderItemEntity.quantityOrdered,
@@ -74,8 +77,11 @@ class OrderItemPricingInventoryCubit
         var pricing = await _pricingInventoryUseCase.getProductPrice(
             productId!, parameters);
         quickOrderItemEntity.updatePricing(
-            ProductPriceEntityMapper.toEntity(pricing),
-            productSettings.canSeePrices!);
+          ProductPriceEntityMapper.toEntity(pricing),
+          productSettings.canSeePrices!,
+          showSavingsAmount: productSettings.showSavingsAmount ?? true,
+          showSavingsPercent: productSettings.showSavingsPercent ?? true,
+        );
       }
     }
     emit(OrderItemSubTotalChange());

@@ -191,6 +191,18 @@ class RequestQuoteWidgetPage extends StatelessWidget {
                                                       cartLineEntity,
                                                   showRemoveButton: false,
                                                   navigateWithoutNavbar: true,
+                                                  showSavingsAmount: context
+                                                          .read<
+                                                              RequestQuoteBloc>()
+                                                          .productSettings
+                                                          ?.showSavingsAmount ??
+                                                      true,
+                                                  showSavingsPercent: context
+                                                          .read<
+                                                              RequestQuoteBloc>()
+                                                          .productSettings
+                                                          ?.showSavingsPercent ??
+                                                      true,
                                                   moreButtonWidget:
                                                       _buildMenuButton(context,
                                                           cartLineEntity),

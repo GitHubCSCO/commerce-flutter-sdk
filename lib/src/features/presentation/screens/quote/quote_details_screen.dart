@@ -446,6 +446,16 @@ class QuoteDetailsPage extends StatelessWidget {
                   showRemoveButton: false,
                   moreButtonWidget:
                       _buildMenuButtonForQuoteLine(context, quoteLineEntity),
+                  showSavingsAmount: context
+                          .read<QuoteDetailsBloc>()
+                          .productSettings
+                          ?.showSavingsAmount ??
+                      true,
+                  showSavingsPercent: context
+                          .read<QuoteDetailsBloc>()
+                          .productSettings
+                          ?.showSavingsPercent ??
+                      true,
                   onCartLineRemovedCallback: (cartLineEntity) {},
                   onCartQuantityChangedCallback: (quantity) {
                     quoteLineEntity =
