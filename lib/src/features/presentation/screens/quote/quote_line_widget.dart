@@ -28,6 +28,8 @@ class QuoteLineWidget extends StatelessWidget {
   final void Function()? onShowMoreButtonClickedCallback;
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
   const QuoteLineWidget(
       {super.key,
       required this.quoteLineEntity,
@@ -42,7 +44,9 @@ class QuoteLineWidget extends StatelessWidget {
       this.showViewBreakPricing = false,
       this.showQuantityAndSubtotalField = true,
       this.canEditQuantity = true,
-      this.moreButtonWidget});
+      this.moreButtonWidget,
+      this.showSavingsAmount = true,
+      this.showSavingsPercent = true});
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +98,10 @@ class QuoteLineWidget extends StatelessWidget {
               child: LineItemPricingWidget(
                 hideInventoryEnable: hideInventoryEnable,
                 hidePricingEnable: hidePricingEnable,
-                discountMessage: quoteLineEntity.pricing?.getDiscountValue(),
+                discountMessage: quoteLineEntity.pricing?.getDiscountValue(
+                  showSavingsAmount: showSavingsAmount,
+                  showSavingsPercent: showSavingsPercent,
+                ),
                 priceValueText: quoteLineEntity.updatePriceValueText(),
                 unitOfMeasureValueText:
                     quoteLineEntity.updateUnitOfMeasureValueText(),

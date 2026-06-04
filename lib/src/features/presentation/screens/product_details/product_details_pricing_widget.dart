@@ -158,8 +158,15 @@ class ProductDetailsPricingWidget extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
+          var productSettings = context
+              .read<ProductDetailsBloc>()
+              .productDetailDataEntity
+              .productSettings;
           var discountMessage = state.productDetailsPriceEntity.product?.pricing
-              ?.getDiscountValue();
+              ?.getDiscountValue(
+            showSavingsAmount: productSettings?.showSavingsAmount ?? true,
+            showSavingsPercent: productSettings?.showSavingsPercent ?? true,
+          );
           if (discountMessage != null &&
               discountMessage.isNotEmpty &&
               discountMessage != "null") {

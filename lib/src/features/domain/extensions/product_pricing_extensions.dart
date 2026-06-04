@@ -39,11 +39,20 @@ extension ProductPriceExtensions on ProductPriceEntity? {
     return defaultUnitOfMeasure;
   }
 
-  String getDiscountValue() {
+  String getDiscountValue({
+    bool showSavingsAmount = true,
+    bool showSavingsPercent = true,
+  }) {
     if (this == null || this?.unitNetPrice == 0) {
       return '';
     }
 
-    return (DiscountValueConverter().convert(this) ?? '').toString();
+    return (DiscountValueConverter().convert(
+              this,
+              showSavingsAmount: showSavingsAmount,
+              showSavingsPercent: showSavingsPercent,
+            ) ??
+            '')
+        .toString();
   }
 }

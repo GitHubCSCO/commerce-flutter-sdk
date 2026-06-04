@@ -371,7 +371,19 @@ class _InvoiceProductsSectionWidget extends StatelessWidget {
                   ? LocalizationConstants.mFGNumberSign.localized() +
                       (invoiceLine.manufacturerItem ?? '')
                   : null,
-              discountMessage: DiscountValueConverter().convert(invoiceLine),
+              discountMessage: DiscountValueConverter().convert(
+                invoiceLine,
+                showSavingsAmount: context
+                        .read<InvoiceDetailCubit>()
+                        .productSettings
+                        ?.showSavingsAmount ??
+                    true,
+                showSavingsPercent: context
+                        .read<InvoiceDetailCubit>()
+                        .productSettings
+                        ?.showSavingsPercent ??
+                    true,
+              ),
               priceValueText: invoiceLine.unitPriceDisplay,
               unitOfMeasureValueText: !invoiceLine.unitOfMeasure.isNullOrEmpty
                   ? ' / ${invoiceLine.unitOfMeasure!}'

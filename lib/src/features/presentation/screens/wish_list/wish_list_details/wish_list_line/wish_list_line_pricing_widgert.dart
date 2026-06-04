@@ -11,10 +11,14 @@ import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 class WishListContentPricingWidget extends StatelessWidget {
   final WishListLineEntity wishListLineEntity;
   final bool realTimeLoading;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
 
   const WishListContentPricingWidget({
     required this.wishListLineEntity,
     this.realTimeLoading = false,
+    this.showSavingsAmount = true,
+    this.showSavingsPercent = true,
     super.key,
   });
 
@@ -29,7 +33,12 @@ class WishListContentPricingWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildDiscountMessageSection(context, wishListLineEntity),
+              _buildDiscountMessageSection(
+                context,
+                wishListLineEntity,
+                showSavingsAmount: showSavingsAmount,
+                showSavingsPercent: showSavingsPercent,
+              ),
               realTimeLoading
                   ? Container(
                       alignment: Alignment.bottomLeft,
@@ -70,8 +79,15 @@ class WishListContentPricingWidget extends StatelessWidget {
 }
 
 Widget _buildDiscountMessageSection(
-    BuildContext context, WishListLineEntity wishListLineEntity) {
-  var discountMessage = wishListLineEntity.pricing?.getDiscountValue();
+  BuildContext context,
+  WishListLineEntity wishListLineEntity, {
+  bool showSavingsAmount = true,
+  bool showSavingsPercent = true,
+}) {
+  var discountMessage = wishListLineEntity.pricing?.getDiscountValue(
+    showSavingsAmount: showSavingsAmount,
+    showSavingsPercent: showSavingsPercent,
+  );
   if (discountMessage != null &&
       discountMessage.isNotEmpty &&
       discountMessage != "null") {

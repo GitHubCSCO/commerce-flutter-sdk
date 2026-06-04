@@ -28,6 +28,8 @@ class CheckoutSuccessEntity {
   final bool isOrderApproval;
   final ReviewOrderEntity? reviewOrderEntity;
   final String? message;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
 
   const CheckoutSuccessEntity({
     required this.orderNumber,
@@ -36,6 +38,8 @@ class CheckoutSuccessEntity {
     this.reviewOrderEntity,
     this.isOrderApproval = false,
     this.message,
+    this.showSavingsAmount = true,
+    this.showSavingsPercent = true,
   });
 
   Map<String, dynamic> toJson() {
@@ -46,6 +50,8 @@ class CheckoutSuccessEntity {
       'cart': cart.toJson(),
       'reviewOrderEntity': reviewOrderEntity?.toJson(),
       'message': message,
+      'showSavingsAmount': showSavingsAmount,
+      'showSavingsPercent': showSavingsPercent,
     };
   }
 
@@ -59,6 +65,8 @@ class CheckoutSuccessEntity {
           ? ReviewOrderEntity.fromJson(json['reviewOrderEntity'])
           : null,
       message: json['message'],
+      showSavingsAmount: json['showSavingsAmount'] ?? true,
+      showSavingsPercent: json['showSavingsPercent'] ?? true,
     );
   }
 }
@@ -225,12 +233,20 @@ class CheckoutSuccessPage extends StatelessWidget {
                 productNumber: orderLine?.erpNumber,
                 discountMessage: (orderLine?.pricing?.unitNetPrice == 0)
                     ? ''
-                    : (DiscountValueConverter().convert(orderLine) ?? '')
+                    : (DiscountValueConverter().convert(
+                              orderLine,
+                              showSavingsAmount:
+                                  checkoutSuccessEntity.showSavingsAmount,
+                              showSavingsPercent:
+                                  checkoutSuccessEntity.showSavingsPercent,
+                            ) ??
+                            '')
                         .toString(),
                 priceValueText: orderLine?.pricing?.unitNetPriceDisplay ?? '',
-                unitOfMeasureValueText: orderLine?.unitOfMeasureDisplay != null
-                    ? ' / ${orderLine?.unitOfMeasureDisplay}'
-                    : null,
+                unitOfMeasureValueText:
+                    orderLine?.unitOfMeasureDisplay.isNullOrEmpty == false
+                        ? ' / ${orderLine?.unitOfMeasureDisplay}'
+                        : null,
                 qtyOrdered: orderLine?.qtyOrdered?.round().toString(),
                 subtotalPriceText:
                     orderLine?.pricing?.extendedUnitNetPriceDisplay,

@@ -299,6 +299,16 @@ class OrderDetailsPage extends StatelessWidget {
                           orderLines: state.order.orderLines ?? [],
                           hidePricingEnable: state.hidePricingEnable,
                           hideInventoryEnable: state.hideInventoryEnable,
+                          showSavingsAmount: context
+                                  .read<OrderDetailsCubit>()
+                                  .productSettings
+                                  ?.showSavingsAmount ??
+                              true,
+                          showSavingsPercent: context
+                                  .read<OrderDetailsCubit>()
+                                  .productSettings
+                                  ?.showSavingsPercent ??
+                              true,
                         ),
                       ],
                     ),

@@ -365,4 +365,10 @@ class WishListDetailsUsecase extends WishListUsecase {
 
     return true;
   }
+
+  Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
+  }
 }

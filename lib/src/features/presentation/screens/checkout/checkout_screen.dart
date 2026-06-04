@@ -168,7 +168,21 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                           context.read<CheckoutBloc>().cart?.requiresApproval ??
                               false,
                       reviewOrderEntity: state.reviewOrderEntity,
-                      message: state.message));
+                      message: state.message,
+                      showSavingsAmount: context
+                              .read<CheckoutBloc>()
+                              .settings
+                              ?.settingsCollection
+                              ?.productSettings
+                              ?.showSavingsAmount ??
+                          true,
+                      showSavingsPercent: context
+                              .read<CheckoutBloc>()
+                              .settings
+                              ?.settingsCollection
+                              ?.productSettings
+                              ?.showSavingsPercent ??
+                          true));
             } else if (state is CheckoutPlaceOrderFailed) {
               context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
               showAlert(context,

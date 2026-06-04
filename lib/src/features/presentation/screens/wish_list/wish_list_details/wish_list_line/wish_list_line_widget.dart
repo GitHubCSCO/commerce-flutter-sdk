@@ -23,6 +23,8 @@ class WishListLineWidget extends StatelessWidget {
   final bool realTimeLoading;
   final bool isDeleteButtonVisible;
   final bool canEditQuantity;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
 
   const WishListLineWidget({
     super.key,
@@ -30,6 +32,8 @@ class WishListLineWidget extends StatelessWidget {
     this.isDeleteButtonVisible = true,
     this.realTimeLoading = false,
     this.canEditQuantity = true,
+    this.showSavingsAmount = true,
+    this.showSavingsPercent = true,
   });
 
   @override
@@ -144,6 +148,8 @@ class WishListLineWidget extends StatelessWidget {
           WishListContentPricingWidget(
             wishListLineEntity: wishListLineEntity,
             realTimeLoading: realTimeLoading,
+            showSavingsAmount: showSavingsAmount,
+            showSavingsPercent: showSavingsPercent,
           ),
           LineItemQuantityGroupWidget(
             qtyOrdered: wishListLineEntity.qtyOrdered?.toInt().toString(),
