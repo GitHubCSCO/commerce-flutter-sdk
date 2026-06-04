@@ -1,7 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuoteItemWidget extends StatelessWidget {
   final String typeDisplay;
@@ -38,19 +37,19 @@ class QuoteItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (!typeDisplay.isNullOrEmpty)
-                  Text(typeDisplay, style: OptiTextStyles.bodyFade),
+                  Text(typeDisplay, style: context.text.bodyFade),
                 Text(
                   quoteNumber,
                   style: TextStyle(
-                    color: OptiAppColors.primaryColor,
+                    color: context.scheme.primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 8.0),
-                Text(companyName, style: OptiTextStyles.body),
+                Text(companyName, style: context.text.body),
                 Text(
                   address,
-                  style: OptiTextStyles.body,
+                  style: context.text.body,
                   maxLines: 2,
                   overflow: TextOverflow.clip,
                 ),

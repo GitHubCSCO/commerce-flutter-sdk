@@ -56,8 +56,12 @@ class CheckoutScreen extends BaseStatelessWidget {
               sl<CartCmsPageBloc>()..add(const CartCmsPageLoadEvent()),
         ),
         BlocProvider<PaymentDetailsBloc>(
-          create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(cartId: cart.id ?? '')),
+          create: (_) => sl<PaymentDetailsBloc>()
+            ..add(
+              LoadPaymentDetailsEvent(
+                cartId: cart.id ?? '',
+              ),
+            ),
         ),
       ],
       child: CheckoutPage(cart: cart),
@@ -170,7 +174,21 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                           context.read<CheckoutBloc>().cart?.requiresApproval ??
                               false,
                       reviewOrderEntity: state.reviewOrderEntity,
-                      message: state.message));
+                      message: state.message,
+                      showSavingsAmount: context
+                              .read<CheckoutBloc>()
+                              .settings
+                              ?.settingsCollection
+                              ?.productSettings
+                              ?.showSavingsAmount ??
+                          true,
+                      showSavingsPercent: context
+                              .read<CheckoutBloc>()
+                              .settings
+                              ?.settingsCollection
+                              ?.productSettings
+                              ?.showSavingsPercent ??
+                          true));
             } else if (state is CheckoutPlaceOrderFailed) {
               context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
               showAlert(context,
@@ -200,7 +218,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                buildSummary(state.cart, state.promotions),
+                                buildSummary(
+                                    context, state.cart, state.promotions),
                                 BlocBuilder<ExpansionPanelCubit,
                                     ExpansionPanelState>(
                                   builder: (_, panelState) {

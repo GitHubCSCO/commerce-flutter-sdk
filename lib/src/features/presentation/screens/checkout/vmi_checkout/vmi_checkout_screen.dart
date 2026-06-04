@@ -62,9 +62,12 @@ class VmiCheckoutScreen extends StatelessWidget {
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PaymentDetailsBloc>(
-          create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(
-                cartId: vmiCheckoutEntity.cart.id ?? '')),
+          create: (_) => sl<PaymentDetailsBloc>()
+            ..add(
+              LoadPaymentDetailsEvent(
+                cartId: vmiCheckoutEntity.cart.id ?? '',
+              ),
+            ),
         ),
       ],
       child: VmiCheckoutPage(
@@ -94,7 +97,21 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                       orderNumber: state.orderNumber,
                       reviewOrderEntity: state.reviewOrderEntity,
                       isVmiCheckout: true,
-                      cart: context.read<CheckoutBloc>().cart!));
+                      cart: context.read<CheckoutBloc>().cart!,
+                      showSavingsAmount: context
+                              .read<CheckoutBloc>()
+                              .settings
+                              ?.settingsCollection
+                              ?.productSettings
+                              ?.showSavingsAmount ??
+                          true,
+                      showSavingsPercent: context
+                              .read<CheckoutBloc>()
+                              .settings
+                              ?.settingsCollection
+                              ?.productSettings
+                              ?.showSavingsPercent ??
+                          true));
             } else if (state is CheckoutPlaceOrderFailed) {
               showAlert(context,
                   message: LocalizationConstants.orderFailed.localized());
@@ -147,7 +164,8 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                   if (state.cartWarningMsg.isNotEmpty)
                                     BuildCartErrorWidget(
                                         cartErrorMsg: state.cartWarningMsg),
-                                  buildSummary(state.cart, state.promotions),
+                                  buildSummary(
+                                      context, state.cart, state.promotions),
                                   BillingShippingWidget(
                                     billingShippingEntity:
                                         billingShippingEntity,
@@ -187,6 +205,20 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                                     vmiCheckoutEntity.cart.id ??
                                                         ''));
                                       },
+                                      showSavingsAmount: context
+                                              .read<CheckoutBloc>()
+                                              .settings
+                                              ?.settingsCollection
+                                              ?.productSettings
+                                              ?.showSavingsAmount ??
+                                          true,
+                                      showSavingsPercent: context
+                                              .read<CheckoutBloc>()
+                                              .settings
+                                              ?.settingsCollection
+                                              ?.productSettings
+                                              ?.showSavingsPercent ??
+                                          true,
                                     ),
                                   )
                                 ],

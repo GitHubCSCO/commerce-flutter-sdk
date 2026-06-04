@@ -1,11 +1,11 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/html_content_webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ProductDetailsExpansionItemWidget extends StatefulWidget {
   final ProductDetailItemEntity specification;
@@ -53,7 +53,7 @@ class _ProductDetailsExpansionItemWidgetState
               backgroundColor: Colors.white,
               title: Text(
                 widget.specification.title,
-                style: OptiTextStyles.titleSmall,
+                style: context.text.titleSmall,
               ),
               collapsedBackgroundColor: Colors.white,
               children: <Widget>[
@@ -61,7 +61,7 @@ class _ProductDetailsExpansionItemWidgetState
                   padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
                   child: HtmlContentWebView(
                     htmlContent: widget.specification.htmlContent,
-                    textStyle: OptiTextStyles.body,
+                    textStyle: context.text.body,
                   ),
                 ),
               ],

@@ -5,7 +5,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/filter.dart';
@@ -18,6 +17,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuoteFilterWidget extends StatelessWidget {
   final QuoteQueryParameters quoteQueryParameters;
@@ -214,7 +214,7 @@ void _showQuoteFilter(
               const SizedBox(height: 45),
               Text(
                 LocalizationConstants.customer.localized().toUpperCase(),
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               const SizedBox(height: 15),
               FilterBillToPickerWidget(
@@ -225,7 +225,7 @@ void _showQuoteFilter(
               if (state.isSalesPerson) ...[
                 Text(
                   LocalizationConstants.user.localized().toUpperCase(),
-                  style: OptiTextStyles.subtitle,
+                  style: context.text.subtitle,
                 ),
                 const SizedBox(height: 15),
                 FilterItemPickerWidget(
@@ -250,7 +250,7 @@ void _showQuoteFilter(
                 const SizedBox(height: 45),
                 Text(
                   LocalizationConstants.salesRep.localized().toUpperCase(),
-                  style: OptiTextStyles.subtitle,
+                  style: context.text.subtitle,
                 ),
                 const SizedBox(height: 15),
                 FilterItemPickerWidget(
@@ -279,7 +279,7 @@ void _showQuoteFilter(
                 LocalizationConstants.requestedDateRange
                     .localized()
                     .toUpperCase(),
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               FilterDatePickerWidget(
                 title: LocalizationConstants.requestedFrom.localized(),
@@ -301,7 +301,7 @@ void _showQuoteFilter(
                 LocalizationConstants.expiresDateRange
                     .localized()
                     .toUpperCase(),
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               FilterDatePickerWidget(
                 title: LocalizationConstants.expireFrom.localized(),

@@ -1,11 +1,9 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/html_string_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/models/screen_parameters.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
@@ -22,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class BrandDetailsEntity {
   BrandEntity? brandEntity;
@@ -79,7 +78,7 @@ class BrandDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(brand.name ?? '', style: OptiTextStyles.titleLarge),
+        title: Text(brand.name ?? '', style: context.text.titleLarge),
         actions: [
           BottomMenuWidget(
               websitePath: brand.detailPagePath,
@@ -163,7 +162,7 @@ class BrandInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       width: double.infinity,
       child: Column(
@@ -181,7 +180,7 @@ class BrandInfoWidget extends StatelessWidget {
                     StackTrace? stackTrace) {
                   // This function is called when the image fails to load
                   return Container(
-                    color: OptiAppColors.backgroundGray, // Placeholder color
+                    color: context.colors.backgroundGray, // Placeholder color
                     alignment: Alignment.center,
                     child: const Icon(
                       Icons.image, // Icon to display
@@ -197,7 +196,7 @@ class BrandInfoWidget extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: HtmlWidget(
               brandEntity?.htmlContent?.styleHtmlContent() ?? '',
-              textStyle: OptiTextStyles.body,
+              textStyle: context.text.body,
             ),
           ),
           Padding(
@@ -230,7 +229,7 @@ class CategoryCarouselWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -241,7 +240,7 @@ class CategoryCarouselWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Text(
               LocalizationConstants.shopByCategory.localized(),
-              style: OptiTextStyles.titleLarge,
+              style: context.text.titleLarge,
             ),
           ),
           SizedBox(
@@ -344,7 +343,7 @@ class CategoryCarouselItemWidget extends StatelessWidget {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 1, color: OptiAppColors.backgroundGray),
+          side: BorderSide(width: 1, color: context.colors.backgroundGray),
           borderRadius: BorderRadius.circular(8),
         ),
       ),
@@ -365,7 +364,7 @@ class CategoryCarouselItemWidget extends StatelessWidget {
                     StackTrace? stackTrace) {
                   // This function is called when the image fails to load
                   return Container(
-                    color: OptiAppColors.backgroundGray, // Placeholder color
+                    color: context.colors.backgroundGray,
                     alignment: Alignment.center,
                     child: const Icon(
                       Icons.image, // Icon to display
@@ -383,7 +382,7 @@ class CategoryCarouselItemWidget extends StatelessWidget {
             child: Text(category?.categoryName ?? "",
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: OptiTextStyles.bodySmall),
+                style: context.text.bodySmall),
           ),
         ],
       ),
@@ -402,7 +401,7 @@ class BrandProductLinesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -413,7 +412,7 @@ class BrandProductLinesWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Text(
               LocalizationConstants.shopProductLines.localized(),
-              style: OptiTextStyles.titleLarge,
+              style: context.text.titleLarge,
             ),
           ),
           SizedBox(
@@ -446,7 +445,7 @@ class BrandProductLinesWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             child: TertiaryButton(
-              backgroundColor: OptiAppColors.grayBackgroundColor,
+              backgroundColor: context.colors.grayBackgroundColor,
               onPressed: () {
                 AppRoute.brandProductLines
                     .navigateBackStack(context, extra: brand);
@@ -474,7 +473,7 @@ class BrandProductLinesItemWidget extends StatelessWidget {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 1, color: OptiAppColors.backgroundGray),
+          side: BorderSide(width: 1, color: context.colors.backgroundGray),
           borderRadius: BorderRadius.circular(8),
         ),
       ),
@@ -495,7 +494,7 @@ class BrandProductLinesItemWidget extends StatelessWidget {
                     StackTrace? stackTrace) {
                   // This function is called when the image fails to load
                   return Container(
-                    color: OptiAppColors.backgroundGray, // Placeholder color
+                    color: context.colors.backgroundGray,
                     alignment: Alignment.center,
                     child: const Icon(
                       Icons.image, // Icon to display
@@ -513,7 +512,7 @@ class BrandProductLinesItemWidget extends StatelessWidget {
             child: Text(brandProductLine?.name ?? "",
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: OptiTextStyles.bodySmall),
+                style: context.text.bodySmall),
           ),
         ],
       ),
@@ -530,7 +529,7 @@ class TopSellerProductsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -541,7 +540,7 @@ class TopSellerProductsWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Text(
               LocalizationConstants.topSellers.localized(),
-              style: OptiTextStyles.titleLarge,
+              style: context.text.titleLarge,
             ),
           ),
           SizedBox(
@@ -588,7 +587,7 @@ class TopSellerProductItemWidget extends StatelessWidget {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 1, color: OptiAppColors.backgroundGray),
+          side: BorderSide(width: 1, color: context.colors.backgroundGray),
           borderRadius: BorderRadius.circular(8),
         ),
       ),
@@ -610,7 +609,7 @@ class TopSellerProductItemWidget extends StatelessWidget {
                     StackTrace? stackTrace) {
                   // This function is called when the image fails to load
                   return Container(
-                    color: OptiAppColors.backgroundGray, // Placeholder color
+                    color: context.colors.backgroundGray,
                     alignment: Alignment.center,
                     child: const Icon(
                       Icons.image, // Icon to display
@@ -628,7 +627,7 @@ class TopSellerProductItemWidget extends StatelessWidget {
             child: Text(topSellerProductEntityLine?.shortDescription ?? "",
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: OptiTextStyles.bodySmall),
+                style: context.text.bodySmall),
           ),
         ],
       ),

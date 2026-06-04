@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/base/base_action_item_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ActionGridItemWidget extends StatelessWidget with BaseActionItemWidget {
   final ActionLinkEntity action;
@@ -40,7 +40,7 @@ class ActionGridItemWidget extends StatelessWidget with BaseActionItemWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: OptiTextStyles.bodyExtraSmall,
+                style: context.text.bodyExtraSmall,
               ),
             ),
           ],

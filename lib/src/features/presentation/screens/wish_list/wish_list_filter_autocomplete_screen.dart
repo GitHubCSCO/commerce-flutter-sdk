@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list_filter_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_autocomplete_cubit.dart';
@@ -15,6 +13,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 enum WishListFilterAutocompleteType {
   erpNumber,
@@ -94,9 +93,9 @@ class _WishListFilterAutocompletePageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         centerTitle: false,
         title: Text(
           switch (widget.type) {
@@ -157,7 +156,7 @@ class _WishListFilterAutocompletePageState
                         padding: const EdgeInsets.all(32.0),
                         child: Text(
                           message,
-                          style: OptiTextStyles.body,
+                          style: context.text.body,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -169,7 +168,7 @@ class _WishListFilterAutocompletePageState
                         child: Text(
                           LocalizationConstants.startTypingToSeeSuggestions
                               .localized(),
-                          style: OptiTextStyles.body,
+                          style: context.text.body,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -186,7 +185,7 @@ class _WishListFilterAutocompletePageState
                           padding: const EdgeInsets.all(32.0),
                           child: Text(
                             LocalizationConstants.noOptions.localized(),
-                            style: OptiTextStyles.body,
+                            style: context.text.body,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -196,7 +195,7 @@ class _WishListFilterAutocompletePageState
                       itemBuilder: (context, index) {
                         final brand = brands[index];
                         return ListTile(
-                          tileColor: OptiAppColors.backgroundWhite,
+                          tileColor: context.colors.backgroundWhite,
                           leading: NetworkImageWithFallback(
                             imageUrl: brand.image,
                           ),
@@ -226,7 +225,7 @@ class _WishListFilterAutocompletePageState
                           padding: const EdgeInsets.all(32.0),
                           child: Text(
                             LocalizationConstants.noOptions.localized(),
-                            style: OptiTextStyles.body,
+                            style: context.text.body,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -236,7 +235,7 @@ class _WishListFilterAutocompletePageState
                       itemBuilder: (context, index) {
                         final product = products[index];
                         return ListTile(
-                          tileColor: OptiAppColors.backgroundWhite,
+                          tileColor: context.colors.backgroundWhite,
                           leading: NetworkImageWithFallback(
                             imageUrl: product.image,
                           ),
@@ -266,7 +265,7 @@ class _WishListFilterAutocompletePageState
                           padding: const EdgeInsets.all(32.0),
                           child: Text(
                             LocalizationConstants.noOptions.localized(),
-                            style: OptiTextStyles.body,
+                            style: context.text.body,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -276,7 +275,7 @@ class _WishListFilterAutocompletePageState
                       itemBuilder: (context, index) {
                         final user = users[index];
                         return ListTile(
-                          tileColor: OptiAppColors.backgroundWhite,
+                          tileColor: context.colors.backgroundWhite,
                           title: Text(user.displayValue ?? ''),
                           onTap: () {
                             context.pop(user);

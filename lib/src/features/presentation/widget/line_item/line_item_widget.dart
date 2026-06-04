@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
@@ -10,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class LineItemWidget extends StatelessWidget {
   final String? productId;
@@ -77,7 +77,7 @@ class LineItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProductImage(),
-            _buildProductDetails(),
+            _buildProductDetails(context),
             _buildRemoveAndAddToCartButton(),
           ],
         ),
@@ -101,7 +101,7 @@ class LineItemWidget extends StatelessWidget {
     return LineItemImageWidget(imagePath: imagePath ?? '');
   }
 
-  Widget _buildProductDetails() {
+  Widget _buildProductDetails(BuildContext context) {
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -139,11 +139,11 @@ class LineItemWidget extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               '${LocalizationConstants.itemNote.localized()}: ${lineNotes!}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.normal,
                 fontStyle: FontStyle.italic,
-                color: OptiAppColors.textSecondary,
+                color: context.colors.textSecondary,
               ),
             ),
             const SizedBox(height: 20),

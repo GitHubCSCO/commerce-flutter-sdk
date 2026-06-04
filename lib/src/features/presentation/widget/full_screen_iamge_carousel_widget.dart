@@ -96,7 +96,7 @@ class _FullScreenImageCarouselPageState
                     shape: BoxShape.circle,
                     color: _currentIndex == index
                         ? Colors.black
-                        : Colors.black.withOpacity(0.4),
+                        : Colors.black.withValues(alpha: 0.4),
                   ),
                 );
               }).toList(),

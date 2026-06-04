@@ -1,9 +1,8 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 void viewQuoteLineBreakPricingWidget(
     BuildContext context, List<QuoteLinePricingEntity> breakPriceList) {
@@ -16,7 +15,7 @@ void viewQuoteLineBreakPricingWidget(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         title: Text(LocalizationConstants.quotedPricing.localized(),
-            style: OptiTextStyles.titleLarge),
+            style: context.text.titleLarge),
         content: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
@@ -45,8 +44,8 @@ void viewQuoteLineBreakPricingWidget(
                               ],
                             ),
                           ),
-                          const Divider(
-                            color: OptiAppColors.border,
+                          Divider(
+                            color: context.colors.border,
                             thickness: 1.0,
                           )
                         ],

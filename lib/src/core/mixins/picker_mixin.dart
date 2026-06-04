@@ -1,11 +1,11 @@
 import 'package:commerce_flutter_sdk/src/core/extensions/product_unit_of_measure_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 mixin PickerMixin {
   String getItemDescriptions(Object item) {
@@ -94,7 +94,7 @@ mixin PickerMixin {
     return null;
   }
 
-  Widget getItemDescriptionWithAvatar(Object item) {
+  Widget getItemDescriptionWithAvatar(BuildContext context, Object item) {
     if (item is ProductDetailStyleValue) {
       final avatar = getAvatar(item.styleValue ?? '');
       return Row(
@@ -105,7 +105,7 @@ mixin PickerMixin {
             item.displayName ?? "",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         ],
       );
@@ -115,7 +115,7 @@ mixin PickerMixin {
       getItemDescriptions(item),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: OptiTextStyles.body,
+      style: context.text.body,
     );
   }
 }

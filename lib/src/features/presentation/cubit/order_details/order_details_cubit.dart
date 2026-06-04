@@ -20,6 +20,7 @@ part 'order_details_state.dart';
 class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   final OrderUsecase _orderUsecase;
   final PricingInventoryUseCase _pricingInventoryUseCase;
+  ProductSettings? productSettings;
 
   OrderDetailsCubit(
       {required OrderUsecase orderUsercase,
@@ -42,12 +43,17 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       _orderUsecase.loadOrder(orderNumber),
       _orderUsecase.loadOrderSettings(),
       _orderUsecase.getOrderStatusMappings(),
+      _pricingInventoryUseCase.loadProductSettings(),
     ]);
 
     final order = futureResults[0] as OrderEntity?;
     final orderSettings = futureResults[1] as OrderSettingsEntity?;
     final orderStatusMappings =
         futureResults[2] as List<OrderStatusMappingEntity>?;
+    final productSettingsResult = futureResults[3];
+    productSettings = productSettingsResult is Success
+        ? productSettingsResult.value as ProductSettings
+        : null;
 
     if (order != null) {
       final analyticEvent = AnalyticsEvent(

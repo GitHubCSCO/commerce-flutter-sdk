@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/map_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/current_location_data_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/location_search_type.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
@@ -13,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
   final CurrentLocationDataEntity locationData;
@@ -34,22 +34,22 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
           children: [
             Text(
               locationData.locationName ?? "",
-              style: OptiTextStyles.subtitle,
+              style: context.text.subtitle,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
               locationData.firestLineValue ?? "",
-              style: OptiTextStyles.body,
+              style: context.text.body,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
               locationData.secondLineValue ?? "",
-              style: OptiTextStyles.body,
+              style: context.text.body,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
               locationData.thridLineValue ?? "",
-              style: OptiTextStyles.body,
+              style: context.text.body,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 16),
@@ -61,7 +61,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                     child: Text(
                       LocalizationConstants.call.localized(),
                       textAlign: TextAlign.center,
-                      style: OptiTextStyles.link,
+                      style: context.text.link,
                     ),
                     onTap: () {
                       _onmakeCall(locationData.thridLineValue ?? "");
@@ -72,7 +72,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                     child: Text(
                       LocalizationConstants.directions.localized(),
                       textAlign: TextAlign.center,
-                      style: OptiTextStyles.link,
+                      style: context.text.link,
                     ),
                     onTap: () {
                       _onDirectionsClick(locationData.latLong?.latitude ?? 0.0,
@@ -103,7 +103,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                           child: Text(
                             LocalizationConstants.changeLocation.localized(),
                             textAlign: TextAlign.center,
-                            style: OptiTextStyles.link,
+                            style: context.text.link,
                           ),
                           onTap: () {
                             _onChangeLocationClick(context);

@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/language/language_bloc.dart';
@@ -10,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_scre
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/language/language_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class LanguageScreen extends BaseStatelessWidget {
   const LanguageScreen({super.key});
@@ -42,7 +42,7 @@ class LanguagePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(LocalizationConstants.languages.localized(),
-            style: OptiTextStyles.titleLarge),
+            style: context.text.titleLarge),
       ),
       body: BlocConsumer<LanguageBloc, LanguageState>(
         listener: (context, state) {

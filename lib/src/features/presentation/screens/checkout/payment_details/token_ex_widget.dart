@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/tokenex_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/token_ex_view_mode.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/pay
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 typedef HandleWebViewRequestFromTokenEX = void Function(
@@ -141,10 +143,16 @@ class _TokenExWebViewState extends State<TokenExWebView> {
                     context.read<TokenExBloc>().isTokenExConfigurationSet;
 
                 if (!isTokenExConfigurationSet) {
+                  final tokenExStyle = TokenExStyleDto(
+                    baseColor: context.colors.lightGrayTextColor.toString(),
+                    focusColor: context.colors.primaryColor.toString(),
+                    errorColor: context.colors.invalidColor.toString(),
+                    textColor: context.colors.darkGrayTextColor.toString(),
+                  );
                   String tokenExSetGetawayJSAction =
                       TokenExScripts.getTokenExSetupScript(
                     json.encode(widget.tokenExEntity.tokenExConfiguration),
-                    json.encode(widget.tokenExEntity.tokenexStyle),
+                    json.encode(tokenExStyle),
                     getTokenEXMode(widget.tokenExEntity.tokenexMode!),
                     json.encode(widget.tokenExEntity.cardType!),
                   );

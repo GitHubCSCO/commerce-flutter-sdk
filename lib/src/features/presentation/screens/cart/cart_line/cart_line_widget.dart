@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/cart_line_extentions.dart';
@@ -12,6 +11,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CartLineWidget extends StatelessWidget {
   final CartLineEntity cartLineEntity;
@@ -23,6 +23,8 @@ class CartLineWidget extends StatelessWidget {
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
   final bool? navigateWithoutNavbar;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
   const CartLineWidget({
     super.key,
     required this.cartLineEntity,
@@ -34,6 +36,8 @@ class CartLineWidget extends StatelessWidget {
     this.showRemoveButton = true,
     this.moreButtonWidget,
     this.navigateWithoutNavbar = false,
+    this.showSavingsAmount = true,
+    this.showSavingsPercent = true,
   });
 
   @override
@@ -110,7 +114,10 @@ class CartLineWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0, 10.0),
             child: LineItemPricingWidget(
-              discountMessage: cartLineEntity.pricing?.getDiscountValue(),
+              discountMessage: cartLineEntity.pricing?.getDiscountValue(
+                showSavingsAmount: showSavingsAmount,
+                showSavingsPercent: showSavingsPercent,
+              ),
               priceValueText: cartLineEntity.updatePriceValueText(),
               unitOfMeasureValueText:
                   cartLineEntity.updateUnitOfMeasureValueText(),
@@ -146,7 +153,7 @@ class CartLineWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 10.0),
                 child: Text(cartLineEntity.promoItemMessage ?? "",
-                    style: OptiTextStyles.subtitle
+                    style: context.text.subtitle
                         .copyWith(fontSize: 12.0, color: Colors.black54)),
               )),
         ],

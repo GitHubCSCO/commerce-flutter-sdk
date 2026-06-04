@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/list_picker_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
@@ -15,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class OrderApprovalFilterWidget extends StatelessWidget {
   final OrderApprovalParameters orderApprovalParameters;
@@ -117,7 +116,7 @@ void _showOrderApprovalFilterWidget(
               const SizedBox(height: 45),
               Text(
                 LocalizationConstants.customer.localized().toUpperCase(),
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               const SizedBox(height: 10),
               FilterShipToPickerWidget(
@@ -129,7 +128,7 @@ void _showOrderApprovalFilterWidget(
               const SizedBox(height: 45),
               Text(
                 LocalizationConstants.orderTotal.localized().toUpperCase(),
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               const SizedBox(height: 10),
               const _FilterTotalTypeWidget(),
@@ -140,7 +139,7 @@ void _showOrderApprovalFilterWidget(
               const SizedBox(height: 45),
               Text(
                 LocalizationConstants.dateRange.localized().toUpperCase(),
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               FilterDatePickerWidget(
                 title: LocalizationConstants.from.localized(),
@@ -236,7 +235,7 @@ class _FilterTotalTypeWidget extends StatelessWidget {
       builder: (context, state) {
         return Container(
           decoration: BoxDecoration(
-            color: OptiAppColors.backgroundInput,
+            color: context.colors.backgroundInput,
             borderRadius: BorderRadius.circular(AppStyle.borderRadius),
           ),
           height: 50,
@@ -245,7 +244,7 @@ class _FilterTotalTypeWidget extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: OptiAppColors.backgroundInput,
+                  color: context.colors.backgroundInput,
                   borderRadius: BorderRadius.circular(AppStyle.borderRadius),
                 ),
                 height: 50,

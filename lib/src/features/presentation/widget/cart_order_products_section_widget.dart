@@ -1,11 +1,11 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/cart_line_extentions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CartOrderProductsSectionWidget extends StatelessWidget {
   final List<CartLineEntity> cartLines;
@@ -13,6 +13,8 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
   final bool? hideInventoryEnable;
   final void Function({required CartLineEntity cartLineEntity})? onAddToList;
   final void Function({required CartLineEntity cartLineEntity})? onAddToCart;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
 
   const CartOrderProductsSectionWidget({
     super.key,
@@ -21,6 +23,8 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
     this.hideInventoryEnable,
     this.onAddToCart,
     this.onAddToList,
+    this.showSavingsAmount = true,
+    this.showSavingsPercent = true,
   });
 
   @override
@@ -38,12 +42,12 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
             children: [
               Text(
                 LocalizationConstants.products.localized(),
-                style: OptiTextStyles.titleLarge,
+                style: context.text.titleLarge,
               ),
               const SizedBox(width: 8),
               Text(
                 '(${cartLines.length} item)',
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ],
           ),
@@ -59,7 +63,10 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
               shortDescription: cartLineEntity.shortDescription,
               manufacturerItem: cartLineEntity.manufacturerItem,
               productNumber: cartLineEntity.getProductNumber(),
-              discountMessage: cartLineEntity.pricing?.getDiscountValue(),
+              discountMessage: cartLineEntity.pricing?.getDiscountValue(
+                showSavingsAmount: showSavingsAmount,
+                showSavingsPercent: showSavingsPercent,
+              ),
               priceValueText: cartLineEntity.updatePriceValueText(),
               unitOfMeasureValueText:
                   cartLineEntity.updateUnitOfMeasureValueText(),

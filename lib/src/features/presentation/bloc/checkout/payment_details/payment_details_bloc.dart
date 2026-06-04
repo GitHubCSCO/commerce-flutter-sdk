@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/tokenex_entity.dart';
@@ -65,7 +64,9 @@ class PaymentDetailsBloc
     _setUpSelectedPaymentMethod(cart!);
     await _setupPaymentDataSources(
         UpdatePaymentMethodEvent(
-            isCVVRequired: true, paymentMethodDto: selectedPaymentMethod),
+          isCVVRequired: true,
+          paymentMethodDto: selectedPaymentMethod,
+        ),
         emit);
   }
 
@@ -202,15 +203,11 @@ class PaymentDetailsBloc
     return _paymentDetailsUseCase.getTokenExConfiguration(cardIdentifier);
   }
 
-  TokenExEntity _createTokenExEntity(AccountPaymentProfile creditCard) {
+  TokenExEntity _createTokenExEntity(
+    AccountPaymentProfile creditCard,
+  ) {
     return TokenExEntity(
       tokenExConfiguration: tokenExConfiguration,
-      tokenexStyle: TokenExStyleDto(
-        baseColor: OptiAppColors.lightGrayTextColor.toString(),
-        focusColor: OptiAppColors.primaryColor.toString(),
-        errorColor: OptiAppColors.invalidColor.toString(),
-        textColor: OptiAppColors.darkGrayTextColor.toString(),
-      ),
       tokenexMode: TokenExViewMode.cvv,
       cardType: creditCard.cardType,
       tokenExUrl: _paymentDetailsUseCase.tokenExIFrameUrl,

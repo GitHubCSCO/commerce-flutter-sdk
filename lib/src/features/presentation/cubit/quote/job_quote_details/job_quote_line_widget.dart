@@ -1,10 +1,10 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_image_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_title_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class JobQuoteLineWidget extends StatelessWidget {
   final String? productId;
@@ -125,7 +125,7 @@ class _JobQuoteLineQuantityGroupWidget extends StatelessWidget {
               children: [
                 Text(
                   LocalizationConstants.orderQTY.localized(),
-                  style: OptiTextStyles.bodySmallHighlight,
+                  style: context.text.bodySmallHighlight,
                 ),
                 const SizedBox(
                   height: 10,
@@ -178,15 +178,15 @@ class _JobQuoteLineStatisticsWidget extends StatelessWidget {
       children: [
         Text(
           '${LocalizationConstants.jobQty.localized()}: $qtyOrdered',
-          style: OptiTextStyles.bodySmallHighlight,
+          style: context.text.bodySmallHighlight,
         ),
         Text(
           '${LocalizationConstants.purchasedQty.localized()}: $purchasedQty',
-          style: OptiTextStyles.bodySmallHighlight,
+          style: context.text.bodySmallHighlight,
         ),
         Text(
           '${LocalizationConstants.qtyRemaining.localized()}: ${qtyOrdered - purchasedQty}',
-          style: OptiTextStyles.bodySmallHighlight,
+          style: context.text.bodySmallHighlight,
         ),
       ],
     );

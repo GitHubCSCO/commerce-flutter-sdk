@@ -3,7 +3,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/list_grid_view_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/brand/brand_product_line/brand_product_line_cubit.dart';
@@ -15,6 +14,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_men
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class BrandProductLinesScreen extends BaseStatelessWidget {
   final Brand brand;
@@ -68,7 +68,7 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage>
     return Scaffold(
       appBar: AppBar(
         title: Text(LocalizationConstants.allBrandProductLines.localized(),
-            style: OptiTextStyles.titleLarge),
+            style: context.text.titleLarge),
         actions: [
           BottomMenuWidget(
               websitePath: widget.brand.detailPagePath,

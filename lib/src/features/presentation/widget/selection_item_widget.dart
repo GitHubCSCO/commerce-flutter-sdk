@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CatalogTypeSelectingParameter {
   final CatalogTypeDto? currentItem;
@@ -69,10 +69,9 @@ class SelectionItemWidget extends StatelessWidget {
                       child: Text(
                         label ?? '',
                         overflow: TextOverflow.ellipsis,
-                        style: OptiTextStyles.body.copyWith(
-                            fontWeight: isSelected
-                                ? OptiTextStyles.bodyHighlightWeight
-                                : OptiTextStyles.bodyWeight),
+                        style: context.text.body.copyWith(
+                            fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w400),
                       ),
                     ),
                   ],
