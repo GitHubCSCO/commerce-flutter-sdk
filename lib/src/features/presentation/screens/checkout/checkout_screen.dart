@@ -5,6 +5,8 @@ import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart_cms/cart_cms_bloc.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart_cms/cart_cms_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
@@ -49,6 +51,10 @@ class CheckoutScreen extends BaseStatelessWidget {
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
+        BlocProvider<CartCmsPageBloc>(
+          create: (context) =>
+              sl<CartCmsPageBloc>()..add(const CartCmsPageLoadEvent()),
+        ),
         BlocProvider<PaymentDetailsBloc>(
           create: (_) => sl<PaymentDetailsBloc>()
             ..add(
