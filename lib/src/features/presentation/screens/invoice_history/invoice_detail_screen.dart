@@ -1,13 +1,11 @@
 import 'dart:io';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
@@ -29,6 +27,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class InvoiceDetailScreen extends BaseStatelessWidget {
   final String invoiceNumber;
@@ -168,9 +167,9 @@ class InvoiceDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         centerTitle: false,
         actions: [
           BottomMenuWidget(
@@ -264,11 +263,11 @@ class _InvoicePaymentSummarySection extends StatelessWidget {
               .copyWith(bottom: 8),
           child: Text(
             LocalizationConstants.orderSummary.localized(),
-            style: OptiTextStyles.titleLarge,
+            style: context.text.titleLarge,
           ),
         ),
         Container(
-          color: OptiAppColors.backgroundWhite,
+          color: context.colors.backgroundWhite,
           padding: const EdgeInsets.symmetric(
             horizontal: 24,
             vertical: 20,
@@ -280,37 +279,37 @@ class _InvoicePaymentSummarySection extends StatelessWidget {
               TwoTextsRow(
                 label: cubit.subtotalTitle,
                 value: cubit.subtotalValue,
-                textStyle: OptiTextStyles.subtitle,
+                textStyle: context.text.subtitle,
               ),
               if (!cubit.taxValue.isNullOrEmpty)
                 TwoTextsRow(
                   label: cubit.taxTitle,
                   value: cubit.taxValue,
-                  textStyle: OptiTextStyles.body,
+                  textStyle: context.text.body,
                 ),
               if (!cubit.shippingValue.isNullOrEmpty)
                 TwoTextsRow(
                   label: cubit.shippingTitle,
                   value: cubit.shippingValue,
-                  textStyle: OptiTextStyles.body,
+                  textStyle: context.text.body,
                 ),
               if (!cubit.discountValue.isNullOrEmpty)
                 TwoTextsRow(
                   label: cubit.discountTitle,
                   value: cubit.discountValue,
-                  textStyle: OptiTextStyles.body,
+                  textStyle: context.text.body,
                 ),
               if (!cubit.otherChargesValue.isNullOrEmpty)
                 TwoTextsRow(
                   label: cubit.otherChargesTitle,
                   value: cubit.otherChargesValue,
-                  textStyle: OptiTextStyles.body,
+                  textStyle: context.text.body,
                 ),
               const SizedBox(height: 10),
               TwoTextsRow(
                 label: cubit.totalTitle,
                 value: cubit.totalValue,
-                textStyle: OptiTextStyles.subtitle,
+                textStyle: context.text.subtitle,
               ),
             ],
           ),
@@ -342,7 +341,7 @@ class _InvoiceProductsSectionWidget extends StatelessWidget {
             children: [
               Text(
                 LocalizationConstants.products.localized(),
-                style: OptiTextStyles.titleLarge,
+                style: context.text.titleLarge,
               ),
               const SizedBox(width: 8),
               Text(
@@ -353,7 +352,7 @@ class _InvoiceProductsSectionWidget extends StatelessWidget {
                     : LocalizationConstants.items.localized().format(
                         [invoiceLines.length.toString()],
                       ),
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ],
           ),
@@ -416,7 +415,7 @@ class _InvoiceInfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       padding: const EdgeInsets.symmetric(
         horizontal: 24,
         vertical: 20,
@@ -555,14 +554,14 @@ class _TextEntries extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: OptiTextStyles.subtitle,
+            style: context.text.subtitle,
           ),
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             value,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         ),
       ],

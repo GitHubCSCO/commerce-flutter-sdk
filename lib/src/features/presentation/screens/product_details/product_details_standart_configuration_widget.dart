@@ -1,17 +1,14 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
   final ProductDetailsStandardConfigurationEntity
@@ -42,7 +39,7 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
                             const EdgeInsets.fromLTRB(25.0, 15.0, 0.0, 5.0),
                         child: Text(
                           configSectionOption.sectionName!,
-                          style: OptiTextStyles.body,
+                          style: context.text.body,
                         ),
                       ),
                       Padding(
@@ -50,7 +47,7 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
                             const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: OptiAppColors.backgroundInput,
+                            color: context.colors.backgroundInput,
                             borderRadius:
                                 BorderRadius.circular(AppStyle.borderRadius),
                           ),

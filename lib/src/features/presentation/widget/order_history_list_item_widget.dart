@@ -1,8 +1,7 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class OrderHistoryListItem extends StatelessWidget {
   final OrderEntity orderEntity;
@@ -25,7 +24,7 @@ class OrderHistoryListItem extends StatelessWidget {
           horizontal: 16,
           vertical: 10,
         ),
-        color: OptiAppColors.backgroundWhite,
+        color: context.colors.backgroundWhite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,8 +38,8 @@ class OrderHistoryListItem extends StatelessWidget {
                     orderEntity.orderNumberLabel ??
                         orderEntity.orderNumber ??
                         '',
-                    style: OptiTextStyles.body
-                        .copyWith(color: OptiAppColors.primaryColor),
+                    style: context.text.body
+                        .copyWith(color: context.scheme.primary),
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -50,7 +49,7 @@ class OrderHistoryListItem extends StatelessWidget {
                           orderEntity.orderDate!,
                         )
                       : '',
-                  style: OptiTextStyles.body,
+                  style: context.text.body,
                 ),
               ],
             ),
@@ -60,7 +59,7 @@ class OrderHistoryListItem extends StatelessWidget {
               child: Text(
                 (orderEntity.poNumberLabel ?? 'PO #') +
                     (orderEntity.customerPO ?? ''),
-                style: OptiTextStyles.bodySmall,
+                style: context.text.bodySmall,
               ),
             ),
             ...(orderEntity.stCompanyName != null
@@ -68,7 +67,7 @@ class OrderHistoryListItem extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       orderEntity.stCompanyName ?? '',
-                      style: OptiTextStyles.bodySmall,
+                      style: context.text.bodySmall,
                     ),
                   ]
                 : []),
@@ -79,12 +78,12 @@ class OrderHistoryListItem extends StatelessWidget {
                   visible: !(hidePricingEnable ?? false),
                   child: Text(
                     orderEntity.orderGrandTotalDisplay ?? '',
-                    style: OptiTextStyles.bodySmallHighlight,
+                    style: context.text.bodySmallHighlight,
                   ),
                 ),
                 Text(
                   orderEntity.statusDisplay ?? '',
-                  style: OptiTextStyles.bodySmallHighlight,
+                  style: context.text.bodySmallHighlight,
                 ),
               ],
             ),

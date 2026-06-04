@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/address_type.dart';
@@ -18,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class BillingShippingWidget extends StatelessWidget {
   final _orderNotesController = TextEditingController();
@@ -91,6 +91,7 @@ class BillingShippingWidget extends StatelessWidget {
           list.add(_buildAddShippingAddressButton(context));
         }
         list.add(_buildShippingMethod(
+            context,
             billingShippingEntity.carriers,
             billingShippingEntity.carriers?[selectedCarrierIndex].shipVias,
             selectedCarrierIndex,
@@ -107,6 +108,7 @@ class BillingShippingWidget extends StatelessWidget {
           maximumDate = DateTime.now().add(duration);
         }
         list.add(_buildRequestDeliveryDate(
+            context,
             maximumDate,
             billingShippingEntity.requestDeliveryDate,
             billingShippingEntity.shippingMethod,
@@ -115,6 +117,7 @@ class BillingShippingWidget extends StatelessWidget {
     } else {
       list.add(_buildPickUpAddress());
       list.add(_buildRequestDeliveryDate(
+          context,
           null,
           billingShippingEntity.requestDeliveryDate,
           billingShippingEntity.shippingMethod,
@@ -154,7 +157,7 @@ class BillingShippingWidget extends StatelessWidget {
         foregroundColor: Colors.blue,
         backgroundColor: Colors.white, // Button color
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        textStyle: OptiTextStyles.linkMedium,
+        textStyle: context.text.linkMedium,
       ),
       child: Text(
         LocalizationConstants.newAddress.localized(),
@@ -238,6 +241,7 @@ class BillingShippingWidget extends StatelessWidget {
   }
 
   Widget _buildShippingMethod(
+      BuildContext context,
       List<CarrierDto>? carriers,
       List<ShipViaDto>? services,
       int selectedCarrierIndex,
@@ -250,7 +254,7 @@ class BillingShippingWidget extends StatelessWidget {
         Text(
           LocalizationConstants.shippingMethod.localized(),
           textAlign: TextAlign.center,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         Row(
@@ -261,7 +265,7 @@ class BillingShippingWidget extends StatelessWidget {
               child: Text(
                 LocalizationConstants.carrier.localized(),
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ),
             Expanded(
@@ -286,7 +290,7 @@ class BillingShippingWidget extends StatelessWidget {
               child: Text(
                 LocalizationConstants.service.localized(),
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ),
             Expanded(
@@ -307,8 +311,12 @@ class BillingShippingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRequestDeliveryDate(DateTime? maxDate, DateTime? selectedDate,
-      ShippingOption? shippingOption, String? requestDateWarningMessage) {
+  Widget _buildRequestDeliveryDate(
+      BuildContext context,
+      DateTime? maxDate,
+      DateTime? selectedDate,
+      ShippingOption? shippingOption,
+      String? requestDateWarningMessage) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -320,7 +328,7 @@ class BillingShippingWidget extends StatelessWidget {
               ? LocalizationConstants.requestDeliveryDateOptional.localized()
               : LocalizationConstants.requestPickUpDateOptional.localized(),
           textAlign: TextAlign.center,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         Row(
@@ -331,7 +339,7 @@ class BillingShippingWidget extends StatelessWidget {
               child: Text(
                 LocalizationConstants.date.localized(),
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ),
             Expanded(
@@ -351,7 +359,7 @@ class BillingShippingWidget extends StatelessWidget {
         Text(
           requestDateWarningMessage ?? '',
           textAlign: TextAlign.center,
-          style: OptiTextStyles.bodySmall,
+          style: context.text.bodySmall,
         ),
         const SizedBox(height: 16),
       ],
@@ -438,7 +446,7 @@ class ShippingAddressWidget extends StatelessWidget {
                 ? title!
                 : LocalizationConstants.shippingAddress.localized(),
             textAlign: TextAlign.start,
-            style: OptiTextStyles.subtitle,
+            style: context.text.subtitle,
           ),
           const SizedBox(height: 8),
           if (companyName.isNullOrEmpty &&
@@ -447,25 +455,25 @@ class ShippingAddressWidget extends StatelessWidget {
             Text(
               LocalizationConstants.selectShippingAddress.localized(),
               textAlign: TextAlign.start,
-              style: OptiTextStyles.bodyFade,
+              style: context.text.bodyFade,
             ),
           if (!companyName.isNullOrEmpty)
             Text(
               companyName ?? '',
               textAlign: TextAlign.start,
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
           if (!fullAddress.isNullOrEmpty)
             Text(
               fullAddress ?? '',
               textAlign: TextAlign.start,
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
           if (!countryName.isNullOrEmpty)
             Text(
               countryName ?? '',
               textAlign: TextAlign.start,
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
           if (buildSeperator) ...[
             const SizedBox(height: 12),
@@ -506,26 +514,26 @@ class BillingAddressWidget extends StatelessWidget {
         Text(
           LocalizationConstants.billingAddress.localized(),
           textAlign: TextAlign.start,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         if (!companyName.isNullOrEmpty)
           Text(
             companyName ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         if (!fullAddress.isNullOrEmpty)
           Text(
             fullAddress ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         if (!countryName.isNullOrEmpty)
           Text(
             countryName ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         if (!email.isNullOrEmpty || !phone.isNullOrEmpty) ...[
           const SizedBox(height: 16),
@@ -533,13 +541,13 @@ class BillingAddressWidget extends StatelessWidget {
             Text(
               email ?? '',
               textAlign: TextAlign.start,
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
           if (!phone.isNullOrEmpty)
             Text(
               phone ?? '',
               textAlign: TextAlign.start,
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
         ],
         if (buildSeperator) ...[
@@ -577,7 +585,7 @@ class PickupLocationWidget extends StatelessWidget {
         Text(
           LocalizationConstants.pickUpLocation.localized(),
           textAlign: TextAlign.start,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         if (description.isNullOrEmpty &&
@@ -587,31 +595,31 @@ class PickupLocationWidget extends StatelessWidget {
           Text(
             LocalizationConstants.selectPickUpLocation.localized(),
             textAlign: TextAlign.start,
-            style: OptiTextStyles.bodyFade,
+            style: context.text.bodyFade,
           ),
         if (!description.isNullOrEmpty)
           Text(
             description ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.subtitle,
+            style: context.text.subtitle,
           ),
         if (!address.isNullOrEmpty)
           Text(
             address ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         if (!city.isNullOrEmpty)
           Text(
             city ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         if (!phone.isNullOrEmpty)
           Text(
             phone ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         if (buildSeperator) ...[
           const SizedBox(height: 12),

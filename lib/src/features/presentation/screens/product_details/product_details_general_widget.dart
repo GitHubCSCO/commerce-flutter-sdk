@@ -1,10 +1,9 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/product_details/product_details_carousel_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ProductDetailsGeneralWidget extends StatelessWidget {
   final ProductDetailsGeneralInfoEntity generalInfoEntity;
@@ -32,13 +31,13 @@ class ProductDetailsGeneralWidget extends StatelessWidget {
               children: [
                 Text(
                   generalInfoEntity.productName ?? '',
-                  style: OptiTextStyles.header3,
+                  style: context.text.header3,
                   textAlign: TextAlign.left,
                 ),
                 if (generalInfoEntity.originalPartNumberValue != null)
                   Text(
                     generalInfoEntity.originalPartNumberValue ?? '',
-                    style: OptiTextStyles.bodySmall,
+                    style: context.text.bodySmall,
                     textAlign: TextAlign.left,
                   ),
                 if (generalInfoEntity.myPartNumberValue != null &&
@@ -46,12 +45,12 @@ class ProductDetailsGeneralWidget extends StatelessWidget {
                   Row(children: [
                     Text(
                       generalInfoEntity.myPartNumberTitle ?? '',
-                      style: OptiTextStyles.bodySmall,
+                      style: context.text.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                     Text(
                       generalInfoEntity.myPartNumberValue ?? '',
-                      style: OptiTextStyles.bodySmall,
+                      style: context.text.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                   ]),
@@ -60,13 +59,13 @@ class ProductDetailsGeneralWidget extends StatelessWidget {
                   Row(children: [
                     Text(
                       generalInfoEntity.mFGNumberTitle ?? '',
-                      style: OptiTextStyles.bodySmall,
+                      style: context.text.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                     Text(
                       generalInfoEntity.mFGNumberValue ?? '',
-                      style: OptiTextStyles.bodySmall
-                          .copyWith(color: OptiAppColors.textSecondary),
+                      style: context.text.bodySmall
+                          .copyWith(color: context.colors.textSecondary),
                       textAlign: TextAlign.left,
                     ),
                   ]),
@@ -75,12 +74,12 @@ class ProductDetailsGeneralWidget extends StatelessWidget {
                   Row(children: [
                     Text(
                       generalInfoEntity.packDescriptionTitle ?? '',
-                      style: OptiTextStyles.bodySmall,
+                      style: context.text.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                     Text(
                       generalInfoEntity.packDescriptionValue ?? '',
-                      style: OptiTextStyles.bodySmall,
+                      style: context.text.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                   ]),

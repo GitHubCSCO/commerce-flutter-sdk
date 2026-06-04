@@ -1,9 +1,9 @@
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class OptiErrorWidget extends StatelessWidget {
   final String? errorText;
@@ -33,7 +33,7 @@ class OptiErrorWidget extends StatelessWidget {
             SizedBox(height: 20),
             Text(
               errorText ?? LocalizationConstants.errorLoading.localized(),
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
             SizedBox(height: 20),
             TertiaryButton(

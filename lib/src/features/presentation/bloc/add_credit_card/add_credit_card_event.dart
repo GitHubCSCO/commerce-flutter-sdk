@@ -6,6 +6,7 @@ class AddCreditCardEvent {}
 
 class SetUpDataSourceEvent extends AddCreditCardEvent {
   AddCreditCardEntity? addCreditCardEntity;
+
   SetUpDataSourceEvent({
     this.addCreditCardEntity,
   });
@@ -13,6 +14,7 @@ class SetUpDataSourceEvent extends AddCreditCardEvent {
 
 class SavePaymentProfileEvent extends AddCreditCardEvent {
   final AccountPaymentProfile accountPaymentProfile;
+
   SavePaymentProfileEvent({
     required this.accountPaymentProfile,
   });
@@ -22,6 +24,7 @@ class UpdateUseAsDefaultCardEvent extends AddCreditCardEvent {}
 
 class DeletCreditCardEvent extends AddCreditCardEvent {
   final AccountPaymentProfile accountPaymentProfile;
+
   DeletCreditCardEvent({
     required this.accountPaymentProfile,
   });

@@ -1,7 +1,5 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/vmi_bin_model_entity.dart';
@@ -15,6 +13,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/tab_switch
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CountInventoryEntity {
   final VmiBinModelEntity vmiBinEntity;
@@ -95,7 +94,7 @@ class _CountInputPageState extends State<CountInputPage> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: OptiAppColors.backgroundWhite,
+          backgroundColor: context.colors.backgroundWhite,
           actions: [
             IconButton(
               onPressed: () {
@@ -109,7 +108,7 @@ class _CountInputPageState extends State<CountInputPage> {
         ),
         body: SafeArea(
           child: Container(
-            color: OptiAppColors.backgroundWhite,
+            color: context.colors.backgroundWhite,
             child: Column(
               children: [
                 Expanded(
@@ -189,8 +188,7 @@ class _CountInputPageState extends State<CountInputPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(LocalizationConstants.qTY.localized(),
-              style: OptiTextStyles.body),
+          Text(LocalizationConstants.qTY.localized(), style: context.text.body),
           NumberTextField(
             initialText: qty.toString(),
             min: 0,
@@ -229,17 +227,17 @@ class _CountInputPageState extends State<CountInputPage> {
 
     final date = _buildRow(
         LocalizationConstants.dateSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         formatDateByLocale(
             widget.countInventoryEntity.vmiBinEntity.previousCountDate),
-        OptiTextStyles.body);
+        context.text.body);
     final countQty = _buildRow(
         LocalizationConstants.countQTYSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         (widget.countInventoryEntity.vmiBinEntity.previousCountQty?.toInt() ??
                 0)
             .toString(),
-        OptiTextStyles.body);
+        context.text.body);
 
     if (date != null) {
       list.add(date);
@@ -254,7 +252,7 @@ class _CountInputPageState extends State<CountInputPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(LocalizationConstants.previousCount.localized(),
-              style: OptiTextStyles.titleLarge),
+              style: context.text.titleLarge),
           ...list
         ],
       ),
@@ -266,21 +264,21 @@ class _CountInputPageState extends State<CountInputPage> {
 
     final date = _buildRow(
         LocalizationConstants.dateSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         formatDateByLocale(
             widget.countInventoryEntity.previousOrder?.orderDate),
-        OptiTextStyles.body);
+        context.text.body);
     final countQty = _buildRow(
         LocalizationConstants.orderQTYSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         _getPreviousOrderQty(widget.countInventoryEntity.previousOrder,
             widget.countInventoryEntity.vmiBinEntity),
-        OptiTextStyles.body);
+        context.text.body);
     final order = _buildRow(
         LocalizationConstants.orderSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         widget.countInventoryEntity.previousOrder?.orderNumber ?? '',
-        OptiTextStyles.body);
+        context.text.body);
 
     if (date != null) {
       list.add(date);
@@ -298,7 +296,7 @@ class _CountInputPageState extends State<CountInputPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(LocalizationConstants.previouseOrder.localized(),
-              style: OptiTextStyles.titleLarge),
+              style: context.text.titleLarge),
           ...list
         ],
       ),
@@ -310,45 +308,45 @@ class _CountInputPageState extends State<CountInputPage> {
 
     final part = _buildRow(
         LocalizationConstants.partNumberSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         widget.countInventoryEntity.vmiBinEntity.productEntity
                 ?.getProductNumber() ??
             '',
-        OptiTextStyles.body);
+        context.text.body);
     final myPart = _buildRow(
         LocalizationConstants.myPartNumberSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         widget.countInventoryEntity.vmiBinEntity.productEntity?.customerName ??
             '',
-        OptiTextStyles.body);
+        context.text.body);
     final mfg = _buildRow(
         LocalizationConstants.mFGNumberSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         widget.countInventoryEntity.vmiBinEntity.productEntity
                 ?.manufacturerItem ??
             '',
-        OptiTextStyles.body);
+        context.text.body);
     final bin = _buildRow(
         LocalizationConstants.binSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         widget.countInventoryEntity.vmiBinEntity.binNumber ?? '',
-        OptiTextStyles.body);
+        context.text.body);
     final maxCount = _buildRow(
         LocalizationConstants.maxSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         widget.countInventoryEntity.vmiBinEntity.maximumQty
                 ?.toInt()
                 .toString() ??
             '',
-        OptiTextStyles.body);
+        context.text.body);
     final minCount = _buildRow(
         LocalizationConstants.minSign.localized(),
-        OptiTextStyles.subtitle,
+        context.text.subtitle,
         widget.countInventoryEntity.vmiBinEntity.minimumQty
                 ?.toInt()
                 .toString() ??
             '',
-        OptiTextStyles.body);
+        context.text.body);
 
     if (part != null) {
       list.add(part);

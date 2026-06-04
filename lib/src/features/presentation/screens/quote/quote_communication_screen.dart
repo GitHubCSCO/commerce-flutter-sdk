@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_communication/quote_communication_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_communication/quote_communication_event.dart';
@@ -9,6 +8,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/input.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuoteCommunicationScreen extends StatelessWidget {
   final QuoteDto quoteDto;
@@ -139,7 +139,7 @@ class QuoteMessageItem extends StatelessWidget {
               SizedBox(width: 8),
               Text(
                 message?.displayName ?? "",
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
             ],
           ),
@@ -161,7 +161,7 @@ class QuoteMessageItem extends StatelessWidget {
                     children: [
                       Text(
                         message?.body ?? "",
-                        style: OptiTextStyles.body,
+                        style: context.text.body,
                       ),
                     ],
                   ),
@@ -171,7 +171,7 @@ class QuoteMessageItem extends StatelessWidget {
                   alignment: Alignment.bottomRight,
                   child: Text(
                     formatDateByLocale(message!.createdDate),
-                    style: OptiTextStyles.bodyFade,
+                    style: context.text.bodyFade,
                   ),
                 ),
               ],

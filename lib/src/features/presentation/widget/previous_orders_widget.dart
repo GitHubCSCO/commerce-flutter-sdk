@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/previous_orders_widget_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -13,6 +11,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_hist
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class PreviousOrdersWidget extends StatelessWidget {
   final PreviousOrdersWidgetEntity previousOrdersWidgetEntity;
@@ -43,7 +42,7 @@ class PreviousOrdersWidget extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                   child: Text(
                     previousOrdersWidgetEntity.title ?? "",
-                    style: OptiTextStyles.titleSmall,
+                    style: context.text.titleSmall,
                   ),
                 ),
                 Container(
@@ -57,7 +56,7 @@ class PreviousOrdersWidget extends StatelessWidget {
                           child: Text(
                             LocalizationConstants.previousOrdersNotFound
                                 .localized(),
-                            style: OptiTextStyles.body,
+                            style: context.text.body,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -102,8 +101,8 @@ class PreviousOrdersWidget extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: TertiaryButton(
-                            borderColor: OptiAppColors.grayBackgroundColor,
-                            backgroundColor: OptiAppColors.grayBackgroundColor,
+                            borderColor: context.colors.grayBackgroundColor,
+                            backgroundColor: context.colors.grayBackgroundColor,
                             text:
                                 LocalizationConstants.viewAllOrders.localized(),
                             onPressed: () {

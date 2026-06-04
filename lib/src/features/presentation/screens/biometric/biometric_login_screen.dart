@@ -1,22 +1,20 @@
 import 'dart:io';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class BiometricLoginScreen extends BaseStatelessWidget {
   const BiometricLoginScreen({
@@ -120,15 +118,15 @@ class BiometricLoginPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: context.scheme.surface,
         centerTitle: false,
         actions: [
           PlainButton(
             onPressed: () {
               context.pop();
             },
-            style: OptiTextStyles.subtitle.copyWith(
-              color: OptiAppColors.primaryColor,
+            style: context.text.subtitle.copyWith(
+              color: context.scheme.primary,
             ),
             text: LocalizationConstants.cancel.localized(),
           ),
@@ -137,13 +135,13 @@ class BiometricLoginPage extends StatelessWidget {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(20),
           child: Container(
-            color: AppStyle.neutral75,
+            color: context.colors.neutral75,
             height: 20,
           ),
         ),
         title: Text(
           'Setup $biometricNameWithSuffix',
-          style: OptiTextStyles.titleLarge,
+          style: context.text.titleLarge,
         ),
       ),
       body: SafeArea(
@@ -167,7 +165,7 @@ class BiometricLoginPage extends StatelessWidget {
           builder: (context, state) {
             return Container(
               height: double.infinity,
-              color: AppStyle.neutral00,
+              color: context.colors.neutral00,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -186,13 +184,13 @@ class BiometricLoginPage extends StatelessWidget {
                         const SizedBox(height: 30),
                         Text(
                           title ?? '',
-                          style: OptiTextStyles.header3,
+                          style: context.text.header3,
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 30),
                         Text(
                           subtitle,
-                          style: OptiTextStyles.body,
+                          style: context.text.body,
                           textAlign: TextAlign.center,
                         ),
                       ],

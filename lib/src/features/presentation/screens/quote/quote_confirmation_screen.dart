@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/quote_confirmation/quote_confirmation_cubit.dart';
@@ -11,6 +10,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/quote/quo
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuoteConfirmationScreen extends StatelessWidget {
   final QuoteDto quote;
@@ -48,7 +48,8 @@ class QuoteConfirmationPage extends StatelessWidget {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildTitleWidget("${quote.quoteNumber} Requested"),
+                    _buildTitleWidget(
+                        context, "${quote.quoteNumber} Requested"),
                     QuoteInformationWidget(
                       quoteDto: state.quoteDto,
                     ),
@@ -64,12 +65,12 @@ class QuoteConfirmationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTitleWidget(String title) {
+  Widget _buildTitleWidget(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 10, 0, 5),
       child: Text(
         title,
-        style: OptiTextStyles.titleLarge,
+        style: context.text.titleLarge,
       ),
     );
   }
@@ -83,7 +84,7 @@ class QuoteConfirmationPage extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
           child: Text(
             '${quoteLineEntities.length} ${quoteLineEntities.length == 1 ? "product" : "products"}',
-            style: OptiTextStyles.bodyFade,
+            style: context.text.bodyFade,
           ),
         ),
         Column(

@@ -5,20 +5,26 @@ abstract class PaymentDetailsEvent {}
 class LoadPaymentDetailsEvent extends PaymentDetailsEvent {
   final String cartId;
 
-  LoadPaymentDetailsEvent({required this.cartId});
+  LoadPaymentDetailsEvent({
+    required this.cartId,
+  });
 }
 
 class UpdatePaymentMethodEvent extends PaymentDetailsEvent {
   final PaymentMethodDto? paymentMethodDto;
   final bool isCVVRequired;
-  UpdatePaymentMethodEvent(
-      {required this.paymentMethodDto, required this.isCVVRequired});
+
+  UpdatePaymentMethodEvent({
+    required this.paymentMethodDto,
+    required this.isCVVRequired,
+  });
 }
 
 class UpdateCreditCartInfoEvent extends PaymentDetailsEvent {
   final String cardNumber;
   final String cardType;
   final String securityCode;
+
   UpdateCreditCartInfoEvent(
       {required this.cardNumber,
       required this.cardType,
@@ -27,6 +33,7 @@ class UpdateCreditCartInfoEvent extends PaymentDetailsEvent {
 
 class UpdateNewAccountPaymentProfileEvent extends PaymentDetailsEvent {
   final AccountPaymentProfile accountPaymentProfile;
+
   UpdateNewAccountPaymentProfileEvent({required this.accountPaymentProfile});
 }
 

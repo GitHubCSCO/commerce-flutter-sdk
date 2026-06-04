@@ -1,11 +1,11 @@
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/single_selection_option_chip.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/single_selection_swatch_chip.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/dropdown_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 enum StyleTraitType {
   swatchDropdown,
@@ -44,6 +44,7 @@ Widget buildStyleTraitSelectorWidget(
   switch (styleTraitTypeFromString(displayType!)) {
     case StyleTraitType.swatchDropdown:
       return _buildStyleTraitDropdownWidget(
+          context,
           styleTrait.styleValues,
           selectedStyleValues?[
               styleTrait.selectedStyleValue?.styleValue?.styleTraitId],
@@ -51,6 +52,7 @@ Widget buildStyleTraitSelectorWidget(
           onSelectItemCallback);
     case StyleTraitType.dropdown:
       return _buildStyleTraitDropdownWidget(
+          context,
           styleTrait.styleValues,
           selectedStyleValues?[
               styleTrait.selectedStyleValue?.styleValue?.styleTraitId],
@@ -109,6 +111,7 @@ Widget buildStyleTraitSelectorWidget(
 }
 
 Widget _buildStyleTraitDropdownWidget(
+    BuildContext context,
     List<ProductDetailStyleValue>? styleValues,
     StyleValueEntity? selectedVaue,
     String? title,
@@ -135,7 +138,7 @@ Widget _buildStyleTraitDropdownWidget(
           padding: const EdgeInsets.fromLTRB(5.0, 20.0, 0.0, 20.0),
           child: Text(
             title!,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         ),
         Container(

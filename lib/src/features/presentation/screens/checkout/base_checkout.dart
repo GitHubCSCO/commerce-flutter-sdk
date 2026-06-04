@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/review_order_entity.dart';
@@ -14,6 +13,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/cart/cart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 mixin BaseCheckout {
   AppBar buildAppBar(BuildContext context) {
@@ -29,7 +29,7 @@ mixin BaseCheckout {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               LocalizationConstants.cancel.localized(),
-              style: OptiTextStyles.subtitleHighlight,
+              style: context.text.subtitleHighlight,
             ),
           ),
         ),
@@ -111,8 +111,8 @@ mixin BaseCheckout {
         orderNotes: checkoutBloc.getOrderNote());
   }
 
-  Widget buildSummary(
-      Cart cart, PromotionCollectionModel? promotionCollectionModel) {
+  Widget buildSummary(BuildContext context, Cart cart,
+      PromotionCollectionModel? promotionCollectionModel) {
     String promotionInfo;
     String promotionValue;
     Promotion? lastPromotion;
@@ -168,11 +168,11 @@ mixin BaseCheckout {
 
     if (promotion != null && lastPromotion != null) {
       list.add(
-          _buildRow(promotionInfo, promotionValue, OptiTextStyles.bodyFade)!);
+          _buildRow(promotionInfo, promotionValue, context.text.bodyFade)!);
     }
 
     list.add(_buildRow(LocalizationConstants.subtotal.localized(),
-        cart.orderGrandTotalDisplay ?? '', OptiTextStyles.subtitleHighlight)!);
+        cart.orderGrandTotalDisplay ?? '', context.text.subtitleHighlight)!);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -237,9 +237,9 @@ mixin BaseCheckout {
                 context
                     .read<CheckoutBloc>()
                     .add(UpdateCartPaymentFailedEvent(id ?? ''));
-                context
-                    .read<PaymentDetailsBloc>()
-                    .add(LoadPaymentDetailsEvent(cartId: id ?? ''));
+                context.read<PaymentDetailsBloc>().add(LoadPaymentDetailsEvent(
+                      cartId: id ?? '',
+                    ));
               } else {
                 context
                     .read<CheckoutBloc>()

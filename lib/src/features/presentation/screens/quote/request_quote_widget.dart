@@ -4,7 +4,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/request_quote_type.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/request_quote/request_quote_bloc.dart';
@@ -26,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class RequestQuoteWidgetScreen extends StatelessWidget {
   final Cart? cart;
@@ -180,7 +180,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
                                       padding: const EdgeInsets.all(10.0),
                                       child: Text(
                                         '${state.cartLineEntities.length} ${state.cartLineEntities.length == 1 ? "product" : "products"}',
-                                        style: OptiTextStyles.body,
+                                        style: context.text.body,
                                       ),
                                     ),
                                     Column(
@@ -318,7 +318,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
           children: [
             Text(
               LocalizationConstants.creatingQuoteFor.localized(),
-              style: OptiTextStyles.subtitle,
+              style: context.text.subtitle,
             ),
             const SizedBox(height: 10),
             FilterItemPickerWidget(

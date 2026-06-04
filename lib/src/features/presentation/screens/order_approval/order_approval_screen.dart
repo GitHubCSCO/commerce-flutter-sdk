@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
@@ -16,6 +14,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_appr
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class OrderApprovalScreen extends StatelessWidget {
   const OrderApprovalScreen({super.key});
@@ -53,9 +52,9 @@ class OrderApprovalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         title: Text(LocalizationConstants.orderApproval.localized()),
         centerTitle: false,
         actions: [
@@ -112,7 +111,7 @@ class OrderApprovalPage extends StatelessWidget {
                                     null
                                 ? '${state.orderApprovalCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
                                 : '',
-                            style: OptiTextStyles.header3,
+                            style: context.text.header3,
                           ),
                           OrderApprovalFilterWidget(
                             orderApprovalParameters:
@@ -271,7 +270,7 @@ class _OrderApprovalItem extends StatelessWidget {
           horizontal: 16,
           vertical: 10,
         ),
-        color: OptiAppColors.backgroundWhite,
+        color: context.colors.backgroundWhite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,8 +281,8 @@ class _OrderApprovalItem extends StatelessWidget {
                 Flexible(
                   child: Text(
                     cart.orderNumber ?? '',
-                    style: OptiTextStyles.body
-                        .copyWith(color: OptiAppColors.primaryColor),
+                    style: context.text.body
+                        .copyWith(color: context.scheme.primary),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
@@ -295,20 +294,20 @@ class _OrderApprovalItem extends StatelessWidget {
                   cart.orderDate != null
                       ? formatDateByLocale(cart.orderDate!)
                       : '',
-                  style: OptiTextStyles.body,
+                  style: context.text.body,
                 ),
               ],
             ),
             Text(
               cart.initiatedByUserName ?? '',
-              style: OptiTextStyles.bodySmall,
+              style: context.text.bodySmall,
             ),
             Text(
               cart.fulfillmentMethod
                       .equalsIgnoreCase(FulfillmentMethodType.PickUp.name)
                   ? (cart.defaultWarehouse?.name ?? '')
                   : (cart.shipToLabel ?? ''),
-              style: OptiTextStyles.bodySmall,
+              style: context.text.bodySmall,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -317,12 +316,12 @@ class _OrderApprovalItem extends StatelessWidget {
                   visible: !(hidePricingEnable ?? false),
                   child: Text(
                     cart.orderGrandTotalDisplay ?? '',
-                    style: OptiTextStyles.bodySmallHighlight,
+                    style: context.text.bodySmallHighlight,
                   ),
                 ),
                 Text(
                   cart.approverReason ?? '',
-                  style: OptiTextStyles.bodySmallHighlight,
+                  style: context.text.bodySmallHighlight,
                 ),
               ],
             ),

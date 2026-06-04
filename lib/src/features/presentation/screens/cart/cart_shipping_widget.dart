@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/map_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart/shipping_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/location_search_type.dart';
@@ -12,6 +11,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/location_se
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 enum ShippingOption {
   Ship,
@@ -47,7 +47,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
           child: Text(
             LocalizationConstants.shipping.localized(),
-            style: OptiTextStyles.titleLarge,
+            style: context.text.titleLarge,
           ),
         ),
         BlocConsumer<CartShippingSelectionBloc, CartShippingSelectionState>(
@@ -142,29 +142,29 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                                       LocalizationConstants.pickUpLocation
                                           .localized(),
                                       textAlign: TextAlign.start,
-                                      style: OptiTextStyles.subtitle,
+                                      style: context.text.subtitle,
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
                                       shippingEntity.warehouse?.description ??
                                           '',
                                       textAlign: TextAlign.start,
-                                      style: OptiTextStyles.subtitle,
+                                      style: context.text.subtitle,
                                     ),
                                     Text(
                                       _wareHouseAddress(),
                                       textAlign: TextAlign.start,
-                                      style: OptiTextStyles.body,
+                                      style: context.text.body,
                                     ),
                                     Text(
                                       _wareHouseCity(),
                                       textAlign: TextAlign.start,
-                                      style: OptiTextStyles.body,
+                                      style: context.text.body,
                                     ),
                                     Text(
                                       shippingEntity.warehouse?.phone ?? '',
                                       textAlign: TextAlign.start,
-                                      style: OptiTextStyles.body,
+                                      style: context.text.body,
                                     ),
                                   ],
                                 ),
@@ -188,7 +188,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                             child: Text(
                               LocalizationConstants.hours.localized(),
                               textAlign: TextAlign.start,
-                              style: OptiTextStyles.link,
+                              style: context.text.link,
                             ),
                             onTap: () {
                               _onHoursClick(context);
@@ -199,7 +199,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                             child: Text(
                               LocalizationConstants.directions.localized(),
                               textAlign: TextAlign.start,
-                              style: OptiTextStyles.link,
+                              style: context.text.link,
                             ),
                             onTap: () {
                               _onDirectionsClick();

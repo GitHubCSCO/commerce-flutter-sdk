@@ -50,8 +50,12 @@ class CheckoutScreen extends BaseStatelessWidget {
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
         BlocProvider<PaymentDetailsBloc>(
-          create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(cartId: cart.id ?? '')),
+          create: (_) => sl<PaymentDetailsBloc>()
+            ..add(
+              LoadPaymentDetailsEvent(
+                cartId: cart.id ?? '',
+              ),
+            ),
         ),
       ],
       child: CheckoutPage(cart: cart),
@@ -208,7 +212,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                buildSummary(state.cart, state.promotions),
+                                buildSummary(
+                                    context, state.cart, state.promotions),
                                 BlocBuilder<ExpansionPanelCubit,
                                     ExpansionPanelState>(
                                   builder: (_, panelState) {

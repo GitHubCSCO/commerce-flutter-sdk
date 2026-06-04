@@ -1,14 +1,15 @@
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/promotion_type.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 mixin PaymentSummaryMixin {
-  List<Widget> buildSummaryItems(PaymentSummaryEntity paymentSummaryEntity) {
+  List<Widget> buildSummaryItems(
+      BuildContext context, PaymentSummaryEntity paymentSummaryEntity) {
     List<Widget> list = [];
     final shouldShowTaxAndShipping =
         paymentSummaryEntity.cartSettings?.showTaxAndShipping ?? false;
@@ -30,22 +31,24 @@ mixin PaymentSummaryMixin {
             x.amount != 0)
         .toList();
 
-    var orderApprove = _buildOrderApprove(paymentSummaryEntity);
-    var subTotal = _buildSubTotal(paymentSummaryEntity);
-    var promotions = _buildPromotions(orderPromotions, shippingPromotions);
+    var orderApprove = _buildOrderApprove(context, paymentSummaryEntity);
+    var subTotal = _buildSubTotal(context, paymentSummaryEntity);
+    var promotions =
+        _buildPromotions(context, orderPromotions, shippingPromotions);
     var shipping =
-        _buildShipping(shouldShowTaxAndShipping, paymentSummaryEntity);
-    var estimatedShipping =
-        _buildShippingHandling(shouldShowTaxAndShipping, paymentSummaryEntity);
+        _buildShipping(context, shouldShowTaxAndShipping, paymentSummaryEntity);
+    var estimatedShipping = _buildShippingHandling(
+        context, shouldShowTaxAndShipping, paymentSummaryEntity);
     var handling =
-        _buildHandling(shouldShowTaxAndShipping, paymentSummaryEntity);
-    var miscCharge =
-        _buildMiscCharge(shouldShowTaxAndShipping, paymentSummaryEntity);
-    var tax =
-        _buildEstimatedTax(shouldShowTaxAndShipping, paymentSummaryEntity);
-    var total =
-        _buildEstimatedTotal(shouldShowTaxAndShipping, paymentSummaryEntity);
-    var savedAmount = _buildYouSaved(orderPromotions, shippingPromotions);
+        _buildHandling(context, shouldShowTaxAndShipping, paymentSummaryEntity);
+    var miscCharge = _buildMiscCharge(
+        context, shouldShowTaxAndShipping, paymentSummaryEntity);
+    var tax = _buildEstimatedTax(
+        context, shouldShowTaxAndShipping, paymentSummaryEntity);
+    var total = _buildEstimatedTotal(
+        context, shouldShowTaxAndShipping, paymentSummaryEntity);
+    var savedAmount =
+        _buildYouSaved(context, orderPromotions, shippingPromotions);
 
     if (orderApprove != null) {
       list.add(orderApprove);
@@ -81,7 +84,8 @@ mixin PaymentSummaryMixin {
     return list;
   }
 
-  Widget? _buildOrderApprove(PaymentSummaryEntity paymentSummaryEntity) {
+  Widget? _buildOrderApprove(
+      BuildContext context, PaymentSummaryEntity paymentSummaryEntity) {
     String title = paymentSummaryEntity.cart == null
         ? LocalizationConstants.approvingCart.localized()
         : LocalizationConstants.approvingCartInfos.localized().format([
@@ -89,7 +93,7 @@ mixin PaymentSummaryMixin {
             paymentSummaryEntity.cart!.initiatedByUserName
           ]);
 
-    TextStyle textStyle = OptiTextStyles.body;
+    TextStyle textStyle = context.text.body;
     return paymentSummaryEntity.isCustomerOrderApproval
         ? Padding(
             padding: const EdgeInsets.only(bottom: 10),
@@ -116,7 +120,8 @@ mixin PaymentSummaryMixin {
         : null;
   }
 
-  Widget? _buildSubTotal(PaymentSummaryEntity paymentSummaryEntity) {
+  Widget? _buildSubTotal(
+      BuildContext context, PaymentSummaryEntity paymentSummaryEntity) {
     final cart = paymentSummaryEntity.cart;
 
     var title = (cart == null)
@@ -128,10 +133,12 @@ mixin PaymentSummaryMixin {
             .format([cart.totalCountDisplay ?? '']);
 
     return _buildRow(
-        title, cart?.orderSubTotalDisplay ?? '', OptiTextStyles.subtitle);
+        title, cart?.orderSubTotalDisplay ?? '', context.text.subtitle);
   }
 
-  Widget? _buildEstimatedTotal(bool shouldShowTaxAndShipping,
+  Widget? _buildEstimatedTotal(
+      BuildContext context,
+      bool shouldShowTaxAndShipping,
       PaymentSummaryEntity paymentSummaryEntity) {
     String title = LocalizationConstants.total.localized();
     String body =
@@ -139,7 +146,7 @@ mixin PaymentSummaryMixin {
                 ? paymentSummaryEntity.cart?.orderGrandTotalDisplay
                 : '') ??
             '';
-    TextStyle textStyle = OptiTextStyles.subtitleHighlight;
+    TextStyle textStyle = context.text.subtitleHighlight;
 
     var widget = _buildRow(title, body, textStyle);
     if (widget != null) {
@@ -152,7 +159,9 @@ mixin PaymentSummaryMixin {
     }
   }
 
-  Widget? _buildEstimatedTax(bool shouldShowTaxAndShipping,
+  Widget? _buildEstimatedTax(
+      BuildContext context,
+      bool shouldShowTaxAndShipping,
       PaymentSummaryEntity paymentSummaryEntity) {
     String title = LocalizationConstants.tax.localized();
     String body =
@@ -160,11 +169,11 @@ mixin PaymentSummaryMixin {
                 ? paymentSummaryEntity.cart?.totalTaxDisplay
                 : '') ??
             '';
-    TextStyle textStyle = OptiTextStyles.body;
+    TextStyle textStyle = context.text.body;
     return _buildRow(title, body, textStyle);
   }
 
-  Widget? _buildShipping(bool shouldShowTaxAndShipping,
+  Widget? _buildShipping(BuildContext context, bool shouldShowTaxAndShipping,
       PaymentSummaryEntity paymentSummaryEntity) {
     String title = LocalizationConstants.shipping.localized();
     String body =
@@ -172,11 +181,13 @@ mixin PaymentSummaryMixin {
                 ? paymentSummaryEntity.cart?.shippingChargesDisplay
                 : '') ??
             '';
-    TextStyle textStyle = OptiTextStyles.body;
+    TextStyle textStyle = context.text.body;
     return _buildRow(title, body, textStyle);
   }
 
-  Widget? _buildShippingHandling(bool shouldShowTaxAndShipping,
+  Widget? _buildShippingHandling(
+      BuildContext context,
+      bool shouldShowTaxAndShipping,
       PaymentSummaryEntity paymentSummaryEntity) {
     String title = LocalizationConstants.shippingHandling.localized();
     String body =
@@ -184,11 +195,11 @@ mixin PaymentSummaryMixin {
                 ? paymentSummaryEntity.cart?.shippingAndHandlingDisplay
                 : '') ??
             '';
-    TextStyle textStyle = OptiTextStyles.body;
+    TextStyle textStyle = context.text.body;
     return _buildRow(title, body, textStyle);
   }
 
-  Widget? _buildHandling(bool shouldShowTaxAndShipping,
+  Widget? _buildHandling(BuildContext context, bool shouldShowTaxAndShipping,
       PaymentSummaryEntity paymentSummaryEntity) {
     String title = LocalizationConstants.handling.localized();
     String body =
@@ -196,11 +207,11 @@ mixin PaymentSummaryMixin {
                 ? paymentSummaryEntity.cart?.handlingChargesDisplay
                 : '') ??
             '';
-    TextStyle textStyle = OptiTextStyles.body;
+    TextStyle textStyle = context.text.body;
     return _buildRow(title, body, textStyle);
   }
 
-  Widget? _buildMiscCharge(bool shouldShowTaxAndShipping,
+  Widget? _buildMiscCharge(BuildContext context, bool shouldShowTaxAndShipping,
       PaymentSummaryEntity paymentSummaryEntity) {
     String title = LocalizationConstants.miscCharge.localized();
     String body =
@@ -208,12 +219,12 @@ mixin PaymentSummaryMixin {
                 ? paymentSummaryEntity.cart?.otherChargesDisplay
                 : '') ??
             '';
-    TextStyle textStyle = OptiTextStyles.body;
+    TextStyle textStyle = context.text.body;
     return _buildRow(title, body, textStyle);
   }
 
-  Widget? _buildYouSaved(
-      List<Promotion>? orderPromotions, List<Promotion>? shippingPromotions) {
+  Widget? _buildYouSaved(BuildContext context, List<Promotion>? orderPromotions,
+      List<Promotion>? shippingPromotions) {
     double sumAmounts(List<Promotion>? promotions) {
       return promotions?.fold(
               0.0, (sum, item) => (sum ?? 0) + (item.amount ?? 0)) ??
@@ -228,14 +239,15 @@ mixin PaymentSummaryMixin {
 
     String title = LocalizationConstants.discounts.localized();
     String body = formattedDiscountTotal;
-    TextStyle textStyle = OptiTextStyles.body;
+    TextStyle textStyle = context.text.body;
     return _buildRow(title, body, textStyle);
   }
 
-  Widget? _buildPromotions(
+  Widget? _buildPromotions(BuildContext context,
       List<Promotion>? orderPromotions, List<Promotion>? shippingPromotions) {
-    var orderPromotion = _buildOrderPromotion(orderPromotions);
-    var shippingPromotion = _buildShippingPromotion(shippingPromotions);
+    var orderPromotion = _buildOrderPromotion(context, orderPromotions);
+    var shippingPromotion =
+        _buildShippingPromotion(context, shippingPromotions);
 
     final list = [];
     if (orderPromotion != null) {
@@ -256,11 +268,12 @@ mixin PaymentSummaryMixin {
     }
   }
 
-  Widget? _buildOrderPromotion(List<Promotion>? orderPromotions) {
+  Widget? _buildOrderPromotion(
+      BuildContext context, List<Promotion>? orderPromotions) {
     List<Widget> list = [];
 
     orderPromotions?.forEach((promotion) {
-      final widget = _buildPromotion(promotion);
+      final widget = _buildPromotion(context, promotion);
       if (widget != null) {
         list.add(widget);
       }
@@ -273,11 +286,12 @@ mixin PaymentSummaryMixin {
     }
   }
 
-  Widget? _buildShippingPromotion(List<Promotion>? shippingPromotions) {
+  Widget? _buildShippingPromotion(
+      BuildContext context, List<Promotion>? shippingPromotions) {
     List<Widget> list = [];
 
     shippingPromotions?.forEach((promotion) {
-      final widget = _buildPromotion(promotion);
+      final widget = _buildPromotion(context, promotion);
       if (widget != null) {
         list.add(widget);
       }
@@ -290,11 +304,11 @@ mixin PaymentSummaryMixin {
     }
   }
 
-  Widget? _buildPromotion(Promotion promotion) {
+  Widget? _buildPromotion(BuildContext context, Promotion promotion) {
     String title =
         '${LocalizationConstants.promotion.localized()} : ${promotion.name!}';
     String body = '-${promotion.amountDisplay!}';
-    TextStyle textStyle = OptiTextStyles.bodyFade;
+    TextStyle textStyle = context.text.bodyFade;
     return _buildRow(title, body, textStyle);
   }
 

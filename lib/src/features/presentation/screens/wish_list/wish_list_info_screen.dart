@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
@@ -23,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class WishListInformationScreen extends BaseStatelessWidget {
   const WishListInformationScreen({
@@ -144,14 +144,14 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
         centerTitle: false,
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         title: Text(LocalizationConstants.listInformation.localized()),
       ),
       body: Container(
-        color: OptiAppColors.backgroundWhite,
+        color: context.colors.backgroundWhite,
         child: SafeArea(
           child: MultiBlocListener(
             listeners: [
@@ -236,7 +236,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                       Expanded(
                         child: SingleChildScrollView(
                           child: Container(
-                            color: OptiAppColors.backgroundWhite,
+                            color: context.colors.backgroundWhite,
                             padding: const EdgeInsets.all(24),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -359,7 +359,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                       return Container(
                         width: double.infinity,
                         height: double.infinity,
-                        color: OptiAppColors.backgroundWhite,
+                        color: context.colors.backgroundWhite,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -403,7 +403,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                           _tagInputEditingController.clear();
                                         },
                                         child: Container(
-                                          color: OptiAppColors.backgroundGray,
+                                          color: context.colors.backgroundGray,
                                           padding: const EdgeInsets.symmetric(
                                             vertical: 16,
                                             horizontal: 24,

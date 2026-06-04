@@ -4,7 +4,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_sdk/src/core/models/screen_parameters.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/brand_mapper.dart';
@@ -17,6 +16,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_men
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class BrandCategoryScreen extends BaseStatelessWidget {
   Brand brand;
@@ -103,7 +103,7 @@ class _BrandCategoryPageState extends State<BrandCategoryPage>
         title: Text(
             widget.categoryTitle ??
                 LocalizationConstants.categories.localized(),
-            style: OptiTextStyles.titleLarge),
+            style: context.text.titleLarge),
         actions: [
           BottomMenuWidget(
               websitePath: widget.brand.detailPagePath,

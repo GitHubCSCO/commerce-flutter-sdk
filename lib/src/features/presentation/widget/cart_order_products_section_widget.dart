@@ -1,11 +1,11 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/cart_line_extentions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CartOrderProductsSectionWidget extends StatelessWidget {
   final List<CartLineEntity> cartLines;
@@ -42,12 +42,12 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
             children: [
               Text(
                 LocalizationConstants.products.localized(),
-                style: OptiTextStyles.titleLarge,
+                style: context.text.titleLarge,
               ),
               const SizedBox(width: 8),
               Text(
                 '(${cartLines.length} item)',
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ],
           ),

@@ -1,7 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class LineItemTitleWidget extends StatelessWidget {
   final String? shortDescription;
@@ -33,14 +33,14 @@ class LineItemTitleWidget extends StatelessWidget {
                     shortDescription ?? '',
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: OptiTextStyles.body,
+                    style: context.text.body,
                     textAlign: TextAlign.left,
                   ),
                 ),
                 if (!productNumber.isNullOrEmpty)
                   Text(
                     productNumber!,
-                    style: OptiTextStyles.bodySmall,
+                    style: context.text.bodySmall,
                     textAlign: TextAlign.left,
                   ),
                 if (!manufacturerItem.isNullOrEmpty)
@@ -48,12 +48,12 @@ class LineItemTitleWidget extends StatelessWidget {
                     children: [
                       Text(
                         '${LocalizationConstants.mFGNumberSign.localized()} ',
-                        style: OptiTextStyles.subtitle.copyWith(fontSize: 12),
+                        style: context.text.subtitle.copyWith(fontSize: 12),
                         textAlign: TextAlign.left,
                       ),
                       Text(
                         manufacturerItem ?? '',
-                        style: OptiTextStyles.bodySmall,
+                        style: context.text.bodySmall,
                         textAlign: TextAlign.left,
                       ),
                     ],

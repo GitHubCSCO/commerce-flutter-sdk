@@ -1,13 +1,11 @@
 import 'package:collection/collection.dart';
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
@@ -24,7 +22,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/button
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/extra/delayer.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/list_picker_widget.dart';
@@ -32,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 void _updateCart(BuildContext context, bool shouldEagerReloadCart) {
   unawaited(context.read<CartCountCubit>().onCartItemChange());
@@ -53,7 +51,7 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Container(
-        color: AppStyle.neutral00,
+        color: context.colors.neutral00,
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -299,7 +297,7 @@ class _ProductDetailsAddCartRowState extends State<ProductDetailsAddCartRow> {
                   flex: 2,
                   child: Text(
                     LocalizationConstants.qTY.localized(),
-                    style: OptiTextStyles.subtitle,
+                    style: context.text.subtitle,
                   ),
                 ),
                 if (isUnitOfMeasureEnabled)
@@ -307,7 +305,7 @@ class _ProductDetailsAddCartRowState extends State<ProductDetailsAddCartRow> {
                     flex: 2,
                     child: Text(
                       LocalizationConstants.unitOfMeasure.localized(),
-                      style: OptiTextStyles.subtitle,
+                      style: context.text.subtitle,
                     ),
                   )
               ],
@@ -331,7 +329,7 @@ class _ProductDetailsAddCartRowState extends State<ProductDetailsAddCartRow> {
                                 50, // Constrain height to match NumberTextField
                             child: Center(
                               child: LoadingAnimationWidget.progressiveDots(
-                                color: OptiAppColors.iconPrimary,
+                                color: context.colors.iconPrimary,
                                 size: 30, // Reduced size to take less space
                               ),
                             ),
@@ -417,7 +415,7 @@ class _ProductDetailsAddCartRowState extends State<ProductDetailsAddCartRow> {
         showMultipleUoM
             ? Container(
                 decoration: BoxDecoration(
-                  color: OptiAppColors.backgroundInput,
+                  color: context.colors.backgroundInput,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
@@ -445,11 +443,11 @@ class _ProductDetailsAddCartRowState extends State<ProductDetailsAddCartRow> {
                       widget.detailsAddToCartEntity.productUnitOfMeasures?.first
                               .unitOfMeasureTextDisplayWithQuantity ??
                           "",
-                      style: OptiTextStyles.header3);
+                      style: context.text.header3);
                 } else if (defaultUom != null) {
                   return Text(
                       defaultUom.unitOfMeasureTextDisplayWithQuantity ?? "",
-                      style: OptiTextStyles.header3);
+                      style: context.text.header3);
                 } else {
                   return const SizedBox.shrink();
                 }
@@ -479,7 +477,7 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
       children: [
         Text(
           title,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(
           height: 5.0,
@@ -488,7 +486,7 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
           fit: BoxFit.scaleDown,
           child: Text(
             getFormattedValue(value),
-            style: OptiTextStyles.titleLargeHighLight,
+            style: context.text.titleLargeHighLight,
           ),
         ),
       ],

@@ -1,8 +1,8 @@
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/date_selection/date_selection_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class DatePickerWidget extends StatelessWidget {
   final void Function(BuildContext context, DateTime dateTime)? callback;
@@ -77,7 +77,7 @@ class PickDate extends StatelessWidget {
                     Text(
                       state.dateString,
                       textAlign: TextAlign.center,
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                     ),
                     const Icon(
                       Icons.arrow_forward_ios,

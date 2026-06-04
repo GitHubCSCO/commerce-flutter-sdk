@@ -1,15 +1,14 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/number_text_field.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_return/order_return_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/order_return/order_return_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/dropdown_picker.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class OrderReturnItem extends StatefulWidget {
   final void Function(int requestCode, int numberOfItems) onReturnInfoChanged;
@@ -78,7 +77,7 @@ class _OrderReturnItemState extends State<OrderReturnItem> {
               widget.orderLine.shortDescription ?? '',
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: OptiTextStyles.body,
+              style: context.text.body,
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 8),
@@ -102,7 +101,7 @@ class _OrderReturnItemState extends State<OrderReturnItem> {
             children: [
               Text(
                 LocalizationConstants.numberOfItems.localized(),
-                style: OptiTextStyles.bodySmall,
+                style: context.text.bodySmall,
               ),
               const SizedBox(width: 4.0), // Space between text and star
               const Text(
@@ -139,8 +138,8 @@ class _OrderReturnItemState extends State<OrderReturnItem> {
             padding: const EdgeInsets.only(top: 4.0),
             child: Text(
               LocalizationConstants.quantityExceeds.localized(),
-              style: OptiTextStyles.bodySmall
-                  .copyWith(color: OptiAppColors.invalidColor),
+              style: context.text.bodySmall
+                  .copyWith(color: context.colors.invalidColor),
             ),
           ),
         ),
@@ -164,7 +163,7 @@ class _OrderReturnItemState extends State<OrderReturnItem> {
           padding: const EdgeInsets.only(bottom: 4.0),
           child: Text(
             LocalizationConstants.returnReason.localized(),
-            style: OptiTextStyles.bodySmall,
+            style: context.text.bodySmall,
           ),
         ),
         Container(
@@ -209,8 +208,8 @@ class _OrderReturnItemState extends State<OrderReturnItem> {
             padding: const EdgeInsets.only(top: 4.0),
             child: Text(
               LocalizationConstants.returnReasonIsRequired.localized(),
-              style: OptiTextStyles.bodySmall
-                  .copyWith(color: OptiAppColors.invalidColor),
+              style: context.text.bodySmall
+                  .copyWith(color: context.colors.invalidColor),
             ),
           ),
         ),

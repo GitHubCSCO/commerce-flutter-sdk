@@ -1,9 +1,7 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/validator_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/add_shipping_address/add_shipping_address_cubit.dart';
@@ -14,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class AddShippingAddressScreen extends StatelessWidget {
   const AddShippingAddressScreen({
@@ -24,7 +23,7 @@ class AddShippingAddressScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: OptiAppColors.backgroundWhite,
+          backgroundColor: context.colors.backgroundWhite,
           title: Text(LocalizationConstants.shippingAddress.localized()),
           centerTitle: false,
         ),
@@ -203,7 +202,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
           children: [
             Text(
               LocalizationConstants.saveThisAddress.localized(),
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
             Switch(
               value: context.watch<AddShippingAddressCubit>().isSavedAddress,
@@ -371,7 +370,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
                         child: Text(
                           LocalizationConstants.selectCountry.localized(),
                           textAlign: TextAlign.start,
-                          style: OptiTextStyles.body,
+                          style: context.text.body,
                         ),
                       ),
                       Expanded(
@@ -458,7 +457,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
                         child: Text(
                           LocalizationConstants.selectState.localized(),
                           textAlign: TextAlign.start,
-                          style: OptiTextStyles.body,
+                          style: context.text.body,
                         ),
                       ),
                       Expanded(

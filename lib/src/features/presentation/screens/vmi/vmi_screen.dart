@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/base/base_dynamic_content_screen.dart';
@@ -15,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:go_router/go_router.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class VMIScreen extends StatelessWidget {
   const VMIScreen({super.key});
@@ -48,9 +48,9 @@ class VMIPage extends StatelessWidget with BaseDynamicContentScreen {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         title: Text(LocalizationConstants.vendorManagedInventory.localized()),
         centerTitle: false,
       ),
@@ -107,7 +107,7 @@ class VMIPage extends StatelessWidget with BaseDynamicContentScreen {
                 return const Center(child: CircularProgressIndicator());
               case CmsLoadedState():
                 return Scaffold(
-                    backgroundColor: OptiAppColors.backgroundGray,
+                    backgroundColor: context.colors.backgroundGray,
                     body: ListView(
                       children: buildContentWidgets(state.widgetEntities),
                     ));

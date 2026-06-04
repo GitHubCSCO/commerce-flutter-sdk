@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_sdk/src/core/mixins/map_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
@@ -7,6 +6,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/pickup_locat
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class PickupLocationLocationWidgetItem extends StatelessWidget
     with MapDirection {
@@ -55,25 +55,25 @@ class PickupLocationLocationWidgetItem extends StatelessWidget
                           Text(
                             warehouse.description ?? '',
                             textAlign: TextAlign.start,
-                            style: OptiTextStyles.subtitle,
+                            style: context.text.subtitle,
                           ),
                         if (!warehouse.wareHouseAddress().isNullOrEmpty)
                           Text(
                             warehouse.wareHouseAddress(),
                             textAlign: TextAlign.start,
-                            style: OptiTextStyles.body,
+                            style: context.text.body,
                           ),
                         if (!warehouse.wareHouseCity().isNullOrEmpty)
                           Text(
                             warehouse.wareHouseCity(),
                             textAlign: TextAlign.start,
-                            style: OptiTextStyles.body,
+                            style: context.text.body,
                           ),
                         if (!warehouse.phone.isNullOrEmpty)
                           Text(
                             warehouse.phone ?? '',
                             textAlign: TextAlign.start,
-                            style: OptiTextStyles.body,
+                            style: context.text.body,
                           ),
                       ],
                     )))
