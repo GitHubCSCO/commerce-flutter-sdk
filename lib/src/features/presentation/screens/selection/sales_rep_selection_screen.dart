@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/selection/sales_rep_selection/sales_rep_selection_cubit.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SalesRepSelectionScreen extends StatelessWidget {
   final CatalogTypeSelectingParameter parameter;
@@ -34,9 +34,9 @@ class SalesRepSelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         title: Text(LocalizationConstants.selectSalesRep.localized()),
         centerTitle: false,
       ),
@@ -123,7 +123,7 @@ class __SalesRepListWidgetState extends State<_SalesRepListWidget> {
 
             final salesRep = widget.salesRepList[index];
             return Container(
-              color: OptiAppColors.backgroundWhite,
+              color: context.colors.backgroundWhite,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SelectionItemWidget(
                 item: salesRep,

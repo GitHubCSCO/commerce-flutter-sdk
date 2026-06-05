@@ -1,15 +1,13 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/number_text_field.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quick_order/order_widgets/order_product_image_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quick_order/quick_order_screen.dart';
@@ -19,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuickOrderItemWidget extends StatelessWidget {
   final Function(BuildContext context, QuickOrderItemEntity,
@@ -92,7 +91,7 @@ class QuickOrderItemWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 20, top: 12),
                     alignment: Alignment.bottomLeft,
                     child: LoadingAnimationWidget.progressiveDots(
-                      color: OptiAppColors.iconPrimary,
+                      color: context.colors.iconPrimary,
                       size: 30,
                     ),
                   );
@@ -140,7 +139,7 @@ class OrderProductTitleWidget extends StatelessWidget {
                           false,
                   child: Text(
                     orderItemEntity.productEntity.brand?.name ?? '',
-                    style: OptiTextStyles.bodySmall,
+                    style: context.text.bodySmall,
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -150,7 +149,7 @@ class OrderProductTitleWidget extends StatelessWidget {
                       false,
                   child: Text(
                     orderItemEntity.productEntity.shortDescription ?? '',
-                    style: OptiTextStyles.body,
+                    style: context.text.body,
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -160,7 +159,7 @@ class OrderProductTitleWidget extends StatelessWidget {
                       .isNotEmpty,
                   child: Text(
                     orderItemEntity.productEntity.getProductNumber() ?? '',
-                    style: OptiTextStyles.bodySmall,
+                    style: context.text.bodySmall,
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -171,14 +170,14 @@ class OrderProductTitleWidget extends StatelessWidget {
                   child: Row(children: [
                     Text(
                       LocalizationConstants.myPartNumberSign.localized(),
-                      style: OptiTextStyles.bodySmallHighlight,
+                      style: context.text.bodySmallHighlight,
                       textAlign: TextAlign.left,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         orderItemEntity.productEntity.customerName ?? '',
-                        style: OptiTextStyles.bodySmall,
+                        style: context.text.bodySmall,
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -191,14 +190,14 @@ class OrderProductTitleWidget extends StatelessWidget {
                   child: Row(children: [
                     Text(
                       LocalizationConstants.mFGNumberSign.localized(),
-                      style: OptiTextStyles.bodySmallHighlight,
+                      style: context.text.bodySmallHighlight,
                       textAlign: TextAlign.left,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         orderItemEntity.productEntity.manufacturerItem ?? '',
-                        style: OptiTextStyles.bodySmall,
+                        style: context.text.bodySmall,
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -259,7 +258,7 @@ class OrderProductPricingWidget extends StatelessWidget {
                         orderItemEntity.discountValueText?.isNotEmpty ?? false,
                     child: Text(
                       orderItemEntity.discountValueText ?? '',
-                      style: OptiTextStyles.bodySmall,
+                      style: context.text.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -269,14 +268,14 @@ class OrderProductPricingWidget extends StatelessWidget {
                     children: [
                       Text(
                         orderItemEntity.priceValueText ?? '',
-                        style: OptiTextStyles.bodySmallHighlight,
+                        style: context.text.bodySmallHighlight,
                         textAlign: TextAlign.left,
                       ),
                       Text(
                         orderItemEntity.selectedUnitOfMeasureTitle != null
                             ? (' / ${orderItemEntity.selectedUnitOfMeasureTitle}')
                             : '',
-                        style: OptiTextStyles.bodySmall,
+                        style: context.text.bodySmall,
                         textAlign: TextAlign.left,
                       ),
                     ],
@@ -286,7 +285,7 @@ class OrderProductPricingWidget extends StatelessWidget {
                     orderItemEntity.showInventoryAvailability == null)
                   Text(
                     orderItemEntity.availability?.message ?? '',
-                    style: OptiTextStyles.bodySmall,
+                    style: context.text.bodySmall,
                     textAlign: TextAlign.left,
                   ),
               ],
@@ -341,7 +340,7 @@ class _OrderProductQuantityGroupWidgetState
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-                  color: AppStyle.neutral100,
+                  color: context.colors.neutral100,
                 ),
                 child: TextButton(
                   onPressed: () {
@@ -349,7 +348,7 @@ class _OrderProductQuantityGroupWidgetState
                   },
                   child: Text(
                     _displayOrderedCount,
-                    style: OptiTextStyles.body,
+                    style: context.text.body,
                   ),
                 )),
             if (widget.quickOrderItemEntity.productEntity
@@ -380,7 +379,7 @@ class _OrderProductQuantityGroupWidgetState
                           padding: const EdgeInsets.only(left: 20, top: 12),
                           alignment: Alignment.center,
                           child: LoadingAnimationWidget.progressiveDots(
-                            color: OptiAppColors.iconPrimary,
+                            color: context.colors.iconPrimary,
                             size: 30,
                           ),
                         );
@@ -434,7 +433,7 @@ class _OrderProductQuantityGroupWidgetState
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-        color: AppStyle.neutral100,
+        color: context.colors.neutral100,
       ),
       child: ListPickerWidget(
           items:
@@ -461,8 +460,8 @@ class _OrderProductQuantityGroupWidgetState
         return AlertDialog(
           title: Text(
             LocalizationConstants.updateQuantity.localized(),
-            style: OptiTextStyles.titleSmall
-                .copyWith(color: OptiAppColors.primaryColor),
+            style:
+                context.text.titleSmall.copyWith(color: context.scheme.primary),
             textAlign: TextAlign.left,
           ),
           content: Column(
@@ -472,7 +471,7 @@ class _OrderProductQuantityGroupWidgetState
               Text(
                 widget.quickOrderItemEntity.productEntity.shortDescription ??
                     '',
-                style: OptiTextStyles.body,
+                style: context.text.body,
                 textAlign: TextAlign.left,
               ),
               const SizedBox(height: 12.0),
@@ -534,11 +533,11 @@ class OrderProductSubTitleColumn extends StatelessWidget {
       children: [
         Text(
           title,
-          style: OptiTextStyles.bodySmall,
+          style: context.text.bodySmall,
         ),
         Text(
           value,
-          style: OptiTextStyles.titleSmall,
+          style: context.text.titleSmall,
         )
       ],
     );

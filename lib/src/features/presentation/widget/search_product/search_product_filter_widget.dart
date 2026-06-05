@@ -1,17 +1,16 @@
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/product_list_filter_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/multiple_selection_option_chip.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/product_list_filter/product_list_filter_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SearchProductFilterWidget extends StatelessWidget {
   final ProductListType productListType;
@@ -65,7 +64,7 @@ class SearchProductFilterWidget extends StatelessWidget {
           showBadge: badgeCount > 0,
           badgeContent: Text(
             badgeCount.toString(),
-            style: OptiTextStyles.badgesStyle,
+            style: context.text.badgesStyle,
           ),
           child: IconButton(
             padding: const EdgeInsets.all(10),

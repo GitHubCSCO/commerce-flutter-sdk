@@ -1,8 +1,8 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CategoryAutoCompleteWidget extends StatelessWidget {
   final Function(BuildContext, AutocompleteCategory) callback;
@@ -52,7 +52,7 @@ class AutoCompleteCategoryWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
       child: Text(
         _getCategoryTitle(autoCompleteCategory),
-        style: OptiTextStyles.body,
+        style: context.text.body,
       ),
     );
   }

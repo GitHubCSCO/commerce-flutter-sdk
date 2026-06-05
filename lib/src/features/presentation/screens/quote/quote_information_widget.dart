@@ -1,8 +1,8 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuoteInformationWidget extends StatelessWidget {
   final QuoteDto? quoteDto;
@@ -18,7 +18,7 @@ class QuoteInformationWidget extends StatelessWidget {
         children: [
           Text(
             LocalizationConstants.quoteInformation.localized(),
-            style: OptiTextStyles.bodyFade,
+            style: context.text.bodyFade,
           ),
           SizedBox(height: 10.0),
           DetailRow(

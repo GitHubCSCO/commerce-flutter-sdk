@@ -1,8 +1,7 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CategoryGridWidget<T extends BaseModel> extends StatelessWidget {
   final List<T> list;
@@ -74,7 +73,7 @@ class CategoryGridItemWidget<T extends BaseModel> extends StatelessWidget {
         callback(context, item);
       },
       child: Container(
-        color: OptiAppColors.backgroundWhite,
+        color: context.colors.backgroundWhite,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,7 +88,7 @@ class CategoryGridItemWidget<T extends BaseModel> extends StatelessWidget {
                     StackTrace? stackTrace) {
                   // This function is called when the image fails to load
                   return Container(
-                    color: OptiAppColors.backgroundGray, // Placeholder color
+                    color: context.colors.backgroundGray,
                     alignment: Alignment.center,
                     child: const Icon(
                       Icons.image, // Icon to display
@@ -109,7 +108,7 @@ class CategoryGridItemWidget<T extends BaseModel> extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: OptiTextStyles.bodyExtraSmall,
+                style: context.text.bodyExtraSmall,
               ),
             ),
           ],

@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_history_filter/invoice_history_filter_cubit.dart';
@@ -10,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class InvoiceHistoryFilterWidget extends StatelessWidget {
   final InvoiceQueryParameters invoiceQueryParameters;
@@ -157,7 +157,7 @@ void _showInvoiceHistoryFilter(
               const SizedBox(height: 45),
               Text(
                 LocalizationConstants.shipToAddress.localized().toUpperCase(),
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               const SizedBox(height: 10),
               FilterShipToPickerWidget(
@@ -169,7 +169,7 @@ void _showInvoiceHistoryFilter(
               const SizedBox(height: 45),
               Text(
                 LocalizationConstants.dateRange.localized().toUpperCase(),
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               FilterDatePickerWidget(
                 title: LocalizationConstants.from.localized(),

@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
@@ -19,6 +18,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_men
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/error_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 void _reloadShopPage(BuildContext context) {
   context.read<CartCountCubit>().loadCurrentCartCount();
@@ -57,12 +57,12 @@ class ShopPage extends StatelessWidget with BaseDynamicContentScreen {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(actions: <Widget>[
         BottomMenuWidget(
             screenName: AnalyticsConstants.screenNameShop,
             websitePath: websitePath),
-      ], backgroundColor: Theme.of(context).colorScheme.surface),
+      ], backgroundColor: context.scheme.surface),
       body: MultiBlocListener(
         listeners: [
           BlocListener<RootBloc, RootState>(
@@ -124,7 +124,7 @@ class ShopPage extends StatelessWidget with BaseDynamicContentScreen {
                   return const Center(child: CircularProgressIndicator());
                 case CmsLoadedState():
                   return Scaffold(
-                      backgroundColor: OptiAppColors.backgroundGray,
+                      backgroundColor: context.colors.backgroundGray,
                       body: ListView(
                         children: buildContentWidgets(state.widgetEntities),
                       ));

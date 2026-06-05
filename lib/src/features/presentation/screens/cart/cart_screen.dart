@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
@@ -9,7 +8,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart/shipping_entity.dart';
@@ -47,6 +45,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 void _reloadCartPage(BuildContext context) {
   context.read<CartCountCubit>().loadCurrentCartCount();
@@ -93,7 +92,7 @@ class _CartPageState extends State<CartPage> {
     final draggableController = DraggableScrollableController();
 
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
         title: Text(LocalizationConstants.cart.localized()),
         backgroundColor: Colors.white,
@@ -550,7 +549,7 @@ class _CartPageState extends State<CartPage> {
             .format([state.cart?.totalCountDisplay ?? '']);
 
     var body = state.cart?.orderSubTotalDisplay ?? '';
-    var textStyle = OptiTextStyles.subtitle;
+    var textStyle = context.text.subtitle;
 
     return Row(
       mainAxisSize: MainAxisSize.max,
@@ -925,7 +924,7 @@ class BuildCartErrorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      color: OptiAppColors.invalidColor,
+      color: context.colors.invalidColor,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -946,7 +945,7 @@ class BuildCartErrorWidget extends StatelessWidget {
                 child: Text(
                   maxLines: null,
                   cartErrorMsg,
-                  style: OptiTextStyles.errorTextStyles,
+                  style: context.text.errorTextStyles,
                 ),
               ),
             ),

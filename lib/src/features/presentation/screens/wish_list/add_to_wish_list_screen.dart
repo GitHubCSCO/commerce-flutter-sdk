@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
@@ -6,7 +5,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/wish_list_status.dart';
@@ -25,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 final GlobalKey _wishListAddToPageScaffoldKey = GlobalKey();
 
@@ -169,9 +168,9 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _wishListAddToPageScaffoldKey,
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         title: Text(LocalizationConstants.addToList.localized()),
         centerTitle: false,
       ),
@@ -461,26 +460,26 @@ class _WishListItem extends StatelessWidget {
         horizontal: 16,
         vertical: 20,
       ),
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       child: InkWell(
         onTap: onAddToListConfirmed,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(wishList.name ?? '', style: OptiTextStyles.body),
+            Text(wishList.name ?? '', style: context.text.body),
             Text(
               wishList.description ?? '',
-              style: OptiTextStyles.bodySmall.copyWith(
-                color: OptiAppColors.textSecondary,
+              style: context.text.bodySmall.copyWith(
+                color: context.colors.textSecondary,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
               _constructListSharingDisplay(),
-              style: OptiTextStyles.bodySmall.copyWith(
-                color: OptiAppColors.textSecondary,
+              style: context.text.bodySmall.copyWith(
+                color: context.colors.textSecondary,
               ),
             ),
             Text(
@@ -492,8 +491,8 @@ class _WishListItem extends StatelessWidget {
                   wishList.updatedByDisplayName ?? '',
                 ],
               ),
-              style: OptiTextStyles.bodySmall.copyWith(
-                color: OptiAppColors.textSecondary,
+              style: context.text.bodySmall.copyWith(
+                color: context.colors.textSecondary,
               ),
             )
           ],

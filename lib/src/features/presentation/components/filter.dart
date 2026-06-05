@@ -1,17 +1,16 @@
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/address_type.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class FilterValueViewModel {
   FilterValueViewModel({
@@ -105,9 +104,9 @@ void showFilterModalSheet(
         builder: (context, isApplyEnabled, _) {
           return SafeArea(
             child: Container(
-              decoration: const BoxDecoration(
-                color: OptiAppColors.backgroundWhite,
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: context.colors.backgroundWhite,
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
@@ -131,7 +130,7 @@ void showFilterModalSheet(
                               ),
                               child: Text(
                                 LocalizationConstants.filter.localized(),
-                                style: OptiTextStyles.titleLarge,
+                                style: context.text.titleLarge,
                               ),
                             ),
                             child,
@@ -141,9 +140,9 @@ void showFilterModalSheet(
                     ),
                   ),
                   Container(
-                    decoration: const BoxDecoration(
-                      color: OptiAppColors.backgroundWhite,
-                      boxShadow: [
+                    decoration: BoxDecoration(
+                      color: context.colors.backgroundWhite,
+                      boxShadow: const [
                         BoxShadow(
                           color: Color.fromRGBO(0, 0, 0, 0.05),
                           blurRadius: 5,
@@ -222,8 +221,8 @@ class FilterOptionsChip extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: OptiTextStyles.body.copyWith(
-              color: OptiAppColors.textSecondary,
+            style: context.text.body.copyWith(
+              color: context.colors.textSecondary,
             ),
           ),
         ),
@@ -236,11 +235,11 @@ class FilterOptionsChip extends StatelessWidget {
                   label: Text(
                     value.title,
                     style: selectedValueIds.contains(value.id)
-                        ? OptiTextStyles.bodySmallHighlight
-                            .copyWith(color: OptiAppColors.backgroundWhite)
-                        : OptiTextStyles.bodySmallHighlight,
+                        ? context.text.bodySmallHighlight
+                            .copyWith(color: context.colors.backgroundWhite)
+                        : context.text.bodySmallHighlight,
                   ),
-                  selectedColor: OptiAppColors.textPrimary,
+                  selectedColor: context.colors.textPrimary,
                   showCheckmark: false,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -254,11 +253,11 @@ class FilterOptionsChip extends StatelessWidget {
                       onSelectionIdRemoved(value.id);
                     }
                   },
-                  backgroundColor: OptiAppColors.backgroundWhite,
+                  backgroundColor: context.colors.backgroundWhite,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
-                    side: const BorderSide(
-                      color: OptiAppColors.textPrimary,
+                    side: BorderSide(
+                      color: context.colors.textPrimary,
                       width: 1,
                     ),
                   ),
@@ -290,7 +289,7 @@ class FilterOptionSwitch extends StatelessWidget {
       children: [
         Text(
           label,
-          style: OptiTextStyles.body,
+          style: context.text.body,
         ),
         Switch(
           value: value,
@@ -336,7 +335,7 @@ class FilterShipToPickerWidget extends StatelessWidget {
           shipTo == null
               ? Text(
                   LocalizationConstants.selectShipToAddress.localized(),
-                  style: OptiTextStyles.body,
+                  style: context.text.body,
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,19 +343,19 @@ class FilterShipToPickerWidget extends StatelessWidget {
                   children: [
                     Text(
                       shipTo?.companyName ?? '',
-                      style: OptiTextStyles.titleSmall,
+                      style: context.text.titleSmall,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       shipTo?.address1 ?? '',
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       '${shipTo?.city ?? ''}, ${shipTo?.state?.abbreviation ?? ''} ${shipTo?.postalCode ?? ''}',
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -399,7 +398,7 @@ class FilterDatePickerWidget extends StatelessWidget {
           child: Text(
             title,
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         ),
         Expanded(
@@ -441,7 +440,7 @@ class FilterListPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: OptiAppColors.backgroundInput,
+        color: context.colors.backgroundInput,
         borderRadius: BorderRadius.circular(AppStyle.borderRadius),
       ),
       height: 50,
@@ -450,7 +449,7 @@ class FilterListPicker extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: OptiAppColors.backgroundInput,
+              color: context.colors.backgroundInput,
               borderRadius: BorderRadius.circular(AppStyle.borderRadius),
             ),
             height: 50,
@@ -514,7 +513,7 @@ class FilterBillToPickerWidget extends StatelessWidget {
           billTo == null
               ? Text(
                   LocalizationConstants.selectCustomer.localized(),
-                  style: OptiTextStyles.body,
+                  style: context.text.body,
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -522,19 +521,19 @@ class FilterBillToPickerWidget extends StatelessWidget {
                   children: [
                     Text(
                       billTo?.companyName ?? '',
-                      style: OptiTextStyles.titleSmall,
+                      style: context.text.titleSmall,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       billTo?.address1 ?? '',
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       '${billTo?.city ?? ''}, ${billTo?.state?.abbreviation ?? ''} ${billTo?.postalCode ?? ''}',
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -582,11 +581,11 @@ class FilterItemPickerWidget extends StatelessWidget {
           item == null
               ? Text(
                   defaultLabel,
-                  style: OptiTextStyles.body,
+                  style: context.text.body,
                 )
               : Text(
                   selectedLabel ?? '',
-                  style: OptiTextStyles.titleSmall,
+                  style: context.text.titleSmall,
                 ),
           const Icon(
             Icons.arrow_forward_ios,

@@ -1,9 +1,9 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/map_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class DealerLocationWidgetItem extends StatefulWidget {
   final Dealer dealerData;
@@ -32,22 +32,22 @@ class _DealerLocationWidgetItemState extends State<DealerLocationWidgetItem>
           children: [
             Text(
               widget.dealerData.name ?? "",
-              style: OptiTextStyles.subtitle,
+              style: context.text.subtitle,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
               widget.dealerData.address1 ?? "",
-              style: OptiTextStyles.body,
+              style: context.text.body,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
               "${widget.dealerData.city}, ${widget.dealerData.state} ${widget.dealerData.postalCode}",
-              style: OptiTextStyles.body,
+              style: context.text.body,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
               widget.dealerData.phone ?? "",
-              style: OptiTextStyles.body,
+              style: context.text.body,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 16),
@@ -59,7 +59,7 @@ class _DealerLocationWidgetItemState extends State<DealerLocationWidgetItem>
                     child: Text(
                       LocalizationConstants.hours.localized(),
                       textAlign: TextAlign.center,
-                      style: OptiTextStyles.link,
+                      style: context.text.link,
                     ),
                     onTap: () {
                       setState(() {
@@ -72,7 +72,7 @@ class _DealerLocationWidgetItemState extends State<DealerLocationWidgetItem>
                     child: Text(
                       LocalizationConstants.directions.localized(),
                       textAlign: TextAlign.center,
-                      style: OptiTextStyles.link,
+                      style: context.text.link,
                     ),
                     onTap: () {
                       _onDirectionsClick(widget.dealerData.latitude ?? 0.0,
@@ -83,7 +83,7 @@ class _DealerLocationWidgetItemState extends State<DealerLocationWidgetItem>
                   Text(
                     "Distance ${widget.dealerData.distance?.toStringAsFixed(2)} Mi",
                     textAlign: TextAlign.center,
-                    style: OptiTextStyles.body,
+                    style: context.text.body,
                   ),
                 ],
               ),
@@ -91,7 +91,7 @@ class _DealerLocationWidgetItemState extends State<DealerLocationWidgetItem>
             if (_isHoursExpanded)
               HtmlWidget(
                 widget.dealerData.htmlContent ?? "",
-                textStyle: OptiTextStyles.body,
+                textStyle: context.text.body,
               ),
             const Padding(
               padding: EdgeInsets.all(8.0),

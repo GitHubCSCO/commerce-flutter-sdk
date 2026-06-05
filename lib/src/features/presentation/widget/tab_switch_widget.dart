@@ -1,6 +1,5 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class TabSwitchWidget extends StatefulWidget {
   final String tabTitle0;
@@ -54,7 +53,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Container(
               decoration: BoxDecoration(
-                color: OptiAppColors.backgroundGray,
+                color: context.colors.backgroundGray,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Padding(
@@ -109,8 +108,8 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
         child: Container(
           decoration: BoxDecoration(
             color: isSelected
-                ? OptiAppColors.primaryColor
-                : OptiAppColors.backgroundGray,
+                ? context.scheme.primary
+                : context.colors.backgroundGray,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Center(
@@ -118,7 +117,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 text,
-                style: OptiTextStyles.subtitle
+                style: context.text.subtitle
                     .copyWith(color: isSelected ? Colors.white : Colors.black),
               ),
             ),

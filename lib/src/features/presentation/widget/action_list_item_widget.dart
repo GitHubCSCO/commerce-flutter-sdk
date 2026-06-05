@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/base/base_action_item_widget.dart';
@@ -8,6 +7,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/show_hide/pr
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ActionListItemWidget extends StatelessWidget with BaseActionItemWidget {
   final ActionLinkEntity action;
@@ -54,7 +54,7 @@ class ActionListItemWidget extends StatelessWidget with BaseActionItemWidget {
                               getActionTitle(action),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: OptiTextStyles.titleSmall,
+                              style: context.text.titleSmall,
                             ),
                           ),
                         ],

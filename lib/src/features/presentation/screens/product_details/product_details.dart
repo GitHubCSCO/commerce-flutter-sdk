@@ -1,9 +1,7 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_detail_item_entity.dart';
@@ -54,6 +52,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/html_string_extension.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ProductDetailsScreen extends BaseStatelessWidget {
   final String productId;
@@ -149,7 +148,7 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
           ),
         ],
         child: Scaffold(
-          backgroundColor: OptiAppColors.backgroundGray,
+          backgroundColor: context.colors.backgroundGray,
           appBar: AppBar(actions: <Widget>[
             BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
                 builder: (_, state) {
@@ -181,7 +180,7 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
                   return Container();
               }
             })
-          ], backgroundColor: Theme.of(context).colorScheme.surface),
+          ], backgroundColor: context.scheme.surface),
           body: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
             buildWhen: (previous, current) {
               if (current is! ProductDetailsReloadState) {
@@ -299,7 +298,8 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
           break;
         case ProdcutDeatilsPageWidgets.productDetailsDescription:
           final detailsEntity = item as ProductDetailsDescriptionEntity;
-          widgets.add(buildProductDetailsDescriptionWidget(detailsEntity));
+          widgets.add(buildProductDetailsDescriptionWidget(
+              buildContext, detailsEntity));
           break;
         case ProdcutDeatilsPageWidgets.productDetailsGeneralInfo:
           final generalInfoEntity = item as ProductDetailsGeneralInfoEntity;
@@ -352,7 +352,7 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
 
 // details description widget
   Widget buildProductDetailsDescriptionWidget(
-      ProductDetailsDescriptionEntity detailsEntity) {
+      BuildContext context, ProductDetailsDescriptionEntity detailsEntity) {
     if (detailsEntity.htmlContent.isNullOrEmpty) {
       return const SizedBox.shrink(); // or return Container();
     }
@@ -364,7 +364,7 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
           padding: const EdgeInsets.all(20.0),
           child: HtmlWidget(
             detailsEntity.htmlContent.styleHtmlContent()!,
-            textStyle: OptiTextStyles.body,
+            textStyle: context.text.body,
           )),
     );
   }

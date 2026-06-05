@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
@@ -10,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/quick_ord
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quick_order/quick_order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuickOrderListWidget extends StatelessWidget {
   final Function(BuildContext context, QuickOrderItemEntity,
@@ -73,7 +73,7 @@ class QuickOrderListWidget extends StatelessWidget {
         Expanded(
           child: Text(
             message ?? SiteMessageConstants.defaultValueQuickOrderInstructions,
-            style: OptiTextStyles.bodySmall,
+            style: context.text.bodySmall,
           ),
         )
       ],

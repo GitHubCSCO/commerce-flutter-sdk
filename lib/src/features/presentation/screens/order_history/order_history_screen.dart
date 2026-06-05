@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
@@ -27,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class OrderHistoryScreen extends BaseStatelessWidget {
   final bool? isFromVMI;
@@ -64,7 +63,7 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
         actions: <Widget>[
           BottomMenuWidget(
@@ -72,7 +71,7 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
             screenName: AnalyticsConstants.screenNameOrders,
           ),
         ],
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         title: const Text('My Orders'),
         centerTitle: false,
       ),
@@ -155,7 +154,7 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
                                 children: [
                                   Text(
                                     '${state.orderEntities.pagination?.totalItemCount ?? ' '} Orders',
-                                    style: OptiTextStyles.header3,
+                                    style: context.text.header3,
                                   ),
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -314,7 +313,7 @@ class _OrderHistoryFilter extends StatelessWidget {
       showBadge: context.watch<OrderHistoryCubit>().state.numberOfFilters > 0,
       badgeContent: Text(
         context.watch<OrderHistoryCubit>().state.numberOfFilters.toString(),
-        style: OptiTextStyles.badgesStyle,
+        style: context.text.badgesStyle,
       ),
       child: IconButton(
         padding: const EdgeInsets.all(10),

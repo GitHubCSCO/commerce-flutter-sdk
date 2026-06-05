@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/saved_payments/saved_payments_state.dart';
@@ -14,6 +12,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_men
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SavedPaymentsScreen extends StatelessWidget {
   const SavedPaymentsScreen({super.key});
@@ -22,7 +21,7 @@ class SavedPaymentsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: OptiAppColors.backgroundWhite,
+          backgroundColor: context.colors.backgroundWhite,
           title: Text(LocalizationConstants.mySavedPayments.localized()),
           centerTitle: false,
           actions: [
@@ -60,7 +59,7 @@ class SavedPaymentPage extends StatelessWidget {
                       child: Text(
                           LocalizationConstants.noSavedPaymentsFound
                               .localized(),
-                          style: OptiTextStyles.body),
+                          style: context.text.body),
                     )
                   : ListView(
                       children: _buildListWidgets(state, context),
@@ -147,9 +146,9 @@ class SavedPaymentPage extends StatelessWidget {
               child: ListTile(
                 title: Text(
                     state.accountPaymentProfiles?[index].cardHolderName ?? ""),
-                trailing: const Icon(
+                trailing: Icon(
                   Icons.arrow_forward_ios,
-                  color: OptiAppColors.mediumGrayTextColor,
+                  color: context.colors.mediumGrayTextColor,
                 ),
               ),
             ),

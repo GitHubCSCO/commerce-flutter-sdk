@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SvgAssetImage extends StatelessWidget {
   final String assetName;
@@ -25,7 +25,7 @@ class SvgAssetImage extends StatelessWidget {
     return SvgPicture.asset(
       assetName,
       colorFilter: ColorFilter.mode(
-        color ?? OptiAppColors.primaryColor,
+        color ?? context.scheme.primary,
         BlendMode.srcIn,
       ),
       fit: fit,

@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SearchHistoryItemWidget extends StatelessWidget {
   final String history;
@@ -32,7 +32,7 @@ class SearchHistoryItemWidget extends StatelessWidget {
           SizedBox(
             child: Text(
               history,
-              style: OptiTextStyles.bodySmall,
+              style: context.text.bodySmall,
             ),
           ),
         ],

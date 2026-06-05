@@ -1,11 +1,10 @@
 import 'dart:math';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/filter.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class MultipleSelectionOptionChip<T> extends StatefulWidget {
   const MultipleSelectionOptionChip({
@@ -59,7 +58,7 @@ class _MultipleSelectionOptionChipState<T>
         children: [
           Text(
             widget.chipTitle ?? '',
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
           Wrap(
             spacing: 8,
@@ -71,11 +70,11 @@ class _MultipleSelectionOptionChipState<T>
                       label: Text(
                         _getValueTitle(value),
                         style: widget.selectedValues.contains(value)
-                            ? OptiTextStyles.bodySmallHighlight
-                                .copyWith(color: OptiAppColors.backgroundWhite)
-                            : OptiTextStyles.bodySmallHighlight,
+                            ? context.text.bodySmallHighlight
+                                .copyWith(color: context.colors.backgroundWhite)
+                            : context.text.bodySmallHighlight,
                       ),
-                      selectedColor: OptiAppColors.textPrimary,
+                      selectedColor: context.colors.textPrimary,
                       showCheckmark: false,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -90,13 +89,13 @@ class _MultipleSelectionOptionChipState<T>
                       },
                       backgroundColor: (!_getValueAvailibility(value))
                           ? Colors.grey // Gray if not available
-                          : OptiAppColors.backgroundWhite,
+                          : context.colors.backgroundWhite,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                         side: BorderSide(
                           color: (!_getValueAvailibility(value))
                               ? Colors.grey // Gray if not available
-                              : OptiAppColors.textPrimary,
+                              : context.colors.textPrimary,
                           width: 1,
                         ),
                       ),
@@ -118,8 +117,8 @@ class _MultipleSelectionOptionChipState<T>
                               showAll = false;
                             });
                           },
-                          style: OptiTextStyles.bodySmallHighlight.copyWith(
-                            color: OptiAppColors.primaryColor,
+                          style: context.text.bodySmallHighlight.copyWith(
+                            color: context.scheme.primary,
                           ),
                           text: 'See less',
                         )
@@ -129,8 +128,8 @@ class _MultipleSelectionOptionChipState<T>
                               showAll = true;
                             });
                           },
-                          style: OptiTextStyles.bodySmallHighlight.copyWith(
-                            color: OptiAppColors.primaryColor,
+                          style: context.text.bodySmallHighlight.copyWith(
+                            color: context.scheme.primary,
                           ),
                           text: 'See more',
                         ))

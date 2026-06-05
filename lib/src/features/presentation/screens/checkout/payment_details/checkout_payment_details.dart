@@ -1,8 +1,10 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/cart_buttons_widget_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart_cms/cart_cms_bloc.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart_cms/cart_cms_state.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
@@ -20,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 typedef OnCompleteCheckoutPaymentSection = void Function();
 
@@ -91,21 +94,33 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (!(isVmiCheckout ?? false))
-                    AddPromotionWidget(
-                      shouldShowPromotionList: false,
-                      fromCartPage: false,
-                      onApplyPromoCode: () {
-                        context.read<CheckoutBloc>().add(
-                              LoadCheckoutEvent(cartId: cart.id ?? ''),
-                            );
+                    BlocBuilder<CartCmsPageBloc, CartCmsPageState>(
+                      builder: (_, cmsState) {
+                        final isAddDiscountEnable =
+                            cmsState is CartCmsPageLoadedState
+                                ? cmsState.pageWidgets
+                                        .whereType<CartButtonsWidgetEntity>()
+                                        .firstOrNull
+                                        ?.isAddDiscountEnabled ??
+                                    true
+                                : true;
+                        return AddPromotionWidget(
+                          shouldShowPromotionList: false,
+                          fromCartPage: false,
+                          isAddDiscountEnable: isAddDiscountEnable,
+                          onApplyPromoCode: () {
+                            context.read<CheckoutBloc>().add(
+                                  LoadCheckoutEvent(cartId: cart.id ?? ''),
+                                );
+                          },
+                        );
                       },
                     ),
                   _buildPaymentMethodPicker(state, context),
                   if (state.cardDetails != null) ...{
                     Padding(
                       padding: const EdgeInsets.only(left: 24.0),
-                      child:
-                          Text(state.cardDetails!, style: OptiTextStyles.body),
+                      child: Text(state.cardDetails!, style: context.text.body),
                     )
                   },
                   _buildPaymentIFrame(state, context),
@@ -159,7 +174,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
             child: Text(
               LocalizationConstants.paymentMethod.localized(),
               textAlign: TextAlign.start,
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
           ),
           Expanded(
@@ -297,7 +312,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
         foregroundColor: Colors.blue,
         backgroundColor: Colors.white, // Button color
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        textStyle: OptiTextStyles.linkMedium,
+        textStyle: context.text.linkMedium,
       ),
       child: Text(
         LocalizationConstants.newPaymentMethod.localized(),

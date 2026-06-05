@@ -1,15 +1,15 @@
+import 'package:commerce_flutter_sdk/src/core/theme/colors/app_colors.dart';
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/config/base_configuration.dart';
 import 'package:commerce_flutter_sdk/src/core/config/custom_configuration.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/url_string_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/utils/asset_provider.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/color_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:flutter/services.dart';
@@ -218,8 +218,7 @@ class AppConfigurationService extends ServiceBase
     var websiteSettings = getWebsiteResult.getResultSuccessValue();
     if (websiteSettings != null) {
       OptiAppColors.primaryColor = websiteSettings.mobilePrimaryColor != null
-          ? OptiAppColors.colorFromHexString(
-              websiteSettings.mobilePrimaryColor!)
+          ? ColorUtils.colorFromHexString(websiteSettings.mobilePrimaryColor!)
           : OptiAppColors.defaultPrimaryColor;
       await _commerceAPIServiceProvider.getLocalStorageService().save(
           CoreConstants.primaryColorCachingKey,

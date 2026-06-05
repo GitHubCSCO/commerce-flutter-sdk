@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
@@ -15,6 +14,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/button
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/barcode_scanner/detector_view.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/barcode_scanner/painters/coordinates_translator.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class BarcodeScannerView extends StatefulWidget {
   final Function(BuildContext, {String resultText, BarcodeFormat format})
@@ -116,8 +116,8 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView>
                     });
                   },
                   backgroundColor: _canScan
-                      ? OptiAppColors.buttonDarkRedBackgroudColor
-                      : OptiAppColors.primaryColor,
+                      ? context.colors.buttonDarkRedBackgroundColor
+                      : context.scheme.primary,
                   text: _canScan
                       ? LocalizationConstants.cancel.localized()
                       : LocalizationConstants.tapToScan.localized(),

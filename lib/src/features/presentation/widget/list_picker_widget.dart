@@ -1,8 +1,8 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/picker_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ListPickerWidget extends StatelessWidget {
   final void Function(BuildContext context, Object item)? callback;
@@ -93,8 +93,7 @@ class _ListPickerState extends State<ListPicker> with PickerMixin {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
-                style: OptiTextStyles
-                    .body, // Assuming you have OptiTextStyles defined
+                style: context.text.body,
               ),
             ),
             Icon(
@@ -166,7 +165,7 @@ class _ListPickerState extends State<ListPicker> with PickerMixin {
                               getItemDescriptions(option),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: OptiTextStyles.body,
+                              style: context.text.body,
                             ),
                           ),
                         );

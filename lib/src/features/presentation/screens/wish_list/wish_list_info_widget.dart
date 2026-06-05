@@ -1,12 +1,11 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ListNameInputWidget extends StatelessWidget {
   const ListNameInputWidget({
@@ -100,7 +99,7 @@ class ListDetailsWidget extends StatelessWidget {
       children: [
         Text(
           LocalizationConstants.listDetails.localized(),
-          style: OptiTextStyles.titleLarge,
+          style: context.text.titleLarge,
         ),
         const SizedBox(height: 32),
         _ListDetailsPropertiesRow(
@@ -149,7 +148,7 @@ class _ListDetailsPropertiesRow extends StatelessWidget {
       children: [
         Text(
           title,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(
           width: 10,
@@ -157,7 +156,7 @@ class _ListDetailsPropertiesRow extends StatelessWidget {
         Flexible(
           child: Text(
             value,
-            style: OptiTextStyles.body,
+            style: context.text.body,
             textAlign: TextAlign.right,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -176,9 +175,9 @@ class ListInformationBottomSubmitWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: OptiAppColors.backgroundWhite,
-        boxShadow: [
+      decoration: BoxDecoration(
+        color: context.colors.backgroundWhite,
+        boxShadow: const [
           BoxShadow(
             color: Color.fromRGBO(0, 0, 0, 0.05),
             blurRadius: 5,

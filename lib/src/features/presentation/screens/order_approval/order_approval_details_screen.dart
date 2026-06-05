@@ -1,10 +1,8 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -23,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class OrderApprovalDetailsScreen extends StatelessWidget {
   final String cartId;
@@ -71,9 +70,9 @@ class OrderApprovalDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         centerTitle: false,
         actions: const [
           _OptionsMenu(),
@@ -387,7 +386,7 @@ class _OrderApprovalHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -397,26 +396,26 @@ class _OrderApprovalHeaderWidget extends StatelessWidget {
             TwoTextsRow(
               label: subtotalTitleLabel,
               value: subtotalValueLabel,
-              textStyle: OptiTextStyles.subtitle,
+              textStyle: context.text.subtitle,
             ),
           if (estimatedShippingValueLabel.isNotEmpty)
             TwoTextsRow(
               label: estimatedShippingTitleLabel,
               value: estimatedShippingValueLabel,
-              textStyle: OptiTextStyles.body,
+              textStyle: context.text.body,
             ),
           if (estimatedTaxValueLabel.isNotEmpty)
             TwoTextsRow(
               label: estitamatedTaxTitleLabel,
               value: estimatedTaxValueLabel,
-              textStyle: OptiTextStyles.body,
+              textStyle: context.text.body,
             ),
           const SizedBox(height: 10),
           if (estimatedTotalValueLabel.isNotEmpty)
             TwoTextsRow(
               label: estiamatedTotalTitleLabel,
               value: estimatedTotalValueLabel,
-              textStyle: OptiTextStyles.subtitle,
+              textStyle: context.text.subtitle,
             ),
         ],
       ),
@@ -468,11 +467,11 @@ class _OrderApprovalInfoWidget extends StatelessWidget {
               .copyWith(bottom: 8),
           child: Text(
             LocalizationConstants.orderInformation.localized(),
-            style: OptiTextStyles.titleLarge,
+            style: context.text.titleLarge,
           ),
         ),
         Container(
-          color: OptiAppColors.backgroundWhite,
+          color: context.colors.backgroundWhite,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -481,17 +480,17 @@ class _OrderApprovalInfoWidget extends StatelessWidget {
               TwoTextsRow(
                 label: orderStatusLabel,
                 value: orderStatusValueLabel,
-                textStyle: OptiTextStyles.subtitle,
+                textStyle: context.text.subtitle,
               ),
               TwoTextsRow(
                 label: poTitleLabel,
                 value: poValueLabel,
-                textStyle: OptiTextStyles.body,
+                textStyle: context.text.body,
               ),
               TwoTextsRow(
                 label: orderDateValueLabel,
                 value: orderDateTitleLabel,
-                textStyle: OptiTextStyles.body,
+                textStyle: context.text.body,
               ),
               const SizedBox(height: 20),
               BillingAddressWidget(
@@ -542,14 +541,14 @@ class OrderNotesWidget extends StatelessWidget {
         Text(
           LocalizationConstants.orderNotes.localized(),
           textAlign: TextAlign.start,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         if (!orderNoteValue.isNullOrEmpty)
           Text(
             orderNoteValue ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
       ],
     );

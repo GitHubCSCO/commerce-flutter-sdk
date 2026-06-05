@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -11,6 +10,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/promo_code_
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/promo_code_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class AddPromotionWidget extends StatefulWidget {
   final bool shouldShowPromotionList;
@@ -113,8 +113,8 @@ class _AddPromotionWidgetState extends State<AddPromotionWidget> {
                         ),
                         const SizedBox(height: 20.0),
                         TertiaryButton(
-                            borderColor: OptiAppColors.grayBackgroundColor,
-                            backgroundColor: OptiAppColors.grayBackgroundColor,
+                            borderColor: context.colors.grayBackgroundColor,
+                            backgroundColor: context.colors.grayBackgroundColor,
                             text: LocalizationConstants.apply.localized(),
                             onPressed: () {
                               unawaited(context
@@ -132,8 +132,8 @@ class _AddPromotionWidgetState extends State<AddPromotionWidget> {
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: TertiaryButton(
-                          borderColor: OptiAppColors.grayBackgroundColor,
-                          backgroundColor: OptiAppColors.grayBackgroundColor,
+                          borderColor: context.colors.grayBackgroundColor,
+                          backgroundColor: context.colors.grayBackgroundColor,
                           text: LocalizationConstants.addDiscount.localized(),
                           onPressed: () {
                             context
