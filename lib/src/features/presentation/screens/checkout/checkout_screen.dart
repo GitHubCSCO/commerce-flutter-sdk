@@ -416,8 +416,31 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
     final isPickUpMethod =
         state.shippingMethod.equalsIgnoreCase(ShippingOption.PickUp.name);
 
-    if ((isShipMethod && carrier != null && service != null) ||
-        isPickUpMethod) {
+    if (isPickUpMethod) {
+      context.read<ExpansionPanelCubit>().onContinueClick();
+      return;
+    }
+
+    if (!isShipMethod) {
+      return;
+    }
+
+    final hasCarriers = state.cart.carriers?.isNotEmpty ?? false;
+    final allowEmptyShipping = checkoutBloc.settings?.settingsCollection
+            ?.accountSettings?.allowEmptyShipping ??
+        false;
+
+    if (!hasCarriers) {
+      if (allowEmptyShipping) {
+        context.read<ExpansionPanelCubit>().onContinueClick();
+      } else {
+        CustomSnackBar.showSnackBarMessage(
+            context, LocalizationConstants.noCarriersFound.localized());
+      }
+      return;
+    }
+
+    if (carrier != null && service != null) {
       context.read<ExpansionPanelCubit>().onContinueClick();
     }
   }

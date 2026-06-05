@@ -118,6 +118,7 @@ AccountSettings _$AccountSettingsFromJson(Map<String, dynamic> json) =>
       enableWarehousePickup: json['enableWarehousePickup'] as bool?,
       logOutUserAfterPasswordChange:
           json['logOutUserAfterPasswordChange'] as bool?,
+      allowEmptyShipping: json['allowEmptyShipping'] as bool?,
     )
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
@@ -157,6 +158,8 @@ Map<String, dynamic> _$AccountSettingsToJson(AccountSettings instance) =>
         'enableWarehousePickup': value,
       if (instance.logOutUserAfterPasswordChange case final value?)
         'logOutUserAfterPasswordChange': value,
+      if (instance.allowEmptyShipping case final value?)
+        'allowEmptyShipping': value,
     };
 
 CartSettings _$CartSettingsFromJson(Map<String, dynamic> json) => CartSettings(
