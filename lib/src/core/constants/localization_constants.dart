@@ -752,6 +752,7 @@ enum LocalizationConstants {
   noVMILocationFound(
       keyword:
           "No vmi location found. Assign a VMI location before continuing."),
+  noCarriersFound(keyword: "No carriers are assigned to the website."),
   externalBrowserOpenWarningMsg(
       keyword:
           "System WebView is disabled. We are opening the link in an external browser. Please note, you will not be logged in."),
