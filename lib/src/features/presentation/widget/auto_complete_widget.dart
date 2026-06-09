@@ -1,11 +1,10 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class AutoCompleteWidget extends StatelessWidget {
   final Function(BuildContext, AutocompleteProduct) callback;
@@ -80,7 +79,7 @@ class AutoCompleteProductWidget extends StatelessWidget {
                       StackTrace? stackTrace) {
                     // This function is called when the image fails to load
                     return Container(
-                      color: OptiAppColors.backgroundGray, // Placeholder color
+                      color: context.colors.backgroundGray, // Placeholder color
                       alignment: Alignment.center,
                       child: const Icon(
                         Icons.image, // Icon to display
@@ -103,15 +102,15 @@ class AutoCompleteProductWidget extends StatelessWidget {
                   autocompleteProduct.title ?? "",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
-                  style: OptiTextStyles.bodySmall,
+                  style: context.text.bodySmall,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   LocalizationConstants.itemNumber
                       .localized()
                       .format([autocompleteProduct.getProductNumber()]),
-                  style: OptiTextStyles.bodySmall.copyWith(
-                    color: OptiAppColors.textDisabledColor,
+                  style: context.text.bodySmall.copyWith(
+                    color: context.colors.textDisabledColor,
                   ),
                 ),
               ],

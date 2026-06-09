@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/carousel_slider/carousel_slider.dart';
@@ -61,13 +61,14 @@ class CarouselSectionWidget extends StatelessWidget {
                           margin: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 4.0),
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black)
-                                  .withOpacity(
-                                      state.current == entry.key ? 0.9 : 0.4)),
+                            shape: BoxShape.circle,
+                            color: (context.scheme.brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black)
+                                .withValues(
+                              alpha: state.current == entry.key ? 0.9 : 0.4,
+                            ),
+                          ),
                         ),
                       );
                     }).toList() ??

@@ -1,9 +1,9 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/payment_summary_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/add_promotion_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CartPaymentSummaryWidget extends StatelessWidget
     with PaymentSummaryMixin {
@@ -21,7 +21,7 @@ class CartPaymentSummaryWidget extends StatelessWidget
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
           child: Text(
             LocalizationConstants.paymentSummary.localized(),
-            style: OptiTextStyles.titleLarge,
+            style: context.text.titleLarge,
           ),
         ),
         Container(
@@ -30,7 +30,7 @@ class CartPaymentSummaryWidget extends StatelessWidget
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ...buildSummaryItems(paymentSummaryEntity),
+              ...buildSummaryItems(context, paymentSummaryEntity),
               _buildAddPromoWidget(),
             ],
           ),

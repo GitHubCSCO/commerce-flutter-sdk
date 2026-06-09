@@ -1,11 +1,11 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/search_history_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SearchHistorySectionWidget extends StatelessWidget {
   final SearchHistoryWidgetEntity searchHistoryWidgetEntity;
@@ -28,7 +28,7 @@ class SearchHistorySectionWidget extends StatelessWidget {
               (searchHistoryWidgetEntity.title ?? "").isEmpty
                   ? LocalizationConstants.searchHistory.localized()
                   : searchHistoryWidgetEntity.title!,
-              style: OptiTextStyles.titleLarge,
+              style: context.text.titleLarge,
             ),
           ),
           BlocBuilder<SearchHistoryCubit, SearchHistoryState>(

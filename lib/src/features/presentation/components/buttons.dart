@@ -1,15 +1,14 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     super.key,
     this.onPressed,
     this.backgroundColor,
-    this.foregroundColor = AppStyle.neutral00,
+    this.foregroundColor,
     this.borderRadius = AppStyle.borderRadius,
     this.isEnabled = true,
     this.leadingIcon,
@@ -23,7 +22,7 @@ class PrimaryButton extends StatelessWidget {
   final Function()? onPressed;
   final bool isEnabled;
   final Color? backgroundColor;
-  final Color foregroundColor;
+  final Color? foregroundColor;
   final double borderRadius;
 
   @override
@@ -35,14 +34,15 @@ class PrimaryButton extends StatelessWidget {
         elevation: const WidgetStatePropertyAll(0),
         backgroundColor: WidgetStatePropertyAll(
           isEnabled
-              ? backgroundColor ?? OptiAppColors.primaryColor
-              : (backgroundColor ?? OptiAppColors.primaryColor)
-                  .withOpacity(AppStyle.disabledButtonOpacity),
+              ? backgroundColor ?? context.scheme.primary
+              : (backgroundColor ?? context.scheme.primary)
+                  .withValues(alpha: AppStyle.disabledButtonOpacity),
         ),
         foregroundColor: WidgetStatePropertyAll(
           isEnabled
-              ? foregroundColor
-              : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+              ? foregroundColor ?? context.colors.neutral00
+              : (foregroundColor ?? context.colors.neutral00)
+                  .withValues(alpha: AppStyle.disabledButtonOpacity),
         ),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
@@ -64,8 +64,8 @@ class PrimaryButton extends StatelessWidget {
               },
               Text(
                 text,
-                style: OptiTextStyles.subtitle.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                style: context.text.subtitle.copyWith(
+                  color: context.colors.onPrimary,
                 ),
               ),
               if (trailingIcon != null) ...{
@@ -85,16 +85,16 @@ class SecondaryButton extends StatelessWidget {
       {super.key,
       required this.text,
       this.onPressed,
-      this.backgroundColor = AppStyle.neutral75,
-      this.foregroundColor = AppStyle.primary500,
+      this.backgroundColor,
+      this.foregroundColor,
       this.borderRadius = AppStyle.borderRadius,
       this.isEnabled = true,
       this.style});
 
   final String text;
   final Function()? onPressed;
-  final Color backgroundColor;
-  final Color foregroundColor;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
   final double borderRadius;
   final bool isEnabled;
   final TextStyle? style;
@@ -112,25 +112,30 @@ class SecondaryButton extends StatelessWidget {
         ),
         foregroundColor: WidgetStatePropertyAll(
           isEnabled
-              ? foregroundColor
-              : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+              ? foregroundColor ?? context.scheme.primary
+              : (foregroundColor ?? context.scheme.primary)
+                  .withValues(alpha: AppStyle.disabledButtonOpacity),
         ),
         backgroundColor: WidgetStatePropertyAll(
           isEnabled
-              ? backgroundColor
-              : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+              ? backgroundColor ?? context.colors.neutral75
+              : (backgroundColor ?? context.colors.neutral75)
+                  .withValues(alpha: AppStyle.disabledButtonOpacity),
         ),
       ),
       child: SizedBox(
         width: double.infinity,
         child: Center(
-          child: Text(text,
-              style: style ??
-                  TextStyle(
-                      color: isEnabled
-                          ? OptiAppColors.primaryColor
-                          : OptiAppColors.primaryColor
-                              .withOpacity(AppStyle.disabledButtonOpacity))),
+          child: Text(
+            text,
+            style: style ??
+                TextStyle(
+                  color: isEnabled
+                      ? context.scheme.primary
+                      : context.scheme.primary
+                          .withValues(alpha: AppStyle.disabledButtonOpacity),
+                ),
+          ),
         ),
       ),
     );
@@ -142,18 +147,18 @@ class TertiaryButton extends StatelessWidget {
     super.key,
     required this.text,
     this.onPressed,
-    this.backgroundColor = AppStyle.neutral00,
-    this.foregroundColor = AppStyle.primary500,
-    this.borderColor = AppStyle.neutral200,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.borderColor,
     this.borderRadius = AppStyle.borderRadius,
     this.isEnabled = true,
   });
 
   final String text;
   final Function()? onPressed;
-  final Color backgroundColor;
-  final Color foregroundColor;
-  final Color borderColor;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final Color? borderColor;
   final double borderRadius;
   final bool isEnabled;
 
@@ -168,17 +173,20 @@ class TertiaryButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius),
             side: BorderSide(
               color: isEnabled
-                  ? borderColor
-                  : borderColor.withOpacity(AppStyle.disabledButtonOpacity),
+                  ? borderColor ?? context.colors.neutral200
+                  : (borderColor ?? context.colors.neutral200)
+                      .withValues(alpha: AppStyle.disabledButtonOpacity),
             ),
           ),
         ),
         foregroundColor: WidgetStatePropertyAll(isEnabled
-            ? foregroundColor
-            : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity)),
+            ? foregroundColor ?? context.scheme.primary
+            : (foregroundColor ?? context.scheme.primary)
+                .withValues(alpha: AppStyle.disabledButtonOpacity)),
         backgroundColor: WidgetStatePropertyAll(isEnabled
-            ? backgroundColor
-            : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity)),
+            ? backgroundColor ?? context.colors.neutral00
+            : (backgroundColor ?? context.colors.neutral00)
+                .withValues(alpha: AppStyle.disabledButtonOpacity)),
       ),
       child: SizedBox(
         width: double.infinity,
@@ -187,9 +195,9 @@ class TertiaryButton extends StatelessWidget {
             text,
             style: TextStyle(
                 color: isEnabled
-                    ? OptiAppColors.primaryColor
-                    : OptiAppColors.primaryColor
-                        .withOpacity(AppStyle.disabledButtonOpacity)),
+                    ? context.scheme.primary
+                    : context.scheme.primary
+                        .withValues(alpha: AppStyle.disabledButtonOpacity)),
           ),
         ),
       ),
@@ -202,13 +210,13 @@ class PlainButton extends StatelessWidget {
       {super.key,
       required this.text,
       this.onPressed,
-      this.foregroundColor = AppStyle.primary500,
+      this.foregroundColor,
       this.isEnabled = true,
       this.style});
 
   final String text;
   final Function()? onPressed;
-  final Color foregroundColor;
+  final Color? foregroundColor;
   final bool isEnabled;
   final TextStyle? style;
 
@@ -220,13 +228,14 @@ class PlainButton extends StatelessWidget {
         elevation: const WidgetStatePropertyAll(0),
         foregroundColor: WidgetStatePropertyAll(
           isEnabled
-              ? foregroundColor
-              : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+              ? foregroundColor ?? context.scheme.primary
+              : (foregroundColor ?? context.scheme.primary)
+                  .withValues(alpha: AppStyle.disabledButtonOpacity),
         ),
       ),
       child: Text(
         text,
-        style: style ?? TextStyle(color: OptiAppColors.primaryColor),
+        style: style ?? TextStyle(color: context.scheme.primary),
       ),
     );
   }
@@ -241,10 +250,20 @@ class PrimaryBlackButton extends PrimaryButton {
     super.leadingIcon,
     super.trailingIcon,
     required super.text,
-  }) : super(
-          backgroundColor: AppStyle.neutral990,
-          foregroundColor: AppStyle.neutral00,
-        );
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PrimaryButton(
+      text: text,
+      onPressed: onPressed,
+      isEnabled: isEnabled,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
+      backgroundColor: context.colors.neutral990,
+      foregroundColor: context.colors.neutral00,
+    );
+  }
 }
 
 class SecondaryBlackButton extends SecondaryButton {
@@ -253,9 +272,17 @@ class SecondaryBlackButton extends SecondaryButton {
     required super.text,
     super.onPressed,
     super.isEnabled,
-  }) : super(
-          foregroundColor: AppStyle.neutral990,
-        );
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SecondaryButton(
+      text: text,
+      onPressed: onPressed,
+      isEnabled: isEnabled,
+      foregroundColor: context.colors.neutral990,
+    );
+  }
 }
 
 class TertiaryBlackButton extends TertiaryButton {
@@ -264,9 +291,17 @@ class TertiaryBlackButton extends TertiaryButton {
     required super.text,
     super.onPressed,
     super.isEnabled,
-  }) : super(
-          foregroundColor: AppStyle.neutral990,
-        );
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TertiaryButton(
+      text: text,
+      onPressed: onPressed,
+      isEnabled: isEnabled,
+      foregroundColor: context.colors.neutral990,
+    );
+  }
 }
 
 class PlainBlackButton extends PlainButton {
@@ -275,7 +310,15 @@ class PlainBlackButton extends PlainButton {
     required super.text,
     super.onPressed,
     super.isEnabled,
-  }) : super(
-          foregroundColor: AppStyle.neutral990,
-        );
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PlainButton(
+      text: text,
+      onPressed: onPressed,
+      isEnabled: isEnabled,
+      foregroundColor: context.colors.neutral990,
+    );
+  }
 }

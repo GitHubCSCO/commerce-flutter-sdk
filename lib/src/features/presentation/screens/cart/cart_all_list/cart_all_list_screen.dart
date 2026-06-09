@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
@@ -26,6 +25,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 void _reloadCartItemsList(BuildContext context) {
   unawaited(context.read<CartCountCubit>().loadCurrentCartCount());
@@ -61,7 +61,7 @@ class CartAllListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text('Cart Details'),
@@ -229,6 +229,16 @@ class CartAllListBody extends StatelessWidget {
                         },
                         hidePricingEnable: state.hidePricingEnable,
                         hideInventoryEnable: state.hideInventoryEnable,
+                        showSavingsAmount: context
+                                .read<CartPageBloc>()
+                                .productSettings
+                                ?.showSavingsAmount ??
+                            true,
+                        showSavingsPercent: context
+                                .read<CartPageBloc>()
+                                .productSettings
+                                ?.showSavingsPercent ??
+                            true,
                       );
                     },
                   ),

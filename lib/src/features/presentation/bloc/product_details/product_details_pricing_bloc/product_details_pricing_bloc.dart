@@ -85,7 +85,10 @@ class ProductDetailsPricingBloc
           (data != null && data.isOnSale != null && data.isOnSale!)
               ? data.unitNetPriceDisplay
               : data.getPriceValue(allowZeroPricing: product.allowZeroPricing);
-      var discountMessage = data.getDiscountValue();
+      var discountMessage = data.getDiscountValue(
+        showSavingsAmount: productSettings.showSavingsAmount ?? true,
+        showSavingsPercent: productSettings.showSavingsPercent ?? true,
+      );
 
       var selectedUnitOfMeasureValueText = '';
       if (chosenUnitOfMeasure?.description?.isNotEmpty ?? false) {

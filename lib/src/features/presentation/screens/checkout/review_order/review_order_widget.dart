@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/payment_summary_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/warehouse_extension.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
   final ReviewOrderEntity reviewOrderEntity;
@@ -46,28 +46,28 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
     List<Widget> list = [];
 
     if (paymentSummaryEntity != null) {
-      list.add(_buildPaymentSummary());
+      list.add(_buildPaymentSummary(context));
     }
-    list.add(_buildBillingAddress());
+    list.add(_buildBillingAddress(context));
 
     if (reviewOrderEntity.shippingMethod == ShippingOption.Ship) {
       final carrier = reviewOrderEntity.selectedCarrier;
       final service = reviewOrderEntity.selectedService;
 
-      list.add(_buildShippingAddress());
+      list.add(_buildShippingAddress(context));
       list.add(_buildShippingMethod(context, carrier, service));
-      list.add(_buildRequestDateSection(isPickup: false));
+      list.add(_buildRequestDateSection(context, isPickup: false));
     } else {
-      list.add(_buildPickUpAddress());
-      list.add(_buildRequestDateSection(isPickup: true));
+      list.add(_buildPickUpAddress(context));
+      list.add(_buildRequestDateSection(context, isPickup: true));
     }
 
     if (!isOrderApproval) {
-      list.add(_buildPaymentMethod());
+      list.add(_buildPaymentMethod(context));
     }
 
     if (!reviewOrderEntity.orderNotes.isNullOrEmpty) {
-      list.add(_buildOrderNotes());
+      list.add(_buildOrderNotes(context));
     }
 
     return list;
@@ -80,13 +80,13 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
     );
   }
 
-  Widget _buildPaymentSummary() {
+  Widget _buildPaymentSummary(BuildContext context) {
     return Column(
-      children: buildSummaryItems(paymentSummaryEntity!),
+      children: buildSummaryItems(context, paymentSummaryEntity!),
     );
   }
 
-  Widget _buildBillingAddress() {
+  Widget _buildBillingAddress(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -96,23 +96,23 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
         Text(
           LocalizationConstants.billingAddress.localized(),
           textAlign: TextAlign.start,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         Text(
           reviewOrderEntity.billTo?.companyName ?? '',
           textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
+          style: context.text.body,
         ),
         Text(
           reviewOrderEntity.billTo?.fullAddress ?? '',
           textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
+          style: context.text.body,
         ),
         Text(
           reviewOrderEntity.billTo?.country?.name ?? '',
           textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
+          style: context.text.body,
         ),
         if ((reviewOrderEntity.billTo?.email ?? '').isNotEmpty ||
             (reviewOrderEntity.billTo?.phone ?? '').isNotEmpty) ...[
@@ -121,13 +121,13 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
             Text(
               reviewOrderEntity.billTo?.email ?? '',
               textAlign: TextAlign.start,
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
           if ((reviewOrderEntity.billTo?.phone ?? '').isNotEmpty)
             Text(
               reviewOrderEntity.billTo?.phone ?? '',
               textAlign: TextAlign.start,
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
         ],
         const SizedBox(height: 12),
@@ -136,7 +136,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
     );
   }
 
-  Widget _buildShippingAddress() {
+  Widget _buildShippingAddress(BuildContext context) {
     return Visibility(
       visible: reviewOrderEntity.shippingMethod == ShippingOption.Ship,
       child: Column(
@@ -148,23 +148,23 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
           Text(
             LocalizationConstants.shippingAddress.localized(),
             textAlign: TextAlign.start,
-            style: OptiTextStyles.subtitle,
+            style: context.text.subtitle,
           ),
           const SizedBox(height: 8),
           Text(
             reviewOrderEntity.shipTo?.companyName ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
           Text(
             reviewOrderEntity.shipTo?.fullAddress ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
           Text(
             reviewOrderEntity.shipTo?.country?.name ?? '',
             textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
           const SizedBox(height: 12),
           _buildSeparator()
@@ -173,7 +173,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
     );
   }
 
-  Widget _buildPickUpAddress() {
+  Widget _buildPickUpAddress(BuildContext context) {
     return Visibility(
       visible: reviewOrderEntity.shippingMethod == ShippingOption.PickUp,
       child: Row(
@@ -190,28 +190,28 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
               Text(
                 LocalizationConstants.pickUpLocation.localized(),
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               const SizedBox(height: 8),
               Text(
                 reviewOrderEntity.warehouse?.description ?? '',
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.subtitle,
+                style: context.text.subtitle,
               ),
               Text(
                 reviewOrderEntity.warehouse?.wareHouseAddress() ?? '',
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
               Text(
                 reviewOrderEntity.warehouse?.wareHouseCity() ?? '',
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
               Text(
                 reviewOrderEntity.warehouse?.phone ?? '',
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
               const SizedBox(height: 12),
               _buildSeparator()
@@ -233,7 +233,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
         Text(
           LocalizationConstants.shippingMethod.localized(),
           textAlign: TextAlign.center,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         Row(
@@ -244,7 +244,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
               child: Text(
                 LocalizationConstants.carrier.localized(),
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ),
             Expanded(
@@ -252,7 +252,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
               child: Text(
                 selectedCarrier?.description ?? '',
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ),
           ],
@@ -265,7 +265,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
               child: Text(
                 LocalizationConstants.service.localized(),
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ),
             Expanded(
@@ -273,7 +273,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
               child: Text(
                 selectedService?.description ?? '',
                 textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ),
           ],
@@ -289,7 +289,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
                   ])
                 : '',
             textAlign: TextAlign.center,
-            style: OptiTextStyles.bodySmall,
+            style: context.text.bodySmall,
           ),
         ),
         if (isOrderApproval) const SizedBox(height: 12),
@@ -297,7 +297,8 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
     );
   }
 
-  Widget _buildRequestDateSection({required bool isPickup}) {
+  Widget _buildRequestDateSection(BuildContext context,
+      {required bool isPickup}) {
     final dateTime = isPickup
         ? reviewOrderEntity.requestPickupDate
         : reviewOrderEntity.requestDeliveryDate;
@@ -316,7 +317,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
                 ? LocalizationConstants.requestPickUpDate.localized()
                 : LocalizationConstants.requestDeliveryDate.localized(),
             textAlign: TextAlign.center,
-            style: OptiTextStyles.subtitle,
+            style: context.text.subtitle,
           ),
           const SizedBox(height: 8),
           Text(
@@ -330,7 +331,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
                         .format([DateFormat('E, MM/dd').format(dateTime)]))
                 : '',
             textAlign: TextAlign.center,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
           const SizedBox(height: 12),
           _buildSeparator()
@@ -339,7 +340,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
     );
   }
 
-  Widget _buildPaymentMethod() {
+  Widget _buildPaymentMethod(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -349,13 +350,13 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
         Text(
           LocalizationConstants.paymentMethod.localized(),
           textAlign: TextAlign.center,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         Text(
           _paymentDescription(reviewOrderEntity.paymentMethod),
           textAlign: TextAlign.center,
-          style: OptiTextStyles.body,
+          style: context.text.body,
         ),
         const SizedBox(height: 12),
         _buildSeparator()
@@ -363,7 +364,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
     );
   }
 
-  Widget _buildOrderNotes() {
+  Widget _buildOrderNotes(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -373,13 +374,13 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
         Text(
           LocalizationConstants.orderNotes.localized(),
           textAlign: TextAlign.center,
-          style: OptiTextStyles.subtitle,
+          style: context.text.subtitle,
         ),
         const SizedBox(height: 8),
         Text(
           reviewOrderEntity.orderNotes ?? "",
           textAlign: TextAlign.center,
-          style: OptiTextStyles.body,
+          style: context.text.body,
         ),
         const SizedBox(height: 12),
         _buildSeparator()

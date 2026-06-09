@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/cart_line_extentions.dart';
@@ -13,6 +12,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/view_quote
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuoteLineWidget extends StatelessWidget {
   final QuoteLineEntity quoteLineEntity;
@@ -28,6 +28,8 @@ class QuoteLineWidget extends StatelessWidget {
   final void Function()? onShowMoreButtonClickedCallback;
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
   const QuoteLineWidget(
       {super.key,
       required this.quoteLineEntity,
@@ -42,7 +44,9 @@ class QuoteLineWidget extends StatelessWidget {
       this.showViewBreakPricing = false,
       this.showQuantityAndSubtotalField = true,
       this.canEditQuantity = true,
-      this.moreButtonWidget});
+      this.moreButtonWidget,
+      this.showSavingsAmount = true,
+      this.showSavingsPercent = true});
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +98,10 @@ class QuoteLineWidget extends StatelessWidget {
               child: LineItemPricingWidget(
                 hideInventoryEnable: hideInventoryEnable,
                 hidePricingEnable: hidePricingEnable,
-                discountMessage: quoteLineEntity.pricing?.getDiscountValue(),
+                discountMessage: quoteLineEntity.pricing?.getDiscountValue(
+                  showSavingsAmount: showSavingsAmount,
+                  showSavingsPercent: showSavingsPercent,
+                ),
                 priceValueText: quoteLineEntity.updatePriceValueText(),
                 unitOfMeasureValueText:
                     quoteLineEntity.updateUnitOfMeasureValueText(),
@@ -119,7 +126,7 @@ class QuoteLineWidget extends StatelessWidget {
                 child: Text(
                   viewQuotedPricingTitle ??
                       LocalizationConstants.viewQuotedPricing.localized(),
-                  style: OptiTextStyles.link,
+                  style: context.text.link,
                 ),
               ),
             ),
@@ -200,14 +207,14 @@ class QuoteLineItemTitleWidget extends StatelessWidget {
                     shortDescription ?? '',
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: OptiTextStyles.body,
+                    style: context.text.body,
                     textAlign: TextAlign.left,
                   ),
                 ),
                 if (!productNumber.isNullOrEmpty)
                   Text(
                     productNumber!,
-                    style: OptiTextStyles.bodySmall,
+                    style: context.text.bodySmall,
                     textAlign: TextAlign.left,
                   ),
                 if (!manufacturerItem.isNullOrEmpty)
@@ -215,11 +222,11 @@ class QuoteLineItemTitleWidget extends StatelessWidget {
                     children: [
                       Text(
                         "${LocalizationConstants.mFGNumberSign.localized()} ",
-                        style: OptiTextStyles.subtitle.copyWith(fontSize: 12),
+                        style: context.text.subtitle.copyWith(fontSize: 12),
                       ),
                       Text(
                         manufacturerItem ?? '',
-                        style: OptiTextStyles.bodySmall,
+                        style: context.text.bodySmall,
                         textAlign: TextAlign.left,
                       ),
                     ],
@@ -229,7 +236,7 @@ class QuoteLineItemTitleWidget extends StatelessWidget {
                     children: [
                       Text(
                         myPartNumberValueLabel ?? '',
-                        style: OptiTextStyles.bodySmall,
+                        style: context.text.bodySmall,
                         textAlign: TextAlign.left,
                       ),
                     ],
@@ -239,12 +246,12 @@ class QuoteLineItemTitleWidget extends StatelessWidget {
                     children: [
                       Text(
                         LocalizationConstants.qTY.localized(),
-                        style: OptiTextStyles.subtitle.copyWith(fontSize: 12),
+                        style: context.text.subtitle.copyWith(fontSize: 12),
                       ),
                       const SizedBox(width: 5),
                       Text(
                         quantityValueLabel ?? '',
-                        style: OptiTextStyles.bodySmall,
+                        style: context.text.bodySmall,
                         textAlign: TextAlign.left,
                       ),
                     ],

@@ -1,10 +1,8 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/converter/avalability_color_converter.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/helper/extra/availability_color_converter.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
@@ -18,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ProductDetailsPricingWidget extends StatelessWidget {
   final ProductDetailsPriceEntity productDetailsPricingEntity;
@@ -105,7 +104,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             },
             child: Text(
               LocalizationConstants.viewQuantityPricing.localized(),
-              style: OptiTextStyles.link,
+              style: context.text.link,
             ),
           );
         }
@@ -134,7 +133,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             },
             child: Text(
               LocalizationConstants.viewAvailabilityWarehouse.localized(),
-              style: OptiTextStyles.link,
+              style: context.text.link,
             ),
           );
         }
@@ -159,18 +158,25 @@ class ProductDetailsPricingWidget extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
+          var productSettings = context
+              .read<ProductDetailsBloc>()
+              .productDetailDataEntity
+              .productSettings;
           var discountMessage = state.productDetailsPriceEntity.product?.pricing
-              ?.getDiscountValue();
+              ?.getDiscountValue(
+            showSavingsAmount: productSettings?.showSavingsAmount ?? true,
+            showSavingsPercent: productSettings?.showSavingsPercent ?? true,
+          );
           if (discountMessage != null &&
               discountMessage.isNotEmpty &&
               discountMessage != "null") {
             return Text(
               discountMessage,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                   fontStyle: FontStyle.italic,
-                  color: OptiAppColors.textSecondary),
+                  color: context.colors.textSecondary),
             );
           }
         }
@@ -195,13 +201,13 @@ class ProductDetailsPricingWidget extends StatelessWidget {
               Text(
                   productDetailsPriceEntity.product.updatePriceValueText(
                       productDetailsPriceEntity.productPricingEnabled),
-                  style: OptiTextStyles.subtitle),
+                  style: context.text.subtitle),
               if (productDetailsPriceEntity
                       .selectedUnitOfMeasureValueText.isNullOrEmpty ==
                   false)
                 Text(
                   " / ${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ""}",
-                  style: OptiTextStyles.body,
+                  style: context.text.body,
                 ),
             ],
           );
@@ -209,7 +215,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         return Container(
           alignment: Alignment.bottomLeft,
           child: LoadingAnimationWidget.progressiveDots(
-            color: OptiAppColors.iconPrimary,
+            color: context.colors.iconPrimary,
             size: 30,
           ),
         );
@@ -225,16 +231,17 @@ class ProductDetailsPricingWidget extends StatelessWidget {
           return Container(
             child: Text(
               productDetailsPriceEntity.availability?.message ?? '',
-              style: OptiTextStyles.body.copyWith(
-                  color: AvailabilityColorConverter.convert(
-                      productDetailsPriceEntity.availability?.messageType)),
+              style: context.text.body.copyWith(
+                color: AvailabilityColorConverter.convert(context,
+                    productDetailsPriceEntity.availability?.messageType),
+              ),
             ),
           );
         } else if (state is ProductDetailsPricingLoading) {
           return Container(
             alignment: Alignment.bottomLeft,
             child: LoadingAnimationWidget.progressiveDots(
-              color: OptiAppColors.iconPrimary,
+              color: context.colors.iconPrimary,
               size: 30,
             ),
           );

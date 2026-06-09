@@ -2,7 +2,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_pricing/quote_pricing_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_pricing/quote_pricing_event.dart';
@@ -14,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuotePricingScreen extends StatelessWidget {
   final QuoteLineEntity? quoteLineEntity;
@@ -46,7 +46,7 @@ class QuotePricingPage extends StatelessWidget {
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
                   LocalizationConstants.apply.localized(),
-                  style: OptiTextStyles.linkMedium,
+                  style: context.text.linkMedium,
                 ),
               ),
             ),
@@ -112,7 +112,7 @@ class QuotePricingPage extends StatelessWidget {
                                   30.0, 20.0, 20.0, 20.0),
                               child: Text(
                                 LocalizationConstants.quantity.localized(),
-                                style: OptiTextStyles.body,
+                                style: context.text.body,
                               ),
                             ),
                             Padding(
@@ -120,7 +120,7 @@ class QuotePricingPage extends StatelessWidget {
                                   20.0, 20.0, 120.0, 20.0),
                               child: Text(
                                 LocalizationConstants.price.localized(),
-                                style: OptiTextStyles.body,
+                                style: context.text.body,
                               ),
                             ),
                           ],
@@ -183,7 +183,7 @@ class QuotePricingPage extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20.0, 30.0, 0.0, 10.0),
           child: Text(
             LocalizationConstants.itemPricing.localized(),
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         ),
         PriceRowWidget(
@@ -247,7 +247,7 @@ class PriceBreakwidget extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Text(
                 LocalizationConstants.to.localized(),
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ),
             Expanded(
@@ -329,8 +329,8 @@ class PriceRowWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: OptiTextStyles.subtitle),
-            Text(price, style: OptiTextStyles.body),
+            Text(label, style: context.text.subtitle),
+            Text(price, style: context.text.body),
           ],
         ),
       ),

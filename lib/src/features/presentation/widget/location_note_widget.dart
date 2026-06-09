@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/location_note_widget_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/location_note/location_note_cubit.dart';
@@ -12,6 +10,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/location_no
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class LocationNoteWidget extends StatelessWidget {
   LocationNoteWidgetEntity locationNoteWidgetEntity;
@@ -33,7 +32,7 @@ class LocationNoteWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
               child: Text(
                 locationNoteWidgetEntity.title ?? "",
-                style: OptiTextStyles.titleSmall,
+                style: context.text.titleSmall,
               ),
             ),
             Container(
@@ -48,7 +47,7 @@ class LocationNoteWidget extends StatelessWidget {
                       visible: state.locationNote.isNotEmpty,
                       child: Text(
                         state.locationNote,
-                        style: OptiTextStyles.body,
+                        style: context.text.body,
                       ),
                     ),
                     Visibility(
@@ -61,7 +60,7 @@ class LocationNoteWidget extends StatelessWidget {
                               .format([
                             LocalizationConstants.editLocationNote.localized()
                           ]),
-                          style: OptiTextStyles.body,
+                          style: context.text.body,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -71,8 +70,8 @@ class LocationNoteWidget extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: TertiaryButton(
-                          borderColor: OptiAppColors.grayBackgroundColor,
-                          backgroundColor: OptiAppColors.grayBackgroundColor,
+                          borderColor: context.colors.grayBackgroundColor,
+                          backgroundColor: context.colors.grayBackgroundColor,
                           text: LocalizationConstants.editLocationNote
                               .localized(),
                           onPressed: () async {

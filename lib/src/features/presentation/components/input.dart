@@ -1,7 +1,6 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/components/style.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class Input extends StatefulWidget {
   final String? hintText;
@@ -144,7 +143,7 @@ class _InputState extends State<Input> {
                   children: [
                     Text(
                       widget.label!,
-                      style: OptiTextStyles.body,
+                      style: context.text.body,
                     ),
                     const SizedBox(width: 4.0), // Space between text and star
                     Visibility(
@@ -167,8 +166,7 @@ class _InputState extends State<Input> {
                 boxShadow: (_focusNode.hasFocus && widget.maxLength == null)
                     ? [
                         BoxShadow(
-                          color:
-                              OptiAppColors.primaryColor.withValues(alpha: 0.3),
+                          color: context.scheme.primary.withValues(alpha: 0.3),
                           spreadRadius: AppStyle.inputDropShadowSpreadRadius,
                         ),
                       ]
@@ -188,16 +186,16 @@ class _InputState extends State<Input> {
                 onEditingComplete: widget.onEditingComplete,
                 onTap: widget.onTap,
                 onTapOutside: widget.onTapOutside,
-                style: OptiTextStyles.body,
+                style: context.text.body,
                 textAlign: widget.textAlign,
                 textDirection: widget.textDirection,
                 textInputAction: widget.textInputAction,
                 focusNode: _focusNode,
-                cursorColor: AppStyle.neutral990,
+                cursorColor: context.colors.neutral990,
                 decoration: InputDecoration(
                   hintText: widget.hintText,
-                  hintStyle: OptiTextStyles.body.copyWith(
-                    color: AppStyle.neutral500,
+                  hintStyle: context.text.body.copyWith(
+                    color: context.colors.neutral500,
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: AppStyle.defaultHorizontalPadding,
@@ -214,13 +212,13 @@ class _InputState extends State<Input> {
                       AppStyle.borderRadius,
                     ),
                     borderSide: BorderSide(
-                      color: OptiAppColors.primaryColor,
+                      color: context.scheme.primary,
                     ),
                   ),
                   filled: true,
                   fillColor: _focusNode.hasFocus
-                      ? AppStyle.neutral00
-                      : AppStyle.neutral100,
+                      ? context.colors.neutral00
+                      : context.colors.neutral100,
                   suffixIcon: _focusNode.hasFocus ? widget.suffixIcon : null,
                 ),
               ),

@@ -12,6 +12,7 @@ part 'invoice_detail_state.dart';
 
 class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
   final InvoiceUseCase _invoiceUseCase;
+  ProductSettings? productSettings;
 
   InvoiceDetailCubit({required InvoiceUseCase invoiceUseCase})
       : _invoiceUseCase = invoiceUseCase,
@@ -31,9 +32,16 @@ class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
       ),
     );
 
-    final result = await _invoiceUseCase.loadInvoice(
-      invoiceId: invoiceNumber,
-    );
+    final results = await Future.wait([
+      _invoiceUseCase.loadInvoice(invoiceId: invoiceNumber),
+      _invoiceUseCase.loadProductSettings(),
+    ]);
+
+    final result = results[0] as Invoice?;
+    final productSettingsResult = results[1];
+    productSettings = productSettingsResult is Success
+        ? productSettingsResult.value as ProductSettings
+        : null;
 
     if (result == null) {
       emit(state.copyWith(status: InvoiceStatus.failure));

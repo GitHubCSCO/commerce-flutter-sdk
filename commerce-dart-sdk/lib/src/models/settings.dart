@@ -104,6 +104,8 @@ class AccountSettings extends BaseModel {
 
   bool? logOutUserAfterPasswordChange;
 
+  bool? allowEmptyShipping;
+
   AccountSettings({
     this.allowCreateAccount,
     this.allowGuestCheckout,
@@ -120,6 +122,7 @@ class AccountSettings extends BaseModel {
     this.useEmailAsUserName,
     this.enableWarehousePickup,
     this.logOutUserAfterPasswordChange,
+    this.allowEmptyShipping,
   });
 
   factory AccountSettings.fromJson(Map<String, dynamic> json) =>

@@ -1,7 +1,5 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
@@ -10,6 +8,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class OrderDetailsBodyWidget extends StatelessWidget {
   final String? orderNumber;
@@ -168,7 +167,7 @@ class OrderInformationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: Column(
@@ -179,49 +178,49 @@ class OrderInformationWidget extends StatelessWidget {
               TwoTextsRow(
                 label: LocalizationConstants.orderNumberSign.localized(),
                 value: orderNumber!,
-                textStyle: OptiTextStyles.subtitle,
+                textStyle: context.text.subtitle,
               ),
             if (webOrderNumber != null)
               TwoTextsRow(
                 label: LocalizationConstants.webOrderNumberSign.localized(),
                 value: webOrderNumber!,
-                textStyle: OptiTextStyles.body,
+                textStyle: context.text.body,
               ),
             if (orderDate != null)
               TwoTextsRow(
                 label: LocalizationConstants.orderDate.localized(),
                 value: orderDate!,
-                textStyle: OptiTextStyles.body,
+                textStyle: context.text.body,
               ),
             if (orderStatus != null)
               TwoTextsRow(
                 label: LocalizationConstants.orderStatus.localized(),
                 value: orderStatus!,
-                textStyle: OptiTextStyles.body,
+                textStyle: context.text.body,
               ),
             if (poNumber != null)
               TwoTextsRow(
                 label: LocalizationConstants.pONumberSign.localized(),
                 value: poNumber!,
-                textStyle: OptiTextStyles.body,
+                textStyle: context.text.body,
               ),
             if (shippingMethod != null)
               TwoTextsRow(
                 label: LocalizationConstants.shippingMethod.localized(),
                 value: shippingMethod!,
-                textStyle: OptiTextStyles.body,
+                textStyle: context.text.body,
               ),
             if (terms != null)
               TwoTextsRow(
                 label: LocalizationConstants.terms.localized(),
                 value: terms!,
-                textStyle: OptiTextStyles.body,
+                textStyle: context.text.body,
               ),
             if (requestedDeliveryDateTitle != null)
               TwoTextsRow(
                 label: requestedDeliveryDateTitle!,
                 value: requestedDeliveryDate!,
-                textStyle: OptiTextStyles.body,
+                textStyle: context.text.body,
               ),
           ],
         ),
@@ -247,7 +246,7 @@ class OrderShippingAddressWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: ShippingAddressWidget(
@@ -274,7 +273,7 @@ class OrderBillingAddressWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: BillingAddressWidget(
@@ -297,7 +296,7 @@ class OrderPickupLocationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: OptiAppColors.backgroundWhite,
+      color: context.colors.backgroundWhite,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: PickupLocationWidget(
@@ -312,12 +311,16 @@ class OrderProductsSectionWidget extends StatelessWidget {
   final List<OrderLineEntity> orderLines;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final bool showSavingsAmount;
+  final bool showSavingsPercent;
 
   const OrderProductsSectionWidget({
     super.key,
     required this.orderLines,
     this.hidePricingEnable,
     this.hideInventoryEnable,
+    this.showSavingsAmount = true,
+    this.showSavingsPercent = true,
   });
 
   @override
@@ -335,12 +338,12 @@ class OrderProductsSectionWidget extends StatelessWidget {
             children: [
               Text(
                 LocalizationConstants.products.localized(),
-                style: OptiTextStyles.titleLarge,
+                style: context.text.titleLarge,
               ),
               const SizedBox(width: 8),
               Text(
                 '(${orderLines.length} item)',
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ],
           ),
@@ -358,12 +361,18 @@ class OrderProductsSectionWidget extends StatelessWidget {
               productNumber: orderLine.getProductNumber(),
               discountMessage: (orderLine.unitNetPrice == 0)
                   ? ''
-                  : (DiscountValueConverter().convert(orderLine) ?? '')
+                  : (DiscountValueConverter().convert(
+                            orderLine,
+                            showSavingsAmount: showSavingsAmount,
+                            showSavingsPercent: showSavingsPercent,
+                          ) ??
+                          '')
                       .toString(),
               priceValueText: orderLine.unitNetPriceDisplay,
-              unitOfMeasureValueText: orderLine.unitOfMeasureDisplay != null
-                  ? ' / ${orderLine.unitOfMeasureDisplay}'
-                  : null,
+              unitOfMeasureValueText:
+                  !orderLine.unitOfMeasureDisplay.isNullOrEmpty
+                      ? ' / ${orderLine.unitOfMeasureDisplay}'
+                      : null,
               qtyOrdered: orderLine.qtyOrdered?.round().toString(),
               subtotalPriceText: orderLine.extendedUnitNetPriceDisplay,
               canEditQty: false,
@@ -446,12 +455,12 @@ class OrderPaymentSectionWidget extends StatelessWidget {
               .copyWith(bottom: 8),
           child: Text(
             LocalizationConstants.orderSummary.localized(),
-            style: OptiTextStyles.titleLarge,
+            style: context.text.titleLarge,
           ),
         ),
         Container(
           width: double.infinity,
-          color: OptiAppColors.backgroundWhite,
+          color: context.colors.backgroundWhite,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Column(
@@ -461,32 +470,32 @@ class OrderPaymentSectionWidget extends StatelessWidget {
                 TwoTextsRow(
                   label: subtotalTitle?.format([itemCount]) ?? '',
                   value: subtotal ?? '',
-                  textStyle: OptiTextStyles.subtitle,
+                  textStyle: context.text.subtitle,
                 ),
                 if (!shippingHandling.isNullOrEmpty)
                   TwoTextsRow(
                     label: shippingHandlingTitle ?? '',
                     value: shippingHandling ?? '',
-                    textStyle: OptiTextStyles.body,
+                    textStyle: context.text.body,
                   ),
                 if (!otherCharges.isNullOrEmpty)
                   TwoTextsRow(
                     label: otherChargesTitle ?? '',
                     value: otherCharges ?? '',
-                    textStyle: OptiTextStyles.body,
+                    textStyle: context.text.body,
                   ),
                 if (!tax.isNullOrEmpty)
                   TwoTextsRow(
                     label: taxTitle ?? '',
                     value: tax ?? '',
-                    textStyle: OptiTextStyles.body,
+                    textStyle: context.text.body,
                   ),
                 if (!total.isNullOrEmpty) ...[
                   const SizedBox(height: 10),
                   TwoTextsRow(
                     label: totalTitle ?? '',
                     value: total ?? '',
-                    textStyle: OptiTextStyles.subtitle,
+                    textStyle: context.text.subtitle,
                   ),
                 ],
                 if (!discount.isNullOrEmpty) const SizedBox(height: 10),
@@ -501,8 +510,8 @@ class OrderPaymentSectionWidget extends StatelessWidget {
                       maxLines: 3,
                       label: promotion.promotionLabel,
                       value: promotion.promotionValue,
-                      textStyle: OptiTextStyles.body.copyWith(
-                        color: OptiAppColors.textSecondary,
+                      textStyle: context.text.body.copyWith(
+                        color: context.colors.textSecondary,
                       ),
                     );
                   }),
@@ -510,7 +519,7 @@ class OrderPaymentSectionWidget extends StatelessWidget {
                   TwoTextsRow(
                     label: discountTitle ?? '',
                     value: discount ?? '',
-                    textStyle: OptiTextStyles.body,
+                    textStyle: context.text.body,
                   ),
               ],
             ),
@@ -532,9 +541,9 @@ class OrderBottomSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: OptiAppColors.backgroundWhite,
-        boxShadow: [
+      decoration: BoxDecoration(
+        color: context.colors.backgroundWhite,
+        boxShadow: const [
           BoxShadow(
             color: Color.fromRGBO(0, 0, 0, 0.05),
             blurRadius: 5,

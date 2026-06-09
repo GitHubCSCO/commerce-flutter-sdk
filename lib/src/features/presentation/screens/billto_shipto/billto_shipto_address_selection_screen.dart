@@ -1,9 +1,7 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/address_type.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/state_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/billto_shipto/address_selection/billto_shipto_address_selection_bloc.dart';
@@ -13,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class BillToShipToAddressSelectionEntity {
   BillTo? selectedBillTo;
@@ -123,7 +122,7 @@ class _BillToShipToAddressSelectionPageState
         title: Text(widget.selectionEntity.addressType == AddressType.billTo
             ? LocalizationConstants.selectBillingAddress.localized()
             : LocalizationConstants.selectShippingAddress.localized()),
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
       ),
       body: Column(
         children: [
@@ -188,7 +187,7 @@ class _BillToShipToAddressSelectionPageState
                             ? widget.selectionEntity.selectedBillTo?.id
                             : widget.selectionEntity.selectedShipTo?.id;
                     return Container(
-                      color: OptiAppColors.backgroundWhite,
+                      color: context.colors.backgroundWhite,
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: ListView.separated(
                         controller: _scrollController,
@@ -279,10 +278,9 @@ class BillToShipToListItem extends StatelessWidget {
                       child: Text(
                         address.label ?? '',
                         overflow: TextOverflow.ellipsis,
-                        style: OptiTextStyles.body.copyWith(
-                            fontWeight: isSelected
-                                ? OptiTextStyles.bodyHighlightWeight
-                                : OptiTextStyles.bodyWeight),
+                        style: context.text.body.copyWith(
+                            fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w400),
                       ),
                     ),
                   ],

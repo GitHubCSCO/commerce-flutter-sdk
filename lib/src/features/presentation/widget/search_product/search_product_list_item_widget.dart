@@ -1,11 +1,9 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/product_list_item_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
@@ -21,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SearchProductListItemWidget extends StatelessWidget
     with ProductListItemMixIn {
@@ -76,7 +75,7 @@ class SearchProductListItemWidget extends StatelessWidget
                       // This function is called when the image fails to load
                       return Container(
                         color:
-                            OptiAppColors.backgroundGray, // Placeholder color
+                            context.colors.backgroundGray, // Placeholder color
                         alignment: Alignment.center,
                         child: const Icon(
                           Icons.image, // Icon to display
@@ -99,21 +98,26 @@ class SearchProductListItemWidget extends StatelessWidget
                     product.shortDescription ?? product.productTitle ?? "",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
-                    style: OptiTextStyles.bodySmall,
+                    style: context.text.bodySmall,
                   ),
                   const SizedBox(height: 4),
                   Text(
                     LocalizationConstants.itemNumber
                         .localized()
                         .format([product.getProductNumber()]),
-                    style: OptiTextStyles.bodySmall.copyWith(
-                      color: OptiAppColors.textDisabledColor,
+                    style: context.text.bodySmall.copyWith(
+                      color: context.colors.textDisabledColor,
                     ),
                   ),
-                  getInfoWidget(product),
+                  getInfoWidget(context, product),
                   const SizedBox(height: 4),
                   LineItemPricingWidget(
-                    discountMessage: product.pricing?.getDiscountValue(),
+                    discountMessage: product.pricing?.getDiscountValue(
+                      showSavingsAmount:
+                          productSettings?.showSavingsAmount ?? true,
+                      showSavingsPercent:
+                          productSettings?.showSavingsPercent ?? true,
+                    ),
                     priceValueText: product.updatePriceValueText(pricingEnable),
                     unitOfMeasureValueText:
                         product.updateUnitOfMeasure(pricingEnable),
@@ -168,7 +172,7 @@ class SearchProductListItemWidget extends StatelessWidget
                         return Container(
                           alignment: Alignment.bottomLeft,
                           child: LoadingAnimationWidget.progressiveDots(
-                            color: OptiAppColors.iconPrimary,
+                            color: context.colors.iconPrimary,
                             size: 30,
                           ),
                         );

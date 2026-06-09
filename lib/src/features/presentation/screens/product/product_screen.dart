@@ -4,7 +4,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/mixins/list_grid_view_mixin.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/product/product_collection_bloc.dart';
@@ -17,6 +16,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 //TODO we need to take another look at the name of each class in this file
 //TODO these classes are associated with category or brand product list page
@@ -155,8 +155,8 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_getTitle(widget.pageEntity),
-            style: OptiTextStyles.titleLarge),
+        title:
+            Text(_getTitle(widget.pageEntity), style: context.text.titleLarge),
         actions: [
           BottomMenuWidget(
               screenName: _getScreenName(widget.pageEntity),
@@ -225,7 +225,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
                     return Center(
                         child: Text(
                             LocalizationConstants.searchNoResults.localized(),
-                            style: OptiTextStyles.body));
+                            style: context.text.body));
                 }
               },
             ),

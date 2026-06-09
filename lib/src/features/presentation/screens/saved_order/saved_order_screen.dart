@@ -1,12 +1,9 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/saved_order/saved_order_cubit.dart';
@@ -15,8 +12,8 @@ import 'package:commerce_flutter_sdk/src/features/presentation/helper/menu/sort_
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class SavedOrderScreen extends StatelessWidget {
   const SavedOrderScreen({super.key});
@@ -40,9 +37,9 @@ class SavedOrderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         title: Text(LocalizationConstants.savedOrders.localized()),
         centerTitle: false,
         actions: [
@@ -100,7 +97,7 @@ class SavedOrderPage extends StatelessWidget {
                                       0)
                                   ? '${state.cartCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
                                   : '',
-                              style: OptiTextStyles.header3,
+                              style: context.text.header3,
                             ),
                             if ((state.cartCollectionModel.carts ?? [])
                                 .isNotEmpty)
@@ -248,21 +245,21 @@ class _SavedOrderItem extends StatelessWidget {
           horizontal: 16,
           vertical: 10,
         ),
-        color: OptiAppColors.backgroundWhite,
+        color: context.colors.backgroundWhite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               cart.shipToLabel ?? '',
-              style: OptiTextStyles.body,
+              style: context.text.body,
             ),
             Text(
               cart.orderDate != null
                   ? formatDateByLocale(cart.orderDate!, isDateAndTime: true)
                   : '',
-              style: OptiTextStyles.bodySmall.copyWith(
-                color: OptiAppColors.textSecondary,
+              style: context.text.bodySmall.copyWith(
+                color: context.colors.textSecondary,
               ),
             ),
             const SizedBox(height: 4),
@@ -270,8 +267,8 @@ class _SavedOrderItem extends StatelessWidget {
               visible: !(hidePricingEnable ?? false),
               child: Text(
                 cart.orderSubTotalDisplay ?? '',
-                style: OptiTextStyles.bodySmall.copyWith(
-                  color: OptiAppColors.textSecondary,
+                style: context.text.bodySmall.copyWith(
+                  color: context.colors.textSecondary,
                 ),
               ),
             ),

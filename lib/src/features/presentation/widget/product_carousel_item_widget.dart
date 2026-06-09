@@ -1,10 +1,9 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_carousel/product_carousel_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ProductCarouselItemWidget extends StatelessWidget {
   final ProductCarouselEntity productCarousel;
@@ -42,7 +41,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
                     StackTrace? stackTrace) {
                   // This function is called when the image fails to load
                   return Container(
-                    color: OptiAppColors.backgroundGray, // Placeholder color
+                    color: context.colors.backgroundGray,
                     alignment: Alignment.center,
                     child: const Icon(
                       Icons.image, // Icon to display
@@ -61,7 +60,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
               child: Text(productCarousel.product!.shortDescription ?? "",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: OptiTextStyles.bodySmall),
+                  style: context.text.bodySmall),
             ),
           ),
           if (!hidePricingEnable)
@@ -71,12 +70,12 @@ class ProductCarouselItemWidget extends StatelessWidget {
                 '${productCarousel.product.updatePriceValueText(productCarousel.productPricingEnabled)} ${productCarousel.product.updateUnitOfMeasure(productCarousel.productPricingEnabled)}',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: OptiTextStyles.bodySmallHighlight,
+                style: context.text.bodySmallHighlight,
               ),
               child: Container(
                 alignment: Alignment.bottomLeft,
                 child: LoadingAnimationWidget.progressiveDots(
-                  color: OptiAppColors.iconPrimary,
+                  color: context.colors.iconPrimary,
                   size: 30,
                 ),
               ),

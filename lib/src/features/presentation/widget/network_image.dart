@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class NetworkImageWithFallback extends StatelessWidget {
   final String? imageUrl;
@@ -30,7 +30,7 @@ class NetworkImageWithFallback extends StatelessWidget {
               width: width,
               height: height,
               decoration: BoxDecoration(
-                color: OptiAppColors.backgroundGray,
+                color: context.colors.backgroundGray,
                 borderRadius: BorderRadius.circular(borderRadius),
               ),
               child: const Icon(
@@ -48,7 +48,7 @@ class NetworkImageWithFallback extends StatelessWidget {
               width: width,
               height: height,
               decoration: BoxDecoration(
-                color: OptiAppColors.backgroundGray,
+                color: context.colors.backgroundGray,
                 borderRadius: BorderRadius.circular(borderRadius),
               ),
               child: const Center(
@@ -67,7 +67,7 @@ class NetworkImageWithFallback extends StatelessWidget {
         width: width,
         height: height,
         decoration: BoxDecoration(
-          color: OptiAppColors.backgroundGray,
+          color: context.colors.backgroundGray,
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: const Icon(

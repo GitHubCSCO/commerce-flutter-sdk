@@ -71,8 +71,11 @@ class OrderItemPricingInventoryCubit
       var pricing = getProductRealTimePrices?.realTimePricingResults
           ?.firstWhere((result) => result.productId == productId);
       quickOrderItemEntity.updatePricing(
-          ProductPriceEntityMapper.toEntity(pricing),
-          productSettings.canSeePrices!);
+        ProductPriceEntityMapper.toEntity(pricing),
+        productSettings.canSeePrices!,
+        showSavingsAmount: productSettings.showSavingsAmount ?? true,
+        showSavingsPercent: productSettings.showSavingsPercent ?? true,
+      );
     } else if ((productSettings.canSeePrices ?? false) &&
         isStorefrontAccessGranted) {
       // V2 has no non-realtime pricing endpoint. Fall back to the static
@@ -90,7 +93,11 @@ class OrderItemPricingInventoryCubit
         extendedUnitNetPrice: listPrice != null ? listPrice * qty : null,
       );
       quickOrderItemEntity.updatePricing(
-          fallbackPricing, productSettings.canSeePrices!);
+        fallbackPricing,
+        productSettings.canSeePrices!,
+        showSavingsAmount: productSettings.showSavingsAmount ?? true,
+        showSavingsPercent: productSettings.showSavingsPercent ?? true,
+      );
     }
     emit(OrderItemSubTotalChange());
 

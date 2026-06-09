@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
@@ -29,6 +28,7 @@ import 'package:go_router/go_router.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class OrderDetailsScreen extends BaseStatelessWidget {
   final String orderNumber;
@@ -157,9 +157,9 @@ class OrderDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         centerTitle: false,
         actions: const [
           _OptionsMenu(),
@@ -299,6 +299,16 @@ class OrderDetailsPage extends StatelessWidget {
                           orderLines: state.order.orderLines ?? [],
                           hidePricingEnable: state.hidePricingEnable,
                           hideInventoryEnable: state.hideInventoryEnable,
+                          showSavingsAmount: context
+                                  .read<OrderDetailsCubit>()
+                                  .productSettings
+                                  ?.showSavingsAmount ??
+                              true,
+                          showSavingsPercent: context
+                                  .read<OrderDetailsCubit>()
+                                  .productSettings
+                                  ?.showSavingsPercent ??
+                              true,
                         ),
                       ],
                     ),

@@ -1,11 +1,11 @@
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/product_carousel_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class ProductCarouselSectionWidget extends StatelessWidget {
   final ProductCarouselWidgetEntity productCarouselWidgetEntity;
@@ -36,7 +36,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     child: Text(
                       _getCarouselTitle(),
-                      style: OptiTextStyles.titleLarge,
+                      style: context.text.titleLarge,
                     ),
                   ),
                   SizedBox(

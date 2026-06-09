@@ -3,7 +3,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_details/quote_details_bloc.dart';
@@ -23,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class QuoteDetailsScreen extends StatelessWidget {
   final QuoteDto? quoteDto;
@@ -235,7 +235,7 @@ class QuoteDetailsPage extends StatelessWidget {
                 child: Text(
                   LocalizationConstants.quoteExpiration.localized(),
                   textAlign: TextAlign.start,
-                  style: OptiTextStyles.subtitle,
+                  style: context.text.subtitle,
                 ),
               ),
               Expanded(
@@ -257,7 +257,7 @@ class QuoteDetailsPage extends StatelessWidget {
               if (state is ExpirationDateRequiredState) {
                 return Text(
                   state.message,
-                  style: OptiTextStyles.body.copyWith(color: Colors.red),
+                  style: context.text.body.copyWith(color: Colors.red),
                 );
               } else {
                 return Container();
@@ -423,7 +423,7 @@ class QuoteDetailsPage extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
           child: Text(
             '${quoteLineEntities.length} ${quoteLineEntities.length == 1 ? "product" : "products"}',
-            style: OptiTextStyles.bodyFade,
+            style: context.text.bodyFade,
           ),
         ),
         Column(
@@ -446,6 +446,16 @@ class QuoteDetailsPage extends StatelessWidget {
                   showRemoveButton: false,
                   moreButtonWidget:
                       _buildMenuButtonForQuoteLine(context, quoteLineEntity),
+                  showSavingsAmount: context
+                          .read<QuoteDetailsBloc>()
+                          .productSettings
+                          ?.showSavingsAmount ??
+                      true,
+                  showSavingsPercent: context
+                          .read<QuoteDetailsBloc>()
+                          .productSettings
+                          ?.showSavingsPercent ??
+                      true,
                   onCartLineRemovedCallback: (cartLineEntity) {},
                   onCartQuantityChangedCallback: (quantity) {
                     quoteLineEntity =
@@ -531,7 +541,7 @@ class QuoteDetailsPage extends StatelessWidget {
             children: [
               Text(
                 LocalizationConstants.message.localized(),
-                style: OptiTextStyles.bodyFade,
+                style: context.text.bodyFade,
               ),
               const SizedBox(height: 10.0),
               if (quoteDto != null &&

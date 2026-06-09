@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/currency_bloc/currency_bloc.dart';
@@ -12,6 +11,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_scre
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/currency/currency_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class CurrencyScreen extends BaseStatelessWidget {
   const CurrencyScreen({super.key});
@@ -44,7 +44,7 @@ class CurrencyPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(LocalizationConstants.currencies.localized(),
-            style: OptiTextStyles.titleLarge),
+            style: context.text.titleLarge),
       ),
       body: BlocListener<CurrencyBloc, CurrencyState>(
         listenWhen: (previous, current) => current is CurrencyChanged,

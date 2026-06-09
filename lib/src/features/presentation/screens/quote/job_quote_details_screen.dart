@@ -1,9 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/job_quote_details_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
@@ -18,12 +16,12 @@ import 'package:commerce_flutter_sdk/src/features/presentation/widget/order_deta
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/job_quote_details/job_quote_details_cubit.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 class JobQuoteDetailsScreen extends StatelessWidget {
   final String? jobQuoteId;
@@ -58,9 +56,9 @@ class JobQuoteDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: context.colors.backgroundGray,
       appBar: AppBar(
-        backgroundColor: OptiAppColors.backgroundWhite,
+        backgroundColor: context.colors.backgroundWhite,
         centerTitle: false,
         title: context.watch<JobQuoteDetailsCubit>().jobQuote != null
             ? Text(
@@ -187,11 +185,11 @@ class _JobQuoteInfoSection extends StatelessWidget {
               .copyWith(bottom: 8),
           child: Text(
             LocalizationConstants.quoteInformation.localized().toUpperCase(),
-            style: OptiTextStyles.titleLarge,
+            style: context.text.titleLarge,
           ),
         ),
         Container(
-          color: OptiAppColors.backgroundWhite,
+          color: context.colors.backgroundWhite,
           padding: const EdgeInsets.symmetric(
             horizontal: 24,
             vertical: 20,
@@ -253,14 +251,14 @@ class _TextEntries extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: OptiTextStyles.subtitle,
+            style: context.text.subtitle,
           ),
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             value,
-            style: OptiTextStyles.body,
+            style: context.text.body,
           ),
         ),
       ],
@@ -292,12 +290,12 @@ class _ProductSection extends StatelessWidget {
             children: [
               Text(
                 LocalizationConstants.products.localized(),
-                style: OptiTextStyles.titleLarge,
+                style: context.text.titleLarge,
               ),
               const SizedBox(width: 8),
               Text(
                 '(${jobQuoteLines.length} item)',
-                style: OptiTextStyles.body,
+                style: context.text.body,
               ),
             ],
           ),

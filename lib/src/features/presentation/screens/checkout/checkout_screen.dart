@@ -5,6 +5,8 @@ import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart_cms/cart_cms_bloc.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/cart_cms/cart_cms_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
@@ -49,9 +51,17 @@ class CheckoutScreen extends BaseStatelessWidget {
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
+        BlocProvider<CartCmsPageBloc>(
+          create: (context) =>
+              sl<CartCmsPageBloc>()..add(const CartCmsPageLoadEvent()),
+        ),
         BlocProvider<PaymentDetailsBloc>(
-          create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(cartId: cart.id ?? '')),
+          create: (_) => sl<PaymentDetailsBloc>()
+            ..add(
+              LoadPaymentDetailsEvent(
+                cartId: cart.id ?? '',
+              ),
+            ),
         ),
       ],
       child: CheckoutPage(cart: cart),
@@ -164,7 +174,21 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                           context.read<CheckoutBloc>().cart?.requiresApproval ??
                               false,
                       reviewOrderEntity: state.reviewOrderEntity,
-                      message: state.message));
+                      message: state.message,
+                      showSavingsAmount: context
+                              .read<CheckoutBloc>()
+                              .settings
+                              ?.settingsCollection
+                              ?.productSettings
+                              ?.showSavingsAmount ??
+                          true,
+                      showSavingsPercent: context
+                              .read<CheckoutBloc>()
+                              .settings
+                              ?.settingsCollection
+                              ?.productSettings
+                              ?.showSavingsPercent ??
+                          true));
             } else if (state is CheckoutPlaceOrderFailed) {
               context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
               showAlert(context,
@@ -194,7 +218,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                buildSummary(state.cart, state.promotions),
+                                buildSummary(
+                                    context, state.cart, state.promotions),
                                 BlocBuilder<ExpansionPanelCubit,
                                     ExpansionPanelState>(
                                   builder: (_, panelState) {
@@ -391,8 +416,31 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
     final isPickUpMethod =
         state.shippingMethod.equalsIgnoreCase(ShippingOption.PickUp.name);
 
-    if ((isShipMethod && carrier != null && service != null) ||
-        isPickUpMethod) {
+    if (isPickUpMethod) {
+      context.read<ExpansionPanelCubit>().onContinueClick();
+      return;
+    }
+
+    if (!isShipMethod) {
+      return;
+    }
+
+    final hasCarriers = state.cart.carriers?.isNotEmpty ?? false;
+    final allowEmptyShipping = checkoutBloc.settings?.settingsCollection
+            ?.accountSettings?.allowEmptyShipping ??
+        false;
+
+    if (!hasCarriers) {
+      if (allowEmptyShipping) {
+        context.read<ExpansionPanelCubit>().onContinueClick();
+      } else {
+        CustomSnackBar.showSnackBarMessage(
+            context, LocalizationConstants.noCarriersFound.localized());
+      }
+      return;
+    }
+
+    if (carrier != null && service != null) {
       context.read<ExpansionPanelCubit>().onContinueClick();
     }
   }

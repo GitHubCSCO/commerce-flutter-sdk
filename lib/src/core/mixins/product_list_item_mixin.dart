@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
@@ -9,6 +8,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/style_trait
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
 
 mixin ProductListItemMixIn {
   Widget getSwatchesWidget() {
@@ -45,7 +45,7 @@ mixin ProductListItemMixIn {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         child: Text(LocalizationConstants.viewMore.localized(),
-                            style: OptiTextStyles.link),
+                            style: context.text.link),
                       )
                   ]));
         }
@@ -74,25 +74,25 @@ mixin ProductListItemMixIn {
     return showWarehouseInventoryButton;
   }
 
-  Widget getInfoWidget(ProductEntity product) {
+  Widget getInfoWidget(BuildContext context, ProductEntity product) {
     List<Widget> list = [];
 
     final myPart = _buildRow(
         LocalizationConstants.myPartNumberSign.localized(),
-        OptiTextStyles.bodySmall,
+        context.text.bodySmall,
         product.customerName ?? '',
-        OptiTextStyles.bodyExtraSmall);
+        context.text.bodyExtraSmall);
     final mfg = _buildRow(
         LocalizationConstants.mFGNumberSign.localized(),
-        OptiTextStyles.bodySmall,
+        context.text.bodySmall,
         product.manufacturerItem ?? '',
-        OptiTextStyles.bodyExtraSmall);
+        context.text.bodyExtraSmall);
 
     final pack = _buildRow(
         LocalizationConstants.packSign.localized(),
-        OptiTextStyles.bodySmall,
+        context.text.bodySmall,
         product.packDescription ?? '',
-        OptiTextStyles.bodyExtraSmall);
+        context.text.bodyExtraSmall);
 
     if (myPart != null) {
       list.add(myPart);

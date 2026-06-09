@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/tokenex_entity.dart';
@@ -70,13 +69,6 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
           expirationYears: paymentOptions?.expirationYears,
           websiteSettings: websiteSetting));
     } else {
-      var tokenExStyle = TokenExStyleDto(
-        baseColor: OptiAppColors.lightGrayTextColor.toString(),
-        focusColor: OptiAppColors.primaryColor.toString(),
-        errorColor: OptiAppColors.invalidColor.toString(),
-        textColor: OptiAppColors.darkGrayTextColor.toString(),
-      );
-
       var tokenExResponse =
           await _addCreditCardUsecase.getTokenExConfiguration("");
 
@@ -87,7 +79,6 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
       var tokeExUrl = _addCreditCardUsecase.tokenExIFrameUrl;
       var tokenExEntity = TokenExEntity(
           tokenExConfiguration: tokenExConfiguration,
-          tokenexStyle: tokenExStyle,
           tokenexMode: TokenExViewMode.full,
           cardType: "",
           tokenExUrl: tokeExUrl);
