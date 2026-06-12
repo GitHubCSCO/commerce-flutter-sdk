@@ -218,11 +218,8 @@ class ProductDetailsBloc
         product.configurationDto!.sections!.isNotEmpty &&
         !(product.isFixedConfiguration ?? false)) {
       for (var s in product.configurationDto!.sections!) {
-        if (selectedConfigurations.containsKey(s.sectionName)) {
-          selectedConfigurations[s.sectionName!] = null;
-        } else {
-          selectedConfigurations[s.sectionName!] = null;
-        }
+        selectedConfigurations[s.sectionName!] =
+            s.options?.firstWhereOrNull((o) => o.selected == true);
       }
     }
 

@@ -42,8 +42,12 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
     isAddToCartButtonAvailable &= addToCartEnabled;
     var effectiveProduct = selectedVariantChild ?? productEntity;
     isAddToCartButtonAvailable &= !(effectiveProduct.cantBuy ?? false);
-    isAddToCartButtonAvailable &= (effectiveProduct.allowedAddToCart ?? true) &&
-        !(effectiveProduct.canConfigure ?? false);
+
+    var isDirectlyAddable = effectiveProduct.allowedAddToCart ?? true;
+    var isAddableAfterConfiguration =
+        isProductConfigurable && isProductConfigurationCompleted;
+    isAddToCartButtonAvailable &=
+        isDirectlyAddable || isAddableAfterConfiguration;
 
     return isAddToCartButtonAvailable;
   }
