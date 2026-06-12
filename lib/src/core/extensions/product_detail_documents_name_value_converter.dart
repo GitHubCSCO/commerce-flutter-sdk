@@ -5,12 +5,17 @@ extension ProductDetailDocumentsNameValueConverter on DocumentEntity? {
     if (this == null) {
       return '';
     }
-    if (this!.name != null && this!.documentType != null) {
-      return "${this!.name!} (${this!.documentType!})";
-    } else if (this!.name != null) {
-      return this!.name!;
-    } else if (this!.documentType != null) {
-      return this!.documentType!;
+    final name = this!.name?.trim();
+    final documentType = this!.documentType?.trim();
+    final hasName = name != null && name.isNotEmpty;
+    final hasDocumentType = documentType != null && documentType.isNotEmpty;
+
+    if (hasName && hasDocumentType) {
+      return "$name ($documentType)";
+    } else if (hasName) {
+      return name;
+    } else if (hasDocumentType) {
+      return documentType;
     }
     return '';
   }
