@@ -11,7 +11,8 @@ InventoryWarehouse _$InventoryWarehouseFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String?,
       description: json['description'] as String?,
       name: json['name'] as String?,
-      qtyAvailable: json['qtyAvailable'] as num?,
+      qtyAvailable:
+          InventoryWarehouse._readQtyAvailable(json, 'qtyAvailable') as num?,
     )
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
