@@ -134,7 +134,8 @@ class ProductDetailsUseCase extends BaseUseCase {
 
   Future<List<ProductEntity>> getVariantChildren(String productId) async {
     var parameters = VariantChildrenQueryParameters(
-      expand: "images,attributes,detail",
+      expand:
+          "detail,content,images,specifications,documents,attributes,badges",
     );
 
     var result = await commerceAPIServiceProvider
