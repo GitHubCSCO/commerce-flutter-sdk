@@ -76,6 +76,11 @@ class LoginUsecase extends BiometricUsecase {
           }
         }
       case Failure(errorResponse: final errorResponse):
+        final exception = errorResponse.exception;
+        if (exception is ServerException && exception.statusCode == 422) {
+          return LoginResponse(LoginStatus.loginChangePassword);
+        }
+
         return LoginResponse(LoginStatus.loginErrorUnsuccessful,
             message: errorResponse.extractErrorMessage());
     }

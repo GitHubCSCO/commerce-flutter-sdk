@@ -31,6 +31,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/in_app_browser
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/language_usecase/language_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/location_note_usecase/location_note_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/change_password_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/login_usecase.dart';
@@ -152,6 +153,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/domain_redi
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_detail/invoice_detail_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_history_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_history_filter/invoice_history_filter_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/change_password/change_password_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/location_note/location_note_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/login_cubit.dart';
@@ -284,6 +286,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => LoginUsecase())
     ..registerFactory(() => ForgotPasswordCubit(forgotPasswordUseCase: sl()))
     ..registerFactory(() => ForgotPasswordUseCase())
+    ..registerFactory(() => ChangePasswordCubit(changePasswordUseCase: sl()))
+    ..registerFactory(() => ChangePasswordUseCase())
 
     //logout
     ..registerFactory(() => LogoutCubit(logoutUsecase: sl()))
