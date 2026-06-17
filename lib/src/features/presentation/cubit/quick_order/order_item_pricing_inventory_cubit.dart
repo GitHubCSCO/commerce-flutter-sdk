@@ -49,9 +49,7 @@ class OrderItemPricingInventoryCubit
             StorefrontAccessConstants.signInRequiredToAddToCartOrSeePrices ||
         isUserSignedIn;
 
-    if (productSettings.realTimePricing! &&
-        productSettings.canSeePrices! &&
-        isStorefrontAccessGranted) {
+    if ((productSettings.canSeePrices ?? false) && isStorefrontAccessGranted) {
       List<ProductPriceQueryParameter> priceProducts = [
         ProductPriceQueryParameter(
           productId: productId,
@@ -69,35 +67,37 @@ class OrderItemPricingInventoryCubit
         return;
       }
       var pricing = getProductRealTimePrices?.realTimePricingResults
-          ?.firstWhere((result) => result.productId == productId);
-      quickOrderItemEntity.updatePricing(
-        ProductPriceEntityMapper.toEntity(pricing),
-        productSettings.canSeePrices!,
-        showSavingsAmount: productSettings.showSavingsAmount ?? true,
-        showSavingsPercent: productSettings.showSavingsPercent ?? true,
-      );
-    } else if ((productSettings.canSeePrices ?? false) &&
-        isStorefrontAccessGranted) {
-      // V2 has no non-realtime pricing endpoint. Fall back to the static
-      // unitListPrice from the product root so quick order rows aren't blank
-      // when realTimePricing is disabled.
-      final qty = quickOrderItemEntity.quantityOrdered;
-      final listPrice = product.unitListPrice;
-      final fallbackPricing = ProductPriceEntity(
-        productId: productId,
-        isOnSale: false,
-        unitListPrice: listPrice,
-        unitListPriceDisplay: product.unitListPriceDisplay,
-        unitNetPrice: listPrice,
-        unitNetPriceDisplay: product.unitListPriceDisplay,
-        extendedUnitNetPrice: listPrice != null ? listPrice * qty : null,
-      );
-      quickOrderItemEntity.updatePricing(
-        fallbackPricing,
-        productSettings.canSeePrices!,
-        showSavingsAmount: productSettings.showSavingsAmount ?? true,
-        showSavingsPercent: productSettings.showSavingsPercent ?? true,
-      );
+          ?.where((result) => result.productId == productId)
+          .firstOrNull;
+
+      if (pricing != null) {
+        quickOrderItemEntity.updatePricing(
+          ProductPriceEntityMapper.toEntity(pricing),
+          productSettings.canSeePrices!,
+          showSavingsAmount: productSettings.showSavingsAmount ?? true,
+          showSavingsPercent: productSettings.showSavingsPercent ?? true,
+        );
+      } else {
+        // Last-resort fallback to the static unitListPrice from the product
+        // root if realtime pricing returned nothing.
+        final qty = quickOrderItemEntity.quantityOrdered;
+        final listPrice = product.unitListPrice;
+        final fallbackPricing = ProductPriceEntity(
+          productId: productId,
+          isOnSale: false,
+          unitListPrice: listPrice,
+          unitListPriceDisplay: product.unitListPriceDisplay,
+          unitNetPrice: listPrice,
+          unitNetPriceDisplay: product.unitListPriceDisplay,
+          extendedUnitNetPrice: listPrice != null ? listPrice * qty : null,
+        );
+        quickOrderItemEntity.updatePricing(
+          fallbackPricing,
+          productSettings.canSeePrices!,
+          showSavingsAmount: productSettings.showSavingsAmount ?? true,
+          showSavingsPercent: productSettings.showSavingsPercent ?? true,
+        );
+      }
     }
     emit(OrderItemSubTotalChange());
 
@@ -123,14 +123,16 @@ class OrderItemPricingInventoryCubit
           return;
         }
         var inventory = result?.realTimeInventoryResults
-            ?.firstWhere((result) => result.productId == product.id);
+            ?.where((result) => result.productId == product.id)
+            .firstOrNull;
 
         if (inventory != null) {
           var availability = inventory.inventoryAvailabilityDtos
-              ?.firstWhere((dto) =>
-                  dto.unitOfMeasure?.toLowerCase() ==
-                  product.unitOfMeasure?.toLowerCase())
-              .availability;
+              ?.where((dto) =>
+                  (dto.unitOfMeasure?.toLowerCase() ?? '') ==
+                  (product.unitOfMeasure?.toLowerCase() ?? ''))
+              .firstOrNull
+              ?.availability;
           quickOrderItemEntity.availability = availability;
         }
       }
