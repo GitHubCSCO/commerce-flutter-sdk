@@ -117,18 +117,37 @@ class ProductDetailsUseCase extends BaseUseCase {
           "detail,content,images,specifications,documents,attributes,variantTraits,badges",
     );
 
-    var resultResponse = await commerceAPIServiceProvider
-        .getProductService()
-        .getProduct(productId, parameters: parameters);
+    const maxReplacementDepth = 10;
+    var currentProductId = productId;
+    var depth = 0;
 
-    switch (resultResponse) {
-      case Success(value: final data):
-        final productEntity =
-            ProductEntityMapper.toEntity(data?.product ?? Product());
+    while (true) {
+      var resultResponse = await commerceAPIServiceProvider
+          .getProductService()
+          .getProduct(currentProductId, parameters: parameters);
 
-        return Success(productEntity);
-      case Failure(errorResponse: final errorResponse):
-        return Failure(errorResponse);
+      switch (resultResponse) {
+        case Success(value: final data):
+          final productEntity =
+              ProductEntityMapper.toEntity(data?.product ?? Product());
+
+          final replacementProductId = productEntity.replacementProductId;
+          final shouldRedirectToReplacement =
+              (productEntity.isDiscontinued ?? false) &&
+                  !replacementProductId.isNullOrEmpty &&
+                  replacementProductId != currentProductId &&
+                  depth < maxReplacementDepth;
+
+          if (shouldRedirectToReplacement) {
+            currentProductId = replacementProductId!;
+            depth++;
+            continue;
+          }
+
+          return Success(productEntity);
+        case Failure(errorResponse: final errorResponse):
+          return Failure(errorResponse);
+      }
     }
   }
 
