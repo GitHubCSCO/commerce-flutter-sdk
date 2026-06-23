@@ -8,31 +8,24 @@ class SearchHistoryItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 36,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(
-            height: double.infinity,
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: Icon(
-                Icons.search,
-                color: Colors.black54,
-                size: 20,
-              ),
-            ),
+          const Icon(
+            Icons.search,
+            color: Colors.black54,
+            size: 20,
           ),
           const SizedBox(width: 8),
-          SizedBox(
+          Expanded(
             child: Text(
               history,
               style: context.text.bodySmall,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
