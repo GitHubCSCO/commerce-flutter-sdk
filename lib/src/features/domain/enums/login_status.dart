@@ -6,4 +6,5 @@ enum LoginStatus {
   loginErrorUnsuccessful, // unsuccessful, online
   loginErrorUnknown,
   loginFailed, // unsuccessful, unknown
+  loginChangePassword, // server requires user to change password (422)
 }

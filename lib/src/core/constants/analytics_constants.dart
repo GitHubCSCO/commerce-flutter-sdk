@@ -53,6 +53,7 @@ class AnalyticsConstants {
   static const String screenNameVmiLocationNote = "VMI Location Note";
   static const String screenNameVmiLocationFinder = "VMI Location Finder";
   static const String screenNameOrderApprovalDetails = "Order Approval Details";
+  static const String screenNameChangePassword = "Change Password";
 
   // Events
   static const String eventViewScreen = "view_screen";
@@ -122,6 +123,8 @@ class AnalyticsConstants {
   static const String eventDisableBiometric = "disable_biometric";
   static const String eventViewForgotPassword = "view_forgot_password";
   static const String eventForgotPassword = "forgot_password";
+  static const String eventViewChangePassword = "view_change_password";
+  static const String eventChangePassword = "change_password";
   static const String eventSignIn = "sign_in";
   static const String eventViewBiometricSetup = "view_biometric_setup";
   static const String eventPropertyLoginType = "login_type";

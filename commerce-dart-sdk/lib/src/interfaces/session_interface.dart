@@ -28,5 +28,11 @@ abstract class ISessionService {
 
   Future<Result<Session, ErrorResponse>> forgotPassword(String userName);
 
+  Future<Result<Session, ErrorResponse>> changePassword(
+    String userName,
+    String oldPassword,
+    String newPassword,
+  );
+
   void deleteCachedCurrentSession();
 }

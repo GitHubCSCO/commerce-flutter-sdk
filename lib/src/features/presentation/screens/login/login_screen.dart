@@ -9,6 +9,7 @@ import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/biometric_info_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/change_password_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/device_authentication_option.dart';
@@ -19,6 +20,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bl
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/login_cubit.dart';
@@ -97,6 +99,7 @@ class _LoginPageState extends State<LoginPage> {
   var _showPassword = false;
   var tapCount = 0;
   var _isSignInEnabled = false;
+  bool _isChangePasswordLogin = false;
 
   void _updateSignInButtonOnTextChange() {
     setState(() {
@@ -268,6 +271,15 @@ class _LoginPageState extends State<LoginPage> {
                                       false;
                                 }
 
+                                if (_isChangePasswordLogin) {
+                                  _isChangePasswordLogin = false;
+                                  CustomSnackBar.showSnackBarMessage(
+                                    context,
+                                    LocalizationConstants.passwordUpdated
+                                        .localized(),
+                                  );
+                                }
+
                                 context
                                     .read<AuthCubit>()
                                     .loadAuthenticationState()
@@ -347,6 +359,8 @@ class _LoginPageState extends State<LoginPage> {
                                       false;
                                 }
 
+                                _isChangePasswordLogin = false;
+
                                 displayDialogWidget(
                                   context: context,
                                   title: state.title,
@@ -360,6 +374,33 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ],
                                 );
+                              } else if (state is LoginChangePasswordState) {
+                                final newPassword =
+                                    await context.pushNamed<String>(
+                                  AppRoute.changePassword.name,
+                                  extra: ChangePasswordEntity(
+                                    userName: _usernameController.text,
+                                    oldPassword: _passwordController.text,
+                                  ),
+                                );
+
+                                if (!context.mounted) {
+                                  return;
+                                }
+                                if (newPassword == null ||
+                                    newPassword.isEmpty) {
+                                  return;
+                                }
+
+                                _passwordController.text = newPassword;
+                                _isChangePasswordLogin = true;
+                                context
+                                    .read<LoginCubit>()
+                                    .onLoginSubmit(
+                                      _usernameController.text,
+                                      newPassword,
+                                    )
+                                    .ignore();
                               }
                             },
                             builder: (context, state) {

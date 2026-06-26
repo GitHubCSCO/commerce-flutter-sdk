@@ -114,7 +114,21 @@ class AuthenticationService extends ServiceBase
         }
       case Failure(errorResponse: final errorResponse):
         {
-          return Failure(errorResponse);
+          clientService.setBasicAuthorizationHeader();
+          final session = Session(userName: userName, password: password);
+          final sessionCreatedResult =
+              await sessionService.postSession(session);
+
+          switch (sessionCreatedResult) {
+            case Success():
+              return Failure(errorResponse);
+
+            case Failure(errorResponse: final sessionError):
+              final statusCode = (sessionError.exception is ServerException)
+                  ? (sessionError.exception as ServerException).statusCode
+                  : null;
+              return Failure(statusCode == 422 ? sessionError : errorResponse);
+          }
         }
     }
   }

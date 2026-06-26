@@ -40,3 +40,7 @@ class LoginFailureState extends LoginState {
         buttonText ?? '',
       ];
 }
+
+class LoginChangePasswordState extends LoginState {
+  const LoginChangePasswordState();
+}
