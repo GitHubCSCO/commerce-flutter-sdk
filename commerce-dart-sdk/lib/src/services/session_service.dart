@@ -218,6 +218,27 @@ class SessionService extends ServiceBase implements ISessionService {
     return result;
   }
 
+  @override
+  Future<Result<Session, ErrorResponse>> changePassword(
+    String userName,
+    String oldPassword,
+    String newPassword,
+  ) async {
+    final session = Session(
+      userName: userName,
+      password: oldPassword,
+      newPassword: newPassword,
+    );
+    final jsonData = serialize(session, (Session session) => session.toJson());
+
+    final result = await patchAsyncNoCache(
+      CommerceAPIConstants.currentSessionUrl,
+      jsonData,
+      Session.fromJson,
+    );
+    return result;
+  }
+
   //We should utlize getCachedCurrentSession instead of calling getCurrentSession in every subsequent call
   //To reduce number of api call
   @override

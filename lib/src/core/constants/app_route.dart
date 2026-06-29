@@ -35,6 +35,7 @@ class RouteNames {
   static const String wishListCreate = 'wishListCreate';
   static const String addToWishList = 'addToWishList';
   static const String forgotPassword = 'forgotPassword';
+  static const String changePassword = 'changePassword';
   static const String orderDetails = 'orderDetails';
   static const String orderReturn = 'orderReturn';
   static const String vmiOrderDetails = 'vmiOrderDetails';
@@ -120,6 +121,7 @@ class RoutePaths {
   static const String wishListCreate = '/${RouteNames.wishListCreate}';
   static const String addToWishList = '/${RouteNames.addToWishList}';
   static const String forgotPassword = '/${RouteNames.forgotPassword}';
+  static const String changePassword = '/${RouteNames.changePassword}';
   static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
   static const String orderReturn = '/${RouteNames.orderReturn}';
 
@@ -222,10 +224,11 @@ enum AppRoute {
       name: RouteNames.addToWishList, fullPath: RoutePaths.addToWishList),
   forgotPassword(
       name: RouteNames.forgotPassword, fullPath: RoutePaths.forgotPassword),
+  changePassword(
+      name: RouteNames.changePassword, fullPath: RoutePaths.changePassword),
   orderDetails(
       name: RouteNames.orderDetails, fullPath: RoutePaths.orderDetails),
   orderReturn(name: RouteNames.orderReturn, fullPath: RoutePaths.orderReturn),
-
   vmiOrderDetails(
       name: RouteNames.vmiOrderDetails, fullPath: RoutePaths.orderDetails),
   locationSearch(
@@ -293,7 +296,6 @@ enum AppRoute {
   quoteAll(name: RouteNames.quoteAll, fullPath: RoutePaths.quoteAll),
   quotePricing(
       name: RouteNames.quotePricing, fullPath: RoutePaths.quotePricing),
-
   userSelection(
     name: RouteNames.userSelection,
     fullPath: RoutePaths.userSelection,

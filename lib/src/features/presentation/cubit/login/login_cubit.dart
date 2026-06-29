@@ -17,6 +17,7 @@ class LoginCubit extends Cubit<LoginState> {
   bool showSpinner = false;
 
   final LoginUsecase loginUsecase;
+
   LoginCubit({required this.loginUsecase}) : super(LoginInitialState());
 
   String informationText = '';
@@ -112,6 +113,8 @@ class LoginCubit extends Cubit<LoginState> {
             buttonText: LocalizationConstants.oK.localized(),
           ),
         );
+      case LoginStatus.loginChangePassword:
+        emit(const LoginChangePasswordState());
     }
   }
 
