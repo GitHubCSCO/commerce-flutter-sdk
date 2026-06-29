@@ -50,6 +50,8 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/vmi_checkout/vmi_checkout_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/location_seach/location_serach_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/login/forgot_password_screen.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/change_password_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/login/change_password_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/product/product_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/order_approval/order_approval_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
@@ -472,6 +474,16 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  final changePassword = createNode(
+    name: AppRoute.changePassword.name,
+    path: AppRoute.changePassword.suffix,
+    builder: (context, state) {
+      final entity = state.extra as ChangePasswordEntity?;
+      return ChangePasswordScreen(entity: entity);
+    },
+    parent: null,
+  );
+
   // path: /account/orderHistory/:orderNumber
   final orderDetails = createNode(
     name: AppRoute.orderDetails.name,
@@ -849,6 +861,7 @@ List<NavigationNode> _getNavigationRoot() {
     wishListCreate,
     addToWishList,
     forgotPassword,
+    changePassword,
     vmiLocationNote,
     locationSearch,
     billToShipToChange,

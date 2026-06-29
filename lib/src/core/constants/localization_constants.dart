@@ -166,6 +166,20 @@ enum LocalizationConstants {
   descriptionOptional(keyword: "Description (Optional)"),
   discardChanges(keyword: "Discard changes?"),
   somethingWentWrong(keyword: "Something went wrong."),
+  passwordUpdated(keyword: "Password Updated"),
+  changePassword(keyword: "Change Password"),
+  changePasswordRequiredMessage(
+      keyword:
+          "A password change is required for your account before you may continue."),
+  existingPassword(keyword: "Existing Password"),
+  newPassword(keyword: "New Password"),
+  confirmNewPassword(keyword: "Confirm New Password"),
+  passwordRequirements(keyword: "Password Requirements"),
+  passwordMinimumLengthRequirement(
+      keyword: "Password must be at least 7 characters long"),
+  passwordDigitRequirement(
+      keyword: "Password must include at least one number"),
+  saveNewPassword(keyword: "Save New Password"),
   updateFailed(keyword: "Update Failed"),
   copyFailed(keyword: "Copy Failed"),
   renameFailed(keyword: "Rename Failed"),
