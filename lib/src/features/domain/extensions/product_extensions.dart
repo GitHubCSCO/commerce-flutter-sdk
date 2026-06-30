@@ -28,7 +28,10 @@ extension ProductExtensions on ProductEntity? {
       return "";
     }
     var subtotalValueText = "";
-    if (this!.pricing != null && this!.pricing!.isOnSale!) {
+    final displayWithVat = shouldDisplayPriceWithVat(null, null);
+    if (!displayWithVat &&
+        this!.pricing != null &&
+        (this!.pricing!.isOnSale ?? false)) {
       subtotalValueText = this!.pricing!.extendedUnitNetPriceDisplay ?? "";
     } else {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
@@ -44,18 +47,28 @@ extension ProductExtensions on ProductEntity? {
     return subtotalValueText;
   }
 
-  String updatePriceValueText(bool? productPricingEnabled) {
+  String updatePriceValueText(
+    bool? productPricingEnabled, {
+    bool? enableVat,
+    String? vatPriceDisplay,
+  }) {
     if (this != null && (this!.quoteRequired ?? false)) {
       return LocalizationConstants.requiresQuote.localized();
     }
 
-    final priceDisplay =
-        (this?.pricing != null && (this!.pricing!.isOnSale ?? false))
-            ? this!.pricing!.unitNetPriceDisplay
-            : this
-                    ?.pricing
-                    ?.getPriceValue(allowZeroPricing: this?.allowZeroPricing) ??
-                '';
+    final displayWithVat =
+        shouldDisplayPriceWithVat(enableVat, vatPriceDisplay);
+
+    final priceDisplay = (!displayWithVat &&
+            this?.pricing != null &&
+            (this!.pricing!.isOnSale ?? false))
+        ? this!.pricing!.unitNetPriceDisplay
+        : this?.pricing?.getPriceValue(
+                  allowZeroPricing: this?.allowZeroPricing,
+                  enableVat: enableVat,
+                  vatPriceDisplay: vatPriceDisplay,
+                ) ??
+            '';
 
     return (productPricingEnabled ?? false)
         ? priceDisplay!

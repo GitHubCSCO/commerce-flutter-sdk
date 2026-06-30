@@ -27,6 +27,18 @@ class ProductPriceEntityMapper {
         vatRate: model?.vatRate,
         vatAmount: model?.vatAmount,
         vatAmountDisplay: model?.vatAmountDisplay,
+        unitListPriceWithVat: model?.unitListPriceWithVat,
+        unitListPriceWithVatDisplay: model?.unitListPriceWithVatDisplay,
+        extendedUnitListPriceWithVat: model?.extendedUnitListPriceWithVat,
+        extendedUnitListPriceWithVatDisplay:
+            model?.extendedUnitListPriceWithVatDisplay,
+        unitRegularPriceWithVat: model?.unitRegularPriceWithVat,
+        unitRegularPriceWithVatDisplay: model?.unitRegularPriceWithVatDisplay,
+        extendedUnitRegularPriceWithVat: model?.extendedUnitRegularPriceWithVat,
+        extendedUnitRegularPriceWithVatDisplay:
+            model?.extendedUnitRegularPriceWithVatDisplay,
+        vatMinusExtendedUnitRegularPrice:
+            model?.vatMinusExtendedUnitRegularPrice,
         unitListBreakPrices: model?.unitListBreakPrices
             ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
@@ -73,6 +85,18 @@ class ProductPriceEntityMapper {
         vatRate: entity.vatRate,
         vatAmount: entity.vatAmount,
         vatAmountDisplay: entity.vatAmountDisplay,
+        unitListPriceWithVat: entity.unitListPriceWithVat,
+        unitListPriceWithVatDisplay: entity.unitListPriceWithVatDisplay,
+        extendedUnitListPriceWithVat: entity.extendedUnitListPriceWithVat,
+        extendedUnitListPriceWithVatDisplay:
+            entity.extendedUnitListPriceWithVatDisplay,
+        unitRegularPriceWithVat: entity.unitRegularPriceWithVat,
+        unitRegularPriceWithVatDisplay: entity.unitRegularPriceWithVatDisplay,
+        extendedUnitRegularPriceWithVat: entity.extendedUnitRegularPriceWithVat,
+        extendedUnitRegularPriceWithVatDisplay:
+            entity.extendedUnitRegularPriceWithVatDisplay,
+        vatMinusExtendedUnitRegularPrice:
+            entity.vatMinusExtendedUnitRegularPrice,
         unitListBreakPrices: entity.unitListBreakPrices
             ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),

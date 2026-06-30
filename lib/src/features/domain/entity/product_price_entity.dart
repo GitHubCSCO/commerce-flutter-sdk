@@ -26,6 +26,15 @@ class ProductPriceEntity extends Equatable {
   final num? vatRate;
   final num? vatAmount;
   final String? vatAmountDisplay;
+  final num? unitListPriceWithVat;
+  final String? unitListPriceWithVatDisplay;
+  final num? extendedUnitListPriceWithVat;
+  final String? extendedUnitListPriceWithVatDisplay;
+  final num? unitRegularPriceWithVat;
+  final String? unitRegularPriceWithVatDisplay;
+  final num? extendedUnitRegularPriceWithVat;
+  final String? extendedUnitRegularPriceWithVatDisplay;
+  final num? vatMinusExtendedUnitRegularPrice;
   final List<BreakPriceDTOEntity>? unitListBreakPrices;
   final List<BreakPriceDTOEntity>? unitRegularBreakPrices;
   final num? regularPrice;
@@ -62,6 +71,15 @@ class ProductPriceEntity extends Equatable {
     this.vatRate,
     this.vatAmount,
     this.vatAmountDisplay,
+    this.unitListPriceWithVat,
+    this.unitListPriceWithVatDisplay,
+    this.extendedUnitListPriceWithVat,
+    this.extendedUnitListPriceWithVatDisplay,
+    this.unitRegularPriceWithVat,
+    this.unitRegularPriceWithVatDisplay,
+    this.extendedUnitRegularPriceWithVat,
+    this.extendedUnitRegularPriceWithVatDisplay,
+    this.vatMinusExtendedUnitRegularPrice,
     this.unitListBreakPrices,
     this.unitRegularBreakPrices,
     this.regularPrice,
@@ -100,6 +118,15 @@ class ProductPriceEntity extends Equatable {
     num? vatRate,
     num? vatAmount,
     String? vatAmountDisplay,
+    num? unitListPriceWithVat,
+    String? unitListPriceWithVatDisplay,
+    num? extendedUnitListPriceWithVat,
+    String? extendedUnitListPriceWithVatDisplay,
+    num? unitRegularPriceWithVat,
+    String? unitRegularPriceWithVatDisplay,
+    num? extendedUnitRegularPriceWithVat,
+    String? extendedUnitRegularPriceWithVatDisplay,
+    num? vatMinusExtendedUnitRegularPrice,
     List<BreakPriceDTOEntity>? unitListBreakPrices,
     List<BreakPriceDTOEntity>? unitRegularBreakPrices,
     num? regularPrice,
@@ -144,6 +171,25 @@ class ProductPriceEntity extends Equatable {
       vatRate: vatRate ?? this.vatRate,
       vatAmount: vatAmount ?? this.vatAmount,
       vatAmountDisplay: vatAmountDisplay ?? this.vatAmountDisplay,
+      unitListPriceWithVat: unitListPriceWithVat ?? this.unitListPriceWithVat,
+      unitListPriceWithVatDisplay:
+          unitListPriceWithVatDisplay ?? this.unitListPriceWithVatDisplay,
+      extendedUnitListPriceWithVat:
+          extendedUnitListPriceWithVat ?? this.extendedUnitListPriceWithVat,
+      extendedUnitListPriceWithVatDisplay:
+          extendedUnitListPriceWithVatDisplay ??
+              this.extendedUnitListPriceWithVatDisplay,
+      unitRegularPriceWithVat:
+          unitRegularPriceWithVat ?? this.unitRegularPriceWithVat,
+      unitRegularPriceWithVatDisplay:
+          unitRegularPriceWithVatDisplay ?? this.unitRegularPriceWithVatDisplay,
+      extendedUnitRegularPriceWithVat: extendedUnitRegularPriceWithVat ??
+          this.extendedUnitRegularPriceWithVat,
+      extendedUnitRegularPriceWithVatDisplay:
+          extendedUnitRegularPriceWithVatDisplay ??
+              this.extendedUnitRegularPriceWithVatDisplay,
+      vatMinusExtendedUnitRegularPrice: vatMinusExtendedUnitRegularPrice ??
+          this.vatMinusExtendedUnitRegularPrice,
       unitListBreakPrices: unitListBreakPrices ?? this.unitListBreakPrices,
       unitRegularBreakPrices:
           unitRegularBreakPrices ?? this.unitRegularBreakPrices,
@@ -187,6 +233,15 @@ class ProductPriceEntity extends Equatable {
         vatRate,
         vatAmount,
         vatAmountDisplay,
+        unitListPriceWithVat,
+        unitListPriceWithVatDisplay,
+        extendedUnitListPriceWithVat,
+        extendedUnitListPriceWithVatDisplay,
+        unitRegularPriceWithVat,
+        unitRegularPriceWithVatDisplay,
+        extendedUnitRegularPriceWithVat,
+        extendedUnitRegularPriceWithVatDisplay,
+        vatMinusExtendedUnitRegularPrice,
         unitListBreakPrices,
         unitRegularBreakPrices,
         regularPrice,

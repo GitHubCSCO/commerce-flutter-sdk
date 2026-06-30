@@ -196,11 +196,23 @@ class ProductDetailsPricingWidget extends StatelessWidget {
       builder: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
           var productDetailsPriceEntity = state.productDetailsPriceEntity;
+          var productSettings = context
+              .read<ProductDetailsBloc>()
+              .productDetailDataEntity
+              .productSettings;
+          final vatLabel =
+              (productDetailsPriceEntity.productPricingEnabled ?? false)
+                  ? productDetailsPriceEntity.product?.pricing?.getVatLabel(
+                      enableVat: productSettings?.enableVat,
+                      vatPriceDisplay: productSettings?.vatPriceDisplay)
+                  : null;
           return Row(
             children: [
               Text(
                   productDetailsPriceEntity.product.updatePriceValueText(
-                      productDetailsPriceEntity.productPricingEnabled),
+                      productDetailsPriceEntity.productPricingEnabled,
+                      enableVat: productSettings?.enableVat,
+                      vatPriceDisplay: productSettings?.vatPriceDisplay),
                   style: context.text.subtitle),
               if (productDetailsPriceEntity
                       .selectedUnitOfMeasureValueText.isNullOrEmpty ==
@@ -208,6 +220,17 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                 Text(
                   " / ${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ""}",
                   style: context.text.body,
+                ),
+              if (vatLabel != null)
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 6.0),
+                    child: Text(
+                      vatLabel,
+                      style: context.text.body,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
             ],
           );

@@ -68,7 +68,8 @@ class QuickOrderItemEntity {
           ? selectedUnitOfMeasure?.unitOfMeasureDisplay
           : selectedUnitOfMeasure?.description;
 
-      if (pricing.isOnSale!) {
+      if (!shouldDisplayPriceWithVat(null, null) &&
+          (pricing.isOnSale ?? false)) {
         priceValueText = pricing.unitNetPriceDisplay;
         extendedPriceValueText = pricing.extendedUnitNetPriceDisplay;
         selectedUnitOfMeasureValueText = uomText;

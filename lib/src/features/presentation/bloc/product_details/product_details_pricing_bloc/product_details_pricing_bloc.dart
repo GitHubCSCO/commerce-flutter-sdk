@@ -81,10 +81,17 @@ class ProductDetailsPricingBloc
         (result is Success) ? (result as Success).value : null;
 
     if (productPricingEnabled != null && productPricingEnabled) {
-      var priceValueText =
-          (data != null && data.isOnSale != null && data.isOnSale!)
-              ? data.unitNetPriceDisplay
-              : data.getPriceValue(allowZeroPricing: product.allowZeroPricing);
+      final displayPriceWithVat = shouldDisplayPriceWithVat(
+          productSettings.enableVat, productSettings.vatPriceDisplay);
+      var priceValueText = (!displayPriceWithVat &&
+              data != null &&
+              data.isOnSale != null &&
+              data.isOnSale!)
+          ? data.unitNetPriceDisplay
+          : data.getPriceValue(
+              allowZeroPricing: product.allowZeroPricing,
+              enableVat: productSettings.enableVat,
+              vatPriceDisplay: productSettings.vatPriceDisplay);
       var discountMessage = data.getDiscountValue(
         showSavingsAmount: productSettings.showSavingsAmount ?? true,
         showSavingsPercent: productSettings.showSavingsPercent ?? true,

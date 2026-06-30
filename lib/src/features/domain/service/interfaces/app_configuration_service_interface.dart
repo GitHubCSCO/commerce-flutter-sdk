@@ -22,6 +22,10 @@ abstract class IAppConfigurationService {
 
   bool? get hideInventoryEnable;
 
+  bool? get enableVat;
+
+  String? get vatPriceDisplay;
+
   Future<bool> hasWillCall();
 
   Future<bool> hasCheckout();

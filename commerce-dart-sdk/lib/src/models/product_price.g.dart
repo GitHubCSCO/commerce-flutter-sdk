@@ -57,6 +57,22 @@ ProductPrice _$ProductPriceFromJson(Map<String, dynamic> json) => ProductPrice(
       vatAmount: json['vatAmount'] as num?,
       vatAmountDisplay: json['vatAmountDisplay'] as String?,
       vatRate: json['vatRate'] as num?,
+      unitListPriceWithVat: json['unitListPriceWithVat'] as num?,
+      unitListPriceWithVatDisplay:
+          json['unitListPriceWithVatDisplay'] as String?,
+      extendedUnitListPriceWithVat:
+          json['extendedUnitListPriceWithVat'] as num?,
+      extendedUnitListPriceWithVatDisplay:
+          json['extendedUnitListPriceWithVatDisplay'] as String?,
+      unitRegularPriceWithVat: json['unitRegularPriceWithVat'] as num?,
+      unitRegularPriceWithVatDisplay:
+          json['unitRegularPriceWithVatDisplay'] as String?,
+      extendedUnitRegularPriceWithVat:
+          json['extendedUnitRegularPriceWithVat'] as num?,
+      extendedUnitRegularPriceWithVatDisplay:
+          json['extendedUnitRegularPriceWithVatDisplay'] as String?,
+      vatMinusExtendedUnitRegularPrice:
+          json['vatMinusExtendedUnitRegularPrice'] as num?,
     )
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
@@ -103,6 +119,24 @@ Map<String, dynamic> _$ProductPriceToJson(ProductPrice instance) =>
       if (instance.vatAmount case final value?) 'vatAmount': value,
       if (instance.vatAmountDisplay case final value?)
         'vatAmountDisplay': value,
+      if (instance.unitListPriceWithVat case final value?)
+        'unitListPriceWithVat': value,
+      if (instance.unitListPriceWithVatDisplay case final value?)
+        'unitListPriceWithVatDisplay': value,
+      if (instance.extendedUnitListPriceWithVat case final value?)
+        'extendedUnitListPriceWithVat': value,
+      if (instance.extendedUnitListPriceWithVatDisplay case final value?)
+        'extendedUnitListPriceWithVatDisplay': value,
+      if (instance.unitRegularPriceWithVat case final value?)
+        'unitRegularPriceWithVat': value,
+      if (instance.unitRegularPriceWithVatDisplay case final value?)
+        'unitRegularPriceWithVatDisplay': value,
+      if (instance.extendedUnitRegularPriceWithVat case final value?)
+        'extendedUnitRegularPriceWithVat': value,
+      if (instance.extendedUnitRegularPriceWithVatDisplay case final value?)
+        'extendedUnitRegularPriceWithVatDisplay': value,
+      if (instance.vatMinusExtendedUnitRegularPrice case final value?)
+        'vatMinusExtendedUnitRegularPrice': value,
       if (instance.unitListBreakPrices?.map((e) => e.toJson()).toList()
           case final value?)
         'unitListBreakPrices': value,

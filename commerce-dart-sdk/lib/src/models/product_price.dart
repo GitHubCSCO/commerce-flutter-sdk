@@ -40,6 +40,15 @@ class ProductPrice extends BaseModel {
     this.vatAmount,
     this.vatAmountDisplay,
     this.vatRate,
+    this.unitListPriceWithVat,
+    this.unitListPriceWithVatDisplay,
+    this.extendedUnitListPriceWithVat,
+    this.extendedUnitListPriceWithVatDisplay,
+    this.unitRegularPriceWithVat,
+    this.unitRegularPriceWithVatDisplay,
+    this.extendedUnitRegularPriceWithVat,
+    this.extendedUnitRegularPriceWithVatDisplay,
+    this.vatMinusExtendedUnitRegularPrice,
   });
 
   String? productId;
@@ -106,6 +115,24 @@ class ProductPrice extends BaseModel {
   num? vatAmount;
 
   String? vatAmountDisplay;
+
+  num? unitListPriceWithVat;
+
+  String? unitListPriceWithVatDisplay;
+
+  num? extendedUnitListPriceWithVat;
+
+  String? extendedUnitListPriceWithVatDisplay;
+
+  num? unitRegularPriceWithVat;
+
+  String? unitRegularPriceWithVatDisplay;
+
+  num? extendedUnitRegularPriceWithVat;
+
+  String? extendedUnitRegularPriceWithVatDisplay;
+
+  num? vatMinusExtendedUnitRegularPrice;
 
   List<BreakPriceDto>? unitListBreakPrices;
 

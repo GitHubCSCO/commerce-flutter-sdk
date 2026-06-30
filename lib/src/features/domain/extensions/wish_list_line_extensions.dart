@@ -8,7 +8,9 @@ extension WishListLineExtensions on WishListLineEntity? {
       return "";
     }
     var priceValueText = "";
-    if (this!.pricing != null && this!.pricing!.isOnSale!) {
+    if (!shouldDisplayPriceWithVat(null, null) &&
+        this!.pricing != null &&
+        (this!.pricing!.isOnSale ?? false)) {
       priceValueText = this!.pricing!.unitNetPriceDisplay ?? "";
     } else {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
@@ -29,7 +31,9 @@ extension WishListLineExtensions on WishListLineEntity? {
       return "";
     }
     var subtotalValueText = "";
-    if (this!.pricing != null && this!.pricing!.isOnSale!) {
+    if (!shouldDisplayPriceWithVat(null, null) &&
+        this!.pricing != null &&
+        (this!.pricing!.isOnSale ?? false)) {
       subtotalValueText = this!.pricing!.extendedUnitNetPriceDisplay ?? "";
     } else {
       if (this!.quoteRequired != null && this!.quoteRequired!) {

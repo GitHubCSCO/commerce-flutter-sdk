@@ -9,9 +9,11 @@ extension CartLineExtensions on CartLineEntity? {
       return "";
     }
     var priceValueText = "";
-    if ((this!.isPromotionItem != null && this!.isPromotionItem!) ||
-        (this!.isDiscounted != null && this!.isDiscounted!) ||
-        (this!.pricing != null && this!.pricing!.isOnSale!)) {
+    final displayWithVat = shouldDisplayPriceWithVat(null, null);
+    if (!displayWithVat &&
+        ((this!.isPromotionItem != null && this!.isPromotionItem!) ||
+            (this!.isDiscounted != null && this!.isDiscounted!) ||
+            (this!.pricing != null && (this!.pricing!.isOnSale ?? false)))) {
       priceValueText = this!.pricing!.unitNetPriceDisplay ?? "";
     } else {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
@@ -32,9 +34,11 @@ extension CartLineExtensions on CartLineEntity? {
       return "";
     }
     var subtotalValueText = "";
-    if ((this!.isPromotionItem != null && this!.isPromotionItem!) ||
-        (this!.isDiscounted != null && this!.isDiscounted!) ||
-        (this!.pricing != null && this!.pricing!.isOnSale!)) {
+    final displayWithVat = shouldDisplayPriceWithVat(null, null);
+    if (!displayWithVat &&
+        ((this!.isPromotionItem != null && this!.isPromotionItem!) ||
+            (this!.isDiscounted != null && this!.isDiscounted!) ||
+            (this!.pricing != null && (this!.pricing!.isOnSale ?? false)))) {
       subtotalValueText = this!.pricing!.extendedUnitNetPriceDisplay ?? "";
     } else {
       if (this!.quoteRequired != null && this!.quoteRequired!) {

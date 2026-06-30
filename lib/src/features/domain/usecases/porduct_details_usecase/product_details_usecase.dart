@@ -164,8 +164,6 @@ class ProductDetailsUseCase extends BaseUseCase {
 
     final qtyOnHand = await _getQtyOnHand(productId);
 
-    // When inventory can't be determined, stay on the discontinued product
-    // rather than redirecting away from a possibly in-stock product.
     if (qtyOnHand == null) {
       return false;
     }

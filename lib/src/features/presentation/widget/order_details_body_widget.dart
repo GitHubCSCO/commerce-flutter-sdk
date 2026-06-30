@@ -3,6 +3,7 @@ import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/two_texts_row.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/line_item/line_item_widget.dart';
@@ -353,6 +354,7 @@ class OrderProductsSectionWidget extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final orderLine = orderLines[index];
+            final showVat = shouldDisplayPriceWithVat(null, null);
             return LineItemWidget(
               productId: orderLine.productId,
               imagePath: orderLine.mediumImagePath,
@@ -368,13 +370,19 @@ class OrderProductsSectionWidget extends StatelessWidget {
                           ) ??
                           '')
                       .toString(),
-              priceValueText: orderLine.unitNetPriceDisplay,
+              priceValueText: showVat
+                  ? (orderLine.unitPriceWithVatDisplay ??
+                      orderLine.unitNetPriceDisplay)
+                  : orderLine.unitNetPriceDisplay,
               unitOfMeasureValueText:
                   !orderLine.unitOfMeasureDisplay.isNullOrEmpty
                       ? ' / ${orderLine.unitOfMeasureDisplay}'
                       : null,
               qtyOrdered: orderLine.qtyOrdered?.round().toString(),
-              subtotalPriceText: orderLine.extendedUnitNetPriceDisplay,
+              subtotalPriceText: showVat
+                  ? (orderLine.netPriceWithVatDisplay ??
+                      orderLine.extendedUnitNetPriceDisplay)
+                  : orderLine.extendedUnitNetPriceDisplay,
               canEditQty: false,
               showViewAvailabilityByWarehouse: false,
               showViewQuantityPricing: false,

@@ -133,6 +133,8 @@ class AppConfigurationService extends ServiceBase
     switch (productSettingsResponse) {
       case Success(value: final value):
         {
+          enableVat = value?.enableVat;
+          vatPriceDisplay = value?.vatPriceDisplay;
           return value!;
         }
       case Failure():
@@ -227,6 +229,8 @@ class AppConfigurationService extends ServiceBase
       privacyPolicyUrl = websiteSettings.mobilePrivacyPolicyUrl?.makeValidUrl();
       termsOfUseUrl = websiteSettings.mobileTermsOfUseUrl?.makeValidUrl();
     }
+
+    await getProductSettings();
   }
 
   @override
@@ -267,6 +271,12 @@ class AppConfigurationService extends ServiceBase
 
   @override
   bool? hidePricingEnable;
+
+  @override
+  bool? enableVat;
+
+  @override
+  String? vatPriceDisplay;
 
   @override
   void setHideInventoryEnable(bool enable) {
