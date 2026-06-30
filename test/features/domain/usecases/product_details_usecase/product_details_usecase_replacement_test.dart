@@ -155,9 +155,8 @@ void main() {
 
       expect((result as Success).value?.id, replacementProductId);
       // No inventory lookup is needed when inventory is not tracked.
-      verifyNever(
-          () => mockRealTimeInventoryService.getProductRealTimeInventory(
-              parameters: any(named: 'parameters')));
+      verifyNever(() => mockRealTimeInventoryService
+          .getProductRealTimeInventory(parameters: any(named: 'parameters')));
     });
 
     test('stays on a product that is not discontinued', () async {

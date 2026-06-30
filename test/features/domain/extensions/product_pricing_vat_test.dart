@@ -61,13 +61,11 @@ void main() {
     test('shows VAT-inclusive price when DisplayWithVat', () {
       expect(
           pricing.getPriceValue(
-              enableVat: true,
-              vatPriceDisplay: VatPriceDisplay.displayWithVat),
+              enableVat: true, vatPriceDisplay: VatPriceDisplay.displayWithVat),
           r'$12.34');
       expect(
           pricing.getSubtotalValue(
-              enableVat: true,
-              vatPriceDisplay: VatPriceDisplay.displayWithVat),
+              enableVat: true, vatPriceDisplay: VatPriceDisplay.displayWithVat),
           r'$12.34');
     });
 
@@ -91,8 +89,7 @@ void main() {
       );
       expect(
           noVatField.getPriceValue(
-              enableVat: true,
-              vatPriceDisplay: VatPriceDisplay.displayWithVat),
+              enableVat: true, vatPriceDisplay: VatPriceDisplay.displayWithVat),
           r'$11.22');
     });
   });
@@ -105,8 +102,7 @@ void main() {
     test('Inc. VAT with rate when DisplayWithVat', () {
       expect(
           pricing.getVatLabel(
-              enableVat: true,
-              vatPriceDisplay: VatPriceDisplay.displayWithVat),
+              enableVat: true, vatPriceDisplay: VatPriceDisplay.displayWithVat),
           'Inc. VAT (10%)');
     });
 

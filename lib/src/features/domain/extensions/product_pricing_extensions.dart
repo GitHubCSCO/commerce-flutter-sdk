@@ -30,8 +30,7 @@ class VatPriceDisplay {
   final vatEnabled = effectiveEnableVat == true;
   final displayWithVat = vatEnabled &&
       (effectiveVatPriceDisplay == VatPriceDisplay.displayWithVat ||
-          effectiveVatPriceDisplay ==
-              VatPriceDisplay.displayWithAndWithoutVat);
+          effectiveVatPriceDisplay == VatPriceDisplay.displayWithAndWithoutVat);
   return (vatEnabled, displayWithVat);
 }
 
