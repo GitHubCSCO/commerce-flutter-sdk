@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/attribute_type_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/attribute_value_entity.dart';
@@ -132,13 +133,13 @@ class ProductDetailsUseCase extends BaseUseCase {
               ProductEntityMapper.toEntity(data?.product ?? Product());
 
           final replacementProductId = productEntity.replacementProductId;
-          final shouldRedirectToReplacement =
-              (productEntity.isDiscontinued ?? false) &&
-                  !replacementProductId.isNullOrEmpty &&
-                  replacementProductId != currentProductId &&
-                  depth < maxReplacementDepth;
+          final hasReplacement = !replacementProductId.isNullOrEmpty &&
+              replacementProductId != currentProductId &&
+              depth < maxReplacementDepth;
 
-          if (shouldRedirectToReplacement) {
+          if (hasReplacement &&
+              await _shouldRedirectToReplacement(
+                  productEntity, currentProductId)) {
             currentProductId = replacementProductId!;
             depth++;
             continue;
@@ -148,6 +149,43 @@ class ProductDetailsUseCase extends BaseUseCase {
         case Failure(errorResponse: final errorResponse):
           return Failure(errorResponse);
       }
+    }
+  }
+
+  Future<bool> _shouldRedirectToReplacement(
+      ProductEntity product, String productId) async {
+    if (!(product.isDiscontinued ?? false)) {
+      return false;
+    }
+
+    if (!(product.trackInventory ?? false)) {
+      return true;
+    }
+
+    final qtyOnHand = await _getQtyOnHand(productId);
+
+    // When inventory can't be determined, stay on the discontinued product
+    // rather than redirecting away from a possibly in-stock product.
+    if (qtyOnHand == null) {
+      return false;
+    }
+
+    return qtyOnHand <= 0;
+  }
+
+  Future<num?> _getQtyOnHand(String productId) async {
+    final response = await commerceAPIServiceProvider
+        .getRealTimeInventoryService()
+        .getProductRealTimeInventory(
+            parameters: RealTimeInventoryParameters(productIds: [productId]));
+
+    switch (response) {
+      case Success(value: final data):
+        final inventory = data?.realTimeInventoryResults
+            ?.firstWhereOrNull((o) => o.productId == productId);
+        return inventory?.qtyOnHand;
+      case Failure():
+        return null;
     }
   }
 
