@@ -82,6 +82,8 @@ class SearchProductFilterWidget extends StatelessWidget {
                       previouslyPurchasedProducts: previouslyPurchased,
                       stockedItemsOnly: selectedStockedItems,
                       search: searchText,
+                      relevancy: _isSearch ? "true" : null,
+                      includeSuggestions: _isSearch ? "true" : null,
                     ),
                   );
               _showProductFilterWidget(
@@ -135,6 +137,8 @@ class SearchProductFilterWidget extends StatelessWidget {
     );
   }
 
+  bool get _isSearch => searchText != null && searchText!.isNotEmpty;
+
   ProductsQueryParameters _getProductsQueryParameters(
       ProductListType productListType) {
     String? selectedCategoryId;
@@ -169,6 +173,8 @@ class SearchProductFilterWidget extends StatelessWidget {
       previouslyPurchasedProducts: false,
       stockedItemsOnly: false,
       search: searchText,
+      relevancy: _isSearch ? "true" : null,
+      includeSuggestions: _isSearch ? "true" : null,
     );
   }
 }

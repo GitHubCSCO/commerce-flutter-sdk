@@ -17,6 +17,7 @@ class PaginationEntityMapper {
         sortType: model.sortType,
         nextPageUri: model.nextPageUri,
         prevPageUri: model.prevPageUri,
+        nextPageToken: model.nextPageToken,
       );
 
   static Pagination toModel(PaginationEntity entity) => Pagination(
@@ -33,5 +34,6 @@ class PaginationEntityMapper {
         sortType: entity.sortType,
         nextPageUri: entity.nextPageUri,
         prevPageUri: entity.prevPageUri,
+        nextPageToken: entity.nextPageToken,
       );
 }

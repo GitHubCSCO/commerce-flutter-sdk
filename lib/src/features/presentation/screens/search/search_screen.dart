@@ -399,10 +399,6 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
         .where((suggestion) => suggestion.isNotEmpty)
         .toList();
 
-    // Build category/brand groups. For retail search (Commerce Search v3) the
-    // results are split into "popular" (top-level attributeResults) and
-    // "suggested" (per-suggestion completionResults), matching the web. Standard
-    // results are shown as a single unlabeled group.
     final List<(String?, List<AutocompleteCategory>)> categoryGroups;
     final List<(String?, List<AutocompleteBrand>)> brandGroups;
 

@@ -79,10 +79,12 @@ class SearchUseCase extends BaseUseCase {
     String? selectedCategoryId,
     bool? previouslyPurchased,
     bool? selectedStockedItems,
+    String? pageToken,
   }) async {
     var parameters = ProductsQueryParameters(
       search: searchQuery.isEmpty ? null : searchQuery,
       page: currentPage,
+      pageToken: pageToken,
       // Sort = this.sortViewModel?.CurrentlySelectedSortOption?.SortType,
       // AttributeValueIds = this.SelectedAttributeValueIds,
       // BrandIds = this.SelectedBrandIds,

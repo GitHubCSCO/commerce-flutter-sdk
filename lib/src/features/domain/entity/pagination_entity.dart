@@ -37,6 +37,8 @@ class PaginationEntity extends Equatable {
   /// full url to rest endpoint? to retrieve previous page or null if no previous page
   final String? prevPageUri;
 
+  final String? nextPageToken;
+
   const PaginationEntity({
     required this.currentPage,
     required this.page,
@@ -49,6 +51,7 @@ class PaginationEntity extends Equatable {
     required this.sortType,
     required this.nextPageUri,
     required this.prevPageUri,
+    this.nextPageToken,
   });
 
   @override
@@ -64,6 +67,7 @@ class PaginationEntity extends Equatable {
         sortType,
         nextPageUri,
         prevPageUri,
+        nextPageToken,
       ];
 
   PaginationEntity copyWith({
@@ -78,6 +82,7 @@ class PaginationEntity extends Equatable {
     String? sortType,
     String? nextPageUri,
     String? prevPageUri,
+    String? nextPageToken,
   }) {
     return PaginationEntity(
       currentPage: currentPage ?? this.currentPage,
@@ -91,6 +96,7 @@ class PaginationEntity extends Equatable {
       sortType: sortType ?? this.sortType,
       nextPageUri: nextPageUri ?? this.nextPageUri,
       prevPageUri: prevPageUri ?? this.prevPageUri,
+      nextPageToken: nextPageToken ?? this.nextPageToken,
     );
   }
 }

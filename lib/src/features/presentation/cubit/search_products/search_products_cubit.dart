@@ -239,6 +239,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
       selectedCategoryId: state.selectedCategoryId,
       previouslyPurchased: state.previouslyPurchased,
       selectedStockedItems: state.selectedStockedItems,
+      pageToken: state.paginationEntity?.nextPageToken,
     );
 
     if (result == null) {
