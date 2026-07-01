@@ -1,3 +1,5 @@
+import 'package:optimizely_commerce_api/src/models/results/attribute_results.dart';
+
 import 'models.dart';
 
 part 'autocomplete.g.dart';
@@ -119,4 +121,47 @@ class AutocompleteCategory extends BaseModel {
       _$AutocompleteCategoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$AutocompleteCategoryToJson(this);
+}
+
+@JsonSerializable()
+class AutocompleteContent extends BaseModel {
+  String? id;
+
+  String? title;
+
+  String? subtitle;
+
+  String? url;
+
+  String? image;
+
+  AutocompleteContent({
+    this.id,
+    this.title,
+    this.subtitle,
+    this.url,
+    this.image,
+  });
+
+  factory AutocompleteContent.fromJson(Map<String, dynamic> json) =>
+      _$AutocompleteContentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AutocompleteContentToJson(this);
+}
+
+@JsonSerializable()
+class AutocompleteCompletionResult extends BaseModel {
+  String? suggestion;
+
+  AttributeResults? attributeResults;
+
+  AutocompleteCompletionResult({
+    this.suggestion,
+    this.attributeResults,
+  });
+
+  factory AutocompleteCompletionResult.fromJson(Map<String, dynamic> json) =>
+      _$AutocompleteCompletionResultFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AutocompleteCompletionResultToJson(this);
 }

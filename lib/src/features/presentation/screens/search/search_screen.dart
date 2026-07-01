@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
@@ -24,7 +26,10 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_scre
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/brand/brand_auto_complete_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/category/category_auto_complete_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/product/product_screen.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/auto_complete_widget.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/widget/content_auto_complete_widget.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/widget/suggestion_auto_complete_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/error_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/search_product/search_products_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
@@ -34,6 +39,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:commerce_flutter_sdk/src/core/theme/app_theme_x.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SearchScreen extends BaseStatelessWidget {
   const SearchScreen({super.key});
@@ -383,46 +389,106 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
   }
 
   Widget _buildSearchAutoComplete(AutocompleteResult? result) {
-    List<AutocompleteCategory>? autoCompleteCategoryList;
-    List<AutocompleteBrand>? autoCompleteBrandList;
     final autoCompleteProductList = result?.products;
+    final autoCompleteContentList = result?.content;
+    final isRetail = result?.isRetailSearchCompletionResults == true;
 
-    if (result?.isRetailSearchCompletionResults == true) {
-      autoCompleteCategoryList = result?.attributeResults?.categories;
-      autoCompleteBrandList = result?.attributeResults?.brands;
+    final suggestionList = result?.completionResults
+        ?.map((e) => e.suggestion)
+        .whereType<String>()
+        .where((suggestion) => suggestion.isNotEmpty)
+        .toList();
+
+    // Build category/brand groups. For retail search (Commerce Search v3) the
+    // results are split into "popular" (top-level attributeResults) and
+    // "suggested" (per-suggestion completionResults), matching the web. Standard
+    // results are shown as a single unlabeled group.
+    final List<(String?, List<AutocompleteCategory>)> categoryGroups;
+    final List<(String?, List<AutocompleteBrand>)> brandGroups;
+
+    if (isRetail) {
+      final popularCategories = _dedupeById<AutocompleteCategory>(
+        result?.attributeResults?.categories ?? const [],
+        (category) => category.id ?? category.title,
+      );
+      final suggestedCategories = _dedupeById<AutocompleteCategory>(
+        result?.completionResults
+                ?.expand((e) => e.attributeResults?.categories ?? const [])
+                .cast<AutocompleteCategory>()
+                .toList() ??
+            const [],
+        (category) => category.id ?? category.title,
+      );
+      final popularBrands = _dedupeById<AutocompleteBrand>(
+        result?.attributeResults?.brands ?? const [],
+        (brand) => '${brand.id ?? brand.title}|${brand.productLineId ?? ''}',
+      );
+      final suggestedBrands = _dedupeById<AutocompleteBrand>(
+        result?.completionResults
+                ?.expand((e) => e.attributeResults?.brands ?? const [])
+                .cast<AutocompleteBrand>()
+                .toList() ??
+            const [],
+        (brand) => '${brand.id ?? brand.title}|${brand.productLineId ?? ''}',
+      );
+
+      categoryGroups = [
+        if (popularCategories.isNotEmpty)
+          (LocalizationConstants.popular.localized(), popularCategories),
+        if (suggestedCategories.isNotEmpty)
+          (LocalizationConstants.suggested.localized(), suggestedCategories),
+      ];
+      brandGroups = [
+        if (popularBrands.isNotEmpty)
+          (LocalizationConstants.popular.localized(), popularBrands),
+        if (suggestedBrands.isNotEmpty)
+          (LocalizationConstants.suggested.localized(), suggestedBrands),
+      ];
     } else {
-      autoCompleteCategoryList = result?.categories;
-      autoCompleteBrandList = result?.brands;
+      final categories = result?.categories ?? const <AutocompleteCategory>[];
+      final brands = result?.brands ?? const <AutocompleteBrand>[];
+      categoryGroups = [if (categories.isNotEmpty) (null, categories)];
+      brandGroups = [if (brands.isNotEmpty) (null, brands)];
     }
 
     return ListView(
       padding: const EdgeInsets.only(top: 8),
       children: [
-        if (autoCompleteCategoryList?.isNotEmpty ?? false) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-            child: Text(
-              LocalizationConstants.categories.localized(),
-              style: context.text.titleSmall,
-            ),
-          ),
-          CategoryAutoCompleteWidget(
-            autocompleteCategories: autoCompleteCategoryList,
-            callback: handleAutoCompleteCategoryCallback,
+        if (suggestionList?.isNotEmpty ?? false) ...[
+          _buildSectionHeader(LocalizationConstants.search.localized()),
+          SuggestionAutoCompleteWidget(
+            suggestions: suggestionList,
+            callback: handleAutoCompleteSuggestionCallback,
           ),
           const SizedBox(height: 12),
         ],
-        if (autoCompleteBrandList?.isNotEmpty ?? false) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-            child: Text(
-              LocalizationConstants.brands.localized(),
-              style: context.text.titleSmall,
+        if (categoryGroups.isNotEmpty) ...[
+          _buildSectionHeader(LocalizationConstants.categories.localized()),
+          for (final group in categoryGroups) ...[
+            if (group.$1 != null) _buildSubHeader(group.$1!),
+            CategoryAutoCompleteWidget(
+              autocompleteCategories: group.$2,
+              callback: handleAutoCompleteCategoryCallback,
             ),
-          ),
-          BrandAutoCompleteWidget(
-            autocompleteBrands: autoCompleteBrandList,
-            callback: handleAutoCompleteBrandCallback,
+          ],
+          const SizedBox(height: 12),
+        ],
+        if (brandGroups.isNotEmpty) ...[
+          _buildSectionHeader(LocalizationConstants.brands.localized()),
+          for (final group in brandGroups) ...[
+            if (group.$1 != null) _buildSubHeader(group.$1!),
+            BrandAutoCompleteWidget(
+              autocompleteBrands: group.$2,
+              callback: handleAutoCompleteBrandCallback,
+            ),
+          ],
+          const SizedBox(height: 12),
+        ],
+        if (autoCompleteContentList?.isNotEmpty ?? false) ...[
+          _buildSectionHeader(LocalizationConstants.content.localized()),
+          ContentAutoCompleteWidget(
+            autocompleteContentList: autoCompleteContentList,
+            callback: handleAutoCompleteContentCallback,
           ),
           const SizedBox(height: 12),
         ],
@@ -434,6 +500,56 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
           ),
       ],
     );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+      child: Text(
+        title,
+        style: context.text.titleSmall,
+      ),
+    );
+  }
+
+  Widget _buildSubHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, bottom: 4, left: 24, right: 24),
+      child: Text(
+        title,
+        style: context.text.bodySmall.copyWith(
+          color: context.colors.textDisabledColor,
+        ),
+      ),
+    );
+  }
+
+  List<T> _dedupeById<T>(List<T> items, String? Function(T) keyOf) {
+    final seen = <String>{};
+    final result = <T>[];
+    for (final item in items) {
+      final key = keyOf(item);
+      if (key == null || key.isEmpty || seen.add(key)) {
+        result.add(item);
+      }
+    }
+    return result;
+  }
+
+  void handleAutoCompleteSuggestionCallback(
+      BuildContext context, String suggestion) {
+    textEditingController.text = suggestion;
+    context.read<SearchHistoryCubit>().addSearchHistory(suggestion);
+    context.read<SearchBloc>().searchQuery = suggestion;
+    context.read<SearchBloc>().add(SearchSearchEvent());
+  }
+
+  void handleAutoCompleteContentCallback(
+      BuildContext context, AutocompleteContent content) {
+    final link = content.url.makeAbsoluteUrl().trim();
+    if (link.isNotEmpty) {
+      unawaited(launchUrlString(link));
+    }
   }
 
   void handleAutoCompleteCategoryCallback(

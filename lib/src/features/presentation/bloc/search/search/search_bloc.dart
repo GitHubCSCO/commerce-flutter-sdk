@@ -36,7 +36,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> _onSearchAutoCompleteLoadEvent(
       SearchAutoCompleteLoadEvent event, Emitter<SearchState> emit) async {
-    var result = await _searchUseCase.loadAutocompleteResults(event.query);
+    var result = await _searchUseCase.loadAutocompleteResults(event.query,
+        contentEnabled: true, spireContent: true);
     switch (result) {
       case Success(value: final data):
         emit(SearchAutoCompleteLoadedState(result: data));
@@ -57,8 +58,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         emit(SearchAutoCompleteInitialState());
       } else {
         emit(SearchLoadingState());
-        final result =
-            await _searchUseCase.loadAutocompleteResults(searchQuery);
+        final result = await _searchUseCase.loadAutocompleteResults(searchQuery,
+            contentEnabled: true, spireContent: true);
 
         if (state is SearchCmsInitialState ||
             state is SearchProductsLoadedState) {
@@ -89,7 +90,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       emit(SearchAutoCompleteInitialState());
     } else {
       emit(SearchLoadingState());
-      final result = await _searchUseCase.loadAutocompleteResults(searchQuery);
+      final result = await _searchUseCase.loadAutocompleteResults(searchQuery,
+          contentEnabled: true, spireContent: true);
 
       if (state is SearchCmsInitialState ||
           state is SearchProductsLoadedState) {

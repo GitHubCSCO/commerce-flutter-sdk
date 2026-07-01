@@ -12,6 +12,10 @@ class AutocompleteResult extends BaseModel {
 
   List<AutocompleteCategory>? categories;
 
+  List<AutocompleteContent>? content;
+
+  List<AutocompleteCompletionResult>? completionResults;
+
   AttributeResults? attributeResults;
 
   bool? isRetailSearchCompletionResults;
@@ -22,6 +26,8 @@ class AutocompleteResult extends BaseModel {
     this.products,
     this.brands,
     this.categories,
+    this.content,
+    this.completionResults,
     this.attributeResults,
     this.isRetailSearchCompletionResults,
     this.attributionToken,

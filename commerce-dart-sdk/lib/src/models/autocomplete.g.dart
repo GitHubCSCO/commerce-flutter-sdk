@@ -121,3 +121,52 @@ Map<String, dynamic> _$AutocompleteCategoryToJson(
       if (instance.url case final value?) 'url': value,
       if (instance.image case final value?) 'image': value,
     };
+
+AutocompleteContent _$AutocompleteContentFromJson(Map<String, dynamic> json) =>
+    AutocompleteContent(
+      id: json['id'] as String?,
+      title: json['title'] as String?,
+      subtitle: json['subtitle'] as String?,
+      url: json['url'] as String?,
+      image: json['image'] as String?,
+    )
+      ..uri = json['uri'] as String?
+      ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String?),
+      );
+
+Map<String, dynamic> _$AutocompleteContentToJson(
+        AutocompleteContent instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.title case final value?) 'title': value,
+      if (instance.subtitle case final value?) 'subtitle': value,
+      if (instance.url case final value?) 'url': value,
+      if (instance.image case final value?) 'image': value,
+    };
+
+AutocompleteCompletionResult _$AutocompleteCompletionResultFromJson(
+        Map<String, dynamic> json) =>
+    AutocompleteCompletionResult(
+      suggestion: json['suggestion'] as String?,
+      attributeResults: json['attributeResults'] == null
+          ? null
+          : AttributeResults.fromJson(
+              json['attributeResults'] as Map<String, dynamic>),
+    )
+      ..uri = json['uri'] as String?
+      ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String?),
+      );
+
+Map<String, dynamic> _$AutocompleteCompletionResultToJson(
+        AutocompleteCompletionResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.suggestion case final value?) 'suggestion': value,
+      if (instance.attributeResults?.toJson() case final value?)
+        'attributeResults': value,
+    };
