@@ -2,6 +2,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_line_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/extensions/order_line_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/two_texts_row.dart';

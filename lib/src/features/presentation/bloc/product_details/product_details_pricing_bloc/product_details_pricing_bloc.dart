@@ -99,11 +99,13 @@ class ProductDetailsPricingBloc
 
       var selectedUnitOfMeasureValueText = '';
       if (chosenUnitOfMeasure?.description?.isNotEmpty ?? false) {
-        selectedUnitOfMeasureValueText = chosenUnitOfMeasure!.description!;
+        selectedUnitOfMeasureValueText =
+            data.getUnitOfMeasure(chosenUnitOfMeasure!.description!) ?? '';
       } else if (chosenUnitOfMeasure?.unitOfMeasureDisplay?.isNotEmpty ??
           false) {
         selectedUnitOfMeasureValueText =
-            chosenUnitOfMeasure!.unitOfMeasureDisplay!;
+            data.getUnitOfMeasure(chosenUnitOfMeasure!.unitOfMeasureDisplay!) ??
+                '';
       } else {
         selectedUnitOfMeasureValueText = '';
       }
