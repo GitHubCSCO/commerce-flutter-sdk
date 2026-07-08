@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>commerce_flutter_app</string>
+	<string>Consolidated Supply Co.</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,6 +24,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>comgooglemaps</string>
@@ -48,8 +50,6 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>The application uses this feature to do voice to text search.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to scan barcodes.</string>
 	<key>NSFaceIDUsageDescription</key>
@@ -58,6 +58,8 @@
 	<string>Your location is used to locate nearby locations and directions to them.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location is used to locate nearby locations and directions to them.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The application uses this feature to do voice to text search.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -83,8 +85,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 </dict>
 </plist>
