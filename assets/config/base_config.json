@@ -4,5 +4,16 @@
     "checkoutUrl": null,
     "startingCategoryForBrowsing": null,
     "hasCheckout": true,
-    "viewOnWebsiteEnabled": true
+    "viewOnWebsiteEnabled": true,
+    "firebaseAndroidApiKey": "AIzaSyClE1Lr3fuWhWTQsBkB0FA3LdofuR7Z3vs",
+    "firebaseAndroidAppId": "1:752661561665:android:5d9c49eaa84ee75430e1c0",
+    "firebaseAndroidMessagingSenderId": "752661561665",
+    "firebaseAndroidProjectId": "consolidatedsupplymobile-c40d4",
+    "firebaseAndroidStorageBucket": "consolidatedsupplymobile-c40d4.firebasestorage.app",
+    "firebaseIOSApiKey": "AIzaSyDuPAhfFL_ajlo3UQHXl0SbXt9m5RxQGag",
+    "firebaseIOSAppId": "1:752661561665:ios:9faaa8b8dbaa577730e1c0",
+    "firebaseIOSMessagingSenderId": "752661561665",
+    "firebaseIOSProjectId": "consolidatedsupplymobile-c40d4",
+    "firebaseIOSStorageBucket": "consolidatedsupplymobile-c40d4.firebasestorage.app",
+    "firebaseIOSBundleId": "com.consolidatedsupply.commerce" 
 }
