@@ -260,6 +260,7 @@ class CheckoutSuccessPage extends StatelessWidget {
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemCount: checkoutSuccessEntity.cart.cartLines?.length ?? 0,
           ),
+<<<<<<< HEAD
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Divider(
@@ -269,6 +270,10 @@ class CheckoutSuccessPage extends StatelessWidget {
           )
         ],
       ),
+=======
+        ],
+      )
+>>>>>>> 459e4bd0 (merge conflicts)
     );
   }
 
