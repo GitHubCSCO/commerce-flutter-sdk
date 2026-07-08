@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
@@ -33,8 +32,6 @@ class NotificationHandler {
 
   bool _isInitialized = false;
   bool _hasNotificationPermissions = false;
-  StreamSubscription<RemoteMessage>? _foregroundSubscription;
-  StreamSubscription<RemoteMessage>? _backgroundSubscription;
 
   Future<void> initialize() async {
     if (_isInitialized) {
@@ -42,39 +39,13 @@ class NotificationHandler {
     }
 
     try {
-      await _requestPermissions();
 
       // Only proceed with initialization if permissions are granted
       if (hasNotificationPermissions) {
         await _initializeLocalNotifications();
-        await _setupFirebaseListeners();
       }
 
       _isInitialized = true;
-    } catch (e) {
-      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
-    }
-  }
-
-  Future<void> _requestPermissions() async {
-    try {
-      final messaging = FirebaseMessaging.instance;
-      final settings = await messaging.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        announcement: false,
-      );
-
-      if (settings.authorizationStatus == AuthorizationStatus.denied) {
-        _hasNotificationPermissions = false;
-        return;
-      } else {
-        _hasNotificationPermissions = true;
-      }
     } catch (e) {
       unawaited(_coreServiceProvider.getTrackingService().trackError(e));
     }
@@ -100,7 +71,6 @@ class NotificationHandler {
       await _localNotifications.initialize(
         initSettings,
         onDidReceiveNotificationResponse: (response) async {
-          unawaited(_onNotificationResponse(response));
         },
       );
 
@@ -132,133 +102,12 @@ class NotificationHandler {
     }
   }
 
-  /// Setup Firebase message listeners
-  Future<void> _setupFirebaseListeners() async {
-    try {
-      await _handleInitialMessage();
-
-      _foregroundSubscription = FirebaseMessaging.onMessage.listen(
-        _handleForegroundMessage,
-      );
-
-      _backgroundSubscription = FirebaseMessaging.onMessageOpenedApp.listen(
-        _handleMessageOpenedApp,
-      );
-    } catch (e) {
-      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
-    }
-  }
-
-  /// Handle initial message when app opens from terminated state
-  Future<void> _handleInitialMessage() async {
-    try {
-      final initialMessage =
-          await FirebaseMessaging.instance.getInitialMessage();
-      if (initialMessage != null) {
-        unawaited(_trackNotificationClicked());
-      }
-    } catch (e) {
-      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
-    }
-  }
-
-  /// Handle foreground messages
-  Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    try {
-      // Only show notification if permissions are granted
-      if (hasNotificationPermissions) {
-        await _showLocalNotification(message);
-      }
-    } catch (e) {
-      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
-    }
-  }
-
-  /// Handle message when app is opened from background
-  Future<void> _handleMessageOpenedApp(RemoteMessage message) async {
-    try {
-      unawaited(_trackNotificationClicked());
-    } catch (e) {
-      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
-    }
-  }
-
-  /// Show local notification
-  Future<void> _showLocalNotification(RemoteMessage message) async {
-    try {
-      // Double-check permissions before showing notification
-      if (!hasNotificationPermissions) {
-        return;
-      }
-
-      String title =
-          message.notification?.title ?? message.data['title'] ?? 'New Message';
-      String body = message.notification?.body ??
-          message.data['body'] ??
-          'You have a new notification';
-
-      const androidDetails = AndroidNotificationDetails(
-        _channelId,
-        _channelName,
-        channelDescription: _channelDescription,
-        importance: Importance.high,
-        priority: Priority.high,
-        playSound: true,
-        enableVibration: true,
-        icon: _androidIcon,
-        largeIcon: DrawableResourceAndroidBitmap(_androidIcon),
-      );
-
-      const iOSDetails = DarwinNotificationDetails(
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true,
-        interruptionLevel: InterruptionLevel.active,
-      );
-
-      const notificationDetails = NotificationDetails(
-        android: androidDetails,
-        iOS: iOSDetails,
-      );
-
-      final notificationId = _generateNotificationId();
-
-      await _localNotifications.show(
-        notificationId,
-        title,
-        body,
-        notificationDetails,
-        payload: _createPayload(message),
-      );
-    } catch (e) {
-      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
-    }
-  }
-
-  /// Handle notification response (when user taps notification)
-  Future<void> _onNotificationResponse(NotificationResponse response) async {
-    try {
-      unawaited(_trackNotificationClicked());
-    } catch (e) {
-      unawaited(_coreServiceProvider.getTrackingService().trackError(e));
-    }
-  }
-
   /// Generate unique notification ID
   int _generateNotificationId() {
     return DateTime.now().millisecondsSinceEpoch ~/ 1000;
   }
 
-  /// Create payload from message
-  String _createPayload(RemoteMessage message) {
-    return message.data.isNotEmpty
-        ? message.data.entries.map((e) => '${e.key}=${e.value}').join('&')
-        : 'default_payload';
-  }
-
   Future<void> dispose() async {
-    await _foregroundSubscription?.cancel();
-    await _backgroundSubscription?.cancel();
     _isInitialized = false;
   }
 
