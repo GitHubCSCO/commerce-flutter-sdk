@@ -10,17 +10,6 @@ PODS:
   - appcenter_analytics (0.0.1):
     - AppCenter
     - Flutter
-<<<<<<< HEAD
-=======
-  - audio_session (0.0.1):
-    - Flutter
-  - camera_avfoundation (0.0.1):
-    - Flutter
-  - connectivity_plus (0.0.1):
-    - Flutter
-  - device_info_plus (0.0.1):
-    - Flutter
->>>>>>> 6744882a (strip out firebase)
   - Flutter (1.0.0)
   - Google-Maps-iOS-Utils (6.1.0):
     - GoogleMaps (~> 9.0)
@@ -89,42 +78,10 @@ PODS:
   - nanopb/encode (3.30910.0)
   - open_filex (0.0.2):
     - Flutter
-<<<<<<< HEAD
   - PromisesObjC (2.4.1)
 
 DEPENDENCIES:
   - appcenter_analytics (from `.symlinks/plugins/appcenter_analytics/ios`)
-=======
-  - package_info_plus (0.4.5):
-    - Flutter
-  - path_provider_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
-  - PromisesObjC (2.4.0)
-  - shared_preferences_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
-  - sqflite_darwin (0.0.4):
-    - Flutter
-    - FlutterMacOS
-  - url_launcher_ios (0.0.1):
-    - Flutter
-  - video_player_avfoundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
-  - wakelock_plus (0.0.1):
-    - Flutter
-  - webview_flutter_wkwebview (0.0.1):
-    - Flutter
-    - FlutterMacOS
-
-DEPENDENCIES:
-  - appcenter_analytics (from `.symlinks/plugins/appcenter_analytics/ios`)
-  - audio_session (from `.symlinks/plugins/audio_session/ios`)
-  - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
-  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
-  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
->>>>>>> 6744882a (strip out firebase)
   - Flutter (from `Flutter`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - google_mlkit_barcode_scanning (from `.symlinks/plugins/google_mlkit_barcode_scanning/ios`)
@@ -153,17 +110,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   appcenter_analytics:
     :path: ".symlinks/plugins/appcenter_analytics/ios"
-<<<<<<< HEAD
-=======
-  audio_session:
-    :path: ".symlinks/plugins/audio_session/ios"
-  camera_avfoundation:
-    :path: ".symlinks/plugins/camera_avfoundation/ios"
-  connectivity_plus:
-    :path: ".symlinks/plugins/connectivity_plus/ios"
-  device_info_plus:
-    :path: ".symlinks/plugins/device_info_plus/ios"
->>>>>>> 6744882a (strip out firebase)
   Flutter:
     :path: Flutter
   google_maps_flutter_ios:
@@ -182,13 +128,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppCenter: 38e27eb52113bff74426db9f500726933c8d2fd7
   appcenter_analytics: 259a1a74f3eff94f8a7c84d5ff73f82ecc7f0700
-<<<<<<< HEAD
-=======
-  audio_session: 9bb7f6c970f21241b19f5a3658097ae459681ba0
-  camera_avfoundation: 5675ca25298b6f81fa0a325188e7df62cc217741
-  connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
-  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
->>>>>>> 6744882a (strip out firebase)
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   Google-Maps-iOS-Utils: 0a484b05ed21d88c9f9ebbacb007956edd508a96
   google_maps_flutter_ios: 17552876e72723da1d41accc22f03b5f7afbde69
@@ -208,19 +147,7 @@ SPEC CHECKSUMS:
   MLKitVision: 39a5a812db83c4a0794445088e567f3631c11961
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   open_filex: 432f3cd11432da3e39f47fcc0df2b1603854eff1
-<<<<<<< HEAD
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
-=======
-  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
-  path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
-  PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
-  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
-  url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
-  video_player_avfoundation: dd410b52df6d2466a42d28550e33e4146928280a
-  wakelock_plus: e29112ab3ef0b318e58cfa5c32326458be66b556
-  webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
->>>>>>> 6744882a (strip out firebase)
 
 PODFILE CHECKSUM: c81b66cf954684e553507da853b90a35772348f4
 

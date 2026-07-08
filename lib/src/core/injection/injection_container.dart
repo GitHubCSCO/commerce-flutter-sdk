@@ -620,6 +620,11 @@ Future<void> initInjectionContainer() async {
               cacheService: sl(),
               networkService: sl(),
             ))
+    // CSCO-custom branch inventory endpoint (see csco_inventory_service.dart).
+    ..registerLazySingleton<ICscoInventoryService>(() => CscoInventoryService(
+          clientService: sl(),
+          networkService: sl(),
+        ))
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
           clientService: sl(),
           sessionService: sl(),
