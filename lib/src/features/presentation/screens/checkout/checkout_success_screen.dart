@@ -227,6 +227,11 @@ class CheckoutSuccessPage extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final orderLine = checkoutSuccessEntity.cart.cartLines?[index];
+              // XNG-Change: Convert API model to domain entity for consistent business logic
+              final cartLineEntity = orderLine != null
+                  ? CartLineEntityMapper.toEntity(orderLine)
+                  : null;
+
               return LineItemWidget(
                 productId: orderLine?.productId,
                 imagePath: orderLine?.smallImagePath,
@@ -260,15 +265,8 @@ class CheckoutSuccessPage extends StatelessWidget {
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemCount: checkoutSuccessEntity.cart.cartLines?.length ?? 0,
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Divider(
-              thickness: 1,
-              color: Colors.grey,
-            ),
-          )
         ],
-      ),
+      )
     );
   }
 

@@ -55,11 +55,7 @@ class CommerceFlutterSDK {
     final coreServiceProvider = sl<ICoreServiceProvider>();
     await NotificationHandler.getInstance(coreServiceProvider).initialize();
 
-    // 4️⃣ Bloc observer
-    // Note: FlutterError.onError and FlutterError.presentError are intentionally
-    // left at their defaults here. The AnalyticsInitializer chains on top of
-    // the default handler so errors remain visible in debug / TestFlight builds
-    // AND are forwarded to Crashlytics/AppCenter in release.
+    // 3️⃣ Error & Bloc observer
     final logger = GetIt.I<OptiLoggerService>();
     if (logger.isDebugLogEnabled) {
       Bloc.observer = const AppBlocObserver();
