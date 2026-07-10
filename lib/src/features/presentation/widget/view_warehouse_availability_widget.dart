@@ -1,6 +1,7 @@
+import 'package:commerce_flutter_sdk/src/core/theme/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/helper/extra/availability_color_converter.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/model/csco_branch_inventory.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/warehouse_inventory/warehouse_inventory_state.dart';
@@ -34,8 +35,10 @@ void viewWarehouseWidget(
         scrollable: true,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
-        title: Text(LocalizationConstants.warehouseInventory.localized(),
-            style: context.text.titleLarge),
+        title: Text(
+          LocalizationConstants.warehouseInventory.localized(),
+          style: context.text.titleLarge,
+        ),
         content: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BlocProvider(
@@ -45,105 +48,18 @@ void viewWarehouseWidget(
               builder: (_, state) {
                 if (state is WareHouseInventoryLoadingState ||
                     state is WareHouseInventoryInitialState) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        alignment: Alignment.bottomLeft,
-                        child: LoadingAnimationWidget.progressiveDots(
-                          color: context.colors.iconPrimary,
-                          size: 30,
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.bottomLeft,
-                        child: LoadingAnimationWidget.progressiveDots(
-                          color: context.colors.iconPrimary,
-                          size: 30,
-                        ),
-                      )
-                    ],
-                  );
+                  return _LoadingIndicator();
+                }
+                if (state is WareHouseInventoryFailureState) {
+                  return _FailurePanel(onClose: () => Navigator.of(context).pop());
                 }
                 if (state is WareHouseInventoryLoadedState) {
-                  var cellHeight = state.warehouses.length > 1 ? 40 : 20;
-                  return SizedBox(
-                    height: state.warehouses.length * cellHeight +
-                        100.0, // Adjust this value to limit the height of the dialog
-                    width: 300.0,
-                    child: Column(
-                      children: [
-                        Flexible(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                ListView.builder(
-                                  shrinkWrap:
-                                      true, // Important to make ListView scrollable inside a scrollable container
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: state.warehouses.length,
-                                  itemBuilder: (context, index) {
-                                    final warehouse = state.warehouses[index];
-                                    return Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0.0, 10.0, 0.0, 10.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                  child: Text((warehouse
-                                                              .description
-                                                              ?.isEmpty ??
-                                                          true)
-                                                      ? (warehouse.name ?? '')
-                                                      : warehouse
-                                                          .description!)),
-                                              Text(
-                                                (warehouse.qtyAvailable ?? 0) %
-                                                            1 ==
-                                                        0
-                                                    ? (warehouse.qtyAvailable ??
-                                                            0)
-                                                        .toInt()
-                                                        .toString() // Show as integer if no decimal part
-                                                    : (warehouse.qtyAvailable ??
-                                                            0)
-                                                        .toStringAsFixed(4),
-                                                style: TextStyle(
-                                                  color:
-                                                      AvailabilityColorConverter
-                                                          .convert(
-                                                    context,
-                                                    warehouse.messageType,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Divider(
-                                          color: context.colors.border,
-                                          thickness: 1.0,
-                                        )
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        PrimaryButton(
-                            text: LocalizationConstants.oK.localized(),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            })
-                      ],
-                    ),
+                  if (!state.hasAny) {
+                    return _EmptyPanel(onClose: () => Navigator.of(context).pop());
+                  }
+                  return _LoadedPanel(
+                    state: state,
+                    onClose: () => Navigator.of(context).pop(),
                   );
                 }
                 return const SizedBox.shrink();
@@ -305,7 +221,7 @@ class _BranchSection extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 12, 0, 4),
-          child: Text(title, style: OptiTextStyles.subtitle),
+          child: Text(title, style: context.text.subtitle),
         ),
         const Divider(color: OptiAppColors.border, thickness: 1.0),
         for (final b in branches) _BranchRow(branch: b),

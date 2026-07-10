@@ -12,6 +12,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/mapper/specification_ma
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/style_value_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/warehouse_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:optimizely_commerce_api/src/models/styled_product.dart';
 
 class StyledProductEntityMapper {
   StyledProductEntity toEntity(StyledProduct model) => StyledProductEntity(
