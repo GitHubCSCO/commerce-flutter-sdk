@@ -12,6 +12,13 @@
     <!-- For Android 13+ (API 33+) notification permission -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_IMAGES"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_VIDEO"
+        tools:node="remove" />
+
 
     <!-- Required for url_launcher to query available apps on Android 11+ -->
     <queries>
