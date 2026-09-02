@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/config/analytics_config.dart';
 import 'package:commerce_flutter_sdk/src/core/config/route_config.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/scanning_mode.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/services.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/account_usecase/account_usecase.dart';
@@ -24,14 +23,12 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/category_useca
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/usecases/currency_usecase/currency_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/dealer_location_usecase/dealer_location_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/in_app_browser/in_app_browser_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/language_usecase/language_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/location_note_usecase/location_note_usecase.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/change_password_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/login_usecase.dart';
@@ -39,7 +36,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/logout_usecase
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/order_usecase/order_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/pickup_location_usecase/pickup_location_usecase.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/usecases/print_usecase/print_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
@@ -76,7 +72,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/usecases/vmi_usecase/vm
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
-import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_filter_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/auth/auth_cubit.dart';
@@ -93,7 +88,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/category/cat
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/bloc/currency_bloc/currency_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/language/language_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
@@ -105,11 +99,9 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/product_deta
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/checkout_confirmation/checkout_confirmation_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/in_app_browser/in_app_browser_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_email/invoice_email_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_return/order_return_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/job_quote_details/job_quote_details_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_communication/quote_communication_bloc.dart';
@@ -153,14 +145,12 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/domain_redi
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_detail/invoice_detail_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_history_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_history_filter/invoice_history_filter_cubit.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/change_password/change_password_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/location_note/location_note_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_cubit.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/print/print_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_approval_details/order_approval_details_cubit.dart';
@@ -190,15 +180,11 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/w
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_autocomplete_cubit.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_information/wish_list_tags_controller_cubit.dart';
-import 'package:commerce_flutter_sdk/src/initializers/analytics_initializer.dart';
 import 'package:commerce_flutter_sdk/src/services/local_storage_service.dart';
 import 'package:commerce_flutter_sdk/src/services/secure_storage_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -222,10 +208,6 @@ Future<void> initInjectionContainer() async {
     //language
     ..registerFactory(() => LanguageBloc(languageUsecase: sl()))
     ..registerLazySingleton(() => LanguageUsecase())
-
-    //currency
-    ..registerFactory(() => CurrencyBloc(currencyUsecase: sl()))
-    ..registerLazySingleton(() => CurrencyUsecase())
 
     //biometric options
     ..registerFactory(() => BiometricOptionsCubit(biometricUsecase: sl()))
@@ -286,8 +268,6 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => LoginUsecase())
     ..registerFactory(() => ForgotPasswordCubit(forgotPasswordUseCase: sl()))
     ..registerFactory(() => ForgotPasswordUseCase())
-    ..registerFactory(() => ChangePasswordCubit(changePasswordUseCase: sl()))
-    ..registerFactory(() => ChangePasswordUseCase())
 
     //logout
     ..registerFactory(() => LogoutCubit(logoutUsecase: sl()))
@@ -301,9 +281,6 @@ Future<void> initInjectionContainer() async {
     //order details
     ..registerFactory(() =>
         OrderDetailsCubit(orderUsercase: sl(), pricingInventoryUseCase: sl()))
-
-    //order return
-    ..registerFactory(() => OrderReturnCubit(orderUserCase: sl()))
 
     //saved order
     ..registerFactory(() =>
@@ -329,10 +306,6 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => InvoiceHistoryFilterCubit(invoiceUseCase: sl()))
     ..registerFactory(() => InvoiceDetailCubit(invoiceUseCase: sl()))
     ..registerFactory(() => InvoiceEmailCubit(invoiceUseCase: sl()))
-
-    //Print
-    ..registerFactory(() => PrintUseCase())
-    ..registerFactory(() => PrintCubit(printUseCase: sl()))
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())
@@ -460,7 +433,6 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => PaymentDetailsUseCase())
     ..registerFactory(() => TokenExBloc())
     ..registerFactory(() => ReviewOrderCubit())
-    ..registerFactory(() => CheckoutConfirmationCubit(orderUseCase: sl()))
 
     // Add Credit Card
     ..registerFactory(() => AddCreditCardBloc(addCreditCardUsecase: sl()))
@@ -529,10 +501,6 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => WishListCreateCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListAddToCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListHandlerCubit())
-    ..registerFactory(() => WishListFilterCubit())
-    ..registerFactory(() => WishListFilterUsecase())
-    ..registerFactory(
-        () => WishListFilterAutocompleteCubit(wishListFilterUsecase: sl()))
     ..registerFactory(
         () => WishListTagsControllerCubit(wishListDetailsUsecase: sl()))
 
@@ -608,6 +576,20 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => InAppBrowserUsecase())
 
     //services
+    ..registerLazySingleton<ITrackingService>(() => CompositeTrackingService(
+          trackers: [
+            FirebaseTrackingService(
+              sessionService: sl(),
+              accountService: sl(),
+              analyticsConfig: sl(),
+            ),
+            AppCenterTrackingService(
+              sessionService: sl(),
+              accountService: sl(),
+              analyticsConfig: sl(),
+            ),
+          ],
+        ))
     ..registerLazySingleton<IRealTimePricingService>(
         () => RealTimePricingService(
               clientService: sl(),
@@ -620,11 +602,6 @@ Future<void> initInjectionContainer() async {
               cacheService: sl(),
               networkService: sl(),
             ))
-    // CSCO-custom branch inventory endpoint (see csco_inventory_service.dart).
-    ..registerLazySingleton<ICscoInventoryService>(() => CscoInventoryService(
-          clientService: sl(),
-          networkService: sl(),
-        ))
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
           clientService: sl(),
           sessionService: sl(),
@@ -672,18 +649,10 @@ Future<void> initInjectionContainer() async {
         loggerService: sl(),
         authStreamService: sl()))
     ..registerSingletonAsync<ICacheService>(() async {
-      debugPrint('[DI] ICacheService factory START');
-      final sw = Stopwatch()..start();
-      try {
-        var pref = await SharedPreferences.getInstance()
-            .timeout(const Duration(seconds: 10));
-        debugPrint('[DI] ICacheService factory END (${sw.elapsedMilliseconds}ms)');
-        return CacheService(sharedPreferences: pref);
-      } catch (e, st) {
-        debugPrint('[DI] ICacheService factory FAILED after '
-            '${sw.elapsedMilliseconds}ms: $e\n$st');
-        rethrow;
-      }
+      var pref = await SharedPreferences.getInstance();
+      return CacheService(
+        sharedPreferences: pref,
+      );
     })
     ..registerLazySingleton<INetworkService>(() => NetworkService())
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
@@ -695,11 +664,6 @@ Future<void> initInjectionContainer() async {
         enableErrorLog: false,
       ),
     )
-    ..registerLazySingleton<IPushNotificationService>(() =>
-        PushNotificationService(
-            cacheService: sl(), networkService: sl(), clientService: sl()))
-    ..registerLazySingleton<IPrintService>(() => PrintService(
-        cacheService: sl(), networkService: sl(), clientService: sl()))
     ..registerLazySingleton<ILoggerService>(() => sl<OptiLoggerService>())
     ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
     ..registerLazySingleton<IMessageService>(() => MessageService(
@@ -775,21 +739,8 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
         ))
     ..registerSingletonAsync<IDeviceService>(() async {
-      debugPrint('[DI] IDeviceService factory START');
-      final sw = Stopwatch()..start();
       final service = DeviceService();
-      try {
-        // PackageInfo.fromPlatform() has been observed to hang on iOS TestFlight
-        // builds in some configurations. We give it a 10-second timeout and,
-        // if it fails, return a DeviceService anyway so the app can still boot.
-        // packageInfo will be null but the rest of DeviceService still works.
-        await service.init().timeout(const Duration(seconds: 10));
-        debugPrint('[DI] IDeviceService factory END (${sw.elapsedMilliseconds}ms)');
-      } catch (e, st) {
-        debugPrint('[DI] IDeviceService.init() FAILED after '
-            '${sw.elapsedMilliseconds}ms (continuing without packageInfo): '
-            '$e\n$st');
-      }
+      await service.init();
       return service;
     })
     ..registerLazySingleton<IQuoteService>(() => QuoteService(
@@ -804,6 +755,19 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ILocalizationService>(() => LocalizationService(
           commerceAPIServiceProvider: sl(),
           coreServiceProvider: sl(),
+        ))
+    ..registerSingletonAsync<IAppConfigurationService>(() async {
+      final service = AppConfigurationService(
+        commerceAPIServiceProvider: sl(),
+        clientService: sl(),
+        cacheService: sl(),
+        networkService: sl(),
+      );
+      await service.init();
+      return service;
+    }, dependsOn: [ICacheService])
+    ..registerLazySingleton<AnalyticsConfig>(() => AnalyticsConfig(
+          appConfigurationService: sl(),
         ))
     ..registerLazySingleton<IWishListService>(() => WishListService(
           clientService: sl(),
@@ -820,98 +784,7 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
-    ..registerLazySingleton<IAuthStreamService>(() => AuthStreamService())
-    ..registerSingletonAsync<IAppConfigurationService>(() async {
-      debugPrint('[DI] IAppConfigurationService factory START');
-      final sw = Stopwatch()..start();
-      final service = AppConfigurationService(
-        commerceAPIServiceProvider: sl(),
-        clientService: sl(),
-        cacheService: sl(),
-        networkService: sl(),
-      );
-      try {
-        await service.init().timeout(const Duration(seconds: 10));
-        debugPrint('[DI] IAppConfigurationService factory END '
-            '(${sw.elapsedMilliseconds}ms)');
-      } catch (e, st) {
-        debugPrint('[DI] IAppConfigurationService.init() FAILED after '
-            '${sw.elapsedMilliseconds}ms: $e\n$st');
-        rethrow;
-      }
-      return service;
-    }, dependsOn: [ICacheService])
+    ..registerLazySingleton<IAuthStreamService>(() => AuthStreamService());
 
-    //analytics config - must be registered before firebase messaging and tracking services
-    ..registerSingletonAsync<AnalyticsConfig>(
-      () async {
-        debugPrint('[DI] AnalyticsConfig factory START');
-        final sw = Stopwatch()..start();
-        final cfg = AnalyticsConfig(
-          appConfigurationService: sl(),
-        );
-
-        try {
-          await AnalyticsInitializer.init(cfg: cfg)
-              .timeout(const Duration(seconds: 10));
-          debugPrint('[DI] AnalyticsConfig factory END '
-              '(${sw.elapsedMilliseconds}ms)');
-        } catch (e, st) {
-          debugPrint('[DI] AnalyticsInitializer.init() FAILED after '
-              '${sw.elapsedMilliseconds}ms (continuing without analytics): '
-              '$e\n$st');
-        }
-        return cfg;
-      },
-      dependsOn: [IAppConfigurationService],
-    )
-    ..registerSingletonWithDependencies<ITrackingService>(
-        () => CompositeTrackingService(
-              trackers: [
-                AppCenterTrackingService(
-                  sessionService: sl(),
-                  accountService: sl(),
-                  analyticsConfig: sl(),
-                ),
-              ],
-            ),
-        dependsOn: [AnalyticsConfig])
-
-    // firebase messaging
-    // DeviceTokenService is registered as a lazy singleton because its
-    // constructor is synchronous — all real async work happens later inside
-    // getDeviceToken(). Using registerSingletonWithDependencies here was a bug:
-    // that API requires the singleton to call signalReady() before sl.allReady()
-    // can complete, but DeviceTokenService never does, so initialization hung
-    // forever waiting on it.
-    ..registerLazySingleton<IDeviceTokenService>(() => DeviceTokenService());
-
-  // Wait for all async singletons to be ready, but with a global timeout and
-  // diagnostic reporting. If any registerSingletonAsync hangs past this
-  // window, GetIt's WaitingTimeOutException tells us exactly which types are
-  // still pending — invaluable for diagnosing TestFlight-only hangs.
-  try {
-    await sl.allReady(timeout: const Duration(seconds: 20));
-    debugPrint('[DI] sl.allReady() completed successfully');
-  } on WaitingTimeOutException catch (e) {
-    final diagnostic = StringBuffer()
-      ..writeln('GetIt service initialization timed out after 20s.')
-      ..writeln()
-      ..writeln('Services NOT ready (these are hanging):')
-      ..writeln('  ${e.notReadyYet}')
-      ..writeln()
-      ..writeln('Services ready (these completed fine):')
-      ..writeln('  ${e.areReady}')
-      ..writeln()
-      ..writeln('Dependency wait map (who is blocking what):')
-      ..writeln('  ${e.areWaitedBy}');
-    debugPrint('[DI] $diagnostic');
-    // Throw a StateError whose toString() includes the diagnostic data so the
-    // _FatalErrorApp UI in main.dart shows it on screen — without this, the
-    // user only sees "Instance of 'WaitingTimeOutException'" with no detail.
-    throw StateError(diagnostic.toString());
-  } catch (e, st) {
-    debugPrint('[DI] sl.allReady() failed: $e\n$st');
-    rethrow;
-  }
+  await sl.allReady();
 }

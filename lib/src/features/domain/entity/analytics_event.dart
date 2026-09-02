@@ -4,6 +4,8 @@ class AnalyticsEvent {
   final String eventName;
   final Map<String, String> properties = {};
 
+  final Map<String, num> numericProperties = {};
+
   AnalyticsEvent(this.eventName, String area) {
     if (eventName.isEmpty) {
       throw ArgumentError('eventName cannot be null or empty');
@@ -15,12 +17,19 @@ class AnalyticsEvent {
   }
 
   AnalyticsEvent withProperty(
-      {required String name, String? strValue, bool? boolValue}) {
+      {required String name,
+      String? strValue,
+      bool? boolValue,
+      num? numValue}) {
     if (strValue != null) {
       properties[name] = strValue;
     }
     if (boolValue != null) {
       properties[name] = boolValue.toString();
+    }
+    if (numValue != null) {
+      numericProperties[name] = numValue;
+      properties[name] = numValue.toString();
     }
     return this;
   }

@@ -2,45 +2,59 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:commerce_flutter_sdk/src/core/extensions/firebase_options_extension.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:appcenter_analytics/appcenter_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:commerce_flutter_sdk/src/core/config/analytics_config.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AnalyticsInitializer {
-  // Static so injection_container.dart can call AnalyticsInitializer.init(cfg: cfg)
-  // without needing to instantiate the class first.
   static Future<void> init({required AnalyticsConfig cfg}) async {
     if (cfg.appCenterSecret?.isNullOrEmpty == false) {
       await AppCenter.start(secret: cfg.appCenterSecret!);
     }
 
-    
+    if (cfg.firebaseOptions?.isValid() == true) {
+      // On Android, Firebase is already initialized by the Google Services plugin
+      // On iOS, we need to initialize manually since there's no plugin
+      // This is a workaround for that
+      try {
+        await Firebase.initializeApp(options: cfg.firebaseOptions);
+      } on FirebaseException catch (fe) {
+        if (fe.code != 'duplicate-app') {
+          rethrow;
+        }
+      }
+      await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
 
-    // Capture the default handler so we can call it from our override.
-    // This preserves the built-in Flutter error display in debug / profile
-    // builds while still forwarding to Crashlytics / AppCenter in release.
-    final FlutterExceptionHandler? defaultOnError = FlutterError.onError;
+      // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+      PlatformDispatcher.instance.onError = (error, stack) {
+        // Fire and forget - don't await in the error handler to avoid blocking
+        unawaited(FirebaseCrashlytics.instance
+            .recordError(error, stack, fatal: true));
+        return true;
+      };
+    }
 
     // Handle Flutter framework errors:
     FlutterError.onError = (errorDetails) async {
-      // Always invoke the default handler first so errors remain visible in
-      // debug and TestFlight builds. Without this, the error console goes
-      // silent and a blank screen is the only symptom.
-      defaultOnError?.call(errorDetails);
-
-      // Ignore benign NetworkImageLoadException – no need to report these.
+      // Ignore benign NetworkImageLoadException
       if (errorDetails.exception is NetworkImageLoadException) {
-        return;
-      }
-
-      if (cfg.appCenterSecret?.isNullOrEmpty == false) {
-        await AppCenterCrashes.trackException(
-          message: errorDetails.exception.toString(),
-          type: errorDetails.exception.runtimeType,
-          stackTrace: errorDetails.stack,
-        );
+        FlutterError.presentError(errorDetails);
+      } else {
+        if (cfg.firebaseOptions?.isValid() == true) {
+          await FirebaseCrashlytics.instance
+              .recordFlutterFatalError(errorDetails);
+        }
+        if (cfg.appCenterSecret?.isNullOrEmpty == false) {
+          await AppCenterCrashes.trackException(
+            message: errorDetails.exception.toString(),
+            type: errorDetails.exception.runtimeType,
+            stackTrace: errorDetails.stack,
+          );
+        }
       }
     };
   }
