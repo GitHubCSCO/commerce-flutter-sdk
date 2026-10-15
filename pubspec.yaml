@@ -66,14 +66,16 @@ dev_dependencies:
   json_serializable: ^6.8.0
 
 flutter:
-  uses-material-design: true
-  assets:
-    - assets/
-    - assets/images/
-    - assets/images/bar_icons/
-    - assets/images/cart_page_icons/
-    - assets/images/biometric_icons/
-    - assets/images/checkout_icons/
-    - assets/images/wish_list_icons/
-    - assets/config/
-    - assets/form/
+config:
+  enable-swift-package-manager: false
+uses-material-design: true
+assets:
+  - assets/
+  - assets/images/
+  - assets/images/bar_icons/
+  - assets/images/cart_page_icons/
+  - assets/images/biometric_icons/
+  - assets/images/checkout_icons/
+  - assets/images/wish_list_icons/
+  - assets/config/
+  - assets/form/
