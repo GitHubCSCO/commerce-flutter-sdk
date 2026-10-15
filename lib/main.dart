@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:commerce_flutter_sdk/commerce_config.dart';
 import 'package:commerce_flutter_sdk/src/initializers/commerce_flutter_sdk_initializer.dart';
 import 'package:flutter/foundation.dart';
@@ -12,7 +11,6 @@ void main() async {
   // is exactly what produces the "blank white screen" symptom in TestFlight.
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
-
     try {
       await CommerceFlutterSDK.initialize(
         config: CommerceConfig(
