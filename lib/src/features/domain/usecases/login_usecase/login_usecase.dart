@@ -4,6 +4,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
+import 'package:flutter/foundation.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LoginResponse {
@@ -16,25 +17,41 @@ class LoginResponse {
 class LoginUsecase extends BiometricUsecase {
   LoginUsecase() : super();
 
+  /// Logs how long each sign in step takes, so a slow or stuck step shows up
+  /// by name in the Xcode console (look for lines starting with [Login]).
+  Future<T> _timed<T>(String label, Future<T> future) async {
+    final stopwatch = Stopwatch()..start();
+    debugPrint('[Login] $label started');
+    try {
+      return await future;
+    } finally {
+      debugPrint('[Login] $label took ${stopwatch.elapsedMilliseconds}ms');
+    }
+  }
+
   Future<LoginResponse> attemptSignIn(
     String username,
     String password,
   ) async {
-    bool isOnline =
-        await commerceAPIServiceProvider.getNetworkService().isOnline();
+    bool isOnline = await _timed('network check',
+        commerceAPIServiceProvider.getNetworkService().isOnline());
     if (!isOnline) {
       return LoginResponse(LoginStatus.loginErrorOffline);
     }
 
-    final result = await commerceAPIServiceProvider
-        .getAuthenticationService()
-        .logInAsync(username, password);
+    final result = await _timed(
+        'token + session create',
+        commerceAPIServiceProvider
+            .getAuthenticationService()
+            .logInAsync(username, password));
     switch (result) {
       case Success():
         {
-          final sessionResult = await commerceAPIServiceProvider
-              .getSessionService()
-              .getCurrentSession();
+          final sessionResult = await _timed(
+              'get current session',
+              commerceAPIServiceProvider
+                  .getSessionService()
+                  .getCurrentSession());
           switch (sessionResult) {
             case Success(value: final fullSession):
               {
@@ -58,11 +75,14 @@ class LoginUsecase extends BiometricUsecase {
                   );
                 }
 
-                await commerceAPIServiceProvider
-                    .getAccountService()
-                    .getCurrentAccountAsync();
+                await _timed(
+                    'get current account',
+                    commerceAPIServiceProvider
+                        .getAccountService()
+                        .getCurrentAccountAsync());
 
-                if (await _showBiometricOptionView()) {
+                if (await _timed('biometric option check',
+                    _showBiometricOptionView())) {
                   await coreServiceProvider
                       .getBiometricAuthenticationService()
                       .markCurrentUserAsSeenEnableBiometricOptionView();
@@ -102,19 +122,22 @@ class LoginUsecase extends BiometricUsecase {
   }
 
   Future<LoginStatus> biometricSignIn() async {
-    final success = await authenticateWithBiometrics();
+    final success =
+        await _timed('Face ID prompt', authenticateWithBiometrics());
     if (success) {
-      final loginSuccess = await coreServiceProvider
-          .getBiometricAuthenticationService()
-          .logInWithStoredCredentials();
+      final loginSuccess = await _timed(
+          'stored credential sign in',
+          coreServiceProvider
+              .getBiometricAuthenticationService()
+              .logInWithStoredCredentials());
 
       if (!loginSuccess) {
         return LoginStatus.loginErrorUnsuccessful;
       }
 
-      final sessionResponse = await commerceAPIServiceProvider
-          .getSessionService()
-          .getCurrentSession();
+      final sessionResponse = await _timed(
+          'get current session',
+          commerceAPIServiceProvider.getSessionService().getCurrentSession());
 
       switch (sessionResponse) {
         case Success(value: final fullSession):
@@ -139,9 +162,11 @@ class LoginUsecase extends BiometricUsecase {
               );
             }
 
-            final accountResult = await commerceAPIServiceProvider
-                .getAccountService()
-                .getCurrentAccountAsync();
+            final accountResult = await _timed(
+                'get current account',
+                commerceAPIServiceProvider
+                    .getAccountService()
+                    .getCurrentAccountAsync());
 
             if (accountResult is Failure) {
               return LoginStatus.loginErrorUnknown;

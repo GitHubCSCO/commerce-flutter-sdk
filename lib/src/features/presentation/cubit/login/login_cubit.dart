@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
@@ -8,6 +10,9 @@ import 'package:commerce_flutter_sdk/src/features/domain/enums/device_authentica
 import 'package:commerce_flutter_sdk/src/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -57,13 +62,71 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
+  /// Upper bound for a whole sign in attempt, including session, account and
+  /// bill to / ship to lookups. Normal sign ins finish in a few seconds. The
+  /// biometric limit is longer because it includes time the customer spends
+  /// on the Face ID or passcode prompt.
+  static const Duration _signInTimeout = Duration(seconds: 30);
+  static const Duration _biometricSignInTimeout = Duration(seconds: 60);
+
+  /// Runs a sign in step so that it always ends in a non loading state.
+  ///
+  /// Any exception thrown during sign in used to be discarded by the
+  /// `.ignore()` calls in LoginScreen, which left the cubit in
+  /// LoginLoadingState forever (the endless spinner) even though the tokens
+  /// had already been saved. This catches the error, records it, and shows a
+  /// dialog instead.
+  Future<void> _runGuarded(String label, Future<void> Function() body,
+      {Duration timeout = _signInTimeout}) async {
+    final stopwatch = Stopwatch()..start();
+    try {
+      await body().timeout(timeout);
+      debugPrint(
+          '[Login] $label finished in ${stopwatch.elapsedMilliseconds}ms');
+    } on TimeoutException catch (error, stack) {
+      _recordError(error, stack, '$label timed out');
+      if (isClosed) return;
+      emit(
+        LoginFailureState(
+          title:
+              LocalizationConstants.errorCommunicatingWithTheServer.localized(),
+          buttonText: LocalizationConstants.dismiss.localized(),
+        ),
+      );
+    } catch (error, stack) {
+      _recordError(error, stack, '$label failed');
+      if (isClosed) return;
+      emit(
+        LoginFailureState(
+          title: LocalizationConstants.unableToGetCurrentSession.localized(),
+          buttonText: LocalizationConstants.dismiss.localized(),
+        ),
+      );
+    }
+  }
+
+  void _recordError(Object error, StackTrace stack, String reason) {
+    debugPrint('[Login] $reason: $error');
+    debugPrint('$stack');
+    try {
+      if (Firebase.apps.isNotEmpty) {
+        unawaited(FirebaseCrashlytics.instance
+            .recordError(error, stack, reason: reason));
+      }
+    } catch (_) {}
+  }
+
   Future<void> initialize() async {
     emit(LoginInfoLoadingState());
     await _loadSiteMessages();
     emit(LoginInitialState());
   }
 
-  Future<void> onLoginSubmit(String username, String password) async {
+  Future<void> onLoginSubmit(String username, String password) =>
+      _runGuarded(
+          'password sign in', () => _onLoginSubmit(username, password));
+
+  Future<void> _onLoginSubmit(String username, String password) async {
     emit(LoginLoadingState());
 
     final loginResponse = await loginUsecase.attemptSignIn(username, password);
@@ -76,7 +139,7 @@ class LoginCubit extends Cubit<LoginState> {
         emit(const LoginSuccessState(
             loginStatus: LoginStatus.loginSuccessBiometric));
       case LoginStatus.loginSuccessBillToShipTo:
-        await handleBillToShipTo();
+        await _handleBillToShipTo();
       case LoginStatus.loginErrorOffline:
         final title = await loginUsecase.getSiteMessage(
             SiteMessageConstants.nameMobileAppAlertNoInternet,
@@ -119,6 +182,12 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> onBiometricLoginSubmit(
+          DeviceAuthenticationOption option, String biometricDisplayOption) =>
+      _runGuarded('biometric sign in',
+          () => _onBiometricLoginSubmit(option, biometricDisplayOption),
+          timeout: _biometricSignInTimeout);
+
+  Future<void> _onBiometricLoginSubmit(
       DeviceAuthenticationOption option, String biometricDisplayOption) async {
     emit(LoginLoadingState());
 
@@ -126,7 +195,7 @@ class LoginCubit extends Cubit<LoginState> {
     switch (loginStatus) {
       case LoginStatus.loginSuccessBillToShipTo:
         trackSignInEvent(biometricDisplayOption);
-        await handleBillToShipTo();
+        await _handleBillToShipTo();
         break;
       case LoginStatus.loginErrorOffline:
         final title = await loginUsecase.getSiteMessage(
@@ -177,7 +246,10 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  Future<void> handleBillToShipTo() async {
+  Future<void> handleBillToShipTo() =>
+      _runGuarded('bill to / ship to check', _handleBillToShipTo);
+
+  Future<void> _handleBillToShipTo() async {
     emit(LoginInitialState());
 
     final fullSession =

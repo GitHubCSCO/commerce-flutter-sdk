@@ -55,6 +55,12 @@ class ClientService implements IClientService {
 
   void _createClient() {
     var baseOptions = BaseOptions(
+      // Without these, a stalled connection can leave a request (and any
+      // spinner awaiting it) pending forever. Per-request receiveTimeout
+      // values still override receiveTimeout here.
+      connectTimeout: const Duration(seconds: 20),
+      sendTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 60),
       headers: {
         Headers.contentTypeHeader: Headers.jsonContentType,
         HeaderConstants.userAgentHeader: HeaderConstants.userAgentType,
@@ -69,50 +75,62 @@ class ClientService implements IClientService {
 
     client.interceptors
         .add(InterceptorsWrapper(onError: (DioException e, handler) async {
-      String refreshToken =
-          (await secureStorageService.load('refreshToken')) ?? "";
-      var accessTokenIsExpired = await isAccessTokenExpired();
-      if (e.response?.statusCode == 401 &&
-          !isRefreshingToken &&
-          !refreshToken.isNullOrEmpty &&
-          accessTokenIsExpired) {
-        isRefreshingToken = true;
-
-        var response = await client.postUri(
-            Uri.parse('/${CommerceAPIConstants.tokenUrl}'),
-            data: {
-              'grant_type': 'refresh_token',
-              'refresh_token': refreshToken,
-              'client_id': clientId ?? '',
-              'client_secret': clientSecret ?? '',
-            },
-            options: Options(contentType: Headers.formUrlEncodedContentType));
-
-        if (!StatusCodeExtension.isSuccessStatusCode(response.statusCode!)) {
-          await removeAccessToken();
-          isRefreshingToken = false;
-          return;
+      // Every path through this handler must call handler.next or
+      // handler.resolve. If it returns without doing so, or throws, Dio never
+      // completes the original request and the caller awaits forever.
+      try {
+        final refreshToken =
+            (await secureStorageService.load('refreshToken')) ?? "";
+        final accessTokenIsExpired = await isAccessTokenExpired();
+        if (e.response?.statusCode != 401 ||
+            isRefreshingToken ||
+            refreshToken.isNullOrEmpty ||
+            !accessTokenIsExpired) {
+          return handler.next(e);
         }
 
-        var responseStr = response.data;
-        TokenResult token = TokenResult.fromJson(responseStr);
+        isRefreshingToken = true;
+        late TokenResult token;
+        try {
+          // Dio throws on non 2xx responses (for example 400 invalid_grant
+          // when the refresh token has expired), so a failed refresh lands
+          // in the catch below rather than in a status code check.
+          final response = await client.postUri(
+              Uri.parse('/${CommerceAPIConstants.tokenUrl}'),
+              data: {
+                'grant_type': 'refresh_token',
+                'refresh_token': refreshToken,
+                'client_id': clientId ?? '',
+                'client_secret': clientSecret ?? '',
+              },
+              options:
+                  Options(contentType: Headers.formUrlEncodedContentType));
+          token = TokenResult.fromJson(response.data);
+          await storeAccessToken(token);
+          setBearerAuthorizationHeader(token.accessToken!);
+          await storeSessionState();
+        } catch (_) {
+          await removeAccessToken();
+          return handler.next(e);
+        } finally {
+          isRefreshingToken = false;
+        }
 
-        await storeAccessToken(token);
-        setBearerAuthorizationHeader(token.accessToken!);
-        await storeSessionState();
-
-        isRefreshingToken = false;
-
-        final opts = Options(
-            method: e.requestOptions.method, headers: e.requestOptions.headers);
+        // Retry with the new token. The original request headers still carry
+        // the expired bearer token, so replace it before resending.
+        final headers = Map<String, dynamic>.from(e.requestOptions.headers);
+        headers[HttpHeaders.authorizationHeader] =
+            'Bearer ${token.accessToken}';
         final cloneReq = await client.request(e.requestOptions.path,
-            options: opts,
+            options: Options(method: e.requestOptions.method, headers: headers),
             data: e.requestOptions.data,
             queryParameters: e.requestOptions.queryParameters);
-
         return handler.resolve(cloneReq);
+      } on DioException catch (retryError) {
+        return handler.next(retryError);
+      } catch (_) {
+        return handler.next(e);
       }
-      return handler.next(e);
     }));
     host = ClientConfig.hostUrl;
   }
@@ -135,7 +153,7 @@ class ClientService implements IClientService {
   String get cookiesStorageKey => "cookies";
 
   bool isRefreshingToken = false;
-  Completer<void>? _refreshCompleter;
+  Completer<Result<bool, ErrorResponse>>? _refreshCompleter;
 
   Future<List<Cookie>> get cookies async {
     var cookiesFuture = cookieJar.loadForRequest(url!);
@@ -536,18 +554,31 @@ class ClientService implements IClientService {
 
   @override
   Future<Result<bool, ErrorResponse>> renewAuthenticationTokens() async {
-    if (_refreshCompleter != null) {
-      // If a refresh is already in progress, wait for it to complete.
-      await _refreshCompleter!.future;
-      // After waiting, return the result of the previous refresh attempt.
-      return const Success(true);
+    // If a refresh is already in progress, share its result. The completer is
+    // completed in the finally block below on every path, so callers waiting
+    // here can never be left pending.
+    final inFlight = _refreshCompleter;
+    if (inFlight != null) {
+      return inFlight.future;
     }
 
-    _refreshCompleter = Completer();
+    final completer = Completer<Result<bool, ErrorResponse>>();
+    _refreshCompleter = completer;
     isRefreshingToken = true;
 
+    Result<bool, ErrorResponse> result = const Success(false);
     try {
-      // Check if session loading is completed
+      result = await _performTokenRefresh();
+      return result;
+    } finally {
+      isRefreshingToken = false;
+      _refreshCompleter = null;
+      completer.complete(result);
+    }
+  }
+
+  Future<Result<bool, ErrorResponse>> _performTokenRefresh() async {
+    try {
       if (_sessionLoadingCompletedState != null) {
         await _sessionLoadingCompletedState;
       } else {
@@ -577,22 +608,15 @@ class ClientService implements IClientService {
         return const Success(false);
       }
 
-      var responseStr = response.data;
-      TokenResult token = TokenResult.fromJson(responseStr);
+      TokenResult token = TokenResult.fromJson(response.data);
 
       await storeAccessToken(token);
       setBearerAuthorizationHeader(token.accessToken!);
       await storeSessionState();
-      _refreshCompleter!.complete();
       return const Success(true);
     } catch (e) {
-      isRefreshingToken = false;
-      _refreshCompleter!.completeError(e);
       await removeAccessToken();
       return const Success(false);
-    } finally {
-      isRefreshingToken = false;
-      _refreshCompleter = null;
     }
   }
 
