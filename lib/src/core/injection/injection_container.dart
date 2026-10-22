@@ -185,6 +185,18 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/w
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_information/wish_list_tags_controller_cubit.dart';
 import 'package:commerce_flutter_sdk/src/services/local_storage_service.dart';
 import 'package:commerce_flutter_sdk/src/services/secure_storage_service.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/device_token_interface.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/currency_usecase/currency_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/change_password_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/print_usecase/print_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/wish_list_usecase/wish_list_filter_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/bloc/currency_bloc/currency_bloc.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/change_password/change_password_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/checkout/checkout_confirmation/checkout_confirmation_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_return/order_return_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/print/print_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_autocomplete_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -784,7 +796,35 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
-    ..registerLazySingleton<IAuthStreamService>(() => AuthStreamService());
+    ..registerLazySingleton<IAuthStreamService>(() => AuthStreamService())
+
+    // Registrations restored from before the "re-enable GA4" commit
+    // (7e75e457), which dropped them by accident. Without IDeviceTokenService,
+    // every sign in and sign out threw a "not registered" error after the
+    // token was saved, which caused the endless spinner and the failed logout.
+    ..registerLazySingleton<IDeviceTokenService>(() => DeviceTokenService())
+    ..registerLazySingleton<IPushNotificationService>(() =>
+        PushNotificationService(
+            cacheService: sl(), networkService: sl(), clientService: sl()))
+    ..registerLazySingleton<IPrintService>(() => PrintService(
+        cacheService: sl(), networkService: sl(), clientService: sl()))
+    // CSCO-custom branch inventory endpoint (see csco_inventory_service.dart).
+    ..registerLazySingleton<ICscoInventoryService>(() => CscoInventoryService(
+          clientService: sl(),
+          networkService: sl(),
+        ))
+    ..registerFactory(() => CurrencyBloc(currencyUsecase: sl()))
+    ..registerLazySingleton(() => CurrencyUsecase())
+    ..registerFactory(() => ChangePasswordCubit(changePasswordUseCase: sl()))
+    ..registerFactory(() => ChangePasswordUseCase())
+    ..registerFactory(() => OrderReturnCubit(orderUserCase: sl()))
+    ..registerFactory(() => PrintUseCase())
+    ..registerFactory(() => PrintCubit(printUseCase: sl()))
+    ..registerFactory(() => CheckoutConfirmationCubit(orderUseCase: sl()))
+    ..registerFactory(() => WishListFilterCubit())
+    ..registerFactory(() => WishListFilterUsecase())
+    ..registerFactory(
+        () => WishListFilterAutocompleteCubit(wishListFilterUsecase: sl()));
 
   await sl.allReady();
 }
