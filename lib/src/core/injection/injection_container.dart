@@ -197,6 +197,8 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_retur
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/print/print_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_autocomplete_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_filter/wish_list_filter_cubit.dart';
+import 'package:commerce_flutter_sdk/src/initializers/analytics_initializer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -778,9 +780,28 @@ Future<void> initInjectionContainer() async {
       await service.init();
       return service;
     }, dependsOn: [ICacheService])
-    ..registerLazySingleton<AnalyticsConfig>(() => AnalyticsConfig(
+    // Analytics config must initialize Firebase before anything uses it.
+    // A plain lazy singleton never calls AnalyticsInitializer.init, so
+    // Firebase.initializeApp never ran and no Analytics or Crashlytics data
+    // was sent. Restored from before the "re-enable GA4" commit (7e75e457).
+    ..registerSingletonAsync<AnalyticsConfig>(
+      () async {
+        final cfg = AnalyticsConfig(
           appConfigurationService: sl(),
-        ))
+        );
+        try {
+          await AnalyticsInitializer.init(cfg: cfg)
+              .timeout(const Duration(seconds: 10));
+          debugPrint('[DI] Firebase initialized: '
+              'project ${cfg.firebaseOptions?.projectId}');
+        } catch (e, st) {
+          debugPrint('[DI] AnalyticsInitializer.init() FAILED '
+              '(continuing without analytics): $e\n$st');
+        }
+        return cfg;
+      },
+      dependsOn: [IAppConfigurationService],
+    )
     ..registerLazySingleton<IWishListService>(() => WishListService(
           clientService: sl(),
           cacheService: sl(),
